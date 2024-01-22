@@ -9,7 +9,7 @@ public class JogoDaVelha {
 		Character[][] tabuleiro = new Character[3][3];
 		final char JOGADOR_A = 'X';
 		final char JOGADOR_B = 'O';
-		int qtnJogadas = 1;
+		int qtnJogadas = 0;
 		
 
 		// mostra o tabuleiro no terminal
@@ -20,12 +20,13 @@ public class JogoDaVelha {
 		do {
 
 			while (!jogadaCorreta) {
-				if (qtnJogadas % 2 != 0) {
+				if (qtnJogadas % 2 == 0) {
 					System.out.println("Vez do jogador: " + JOGADOR_B);//confere se é jogador a ou b
 
-				} else {
+				} else if (qtnJogadas % 2 != 0){
 					System.out.println("Vez do jogador: " + JOGADOR_A);
 				}
+				qtnJogadas++;
 				System.out.print("Informe a linha: ");
 				int linha = sc.nextInt();
 
