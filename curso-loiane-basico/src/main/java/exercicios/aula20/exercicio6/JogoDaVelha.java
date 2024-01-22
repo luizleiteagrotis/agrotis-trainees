@@ -53,7 +53,7 @@ public class JogoDaVelha {
 
 	}
 
-
+	
 	private static void mostraTabuleiro(Character[][] tabuleiro) {
 		System.out.println("-------");
 		for (Character[] linha : tabuleiro) {
