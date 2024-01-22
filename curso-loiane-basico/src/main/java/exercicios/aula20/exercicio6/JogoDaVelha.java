@@ -10,21 +10,25 @@ public class JogoDaVelha {
 		final char JOGADOR_A = 'X';
 		final char JOGADOR_B = 'O';
 		int qtnJogadas = 0;
-		
 
 		// mostra o tabuleiro no terminal
 		mostraTabuleiro(tabuleiro);
 		boolean flagChecagemVitoria = true;
 		boolean jogadaCorreta = false;
+		int qtdJJogadas = 0;
 
+		
+			
+	
 		do {
 
 			while (!jogadaCorreta) {
 				if (qtnJogadas % 2 == 0) {
-					System.out.println("Vez do jogador: " + JOGADOR_B);//confere se é jogador a ou b
-
-				} else if (qtnJogadas % 2 != 0){
-					System.out.println("Vez do jogador: " + JOGADOR_A);
+					System.out.println("Vez do jogador: " + JOGADOR_A);// confere se é jogador a ou b
+					qtdJJogadas++;
+				} else if (qtnJogadas % 2 != 0) {
+					System.out.println("Vez do jogador: " + JOGADOR_B);
+					qtdJJogadas++;
 				}
 				qtnJogadas++;
 				System.out.print("Informe a linha: ");
@@ -39,7 +43,7 @@ public class JogoDaVelha {
 					if (qtnJogadas % 2 == 0) {
 						tabuleiro[linha - 1][coluna - 1] = JOGADOR_B;
 
-					} else if (qtnJogadas % 2 != 0){
+					} else if (qtnJogadas % 2 != 0) {
 						tabuleiro[linha - 1][coluna - 1] = JOGADOR_A;
 					}
 					jogadaCorreta = true;
@@ -50,10 +54,9 @@ public class JogoDaVelha {
 			jogadaCorreta = false;
 
 		} while (flagChecagemVitoria);
-
 	}
-
 	
+
 	private static void mostraTabuleiro(Character[][] tabuleiro) {
 		System.out.println("-------");
 		for (Character[] linha : tabuleiro) {
