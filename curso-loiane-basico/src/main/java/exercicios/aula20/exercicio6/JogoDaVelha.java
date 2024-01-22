@@ -10,51 +10,47 @@ public class JogoDaVelha {
 		final char JOGADOR_A = 'X';
 		final char JOGADOR_B = 'O';
 		int qtnJogadas = 1;
-		
+
 		// mostra o tabuleiro no terminal
 		mostraTabuleiro(tabuleiro);
-		boolean flagChecagemVitoria= true;
+		boolean flagChecagemVitoria = true;
 		boolean jogadaCorreta = false;
-		
+
 		do {
-			
+
 			while (!jogadaCorreta) {
-			System.out.print("Informe a linha: ");
-			int linha = sc.nextInt();
-			
-			System.out.print("Informe a coluna: ");
-			int coluna = sc.nextInt();
-
-			if (tabuleiro[linha-1][coluna-1] != null) {
-				System.out.println("O espaço está preenchido, entre outro valor");
-			} else {
 				if (qtnJogadas % 2 == 0) {
-					tabuleiro[linha-1][coluna-1] = JOGADOR_B;
-					
-				} else {
-					tabuleiro[linha-1][coluna-1] = JOGADOR_A;
-				}
-				jogadaCorreta = true;
-			}
-			
-			for(int i = 0; i < tabuleiro.length; i++)	{
-				for(int j = 0 ; j < tabuleiro[i].length; j++) {
-					if(tabuleiro[linha][coluna] == null) {
-						tabuleiro[linha][coluna]= tabuleiro[linha][coluna];
-						flagChecagemVitoria = false;
-					}
-				}
-			}
-			mostraTabuleiro(tabuleiro);
-			
-			
-		}while(flagChecagemVitoria);
-		
-		
+					System.out.println("Vez do jogador: " + JOGADOR_B);
 
-		
+				} else {
+					System.out.println("Vez do jogador: " + JOGADOR_A);
+				}
+				System.out.print("Informe a linha: ");
+				int linha = sc.nextInt();
+
+				System.out.print("Informe a coluna: ");
+				int coluna = sc.nextInt();
+
+				if (tabuleiro[linha - 1][coluna - 1] != null) {
+					System.out.println("O espaço está preenchido, entre outro valor");
+				} else {
+					if (qtnJogadas % 2 == 0) {
+						tabuleiro[linha - 1][coluna - 1] = JOGADOR_B;
+
+					} else {
+						tabuleiro[linha - 1][coluna - 1] = JOGADOR_A;
+					}
+					jogadaCorreta = true;
+				}
+			}
+
+			mostraTabuleiro(tabuleiro);
+			jogadaCorreta = false;
+
+		} while (flagChecagemVitoria);
+
 	}
-	
+
 
 	private static void mostraTabuleiro(Character[][] tabuleiro) {
 		System.out.println("-------");
@@ -72,6 +68,4 @@ public class JogoDaVelha {
 			System.out.println("-------");
 		}
 	}
-
-	
 }
