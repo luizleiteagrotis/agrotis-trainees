@@ -32,7 +32,17 @@ O eclipse será reiniciado.
 ### Importe no Eclipse o projeto maven curso-loiane-basico
 Menu File > Import... > Pesquise por maven > Escolha a opção "Existing Maven Projects" > Next > Browse... > Navegue até a pasta agrotis-trainees/curso-loiane-basico > Abrir > Finish
 
-## Como estruturar os diretórios
+## Comandos Git úteis
+### Listar todas as branches
+```git branch --all```
+
+### Listar os commits da branch atual
+```git log```
+
+### Trocar de branch
+```git checkout <nomeDaBranch>```
+
+## Estrutura de Diretórios
 * ```./curso-loiane-basico``` Exercícios das aulas dos cursos de Java da <a href= "https://loiane.training">Loiane Groner</a>
 
 Para mais informações, acesse o respectivo diretório e leia o README. 
