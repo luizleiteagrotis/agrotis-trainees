@@ -13,6 +13,23 @@ public class JogoDaVelha {
 		// mostra o tabuleiro no terminal
 		mostraTabuleiro(tabuleiro);
 		
+		System.out.print("Informe a linha: ");
+		int linha = sc.nextInt();
+		
+		System.out.print("Informe a coluna: ");
+		int coluna = sc.nextInt();
+		
+		if(tabuleiro[linha][coluna]  == null) {
+			System.out.println("Espaço preenchido");
+			
+		}
+//		for(int i=linha; i<3; i++) {
+//			for(int j = 0 ; j < 3; j++) {
+//				
+//			}
+//		}
+		
+		//
 		sc.close();
 	}
 
