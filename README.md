@@ -5,25 +5,39 @@ Repositório destinado para armazenar os códigos desenvolvidos durantes os curs
 
 ## 📦Como importar
 ### Abra o terminal e acesse a pasta Desenvolvimento/backend
-```cd Desenvolvimento/backend```
+```
+cd Desenvolvimento/backend
+```
 
 ### Clone o repositório no diretório local Desenvolvimento/backend
-```git clone https://github.com/luizleiteagrotis/agrotis-trainees.git```
+```
+git clone https://github.com/luizleiteagrotis/agrotis-trainees.git
+```
 
 ### Entre na pasta agrotis-trainees recém criada
-```cd agrotis-trainees```
+```
+cd agrotis-trainees
+```
 
 ### Crie uma branch com o e-email Agrotis (antes do @)
-```git branch <nomeDaBranch>```
+```
+git branch <nomeDaBranch>
+```
 
 Exemplo
-```git branch kayo.cezario```
+```
+git branch kayo.cezario
+```
 
 ### Trocar de branch
-```git checkout <nomeDaBranch>```
+```
+git checkout <nomeDaBranch>
+```
 
 Exemplo
-```git checkout kayo.cezario```
+```
+git checkout kayo.cezario
+```
 
 ### Abra o Eclipse e troque o Workspace
 Menu File > Switch Workspace > Other > Browse... > Navegue até a pasta agrotis-trainees > Abrir > Launch
@@ -34,13 +48,19 @@ Menu File > Import... > Pesquise por maven > Escolha a opção "Existing Maven P
 
 ## Comandos Git úteis
 ### Listar todas as branches
-```git branch --all```
+```
+git branch --all
+```
 
 ### Listar os commits da branch atual
-```git log```
+```
+git log
+```
 
 ### Trocar de branch
-```git checkout <nomeDaBranch>```
+```
+git checkout <nomeDaBranch>
+```
 
 ## Estrutura de Diretórios
 * ```./curso-loiane-basico``` Exercícios das aulas dos cursos de Java da <a href= "https://loiane.training">Loiane Groner</a>
