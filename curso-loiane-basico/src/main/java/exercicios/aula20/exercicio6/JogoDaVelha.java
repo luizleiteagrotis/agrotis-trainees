@@ -10,6 +10,7 @@ public class JogoDaVelha {
 		final char JOGADOR_A = 'X';
 		final char JOGADOR_B = 'O';
 		int qtnJogadas = 1;
+		
 
 		// mostra o tabuleiro no terminal
 		mostraTabuleiro(tabuleiro);
@@ -19,8 +20,8 @@ public class JogoDaVelha {
 		do {
 
 			while (!jogadaCorreta) {
-				if (qtnJogadas % 2 == 0) {
-					System.out.println("Vez do jogador: " + JOGADOR_B);
+				if (qtnJogadas % 2 != 0) {
+					System.out.println("Vez do jogador: " + JOGADOR_B);//confere se é jogador a ou b
 
 				} else {
 					System.out.println("Vez do jogador: " + JOGADOR_A);
@@ -37,7 +38,7 @@ public class JogoDaVelha {
 					if (qtnJogadas % 2 == 0) {
 						tabuleiro[linha - 1][coluna - 1] = JOGADOR_B;
 
-					} else {
+					} else if (qtnJogadas % 2 != 0){
 						tabuleiro[linha - 1][coluna - 1] = JOGADOR_A;
 					}
 					jogadaCorreta = true;
