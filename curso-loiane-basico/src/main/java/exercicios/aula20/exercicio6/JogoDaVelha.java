@@ -12,24 +12,28 @@ public class JogoDaVelha {
 		
 		// mostra o tabuleiro no terminal
 		mostraTabuleiro(tabuleiro);
+		boolean flagChecagemVitoria= true;
 		
-		System.out.print("Informe a linha: ");
-		int linha = sc.nextInt();
-		
-		System.out.print("Informe a coluna: ");
-		int coluna = sc.nextInt();
-		
-		if(tabuleiro[linha][coluna]  == null) {
-			System.out.println("Espaço preenchido");
+		do {
+			System.out.print("Informe a linha: ");
+			int linha = sc.nextInt();
 			
-		}
-//		for(int i=linha; i<3; i++) {
-//			for(int j = 0 ; j < 3; j++) {
-//				
-//			}
-//		}
+			System.out.print("Informe a coluna: ");
+			int coluna = sc.nextInt();
+
+			mostraTabuleiro(tabuleiro);
+			for(int i = 0; i < tabuleiro.length; i++)	{
+				for(int j = 0 ; j < tabuleiro[i].length; j++) {
+					if(tabuleiro[linha][coluna] == null) {
+						tabuleiro[linha][coluna]= tabuleiro[linha][coluna];
+						flagChecagemVitoria = false;
+					}
+				}
+			}
+		}while(flagChecagemVitoria);
 		
-		//
+		
+
 		sc.close();
 	}
 
