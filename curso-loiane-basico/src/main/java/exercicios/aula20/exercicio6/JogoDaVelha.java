@@ -7,31 +7,24 @@ public class JogoDaVelha {
 	private static int posicaoLinha;
 	private static int posicaoColuna;
 	private static Character[][] tabuleiro = new Character[3][3];
-	private static final char JOGADOR_A = 'X';
-	private static final char JOGADOR_B = 'O';
+	private static final char PECA_JOGADOR_A = 'X';
+	private static final char PECA_JOGADOR_B = 'O';
 	private static boolean rodadaJogadorA = true;
 	private static boolean jogadorAVenceu = true;
-	private static boolean empate = true;
+	private static boolean empate = false;
 
 	public static void main(String[] args) {
-
 		while (ninguemVenceu()) {
-			mostraTabuleiro();
+			mostrarTabuleiro();
+			mostrarVez();
 			pegarPosicao();
 			fazerJogada();
 		}
-
-		mostraTabuleiro();
-		if (empate) {
-			System.out.println("Empatou");
-		} else {
-			System.out.println("Jogador " 
-								+ (jogadorAVenceu ? 'A' : 'B')
-								+ " venceu");
-		}
+		mostrarTabuleiro();
+		mostrarVencedor();
 	}
 
-	private static void mostraTabuleiro() {
+	private static void mostrarTabuleiro() {
 		System.out.println("-------");
 		for (Character[] linha : tabuleiro) {
 			System.out.print("|");
@@ -48,6 +41,11 @@ public class JogoDaVelha {
 		}
 	}
 
+	private static void mostrarVez() {
+		System.out.println("Vez do jogador " 
+							+ (rodadaJogadorA ? "A" : "B"));
+	}
+	
 	private static void pegarPosicao() {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Informe a linha: ");
@@ -61,24 +59,24 @@ public class JogoDaVelha {
 		if (tabuleiro[posicaoLinha][posicaoColuna] != null) {
 			System.out.println("O espaço está preenchido, entre outro valor");
 		} else {
-			tabuleiro[posicaoLinha][posicaoColuna] = rodadaJogadorA ? JOGADOR_A : JOGADOR_B;
+			tabuleiro[posicaoLinha][posicaoColuna] = rodadaJogadorA ? PECA_JOGADOR_A : PECA_JOGADOR_B;
 			rodadaJogadorA = !rodadaJogadorA;
 		}
 
 	}
 
 	private static boolean ninguemVenceu() {
-		return !(verificaLinha() 
-				|| verificaColuna() 
-				|| verificaDiagonalPrincipal()
-				|| verificaDiagonalSecundaria()
-				|| verificaTabuleiroCheio());
+		return !(algumaLinhaPreenchida() 
+				|| algumaColunaPreenchida() 
+				|| diagonalPrincipalPreenchida()
+				|| diagonalSecundariaPreenchida()
+				|| tabuleiroCheio());
 	}
 
-	private static boolean verificaLinha() {
+	private static boolean algumaLinhaPreenchida() {
 		for (int linha = 0; linha < tabuleiro.length; linha++) {
 			if (linhaPreenchida(linha)) {
-				jogadorAVenceu = tabuleiro[linha][0] == JOGADOR_A;
+				jogadorAVenceu = tabuleiro[linha][0] == PECA_JOGADOR_A;
 				return true;
 			};
 		}
@@ -97,10 +95,10 @@ public class JogoDaVelha {
 		return true;
 	}
 
-	private static boolean verificaColuna() {
+	private static boolean algumaColunaPreenchida() {
 		for (int coluna = 0; coluna < tabuleiro[0].length; coluna++) {
 			if (colunaPreenchida(coluna)) {
-				jogadorAVenceu = tabuleiro[0][coluna] == JOGADOR_A;
+				jogadorAVenceu = tabuleiro[0][coluna] == PECA_JOGADOR_A;
 				return true;
 			};
 		}
@@ -119,7 +117,7 @@ public class JogoDaVelha {
 		return true;
 	}
 	
-	private static boolean verificaDiagonalPrincipal() {
+	private static boolean diagonalPrincipalPreenchida() {
 		Character peca = tabuleiro[0][0];
 		if (peca == null) return false;
 		for (int i = 1; i < tabuleiro.length; i++) {
@@ -127,23 +125,23 @@ public class JogoDaVelha {
 				return false;
 			}
 		}
-		jogadorAVenceu = peca == JOGADOR_A;
+		jogadorAVenceu = peca == PECA_JOGADOR_A;
 		return true;
 	}
 	
-	private static boolean verificaDiagonalSecundaria() {
+	private static boolean diagonalSecundariaPreenchida() {
 		Character peca = tabuleiro[0][2];
 		if (peca == null) return false;
 		for (int i = 0, j = 2; i < tabuleiro.length; i++, j--) {
-			if (peca != tabuleiro[i][i]) {
+			if (peca != tabuleiro[i][j]) {
 				return false;
 			}
 		}
-		jogadorAVenceu = peca == JOGADOR_A;
+		jogadorAVenceu = peca == PECA_JOGADOR_A;
 		return true;
 	}
 	
-	private static boolean verificaTabuleiroCheio() {
+	private static boolean tabuleiroCheio() {
 		for (Character[] linha : tabuleiro) {
 			for (Character peca : linha) {
 				if (peca == null) {
@@ -153,5 +151,15 @@ public class JogoDaVelha {
 		}
 		empate = true;
 		return true;
+	}
+	
+	private static void mostrarVencedor() {
+		if (empate) {
+			System.out.println("Empatou");
+		} else {
+			System.out.println("Jogador " 
+								+ (jogadorAVenceu ? 'A' : 'B')
+								+ " venceu");
+		}
 	}
 }
