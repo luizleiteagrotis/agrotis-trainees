@@ -98,20 +98,20 @@ Exemplo
 git push origin kayo-anderson
 ```
 
-### Dicas úteis Git
+## 💡 Dicas úteis Git
 
 Caso já tenha começado a mexer no código antes de criar a branch correta, faça os passo abaixo:
-#### 1. Salve as alterações locais no stash
+### 1. Salve as alterações locais no stash
 ```
 git stash
 ```
 
-#### 2. Garanta que esteja na branch original atualizada
+### 2. Garanta que esteja na branch original atualizada
 ```
 git fetch && git checkout dojo-1 && git pull
 ```
 
-#### 3. Crie uma branch a partir da dojo-1 com os nomes da dupla e entre nela
+### 3. Crie uma branch a partir da dojo-1 com os nomes da dupla e entre nela
 ```
 git checkout -b nome.1-nome.2
 ```
@@ -121,9 +121,9 @@ Exemplo
 git checkout -b kayo-anderson
 ```
 
-#### 4. Resgate as alterações salvas no stash
+### 4. Resgate as alterações salvas no stash
 ```
 git stash pop
 ```
 
-#### 5. Siga do passo 9 em diante
+### 5. Siga do passo 9 em diante
