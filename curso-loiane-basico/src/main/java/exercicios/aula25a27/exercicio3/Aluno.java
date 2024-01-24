@@ -38,14 +38,6 @@ public class Aluno {
 		this.notas = notas;
 	}
 	
-	public void setarNotas() {
-		for (int i = 0; i < notas.length; i++) {
-			for (int j = 0; j < disciplinas.length; j++) {
-				
-			}
-		}
-	}
-
 	public void verificarAprovado() {
 		for (int i = 0; i < notas.length; i++) {
 			System.out.println(disciplinas[i]);

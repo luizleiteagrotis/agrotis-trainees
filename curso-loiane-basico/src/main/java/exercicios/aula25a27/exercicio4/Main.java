@@ -30,8 +30,6 @@ public class Main {
 				jogoVelha.fazerJogada();
 			}
 
-			jogoVelha.setCamposIguais(0);
-
 			jogoVelha.verificarVencedorLinha();
 
 			jogoVelha.verificarVencedorColuna();
@@ -39,7 +37,7 @@ public class Main {
 			jogoVelha.verificarVencedorDiagonalPrincipal();
 
 			jogoVelha.verificarVencedorDiagonalSecundaria();
-
+			
 			jogoVelha.verificarVelha();
 
 			jogoVelha.mudarJogador();
