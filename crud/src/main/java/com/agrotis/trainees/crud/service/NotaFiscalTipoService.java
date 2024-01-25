@@ -20,8 +20,8 @@ public class NotaFiscalTipoService {
 		super();
 		this.repository = repository;
 	}
-	
-	public NotaFiscalTipo inserir(NotaFiscalTipo entidade) {
+
+	public NotaFiscalTipo salvar(NotaFiscalTipo entidade) {
 		return repository.save(entidade);
 	}
 

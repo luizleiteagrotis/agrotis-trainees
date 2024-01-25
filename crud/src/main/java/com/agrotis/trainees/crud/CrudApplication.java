@@ -31,7 +31,7 @@ public class CrudApplication implements CommandLineRunner {
 	public void run(String... args){
 		NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 		notaFiscalTipo.setNome("nomeTeste");
-		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.inserir(notaFiscalTipo);
+		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
 		LOG.info("id inserido: {}", notaFiscalTipo2.getId());
 
 		NotaFiscalTipo porId =  notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
@@ -40,11 +40,15 @@ public class CrudApplication implements CommandLineRunner {
 		List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
 		LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 
+		NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
+		porNome.setNome("nomeAlterado");
+		notaFiscalTipoService.salvar(porNome);
+		LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+
 		notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 
-		NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome("testeNota");
-		LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+
 	}
 }
