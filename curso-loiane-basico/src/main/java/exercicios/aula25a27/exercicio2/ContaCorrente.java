@@ -57,7 +57,7 @@ public class ContaCorrente {
 	public void saque(double valorDoSaque) {
 		if (validaSaque(valorDoSaque)) {
 			this.saldo -= valorDoSaque;
-			System.out.println("Fazendo saque de: "+ valorDoSaque +" na conta "+ this.numeroDaConta);
+			System.out.println("Fazendo saque de: " + valorDoSaque + " na conta " + this.numeroDaConta);
 		}
 	}
 
@@ -71,9 +71,11 @@ public class ContaCorrente {
 	}
 
 	public boolean ehClienteEspecial() {
-		if (!chequeEspecial) {
+		if (chequeEspecial) {
+			System.out.println("Cliente possui cheque especial");
 			return false;
 		}
+		System.out.println("Cliente não possui cheque especial");
 		return true;
 	}
 
@@ -82,7 +84,16 @@ public class ContaCorrente {
 	}
 
 	public void setLimiteChequeEspecial(Double limiteChequeEspecial) {
-		this.limiteChequeEspecial = limiteChequeEspecial;
+		if (limiteChequeEspecial > 0) {
+			System.out.println("Limite atual: "+ limiteChequeEspecial);
+			this.limiteChequeEspecial = limiteChequeEspecial;
+			this.chequeEspecial = true;
+		} else {
+			System.out.println("Limite atual: "+ limiteChequeEspecial);
+			this.limiteChequeEspecial = limiteChequeEspecial;
+			this.chequeEspecial = false;
+		}
+
 	}
 
 	public boolean isChequeEspecial() {

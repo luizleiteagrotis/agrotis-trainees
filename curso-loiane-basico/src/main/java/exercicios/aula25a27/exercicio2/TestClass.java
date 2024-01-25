@@ -14,9 +14,9 @@ public class TestClass {
 		contaUm.saque(80);
 		contaUm.ehClienteEspecial();
 		contaUm.consultaSaldo();
+		contaUm.setLimiteChequeEspecial(0.0);
+		contaUm.ehClienteEspecial();
 
 	}
-	
-	
 
 }
