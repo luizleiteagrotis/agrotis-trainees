@@ -5,7 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 
+import java.util.Optional;
+
 @Repository
-public interface NotaFiscalTipoRepository extends JpaRepository<NotaFiscalTipo, Long> {
+public interface NotaFiscalTipoRepository extends JpaRepository<NotaFiscalTipo, Integer> {
+
+    Optional<NotaFiscalTipo> findByNome(String nome);
 
 }
