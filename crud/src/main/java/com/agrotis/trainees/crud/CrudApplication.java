@@ -45,7 +45,7 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalTipoService.salvar(porNome);
 		LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
 
-		notaFiscalTipoService.deletarPorId(porId.getId());
+		//notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 
