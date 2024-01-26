@@ -13,11 +13,7 @@ public class Contribuinte {
 
 	@Override
 	public String toString() {
-		return "Contribuinte: " + nome+"\n";
+		return "Contribuinte: " + nome + "\n";
 	}
-	
-	
-
-	
 
 }

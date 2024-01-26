@@ -1,17 +1,13 @@
 package exercicios.aula44a46.exercicio1.figuras2D;
 
 import exercicios.aula44a46.exercicio1.DimensaoSuperficial;
-import exercicios.aula44a46.exercicio1.DimensaoVolumetrica;
 import exercicios.aula44a46.exercicio1.Figura2D;
 
-public class Circulo extends Figura2D implements DimensaoSuperficial, DimensaoVolumetrica {
+public class Circulo extends Figura2D implements DimensaoSuperficial{
 
 	private Double raio;
 	private Double pi = Math.PI;
-	private Double volume;
 	private Double area;
-	
-	
 
 	public Circulo(Double raio) {
 		this.raio = raio;
@@ -23,13 +19,8 @@ public class Circulo extends Figura2D implements DimensaoSuperficial, DimensaoVo
 	}
 
 	@Override
-	public void calcularVolume() {
-		this.volume = (4 * Math.PI * (raio * raio * raio)) / 3;
-	}
-
-	@Override
 	public String toString() {
-		return "Circulo [raio=" + raio + ", pi=" + pi + ", volume=" + volume + ", area=" + area + "]";
+		return "Circulo [raio=" + raio + ", pi=" + pi + ", area=" + area + "]";
 	}
 
 	
