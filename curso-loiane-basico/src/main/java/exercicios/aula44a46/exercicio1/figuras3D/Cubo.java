@@ -9,9 +9,6 @@ public class Cubo extends Figura3D implements DimensaoSuperficial, DimensaoVolum
 	private Double areaSuperficial;
 	private Double volume;
 
-	public Cubo() {
-	}
-
 	public Cubo(Double lado) {
 		this.lado = lado;
 	}
@@ -27,5 +24,12 @@ public class Cubo extends Figura3D implements DimensaoSuperficial, DimensaoVolum
 		volume = Math.pow(lado, 3);
 		System.out.println("Volume do Cubo: " + volume);
 	}
+
+	@Override
+	public String toString() {
+		return "Cubo [lado=" + lado + ", areaSuperficial=" + areaSuperficial + ", volume=" + volume + "]";
+	}
+	
+	
 
 }

@@ -17,4 +17,10 @@ public class Quadrado extends Figura2D implements DimensaoSuperficial {
 		System.out.println("Area do quadrado"+ this.area);
 	}
 
+	@Override
+	public String toString() {
+		return "Quadrado [lado=" + lado + ", area=" + area + "]";
+	}
+
+	
 }

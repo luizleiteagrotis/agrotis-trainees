@@ -10,6 +10,12 @@ public class Circulo extends Figura2D implements DimensaoSuperficial, DimensaoVo
 	private Double pi = Math.PI;
 	private Double volume;
 	private Double area;
+	
+	
+
+	public Circulo(Double raio) {
+		this.raio = raio;
+	}
 
 	@Override
 	public void calcularArea() {
@@ -21,4 +27,10 @@ public class Circulo extends Figura2D implements DimensaoSuperficial, DimensaoVo
 		this.volume = (4 * Math.PI * (raio * raio * raio)) / 3;
 	}
 
+	@Override
+	public String toString() {
+		return "Circulo [raio=" + raio + ", pi=" + pi + ", volume=" + volume + ", area=" + area + "]";
+	}
+
+	
 }

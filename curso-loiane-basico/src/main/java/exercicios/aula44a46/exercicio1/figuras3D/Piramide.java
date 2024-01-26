@@ -8,6 +8,8 @@ public class Piramide extends Figura3D implements DimensaoSuperficial, DimensaoV
 	private double baseLargura;
 	private double baseComprimento;
 	private double altura;
+	private double area;
+	private double volume;
 
 	public Piramide(double baseLargura, double baseComprimento, double altura) {
 		this.baseLargura = baseLargura;
@@ -19,14 +21,14 @@ public class Piramide extends Figura3D implements DimensaoSuperficial, DimensaoV
 	public void calcularArea() {
 		double areaBase = baseLargura * baseComprimento;
 		double areaLateral = calcularAreaLateral();
-		double areaTotal = areaBase + areaLateral;
+		area = areaBase + areaLateral;
 
-		System.out.println("Área da Pirâmide: " + areaTotal);
+		System.out.println("Área da Pirâmide: " + area);
 	}
 
 	@Override
 	public void calcularVolume() {
-		double volume = (baseLargura * baseComprimento * altura) / 3.0;
+		volume = (baseLargura * baseComprimento * altura) / 3.0;
 
 		System.out.println("Volume da Pirâmide: " + volume);
 	}
@@ -41,4 +43,11 @@ public class Piramide extends Figura3D implements DimensaoSuperficial, DimensaoV
 	private double calcularHipotenusa() {
 		return Math.sqrt(baseLargura * baseLargura + baseComprimento * baseComprimento);
 	}
+
+	@Override
+	public String toString() {
+		return "Piramide [baseLargura=" + baseLargura + ", baseComprimento=" + baseComprimento + ", altura=" + altura
+				+ " area=" + area + "volume" + volume + "]";
+	}
+
 }

@@ -9,9 +9,6 @@ public class Cilindro extends Figura3D implements DimensaoSuperficial, DimensaoV
 	private Double altura;
 	private Double volume;
 
-	public Cilindro() {
-	}
-
 	public Cilindro(Double raio, Double altura) {
 		this.raio = raio;
 		this.altura = altura;
@@ -30,5 +27,12 @@ public class Cilindro extends Figura3D implements DimensaoSuperficial, DimensaoV
 		this.volume = (Math.PI * (raio * raio) * altura);
 
 	}
+
+	@Override
+	public String toString() {
+		return "Cilindro [raio=" + raio + ", altura=" + altura + ", volume=" + volume + "]";
+	}
+	
+	
 
 }
