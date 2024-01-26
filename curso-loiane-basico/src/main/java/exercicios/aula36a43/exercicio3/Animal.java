@@ -5,13 +5,13 @@ public abstract class Animal {
 	private int comprimento;
 	private Integer numeroDePatas;
 	private String cor;
-	private String ambiente;
+	private Ambiente ambiente;
 	private Double velocidade;
 
 	public Animal() {
 	}
 
-	public Animal(String nome, int comprimento, Integer numeroDePatas, String cor, String ambiente,
+	public Animal(String nome, int comprimento, Integer numeroDePatas, String cor, Ambiente ambiente,
 			Double velocidade) {
 		this.nome = nome;
 		this.comprimento = comprimento;
@@ -53,11 +53,11 @@ public abstract class Animal {
 		this.cor = cor;
 	}
 
-	public String getAmbiente() {
+	public Ambiente getAmbiente() {
 		return ambiente;
 	}
 
-	public void setAmbiente(String ambiente) {
+	public void setAmbiente(Ambiente ambiente) {
 		this.ambiente = ambiente;
 	}
 

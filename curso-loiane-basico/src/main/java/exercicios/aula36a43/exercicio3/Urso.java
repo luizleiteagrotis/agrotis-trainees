@@ -18,9 +18,13 @@ public class Urso extends Mamifero {
 
 	@Override
 	public String toString() {
-		return "Urso [alimentoPreferido=" + alimentoPreferido + ", getNome()=" + getNome() + ", getComprimento()="
-				+ getComprimento() + ", getNumeroDePatas()=" + getNumeroDePatas() + ", getCor()=" + getCor()
-				+ ", getAmbiente()=" + getAmbiente() + ", getVelocidade()=" + getVelocidade() + "]";
+		return "Urso Alimento Preferido=" + alimentoPreferido 
+				+ ", Nome: " + getNome() 
+				+ ", Comprimento: " + getComprimento() 
+				+ ", NumeroDePatas: " + getNumeroDePatas() 
+				+ ", Cor: " + getCor() 
+				+ ", Ambiente: " + getAmbiente() 
+				+ ", Velocidade: " + getVelocidade() + "]";
 	}
 
 }

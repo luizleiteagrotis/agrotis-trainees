@@ -7,7 +7,7 @@ public class Peixe extends Animal {
 
 	public Peixe() {
 		this.setNumeroDePatas(0);
-		this.setAmbiente("Mar");
+		this.setAmbiente(Ambiente.MAR);
 		this.setCor("Cinzenta");
 	}
 
@@ -16,18 +16,20 @@ public class Peixe extends Animal {
 		this.setComprimento(comprimento);
 		this.setVelocidade(velocidade);
 		this.setNumeroDePatas(0);
-		this.setAmbiente("Mar");
+		this.setAmbiente(Ambiente.MAR);
 		this.setCor("Cinzenta");
 	}
 
 	@Override
 	public String toString() {
-		return "Peixe [barbatana=" + barbatana + ", calda=" + calda + ", getNome()=" + getNome() + ", getComprimento()="
-				+ getComprimento() + ", getNumeroDePatas()=" + getNumeroDePatas() + ", getCor()=" + getCor()
-				+ ", getAmbiente()=" + getAmbiente() + ", getVelocidade()=" + getVelocidade() + "]";
+		return "Peixe: Possui barbatana? " + barbatana 
+				+ ", Possui calda?" + calda 
+				+ ", Nome" + getNome() 
+				+ ", Comprimento: " + getComprimento() 
+				+ ", NumeroDePatas: " + getNumeroDePatas() 
+				+ ", Cor: " + getCor()
+				+ ", Ambiente: " + getAmbiente() 
+				+ ", Velocidade: " + getVelocidade() + "]";
 	}
-
-
-	
 
 }

@@ -3,7 +3,7 @@ package exercicios.aula36a43.exercicio3;
 public class Mamifero extends Animal {
 
 	public Mamifero() {
-		this.setAmbiente("Terra");
+		this.setAmbiente(Ambiente.TERRA);
 		this.setNumeroDePatas(4);
 
 	}
@@ -13,16 +13,19 @@ public class Mamifero extends Animal {
 		this.setComprimento(comprimento);
 		this.setCor(cor);
 		this.setVelocidade(velocidade);
-		this.setAmbiente("Terra");
+		this.setAmbiente(Ambiente.TERRA);
 		this.setNumeroDePatas(4);
 
 	}
 
 	@Override
 	public String toString() {
-		return "Mamifero [getNome()=" + getNome() + ", getComprimento()=" + getComprimento() + ", getNumeroDePatas()="
-				+ getNumeroDePatas() + ", getCor()=" + getCor() + ", getAmbiente()=" + getAmbiente()
-				+ ", getVelocidade()=" + getVelocidade() + "]";
+		return "Mamifero Nome: " + getNome() 
+		+ ", Comprimento:" + getComprimento() 
+		+ ", NumeroDePatas: " + getNumeroDePatas() 
+		+ ", Cor: " + getCor() 
+		+ ", Ambiente: " + getAmbiente()
+		+ ", Velocidade" + getVelocidade() + "]";
 	}
 
 }
