@@ -33,7 +33,5 @@ public class Agenda {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
 
 }

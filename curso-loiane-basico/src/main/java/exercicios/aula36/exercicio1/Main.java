@@ -8,7 +8,9 @@ public class Main {
 
 		Scanner scan = new Scanner(System.in);
 
-		Contato[] contatos = new Contato[3];
+		System.out.println("Diga a qtn Contatos: ");
+		Contato[] contatos = new Contato[scan.nextInt()];
+		scan.nextLine();
 		Agenda agenda = new Agenda();
 
 		System.out.println("Entre com o nome da agenda: ");
