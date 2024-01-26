@@ -1,7 +1,7 @@
 package exercicios.aula47a52.exercicio1;
 
 public class Contato {
-	private Long id = 1L;
+	private static Long id = 0l;
 	private String nome;
 	private String telefone;
 
@@ -10,7 +10,7 @@ public class Contato {
 	}
 
 	public Contato(String nome, String telefone) {
-		this.id = id++;
+		id++;
 		this.nome = nome;
 		this.telefone = telefone;
 	}

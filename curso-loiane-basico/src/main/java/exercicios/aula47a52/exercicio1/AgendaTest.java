@@ -15,11 +15,12 @@ public class AgendaTest {
 			agenda.consultarContato(id);
 		} else if (operacao == 2) {
 			System.out.println("Informe o nome do contato: ");
-			sc.nextLine(); // Consumir a quebra de linha pendente
+			sc.nextLine();
 			String nome = sc.nextLine();
 			System.out.println("Informe o telefone: ");
 			String telefone = sc.nextLine();
 			Contato contato = new Contato(nome, telefone);
+
 			agenda.adicionarContato(contato);
 			System.out.println("Adicionando o contato na agenda: " + contato);
 
@@ -51,7 +52,7 @@ public class AgendaTest {
 			}
 		}
 
-		sc.close(); // Fechar o Scanner após o uso
+		sc.close();
 	}
 
 	private static int programaInicial(Scanner sc) {
