@@ -1,58 +1,46 @@
-# CRUD
+# Aprendendo CRUD na prática
 
-CRUD é abreviação para os termos em inglês: Create, Read, Update e Delete.
-Esse termo se popularizou para se referir a camada de persisência em banco de dados.
+CRUD é abreviação para os termos em inglês: **C**reate, **R**ead, **U**pdate e **D**elete.  
+Esse termo se popularizou para se referir a camada de persisência em banco de dados.  
 Quando ouvimos "é preciso criar um CRUD", entendemos que precisamos criar no mínimo uma...
 - Tabela (arquivo .sql com o CREATE TABLE...)
 - Classe Entidade (Entity com todos os campos da tabela)
-- Classe DAO (Repository com todos os métodos de CRUD a nível de Banco)
-- Classe RN (Service com todos os métodos de CRUD a nível de Regra de Negócio)
+- Classe DAO¹ (Repository com todos os métodos de CRUD a nível de Banco)
+- Classe RN² (Service com todos os métodos de CRUD a nível de Regra de Negócio)
 
+¹DAO = Data Access Object  
+²RN = Regra de Negócio
+
+## Objetivo
+
+O objetivo do projeto crud aqui proposto é dar um exemplo prático de CRUD para servir de base para a construção de um sistema de controle de estoque.  
+Este sistema deverá fazer as movimentações de estoque por meio de Notas Fiscais de Entrada e Saída.
+Abaixo temos as orientações técnicas básicas, já que toda regra de negócio estará documentada apenas nas issues do JIRA.
 
 ## Instalando SQL Server Local com Docker
-Siga [este tutorial](https://portalagrotis.com/des-plat/sql-server-local/)
+O primeiro passo é garantir que tenha feito [este tutorial](https://portalagrotis.com/des-plat/sql-server-local/) para podermos criar a estrutura de tabelas localmente para persistência do nosso sistema.
 
-## Para cada issue
-### Modelar tabela (arquivo nome_tabela.sql em /src/main/resources/sql)
-### Criar Entity
-### Criar Repository
-### Criar Service
-### Incluir execução ao final do main()
-### Garantir que esteja Criando, Lendo, Atualizando e Deletando registros na tabela.
+## Passos esperados para cada issue do Jira
 
-TODO - Melhorar este arquivo com as orientações gerais, e deixar a quebra das atividades para fazermos direto no JIRA, ou seja, aqui terá apenas orientações mais técnicas e exemplos de código, no JIRA teremos as regras de negócio que precisam ser implementadas...
-
-- Tipo de Nota Fiscal: ID, Nome (TODO Entidade Modelo sem BaseEntity e com .sql de exemplo, demais tabelas não vamos dar o SQL, vamos pedir pros trainees modelarem, para avaliarmos a parte analítica deles, que estão se formando em Análise e Desenvolvimento)
-- Parceiro de Negócio: ID, Nome, Inscrição Fiscal
-- Produto: ID, Descrição (Estoque, Custo Médio, Custo de Última Compra)
-- Nota Fiscal: 
--- Cabeçalho: ID, Número, ID do Parceiro, Data, Tipo, Valor Total
--- Itens: ID, ID do Produto, Quantidade, Preço Unitário, Valor Total
-
-0ª Instalar SQL Server Developer:
-
-Regras:
-- Modelar em arquivo .sql dentro do projeto (TODO qual pasta?)
-- 
-
-1ª Cadastros Básicos
-- Parceiro
-- Produto (sem estoque)
-
-2ª Nota Fiscal
-- Cabeçalho 
-- Itens
-
-3º Controle de estoque
-
-4º Custo Médio
-
-5º Custo de Última compra
-
-6º Formação de Preço
-
-7º Refatoração - Entidade Tipo de Nota Fiscal vira enum (EnumTipoNotaFiscal - ENTRADA, SAIDA)
-
-8º Exceptions ao invés de Logs
-
-9º Scanner para interação com o usuário no terminal escolhendo as ações a serem feitas
+1. Ler todas as informações presentes na issue (título, descrição, anexos, comentários, links externos, etc)
+2. Num comentário, descrever o seu entendimento ou as dúvidas a serem levantadas, marcando outras pessoas se necessário
+3. Num novo comentário, iniciar sua análise, modelagem e estruturação da solução, isso envolve:
+   * Modelar a tabela
+   * Estudar quais classes serão necessárias (usando tabela nota_fiscal_tipo como exemplo)
+   * Estimar um tempo em horas para o desenvolvimento desta solução
+4. Após sua proposta de solução documentada, pedir a revisão de um colega
+5. Uma vez revisado isso, ai sim pode partir para o desenvolvimento do código
+6. Organizar o código da seguinte forma:
+   * Comandos SQL devem ser criados em /src/main/resources/sql
+   * Entidades em /src/main/java/com/agrotis/trainees/crud/entity
+   * DAO em /src/main/java/com/agrotis/trainees/crud/repository
+   * RN em /src/main/java/com/agrotis/trainees/crud/service
+7. Após implementar um método CRUD
+   * Testar via método main()
+   * Dando sucesso, efetuar commit seguindo [o nosso padrão](https://portalagrotis.com/des-plat/des-plat/doc/padroes-codigo/padrao-msg-commit/)
+   * Partir para o próprio método e repetir esse processo
+8. Ao final queremos no mínimo um commit para cada operação, ex:
+   * Criação
+   * Leitura
+   * Atualização
+   * Deleção
