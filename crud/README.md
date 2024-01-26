@@ -22,7 +22,7 @@ O primeiro passo é garantir que tenha feito [este tutorial](https://portalagrot
 
 ## Passos esperados para cada issue do Jira
 
-1. Ler todas as informações presentes na issue (título, descrição, anexos, comentários, links externos, etc)
+1. Ler todas as informações presentes na issue (issue pai, título, descrição, anexos, comentários, links externos, etc)
 2. Num comentário, descrever o seu entendimento ou as dúvidas a serem levantadas, marcando outras pessoas se necessário
 3. Num novo comentário, iniciar sua análise, modelagem e estruturação da solução, isso envolve:
    * Modelar a tabela
