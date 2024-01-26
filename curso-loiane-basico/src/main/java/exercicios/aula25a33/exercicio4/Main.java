@@ -1,11 +1,11 @@
-package exercicios.aula25a27.exercicio4;
+package exercicios.aula25a33.exercicio4;
 
 import java.util.Scanner;
 
-import exercicios.aula25a27.exercicio4.regras.RegraCheio;
-import exercicios.aula25a27.exercicio4.regras.RegraColuna;
-import exercicios.aula25a27.exercicio4.regras.RegraDiagonal;
-import exercicios.aula25a27.exercicio4.regras.RegraLinha;
+import exercicios.aula25a33.exercicio4.regras.RegraCheio;
+import exercicios.aula25a33.exercicio4.regras.RegraColuna;
+import exercicios.aula25a33.exercicio4.regras.RegraDiagonal;
+import exercicios.aula25a33.exercicio4.regras.RegraLinha;
 
 public class Main {
 	

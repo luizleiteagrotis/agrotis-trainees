@@ -1,4 +1,4 @@
-package exercicios.aula25a27.exercicio3;
+package exercicios.aula25a33.exercicio3;
 
 import java.util.ArrayList;
 import java.util.Collections;

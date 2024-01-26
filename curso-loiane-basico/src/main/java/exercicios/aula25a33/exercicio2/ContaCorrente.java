@@ -1,4 +1,4 @@
-package exercicios.aula25a27.exercicio2;
+package exercicios.aula25a33.exercicio2;
 
 public class ContaCorrente {
 	

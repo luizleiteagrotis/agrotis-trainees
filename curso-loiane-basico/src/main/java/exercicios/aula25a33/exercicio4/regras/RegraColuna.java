@@ -1,6 +1,6 @@
-package exercicios.aula25a27.exercicio4.regras;
+package exercicios.aula25a33.exercicio4.regras;
 
-import exercicios.aula25a27.exercicio4.Tabuleiro;
+import exercicios.aula25a33.exercicio4.Tabuleiro;
 
 public class RegraColuna implements RegraFinalizacao {
 	
