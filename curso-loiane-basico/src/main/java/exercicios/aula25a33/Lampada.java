@@ -1,4 +1,4 @@
-package exercicios.aula25a27;
+package exercicios.aula25a33;
 
 public class Lampada {
 
