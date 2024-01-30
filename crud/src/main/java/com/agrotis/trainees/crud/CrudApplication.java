@@ -59,10 +59,10 @@ public class CrudApplication implements CommandLineRunner {
 		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-		parceiroNegocio.setNome("cocapec");
-		parceiroNegocio.setInscricaoFiscal("101010");
-		parceiroNegocio.setEndereco("Sao Paulo, Rua Tomaz Pedro do Couto, 1172");
-		parceiroNegocio.setTelefone("16 9 3232 6363");
+		parceiroNegocio.setNome("nome errado3");
+		parceiroNegocio.setInscricaoFiscal("202020");
+		parceiroNegocio.setEndereco("Aracaju, rua Torres, 15");
+		parceiroNegocio.setTelefone("79 9 5454 5454");
 	
 
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
@@ -79,6 +79,14 @@ public class CrudApplication implements CommandLineRunner {
 		List<ParceiroNegocio> todosParceiros = parceiroNegocioService.listarTodos();
 		LOG.info("Salvos no total de {} tipos de parceiros", todosParceiros.size() );
 		
+		
+		ParceiroNegocio parceiroPorNome2 = parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
+		parceiroPorNome2.setNome("Cafe de Sergipe");
+		parceiroPorNome2.setEndereco("Espirito Santo, Rua Sao Pedro, 333");
+		parceiroPorNome2.setTelefone("27 9 7777 6666");
+		parceiroNegocioService.salvar(parceiroPorNome2);
+		LOG.info("Nome, endereco e telefone atualizado com sucesso, novo nome: {}, novo endereco: {}, novo telefone: {} ", 
+				parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(), parceiroPorNome2.getTelefone() );
 		
 	}
 }
