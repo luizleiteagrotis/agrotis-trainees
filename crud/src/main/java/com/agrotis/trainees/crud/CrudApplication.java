@@ -53,6 +53,8 @@ public class CrudApplication implements CommandLineRunner {
 		// notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
+		
+		LOG.info("----------------PDN------------------");
 
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		parceiroNegocio.setNome("Copersucar");
@@ -63,14 +65,13 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("id inserido: {}", parceiroNegocio.getId());
 		
 		ParceiroNegocio buscaParceiroID = parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
-		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
+		LOG.info("Busca por id. Nome {} id {} ", buscaParceiroID.getNome(), buscaParceiroID.getId());
 		
 		ParceiroNegocio buscaParceiroNome = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		LOG.info("Busca por nome. Nome {} id {} ", buscaParceiroNome.getNome(), buscaParceiroNome.getId());
 		
+		List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
+		LOG.info("Salvos no total de {} tipos de notas", parceirosSalvos.size());
 		
-		
-		
-		
-
 	}
 }

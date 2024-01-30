@@ -53,8 +53,6 @@ public class ParceiroNegocio {
 		this.telefone = telefone;
 	}
 	
-	
-	
 	@Override
 	public String toString() {
 		return "ParceiroNegocio: id: " + id+ "\n" 
@@ -84,4 +82,3 @@ public class ParceiroNegocio {
 
 }
 
-//Modelar a entidade ParceiroNegocio com os atributos id, nome, inscricaoFiscal, endereco e telefone.

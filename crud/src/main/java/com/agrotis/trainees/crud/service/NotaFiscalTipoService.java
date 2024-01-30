@@ -43,6 +43,9 @@ public class NotaFiscalTipoService {
 		LOG.info("Deletado com sucesso");
 	}
 
+	public List<NotaFiscalTipo> listarTodos() {
+		return repository.findAll();
+	}
 
 
 	
