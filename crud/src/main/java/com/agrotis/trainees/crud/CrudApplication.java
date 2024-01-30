@@ -37,7 +37,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		int p = 2;
+		int p = 3;
 		if(p == 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 			notaFiscalTipo.setNome("nomeTeste");
@@ -60,10 +60,10 @@ public class CrudApplication implements CommandLineRunner {
 			 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 		} else {
 			ParceiroNegocios parceiroNegocios = new ParceiroNegocios();
-			parceiroNegocios.setNome("Luiz Inacio Lulo da Silvia");
-			parceiroNegocios.setInscricaoFiscal("209.857.825-9");
-			parceiroNegocios.setEndereco("Avenida presidente bolsonaro, 22");
-			parceiroNegocios.setTelefone("13985474125");			
+			parceiroNegocios.setNome("Sabrina Sato");
+			parceiroNegocios.setInscricaoFiscal("854.569.84");
+			parceiroNegocios.setEndereco("Disney, 2");
+			parceiroNegocios.setTelefone("587489632");			
 			ParceiroNegocios parceiroNegocios2 = parceiroNegociosService.salvar(parceiroNegocios);
 			LOG.info("id inserido: {}", parceiroNegocios2.getId());
 			
@@ -80,12 +80,17 @@ public class CrudApplication implements CommandLineRunner {
 			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 			
 			porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios.getNome());
-			porNome.setNome("Lulao");
-			porNome.setEndereco("Avenida presidente Dilma, 13");
-			porNome.setTelefone("139157157");
+			porNome.setNome("Sabrina");
+			porNome.setEndereco("globo");
+			porNome.setTelefone("258749632");
 			parceiroNegociosService.salvar(porNome);
 			LOG.info("Dados alterados com sucesso");
 			
+			if(p == 3) {
+				porId = parceiroNegociosService.buscarPorId(12);
+				parceiroNegociosService.deletarPorId(porId.getId());
+				LOG.info("O usuario {} foi deletado", porId.getNome());
+			}
 			
 		}
 		
