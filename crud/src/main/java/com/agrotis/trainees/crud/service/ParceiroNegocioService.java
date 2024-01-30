@@ -76,6 +76,12 @@ public class ParceiroNegocioService {
 
 	}
 	
+	public void deletar(Integer id) {
+		repository.deleteById(id);
+		LOG.info("Deletado com sucesso");
+		
+	}
+	
 	
 	
 }
