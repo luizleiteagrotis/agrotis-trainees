@@ -60,7 +60,7 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroNegocio.setNome("Copersucar");
 		parceiroNegocio.setInscricaoFiscal("22.338.624/0002-37");
 		parceiroNegocio.setEndereco("Rua dos Sonhadores, 67");
-		parceiroNegocio.setTelefone("41988556544");
+		parceiroNegocio.setTelefone("419885565445");
 		parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio.getId());
 		
@@ -71,7 +71,7 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("Busca por nome. Nome {} id {} ", buscaParceiroNome.getNome(), buscaParceiroNome.getId());
 		
 		List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
-		LOG.info("Salvos no total de {} tipos de notas", parceirosSalvos.size());
+		LOG.info("Salvos no total de {} parceiros de negocio.", parceirosSalvos.size());
 		
 	}
 }
