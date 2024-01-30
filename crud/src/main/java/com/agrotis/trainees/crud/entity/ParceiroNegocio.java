@@ -19,7 +19,7 @@ public class ParceiroNegocio {
     private String nome;
     
     @Column(name = "inscricao_fiscal")
-    private Long inscricaoFiscal;
+    private String inscricaoFiscal;
     
     private String endereco;
     
@@ -34,10 +34,10 @@ public class ParceiroNegocio {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Long getInscricaoFiscal() {
+	public String getInscricaoFiscal() {
 		return inscricaoFiscal;
 	}
-	public void setInscricaoFiscal(Long inscricaoFiscal) {
+	public void setInscricaoFiscal(String inscricaoFiscal) {
 		this.inscricaoFiscal = inscricaoFiscal;
 	}
 	public String getEndereco() {

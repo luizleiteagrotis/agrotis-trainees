@@ -20,8 +20,16 @@ public class ParceiroNegocioService {
 	}
 
 	
-	public ParceiroNegocio create(ParceiroNegocio negocio) {
+	public ParceiroNegocio salvar(ParceiroNegocio negocio) {
 		return repository.save(negocio);
 	}
+	
+	public ParceiroNegocio buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível buscar pelo id {}", id);
+			return null;
+		});
+	}
+	
 
 }
