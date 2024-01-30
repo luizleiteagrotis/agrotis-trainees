@@ -21,7 +21,7 @@ spring:
     properties:
       hibernate:
         format-sql: true
-    database-platform: org.hibernate.dialect.SQLServer2008Dialect
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
   data:
     redis:
       repositories:
@@ -30,4 +30,4 @@ spring:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     url: jdbc:sqlserver://localhost:1433;databaseName=crud
     username: sa
-    password: SuaSenha123
+    password: Idkmysenha21.

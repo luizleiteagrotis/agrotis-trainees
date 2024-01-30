@@ -1,5 +1,4 @@
 package com.agrotis.trainees.crud.service;
-
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
 import org.slf4j.Logger;
