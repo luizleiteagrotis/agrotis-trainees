@@ -37,8 +37,8 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		int p = 1;
-		if(p != 1) {
+		int p = 2;
+		if(p == 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 			notaFiscalTipo.setNome("nomeTeste");
 			NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
@@ -60,12 +60,24 @@ public class CrudApplication implements CommandLineRunner {
 			 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 		} else {
 			ParceiroNegocios parceiroNegocios = new ParceiroNegocios();
-			parceiroNegocios.setNome("Lucas Bispo");
-			parceiroNegocios.setInscricaoFiscal("14.854.784-8");
-			parceiroNegocios.setEndereco("Rua Eduardo Carlos Pereira, 4125");
-			parceiroNegocios.setTelefone("41991052437");			
+			parceiroNegocios.setNome("Felipe Gonçalves");
+			parceiroNegocios.setInscricaoFiscal("929.77393-41");
+			parceiroNegocios.setEndereco("Avenida Mandacaru, 75");
+			parceiroNegocios.setTelefone("44987498852");			
 			ParceiroNegocios parceiroNegocios2 = parceiroNegociosService.salvar(parceiroNegocios);
 			LOG.info("id inserido: {}", parceiroNegocios2.getId());
+			
+			ParceiroNegocios porId = parceiroNegociosService.buscarPorId(parceiroNegocios2.getId());
+			LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
+			
+			ParceiroNegocios porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios2.getNome());
+			LOG.info("Busca por nome. Nome {} inscricao {} ", porNome.getNome(), porNome.getInscricaoFiscal());
+					
+			ParceiroNegocios porInscricao = parceiroNegociosService.buscarPorInscricaoFiscal(parceiroNegocios2.getInscricaoFiscal());
+			LOG.info("Busca por inscrição fiscal. Nome {} inscrição {} ", porInscricao.getNome(), porInscricao.getInscricaoFiscal());
+			
+			List<ParceiroNegocios> todosSalvos = parceiroNegociosService.listarTodos();
+			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 		}
 		
 
