@@ -60,7 +60,7 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroNegocio.setNome("Copersucar");
 		parceiroNegocio.setInscricaoFiscal("22.338.624/0002-37");
 		parceiroNegocio.setEndereco("Rua dos Sonhadores, 67");
-		parceiroNegocio.setTelefone("419885565445");
+		parceiroNegocio.setTelefone("41988556544");
 		parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio.getId());
 		
