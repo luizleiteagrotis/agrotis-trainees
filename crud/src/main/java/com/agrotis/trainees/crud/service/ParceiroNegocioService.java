@@ -2,6 +2,8 @@ package com.agrotis.trainees.crud.service;
 
 
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,27 @@ public class ParceiroNegocioService {
 
 		}
 		return repository.save(entidade);
-	
 	}
+	
+	public ParceiroNegocio buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(()->{
+			LOG.error("Nota não encontrada para id {}.", id);
+			return null;
+		});
+	}
+	
+	public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
+		return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(()->{
+			LOG.error("Nota não encontrada para id {}.", inscricaoFiscal);
+			return null;
+		});
+	}
+	
+	public List<ParceiroNegocio> listarTodos() {
+		return repository.findAll();
+	}
+	
+	
 	
 	
 	
