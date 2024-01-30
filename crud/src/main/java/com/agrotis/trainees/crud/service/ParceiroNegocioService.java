@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,28 @@ public class ParceiroNegocioService {
 		});
 	}
 	
+	
 	public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
 	}
 	
 	
-	
+	public ParceiroNegocio atualizar(String incricaoFiscal, String nome, String NovaIscricaoFiscal, String endereco, String telefone) {
+
+		
+		Optional<ParceiroNegocio> parceiroOptional = repository.findByInscricaoFiscal(incricaoFiscal);
+
+		if (parceiroOptional.isPresent()) {
+		    ParceiroNegocio parceiro = parceiroOptional.get();
+		    parceiro.setNome(nome);
+		    parceiro.setInscricaoFiscal(NovaIscricaoFiscal);
+		    parceiro.setEndereco(endereco);
+		    parceiro.setTelefone(telefone);
+		    return repository.save(parceiro);
+		}
+		return null; 
+
+	}
 	
 	
 	

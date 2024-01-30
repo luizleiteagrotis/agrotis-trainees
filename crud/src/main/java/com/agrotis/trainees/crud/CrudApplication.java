@@ -41,7 +41,7 @@ public class CrudApplication implements CommandLineRunner {
 
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		parceiroNegocio.setNome("Heitor e Elias Pães e Doces Ltda");
-		parceiroNegocio.setInscricaoFiscal("01231212200035");
+		parceiroNegocio.setInscricaoFiscal("00231212200035");
 		parceiroNegocio.setEndereco("Rua Barão de Cocais");
 		parceiroNegocio.setTelefone("11414168390");
 		
@@ -59,19 +59,18 @@ public class CrudApplication implements CommandLineRunner {
 			LOG.info("Buscar por todos. Nome {} inscricao fiscal {}", parceiro.getNome(), parceiro.getInscricaoFiscal());
 		}
 		
+		ParceiroNegocio atualizar = parceiroNegocioService.atualizar("21212704001134", "Hadassa e Tatiane Esportes Ltda","00000704001134", "Moradias Bom Jesus","41992477204");
+		LOG.info("Atualizado. Nome {} inscricao fiscal {}", atualizar.getNome(), atualizar.getInscricaoFiscal());
+		NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+		notaFiscalTipo.setNome("nomeTeste");
+		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
+		LOG.info("id inserido: {}", notaFiscalTipo2.getId());
+		NotaFiscalTipo porIdNF =  notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
+		LOG.info("Busca por id. Nome {} id {} ", porIdNF.getNome(), porIdNF.getId());
+		List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
+		LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 		
-//		NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-//		notaFiscalTipo.setNome("nomeTeste");
-//		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
-//		LOG.info("id inserido: {}", notaFiscalTipo2.getId());
-
-//
-//		NotaFiscalTipo porId =  notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-//		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
-//
-//		List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
-//		LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
-//
+		
 //		NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 //		porNome.setNome("nomeAlterado");
 //		notaFiscalTipoService.salvar(porNome);
