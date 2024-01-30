@@ -10,9 +10,7 @@ public class AgendaTest {
 		int operacao = programaInicial(sc);
 
 		if (operacao == 1) {
-			System.out.println("Informe o ID do contato a ser buscado.");
-			Long id = sc.nextLong();
-			agenda.consultarContato(id);
+			buscarContato(sc, agenda);
 		} else if (operacao == 2) {
 			System.out.println("Informe o nome do contato: ");
 			sc.nextLine();
@@ -45,14 +43,18 @@ public class AgendaTest {
 				System.out.println("Deseja consultar um contato? (s/n)");
 				char respostaConsulta = sc.next().charAt(0);
 				if (respostaConsulta == 's' || respostaConsulta == 'S') {
-					System.out.println("Informe o ID do contato a ser buscado.");
-					Long id = sc.nextLong();
-					agenda.consultarContato(id);
+					buscarContato(sc, agenda);
 				}
 			}
 		}
 
 		sc.close();
+	}
+
+	private static void buscarContato(Scanner sc, Agenda agenda) {
+		System.out.println("Informe o ID do contato a ser buscado.");
+		Long id = sc.nextLong();
+		agenda.consultarContato(id);
 	}
 
 	private static int programaInicial(Scanner sc) {

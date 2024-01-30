@@ -1,6 +1,6 @@
 package exercicios.aula25a27.exercicio2;
 
-public class TestClass {
+public class ContaCorrenteTest {
 
 	public static void main(String[] args) {
 

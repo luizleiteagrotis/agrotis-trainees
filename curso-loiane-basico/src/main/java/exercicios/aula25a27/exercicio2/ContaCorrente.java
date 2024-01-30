@@ -6,9 +6,9 @@ public class ContaCorrente {
 
 	private Long numeroDaConta;
 	private Double saldo;
+	private boolean chequeEspecial;
 	private Double limite;
 	private Double limiteChequeEspecial;
-	private boolean chequeEspecial;
 
 	public ContaCorrente() {
 	}
@@ -40,8 +40,9 @@ public class ContaCorrente {
 		return chequeEspecial;
 	}
 
-	public void setContaEspecial(boolean contaEspecial) {
+	public void setContaEspecial(boolean contaEspecial, double limiteContaEspecial) {
 		this.chequeEspecial = contaEspecial;
+		this.limiteChequeEspecial = limiteContaEspecial;
 	}
 
 	public double consultaSaldo() {
@@ -50,8 +51,12 @@ public class ContaCorrente {
 	}
 
 	public void deposita(double valor) {
-		this.saldo = valor;
-		System.out.println("Fazendo depósito de: " + valor + " na conta numero: " + this.numeroDaConta);
+		if (valor > 0) {
+			this.saldo = valor;
+			System.out.println("Fazendo depósito de: " + valor + " na conta numero: " + this.numeroDaConta);
+		} else {
+			System.out.println("O valor do depósito tem que ser maior que 0.");
+		}
 	}
 
 	public void saque(double valorDoSaque) {
@@ -85,11 +90,11 @@ public class ContaCorrente {
 
 	public void setLimiteChequeEspecial(Double limiteChequeEspecial) {
 		if (limiteChequeEspecial > 0) {
-			System.out.println("Limite atual: "+ limiteChequeEspecial);
+			System.out.println("Limite atual: " + limiteChequeEspecial);
 			this.limiteChequeEspecial = limiteChequeEspecial;
 			this.chequeEspecial = true;
 		} else {
-			System.out.println("Limite atual: "+ limiteChequeEspecial);
+			System.out.println("Limite atual: " + limiteChequeEspecial);
 			this.limiteChequeEspecial = limiteChequeEspecial;
 			this.chequeEspecial = false;
 		}

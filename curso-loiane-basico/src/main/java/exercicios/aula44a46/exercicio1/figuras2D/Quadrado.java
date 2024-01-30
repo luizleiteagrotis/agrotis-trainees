@@ -14,7 +14,7 @@ public class Quadrado extends Figura2D implements DimensaoSuperficial {
 	@Override
 	public void calcularArea() {
 		this.area = Math.pow(lado, 2);
-		System.out.println("Area do quadrado"+ this.area);
+		System.out.println("Area do quadrado" + this.area);
 	}
 
 	@Override
@@ -22,5 +22,4 @@ public class Quadrado extends Figura2D implements DimensaoSuperficial {
 		return "Quadrado [lado=" + lado + ", area=" + area + "]";
 	}
 
-	
 }

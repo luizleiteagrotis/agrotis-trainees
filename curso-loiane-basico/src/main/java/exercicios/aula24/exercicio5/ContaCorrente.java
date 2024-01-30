@@ -7,7 +7,7 @@ public class ContaCorrente {
 	private Long numeroDaConta;
 	private Double saldo;
 	private Double limite;
-	private Double limiteContaEspecial = null;
+	private Double limiteContaEspecial;
 	private boolean contaEspecial;
 
 	public ContaCorrente() {
@@ -63,7 +63,9 @@ public class ContaCorrente {
 
 	@Override
 	public String toString() {
-		return "ContaCorrente [numeroDaConta=" + numeroDaConta + ", saldo=" + saldo + ", limite=" + limite
+		return "ContaCorrente [numeroDaConta=" + numeroDaConta 
+				+ ", saldo=" + saldo 
+				+ ", limite=" + limite
 				+ ", contaEspecial=" + contaEspecial + "]";
 	}
 

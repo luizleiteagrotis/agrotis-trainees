@@ -1,6 +1,6 @@
 package exercicios.aula25a27.exercicio1;
 
-public class TestClass {
+public class LampadaTest {
 
 	public static void mais(String[] args) {
 
