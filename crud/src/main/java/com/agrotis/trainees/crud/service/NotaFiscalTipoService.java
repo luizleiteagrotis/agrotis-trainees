@@ -11,9 +11,8 @@ import java.util.List;
 @Service
 public class NotaFiscalTipoService {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(NotaFiscalTipoService.class);
-	
+	private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalTipoService.class);
+
 	private final NotaFiscalTipoRepository repository;
 
 	public NotaFiscalTipoService(NotaFiscalTipoRepository repository) {
@@ -32,14 +31,14 @@ public class NotaFiscalTipoService {
 		});
 	}
 
-
 	public NotaFiscalTipo buscarPorNome(String nome) {
 		return repository.findByNome(nome).orElseGet(() -> {
 			LOG.error("Nota não encontrada para o nome {}.", nome);
 			return null;
 		});
 	}
-	public void deletarPorId(Integer id){
+
+	public void deletarPorId(Integer id) {
 		repository.deleteById(id);
 		LOG.info("Deletado com sucesso");
 	}
@@ -48,6 +47,4 @@ public class NotaFiscalTipoService {
 		return repository.findAll();
 	}
 
-
-	
 }

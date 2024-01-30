@@ -59,13 +59,25 @@ public class CrudApplication implements CommandLineRunner {
 		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-		parceiroNegocio.setNome("Café de Minas");
-		parceiroNegocio.setInscricaoFiscal("8888");
-		parceiroNegocio.setEndereco("Minas, Rua Augusta, 314");
-		parceiroNegocio.setTelefone("31 9 99368 9170");
+		parceiroNegocio.setNome("cocapec");
+		parceiroNegocio.setInscricaoFiscal("101010");
+		parceiroNegocio.setEndereco("Sao Paulo, Rua Tomaz Pedro do Couto, 1172");
+		parceiroNegocio.setTelefone("16 9 3232 6363");
+	
 
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
+		
+		
+		ParceiroNegocio parceiroPorId = parceiroNegocioService.buscarPorId(parceiroNegocio2.getId()); 
+		LOG.info("Busca por id. Nome {} Inscricao Fiscal {} Endereco {} Telefone {} id {}", 
+				parceiroPorId.getNome(), parceiroPorId.getInscricaoFiscal(), parceiroPorId.getEndereco(), parceiroPorId.getTelefone(), parceiroPorId.getId());
+		
+		ParceiroNegocio parceiroPorNome = parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
+		LOG.info("Busca por nome. Nome {} id {}", parceiroPorNome.getNome(), parceiroPorNome.getId());
+		
+		List<ParceiroNegocio> todosParceiros = parceiroNegocioService.listarTodos();
+		LOG.info("Salvos no total de {} tipos de parceiros", todosParceiros.size() );
 		
 		
 	}
