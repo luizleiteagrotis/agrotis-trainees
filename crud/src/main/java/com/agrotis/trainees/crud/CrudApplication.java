@@ -1,10 +1,6 @@
 package com.agrotis.trainees.crud;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.List;
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
+import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
