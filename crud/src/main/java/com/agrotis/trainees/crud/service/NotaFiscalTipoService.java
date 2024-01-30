@@ -17,7 +17,6 @@ public class NotaFiscalTipoService {
 	private final NotaFiscalTipoRepository repository;
 
 	public NotaFiscalTipoService(NotaFiscalTipoRepository repository) {
-		super();
 		this.repository = repository;
 	}
 
