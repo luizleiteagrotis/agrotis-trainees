@@ -60,24 +60,33 @@ public class CrudApplication implements CommandLineRunner {
 			 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 		} else {
 			ParceiroNegocios parceiroNegocios = new ParceiroNegocios();
-			parceiroNegocios.setNome("Felipe Gonçalves");
-			parceiroNegocios.setInscricaoFiscal("929.77393-41");
-			parceiroNegocios.setEndereco("Avenida Mandacaru, 75");
-			parceiroNegocios.setTelefone("44987498852");			
+			parceiroNegocios.setNome("Luiz Inacio Lulo da Silvia");
+			parceiroNegocios.setInscricaoFiscal("209.857.825-9");
+			parceiroNegocios.setEndereco("Avenida presidente bolsonaro, 22");
+			parceiroNegocios.setTelefone("13985474125");			
 			ParceiroNegocios parceiroNegocios2 = parceiroNegociosService.salvar(parceiroNegocios);
 			LOG.info("id inserido: {}", parceiroNegocios2.getId());
 			
 			ParceiroNegocios porId = parceiroNegociosService.buscarPorId(parceiroNegocios2.getId());
-			LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
-			
-			ParceiroNegocios porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios2.getNome());
-			LOG.info("Busca por nome. Nome {} inscricao {} ", porNome.getNome(), porNome.getInscricaoFiscal());
+			LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());			
 					
 			ParceiroNegocios porInscricao = parceiroNegociosService.buscarPorInscricaoFiscal(parceiroNegocios2.getInscricaoFiscal());
 			LOG.info("Busca por inscrição fiscal. Nome {} inscrição {} ", porInscricao.getNome(), porInscricao.getInscricaoFiscal());
 			
+			ParceiroNegocios porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios2.getNome());
+			LOG.info("Busca por nome. Nome {} inscricao {} ", porNome.getNome(), porNome.getInscricaoFiscal());
+			
 			List<ParceiroNegocios> todosSalvos = parceiroNegociosService.listarTodos();
 			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
+			
+			porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios.getNome());
+			porNome.setNome("Lulao");
+			porNome.setEndereco("Avenida presidente Dilma, 13");
+			porNome.setTelefone("139157157");
+			parceiroNegociosService.salvar(porNome);
+			LOG.info("Dados alterados com sucesso");
+			
+			
 		}
 		
 
