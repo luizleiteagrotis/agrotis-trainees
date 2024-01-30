@@ -12,4 +12,5 @@ public interface NotaFiscalTipoRepository extends JpaRepository<NotaFiscalTipo, 
 
     Optional<NotaFiscalTipo> findByNome(String nome);
 
+
 }
