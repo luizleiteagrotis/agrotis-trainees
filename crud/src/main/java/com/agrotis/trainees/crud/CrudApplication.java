@@ -2,9 +2,11 @@ package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocios;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ParceiroNegociosRepository;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegociosService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.sql.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -22,12 +25,17 @@ public class CrudApplication implements CommandLineRunner {
 
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegociosService parceiroNegociosService;
+	private final ProdutoService produtoService;
 	
-	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService,
-				ParceiroNegociosService parceiroNegociosService) {
+	public CrudApplication(
+			NotaFiscalTipoService notaFiscalTipoService,
+			ParceiroNegociosService parceiroNegociosService,
+			ProdutoService produtoService
+				) {
 		
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegociosService = parceiroNegociosService;
+		this.produtoService = produtoService;
 	}
 
 	public static void main(String[] args) {
@@ -37,8 +45,8 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		int p = 3;
-		if(p == 1) {
+		int p = 4;
+		if(p < 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 			notaFiscalTipo.setNome("nomeTeste");
 			NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
@@ -58,7 +66,7 @@ public class CrudApplication implements CommandLineRunner {
 			//notaFiscalTipoService.deletarPorId(porId.getId());
 			notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 			 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-		} else {
+		} else if(p < 4){
 			ParceiroNegocios parceiroNegocios = new ParceiroNegocios();
 			parceiroNegocios.setNome("Sabrina Sato");
 			parceiroNegocios.setInscricaoFiscal("854.569.84");
@@ -92,6 +100,18 @@ public class CrudApplication implements CommandLineRunner {
 				LOG.info("O usuario {} foi deletado", porId.getNome());
 			}
 			
+		} else {
+			
+			
+			Produto produto = new Produto();
+			ParceiroNegocios fabricante = parceiroNegociosService.buscarPorId(50); //Deve associar o fabricante a Lucas Bispo
+			produto.setDescricao("Maça verde");
+			produto.setFabricante(fabricante);
+			produto.setDataFabricacao(Date.valueOf("2021-01-01"));
+			produto.setDataValidade(Date.valueOf("2024-05-05"));
+			Produto produto2 = produtoService.salvar(produto);
+			LOG.info("id inserido: {}", produto2.getId());
+		
 		}
 		
 
