@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioTipoRepository;
 
@@ -25,5 +27,22 @@ public class ParceiroNegocioTipoService {
 		public ParceiroNegocio salvar(ParceiroNegocio entidade) {
 			return repository.save(entidade);
 		}
-
+		
+		public ParceiroNegocio buscarPorId(Integer id) {
+			return repository.findById(id).orElseGet(() -> {
+				LOG.error("Parceiro não encontrado para id {}.", id);
+				return null;
+			});
+		}
+		
+		public ParceiroNegocio buscarPorNome(String nome) {
+			return repository.findByNome(nome).orElseGet(() -> {
+				LOG.error("Parceiro não encontrado para o nome {}.", nome);
+				return null;
+			});
+		}
+		
+		public List<ParceiroNegocio> listarTodos() {
+		return repository.findAll();
+		}
 }

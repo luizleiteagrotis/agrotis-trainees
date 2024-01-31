@@ -10,6 +10,6 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 @Repository
 public interface ParceiroNegocioTipoRepository extends JpaRepository<ParceiroNegocio, Integer> {
-
+    Optional<ParceiroNegocio> findByNome( String nome);
 
 }

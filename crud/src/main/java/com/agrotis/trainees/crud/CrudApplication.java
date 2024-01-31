@@ -22,6 +22,7 @@ public class CrudApplication implements CommandLineRunner {
     @Autowired
     private ParceiroNegocioTipoService parceiroNegocioService;
     
+	
     public static void main(String[] args) {
         SpringApplication.run(CrudApplication.class, args);
     }
@@ -44,6 +45,16 @@ public class CrudApplication implements CommandLineRunner {
 	        } else {
 	            LOG.error("Falha ao criar o Parceiro de Negócio.");
 	        }
+	        ParceiroNegocio parceiroPorId =  parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
+			LOG.info("Busca por id. Nome {} id {} ", parceiroPorId.getNome(), parceiroPorId.getId());
+
+			ParceiroNegocio parceiroPorNome =  parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+			LOG.info("Busca por nome. Nome {} id {} ", parceiroPorNome.getNome(), parceiroPorNome.getId());
+
+			List<ParceiroNegocio> todosParceirosSalvos = parceiroNegocioService.listarTodos();
+			LOG.info("Salvos no total de {} tipos de Parceiros", todosParceirosSalvos.size());
 	    }
+	   
+	    
 	}
 }
