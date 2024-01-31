@@ -35,8 +35,8 @@ public class CrudApplication implements CommandLineRunner {
         try {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
             parceiroNegocio.setNome("Hadassa e Tatiane Esportes Ltda");
-            parceiroNegocio.setInscricaoFiscal("11111704001134");
-            // parceiroNegocio.setEndereco("Moradias Bom Jesus");
+            parceiroNegocio.setInscricaoFiscal("11199704001134");
+            parceiroNegocio.setEndereco("Moradias Bom Jesus");
             parceiroNegocio.setTelefone("41992477204");
             // Create
             ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
@@ -52,19 +52,17 @@ public class CrudApplication implements CommandLineRunner {
             for (ParceiroNegocio parceiro : listarTodos) {
                 LOG.info("Buscar por todos. Nome {} inscricao fiscal {}", parceiro.getNome(), parceiro.getInscricaoFiscal());
             }
+
+            ParceiroNegocio atualizar = parceiroNegocioService.atualizar("21212704001134", "Hadassa e Tatiane Esportes Ltda",
+                            "00000704001134", "Moradias Bom Jesus", "41992477204");
+            LOG.info("Atualizado. Nome {} inscricao fiscal {}", atualizar.getNome(), atualizar.getInscricaoFiscal());
+            parceiroNegocioService.deletar(54);
         } catch (IllegalArgumentException exp) {
-            System.out.println("Houve um erro ao tentar salvar no banco");
+            System.out.println("Houve um erro ao tentar fazer alguma operação no banco");
         }
         ;
 
-        // ParceiroNegocio atualizar =
-        // parceiroNegocioService.atualizar("21212704001134", "Hadassa e Tatiane
-        // Esportes Ltda","00000704001134", "Moradias Bom Jesus","41992477204");
-        // LOG.info("Atualizado. Nome {} inscricao fiscal {}",
         // atualizar.getNome(), atualizar.getInscricaoFiscal());
-        //
-        parceiroNegocioService.deletar(54);
-        //
 
         // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         // notaFiscalTipo.setNome("nomeTeste");

@@ -61,6 +61,11 @@ public class ParceiroNegocioService {
 
     public ParceiroNegocio atualizar(String incricaoFiscal, String nome, String NovaIscricaoFiscal, String endereco,
                     String telefone) {
+        if (buscarPorInscricaoFiscal(incricaoFiscal) == null) {
+            LOG.error("Inscrição fiscal não encontrada.");
+            throw new IllegalArgumentException("Inscrição fiscal não encontrada.");
+
+        }
 
         Optional<ParceiroNegocio> parceiroOptional = repository.findByInscricaoFiscal(incricaoFiscal);
 
