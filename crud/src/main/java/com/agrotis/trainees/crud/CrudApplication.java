@@ -52,5 +52,9 @@ public class CrudApplication implements CommandLineRunner {
 		
 		List<ParceiroNegocio> parceiros = parceiroNegocioService.listarTodos();
 		LOG.info("Salvos no total de {} parceiros de negocio", parceiros.size());
+		
+		parceiroPorId.setNome("coxinha cabulosa");
+		parceiroNegocioService.salvar(parceiroPorId);
+		LOG.info("Update nome -> NomeNovo: {} id {}", parceiroPorId.getNome(), parceiroPorId.getId());
 	}
 }
