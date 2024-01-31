@@ -31,12 +31,18 @@ public class CrudApplication2 implements CommandLineRunner {
 	public void run(String... args){
 		//Create
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-		parceiroNegocio.setNome("VT Engenharia");
-		parceiroNegocio.setEndereco("Rua Treze de Maio, 35, Centro - Curitiba, Paraná");
-		parceiroNegocio.setInscricaoFiscal("140000863187");
-		parceiroNegocio.setTelefone("41999964331");
+		parceiroNegocio.setNome("Intercell");
+		parceiroNegocio.setEndereco("Rua Brigadeiro Franco, 3699, Rebouças - Curitiba, Paraná");
+		parceiroNegocio.setInscricaoFiscal("00980003465");
+		parceiroNegocio.setTelefone("4133698439");
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
+		
+		ParceiroNegocio porId =  parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
+		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
+				
+		List<ParceiroNegocio> todosSalvos = parceiroNegocioService.listarTodos();
+		LOG.info("Salvos no total de {} parceiros", todosSalvos.size());
 
 	}
 }
