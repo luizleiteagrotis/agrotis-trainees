@@ -41,7 +41,12 @@ public class ParceiroNegocioService {
 	public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
 	}
-
+	public ParceiroNegocio buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.error("Nota não encontrada para o id {}. ", id);
+			return null;
+		});
+	}
 	
 	public ParceiroNegocio update(Integer id, ParceiroNegocio parceiro) {
 		repository.findById(id).orElseGet(() -> {
