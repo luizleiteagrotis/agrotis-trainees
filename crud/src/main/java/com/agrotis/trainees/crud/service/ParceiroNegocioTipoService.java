@@ -45,4 +45,9 @@ public class ParceiroNegocioTipoService {
 		public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
 		}
+		
+		public void deletarPorId(Integer id){
+			repository.deleteById(id);
+			LOG.info("Deletado com sucesso");
+		}
 }

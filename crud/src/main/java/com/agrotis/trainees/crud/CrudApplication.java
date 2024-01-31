@@ -32,7 +32,7 @@ public class CrudApplication implements CommandLineRunner {
 	        // Operações com a entidade ParceiroNegocio
 	
 	        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-	        parceiroNegocio.setNome("milharal ");
+	        parceiroNegocio.setNome("outronome ");
 	        parceiroNegocio.setInscricaoFiscal("82.413.816/0001-01");
 	        parceiroNegocio.setEndereco("Rua 13 de maio");
 	        parceiroNegocio.setTelefone("4135238200");
@@ -58,8 +58,9 @@ public class CrudApplication implements CommandLineRunner {
 			porNome.setNome("Agrotis informática");
 			parceiroNegocioService.salvar(porNome);
 			LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
-	    }
-	   
 	    
+	   
+			parceiroNegocioService.deletarPorId(parceiroPorId.getId());
+	    }
 	}
 }
