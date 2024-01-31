@@ -58,14 +58,30 @@ public class CrudApplication implements CommandLineRunner {
 		 
 		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-		parceiroNegocio.setNome("AgroFertil Ltda");		
-		parceiroNegocio.setInscricaoFiscal("23.745.875/0001-25");
-		parceiroNegocio.setEndereco("Rua Treze de Maio, 46. Curitiba - Paraná");
-		parceiroNegocio.setTelefone("(41)3565-2871");
+		parceiroNegocio.setNome("Coamo");		
+		parceiroNegocio.setInscricaoFiscal("32.785.081/0001-22");
+		parceiroNegocio.setEndereco("Rua Manaus. Manaus - Amazonas");
+		parceiroNegocio.setTelefone("(71)3298-6789");
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		
 		
+		ParceiroNegocio porIdParceiro = parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
+		LOG.info("Busca por id. Nome {} id {} inscricaoFiscal {} endereco {} telefone {}", porIdParceiro.getNome(), porIdParceiro.getId(), porIdParceiro.getInscricaoFiscal(), porIdParceiro.getEndereco(), porIdParceiro.getTelefone());
+		
+		ParceiroNegocio porNomeParceiro = parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
+		LOG.info("Busca por id. Nome {} id {} inscricaoFiscal {} endereco {} telefone {}", porNomeParceiro.getNome(), porNomeParceiro.getId(), porNomeParceiro.getInscricaoFiscal(), porNomeParceiro.getEndereco(), porNomeParceiro.getTelefone());
+		
+		ParceiroNegocio porInscricaoFiscalParceiro = parceiroNegocioService.buscarPorInscricaoFiscal(parceiroNegocio2.getInscricaoFiscal());
+		LOG.info("Busca por id. Nome {} id {} inscricaoFiscal {} endereco {} telefone {}", porInscricaoFiscalParceiro.getNome(), porInscricaoFiscalParceiro.getId(), porInscricaoFiscalParceiro.getInscricaoFiscal(), porInscricaoFiscalParceiro.getEndereco(), porInscricaoFiscalParceiro.getTelefone());
+		
 
+		List<ParceiroNegocio> todosSalvosParceiro = parceiroNegocioService.listarTodos();
+		LOG.info("Salvos no total de {} parceiros de negócio", todosSalvos.size());
+	
+
+		
+
+		
 	}
 }
