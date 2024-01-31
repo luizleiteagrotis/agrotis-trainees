@@ -31,18 +31,27 @@ public class CrudApplication2 implements CommandLineRunner {
 	public void run(String... args){
 		//Create
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-		parceiroNegocio.setNome("Intercell");
-		parceiroNegocio.setEndereco("Rua Brigadeiro Franco, 3699, Rebouças - Curitiba, Paraná");
-		parceiroNegocio.setInscricaoFiscal("00980003465");
-		parceiroNegocio.setTelefone("4133698439");
+		parceiroNegocio.setNome("SR Photo");
+		parceiroNegocio.setEndereco("Rua Arlindo Nogueira, 166, Centro - Curitiba, Paraná");
+		parceiroNegocio.setInscricaoFiscal("11789600040");
+		parceiroNegocio.setTelefone("4840046315");
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		
+		//Read
 		ParceiroNegocio porId =  parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
+		porId.setNome("VR Engenharia");
 		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
 				
 		List<ParceiroNegocio> todosSalvos = parceiroNegocioService.listarTodos();
 		LOG.info("Salvos no total de {} parceiros", todosSalvos.size());
-
+		
+		//Update
+		parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		
+		ParceiroNegocio porNome = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		porNome.setNome("Posto Paris");
+		parceiroNegocioService.salvar(porNome);
+		LOG.info("Nome alterado: novo nome {}", porNome.getNome() );
 	}
 }
