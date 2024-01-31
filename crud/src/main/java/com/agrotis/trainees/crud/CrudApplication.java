@@ -81,5 +81,9 @@ public class CrudApplication implements CommandLineRunner {
 		
 		produtoPorId.setNome("moranguinho");
 		produtoService.salvar(produtoPorId);
+		
+		produtos.forEach((p) -> {
+			produtoService.deletar(p.getId());
+		});
 	}
 }

@@ -46,4 +46,10 @@ public class ProdutoService {
 		LOG.info("Produtos buscados com sucesso. Quantidade: {}", produtos.size());
 		return produtos;
 	}
+	
+	public void deletar(long idProduto) {
+		LOG.info("tentando deletar produto com id {}", idProduto);
+		repository.deleteById(idProduto);
+		LOG.info("Deletado id {} com sucesso", idProduto);
+	}
 }
