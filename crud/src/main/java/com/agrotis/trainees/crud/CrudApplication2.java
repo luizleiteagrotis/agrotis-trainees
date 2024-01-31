@@ -29,7 +29,9 @@ public class CrudApplication2 implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		//Create
+		
+		/*--------------------------
+		Inicio CREATE*/
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		parceiroNegocio.setNome("SR Photo");
 		parceiroNegocio.setEndereco("Rua Arlindo Nogueira, 166, Centro - Curitiba, Paraná");
@@ -38,7 +40,9 @@ public class CrudApplication2 implements CommandLineRunner {
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		
-		//Read
+		
+		/*--------------------------
+		Inicio READ*/
 		ParceiroNegocio porId =  parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
 		porId.setNome("VR Engenharia");
 		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
@@ -46,16 +50,24 @@ public class CrudApplication2 implements CommandLineRunner {
 		List<ParceiroNegocio> todosSalvos = parceiroNegocioService.listarTodos();
 		LOG.info("Salvos no total de {} parceiros", todosSalvos.size());
 		
-		//Update
+		
+		/*--------------------------
+		Inicio UPDATE*/
 		parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
 		
+		//Insira o nome da empresa que voce quer alterar entre parenteses (depois da função "buscarPorNome");
 		ParceiroNegocio porNome = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		//Insira o novo nome;
 		porNome.setNome("Posto Paris");
 		parceiroNegocioService.salvar(porNome);
 		LOG.info("Nome alterado: novo nome {}", porNome.getNome() );
+	
 		
-		//Delete
+		/*-------------------
+		Inicio DELETE
+		Insira o ID do parceiro que você quer deletar na linha abaixo*/
 		parceiroNegocioService.deletarPorId(4);
+		//Insira o nome do parceiro que você quer deletar na linha abaixo;
 		porId.setNome("VR Engenharia");
 	}
 }
