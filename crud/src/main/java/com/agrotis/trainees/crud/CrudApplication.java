@@ -77,7 +77,9 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("id inserido: {}", produto.getId());
 		
 		Produto produtoPorId = produtoService.buscarPor(produto.getId());
-		produtoPorId.setNome("moranguinho");
 		List<Produto> produtos = produtoService.listarTodos();
+		
+		produtoPorId.setNome("moranguinho");
+		produtoService.salvar(produtoPorId);
 	}
 }
