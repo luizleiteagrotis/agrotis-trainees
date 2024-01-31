@@ -5,6 +5,7 @@ import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class NotaFiscalTipoService {
 	}
 
 	public NotaFiscalTipo salvar(NotaFiscalTipo entidade) {
+		if (StringUtils.isEmpty(entidade.getNome())) {
+			LOG.error("Obrigatório preencher o nome do tipo de nota fiscal.");
+			return null;
+		}
 		return repository.save(entidade);
 	}
 

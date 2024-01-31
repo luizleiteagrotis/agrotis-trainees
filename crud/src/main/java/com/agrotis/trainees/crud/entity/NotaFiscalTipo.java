@@ -14,11 +14,14 @@ public class NotaFiscalTipo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     
-    @NotBlank(message = "Obrigatório preencher o nome do tipo de nota fiscal")
     private String nome;
 
     public Integer getId() {
         return id;
+    }
+    
+    public void setId(Integer id) {
+    	this.id = id;
     }
 
     public String getNome() {
