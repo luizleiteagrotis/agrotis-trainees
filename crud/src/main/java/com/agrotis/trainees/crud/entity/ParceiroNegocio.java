@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -24,14 +26,17 @@ public class ParceiroNegocio {
 	@Column(name = "inscricao_fiscal")
 	@NotEmpty(message = "O campo inscrição fiscal deve ser preenchido")
 	private String inscricaoFiscal;
-	
+
 	@NotEmpty(message = "O campo endereço tem de ser preenchido.")
 	private String endereco;
-	
+
 	@Size(min = 8, max = 11, message = "O campo telefone tem de conter entre 8 e 11 caracteres")
 	private String telefone;
 
-	// Getters e Setters 
+	@OneToMany(mappedBy = "fabricante")
+	private List<Produto> produtos;
+
+	// Getters e Setters
 	public Integer getId() {
 		return id;
 	}
