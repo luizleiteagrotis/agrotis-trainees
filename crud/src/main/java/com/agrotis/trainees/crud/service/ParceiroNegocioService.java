@@ -37,16 +37,22 @@ public class ParceiroNegocioService {
 			return null;
 		});
 	}
-	
-	public void deletarPorId(Integer id){
+
+	public void deletarPorId(Integer id) {
 		repository.deleteById(id);
 		LOG.info("Deletado com sucesso");
 	}
-	
+
 	public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
 	}
-	
-	
+
+	public ParceiroNegocio update(Integer id, ParceiroNegocio negocio) {
+		ParceiroNegocio byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível encontrar o parceiro de negocio pelo ID {}", id);
+			return null;
+		});
+		return repository.save(byId);
+	}
 
 }

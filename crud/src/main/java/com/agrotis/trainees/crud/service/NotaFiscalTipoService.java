@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,13 @@ public class NotaFiscalTipoService {
 		return repository.findAll();
 	}
 
+	public NotaFiscalTipo update(Integer id, NotaFiscalTipo negocio) {
+		NotaFiscalTipo byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível encontrar o parceiro de negocio pelo ID {}", id);
+			return null;
+		});
+		return repository.save(byId);
+	}
 
 	
 }

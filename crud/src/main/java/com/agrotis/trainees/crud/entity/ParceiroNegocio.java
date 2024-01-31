@@ -28,7 +28,7 @@ public class ParceiroNegocio {
 	@NotEmpty(message = "O campo endereço tem de ser preenchido.")
 	private String endereco;
 	
-	@Size(min = 8, max = 11, message = "O campo telefone pode conter no máximo 11 caracteres")
+	@Size(min = 8, max = 11, message = "O campo telefone tem de conter entre 8 e 11 caracteres")
 	private String telefone;
 
 	// Getters e Setters 
