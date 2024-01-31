@@ -29,4 +29,21 @@ public class ProdutoService {
 		LOG.info("Produto salvo com sucesso. ID: {}", produto.getId());
 		return produto;
 	}
+	
+	public Produto buscarPor(long id) {
+		LOG.info("Tentando buscar produto por id {}", id);
+		Produto produto = repository.findById(id).orElseGet(() -> {
+			LOG.error("Produto nao encontrado. ID: {}", id);
+			return null;
+		});
+		LOG.info("Produto encontrado com sucesso");
+		return produto;
+	}
+	
+	public List<Produto> listarTodos() {
+		LOG.info("Tentando buscar todos os produtos");
+		List<Produto> produtos = repository.findAll();
+		LOG.info("Produtos buscados com sucesso. Quantidade: {}", produtos.size());
+		return produtos;
+	}
 }
