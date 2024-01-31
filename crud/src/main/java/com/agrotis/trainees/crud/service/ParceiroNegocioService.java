@@ -16,8 +16,8 @@ public class ParceiroNegocioService {
 	
 	private ParceiroNegocioRepository repository;
 	
-	private static final Logger LOG = LoggerFactory
-			.getLogger(CrudApplication.class);
+	private final Logger LOG = LoggerFactory
+			.getLogger(ParceiroNegocioService.class);
 	
 	@Autowired
 	public ParceiroNegocioService(ParceiroNegocioRepository repository) {
@@ -25,22 +25,31 @@ public class ParceiroNegocioService {
 	}
 	
 	public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-		return repository.save(entidade);
+		LOG.info("Tentando salvar parceiro");
+		entidade = repository.save(entidade);
+		LOG.info("Entidade salva com sucesso. ID: {}", entidade.getId());
+		return entidade;
 	}
 	
-	public ParceiroNegocio buscarPorId(long id) {
-		
-		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Nota não encontrada para id {}.", id);
+	public ParceiroNegocio buscarPorId(long idParceiro) {
+		LOG.info("Tentando buscar parceiro com id: {}", idParceiro);
+		ParceiroNegocio parceiro = repository.findById(idParceiro).orElseGet(() -> {
+			LOG.error("Nota não encontrada para id {}.", idParceiro);
 			return null;
 		});
+		LOG.info("Parceiro encontrado com sucesso. ID: {}", idParceiro);
+		return parceiro;
 	}
 	
 	public List<ParceiroNegocio> listarTodos() {
-		return repository.findAll();
+		LOG.info("Tentando buscar todos os parceiros");
+		List<ParceiroNegocio> parceiros = repository.findAll();
+		LOG.info("Parceiros buscados com sucesso. Quantidade: {}", parceiros.size());
+		return parceiros;
 	}
 	
 	public void deletar(long idParceiro) {
+		LOG.info("Tentando deletar parceiro. ID: {}", idParceiro);
 		repository.deleteById(idParceiro);
 		LOG.info("Deletado id {} com sucesso", idParceiro);
 	}

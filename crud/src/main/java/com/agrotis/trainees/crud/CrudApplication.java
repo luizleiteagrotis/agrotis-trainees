@@ -1,10 +1,7 @@
 package com.agrotis.trainees.crud;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -23,12 +20,12 @@ public class CrudApplication implements CommandLineRunner {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(CrudApplication.class);
 
-
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
 	
 	@Autowired
-	public CrudApplication(ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService) {
+	public CrudApplication(ParceiroNegocioService parceiroNegocioService, 
+			ProdutoService produtoService) {
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
 	}
@@ -51,22 +48,17 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroNegocio.setEndereco("enderecoTeste");
 		parceiroNegocio.setTelefone("12345");
 		parceiroNegocio = parceiroNegocioService.salvar(parceiroNegocio);
-		LOG.info("id inserido: {}", parceiroNegocio.getId());
 		
 		ParceiroNegocio parceiroPorId = parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
-		LOG.info("busca por id -> Nome: {} id {}", parceiroPorId.getNome(), parceiroPorId.getId());
 		
 		List<ParceiroNegocio> parceiros = parceiroNegocioService.listarTodos();
-		LOG.info("Salvos no total de {} parceiros de negocio", parceiros.size());
 		
 		parceiroPorId.setNome("coxinha cabulosa");
 		parceiroNegocioService.salvar(parceiroPorId);
-		LOG.info("Update nome -> NomeNovo: {} id {}", parceiroPorId.getNome(), parceiroPorId.getId());
 		
 		parceiros.forEach((parceiro) -> {
 			parceiroNegocioService.deletar(parceiro.getId());
 		});
-		LOG.info("Deletado todos os parceiros");
 	}
 	
 	private void testarProduto() {
@@ -77,7 +69,6 @@ public class CrudApplication implements CommandLineRunner {
 		fabricante.setTelefone("12345");
 		fabricante = parceiroNegocioService.salvar(fabricante);
 		LOG.info("id inserido: {}", fabricante.getId());
-		
 		Produto produto = new Produto();
 		produto.setNome("maca");
 		produto.setDescricao("maca vermelha muito boa, tem seu nome dentro");
