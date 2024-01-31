@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,8 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
@@ -20,11 +24,13 @@ public class CrudApplication implements CommandLineRunner {
 
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegocioService parceiroNegocioService;
+	private final ProdutoService produtoService;
 
 	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService,
-			ParceiroNegocioService parceiroNegocioService) {
+			ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
+		this.produtoService = produtoService;
 	}
 
 	public static void main(String[] args) {
@@ -72,6 +78,26 @@ public class CrudApplication implements CommandLineRunner {
 		
 		List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
 		LOG.info("Salvos no total de {} parceiros de negocio.", parceirosSalvos.size());
+		
+		LOG.info("----------------PRODUTO------------------");
+		
+		Produto produto = new Produto();
+		ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
+		parceiroNegocio2.setNome("Copacol");
+		parceiroNegocio2.setInscricaoFiscal("22.338.624/0002-37");
+		parceiroNegocio2.setEndereco("Rua dos Sonhadores, 67");
+		parceiroNegocio2.setTelefone("41988556544");
+		parceiroNegocioService.salvar(parceiroNegocio2);
+		LOG.info("id inserido: {}", parceiroNegocio2.getId());
+
+		produto.setDataFabricacao(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		produto.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		produto.setDescricao("Fertilizante Quebra Nózes");
+		produto.setFabricante(parceiroNegocio2);
+		produtoService.salvar(produto);
+		LOG.info("id inserido: {}", produto.getId());
+
+		
 		
 	}
 }
