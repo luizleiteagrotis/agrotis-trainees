@@ -56,5 +56,10 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroPorId.setNome("coxinha cabulosa");
 		parceiroNegocioService.salvar(parceiroPorId);
 		LOG.info("Update nome -> NomeNovo: {} id {}", parceiroPorId.getNome(), parceiroPorId.getId());
+		
+		parceiros.forEach((parceiro) -> {
+			parceiroNegocioService.deletar(parceiro.getId());
+		});
+		LOG.info("Deletado todos os parceiros");
 	}
 }

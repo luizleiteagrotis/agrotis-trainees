@@ -39,4 +39,9 @@ public class ParceiroNegocioService {
 	public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
 	}
+	
+	public void deletar(long idParceiro) {
+		repository.deleteById(idParceiro);
+		LOG.info("Deletado id {} com sucesso", idParceiro);
+	}
 }
