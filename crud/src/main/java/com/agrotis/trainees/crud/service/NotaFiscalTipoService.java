@@ -48,6 +48,7 @@ public class NotaFiscalTipoService {
 		return repository.findAll();
 	}
 
+	
 
 	
 }
