@@ -58,10 +58,10 @@ public class CrudApplication implements CommandLineRunner {
 		 
 		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-		parceiroNegocio.setNome("Coamo");		
-		parceiroNegocio.setInscricaoFiscal("32.785.081/0001-22");
-		parceiroNegocio.setEndereco("Rua Manaus. Manaus - Amazonas");
-		parceiroNegocio.setTelefone("(71)3298-6789");
+		parceiroNegocio.setNome("C.Vale");		
+		parceiroNegocio.setInscricaoFiscal("32.761.087/0001-31");
+		parceiroNegocio.setEndereco("Rua São Paulo. Paulo - São Paulo");
+		parceiroNegocio.setTelefone("(11)3248-6139");
 		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		
@@ -87,7 +87,10 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("Dados alterados com sucesso!", porNomeParceiro.getNome(), porNomeParceiro.getId(), porNomeParceiro.getInscricaoFiscal(), porNomeParceiro.getEndereco(), porIdParceiro.getTelefone());
 
 		
-
+		boolean parceiroDeletar = false; // o comando funcionou adequadamente, por isso, deixei a variável como false 
+		if (parceiroDeletar == true) {
+			parceiroNegocioService.deletarPorId(21);
+		}
 		
 	}
 }
