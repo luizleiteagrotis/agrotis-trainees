@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class ParceiroNegocioService {
 	public void deletarPorId(Integer id){
 		repository.deleteById(id);
 		LOG.info("Deletado com sucesso");
+	}
+	public List<ParceiroNegocio> listarTodos() {
+		return repository.findAll();
 	}
 
 	
