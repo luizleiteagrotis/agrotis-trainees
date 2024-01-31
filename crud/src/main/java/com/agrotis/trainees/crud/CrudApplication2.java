@@ -53,5 +53,9 @@ public class CrudApplication2 implements CommandLineRunner {
 		porNome.setNome("Posto Paris");
 		parceiroNegocioService.salvar(porNome);
 		LOG.info("Nome alterado: novo nome {}", porNome.getNome() );
+		
+		//Delete
+		parceiroNegocioService.deletarPorId(4);
+		porId.setNome("VR Engenharia");
 	}
 }
