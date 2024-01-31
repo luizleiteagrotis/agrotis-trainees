@@ -80,6 +80,12 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("Salvos no total de {} parceiros de negócio", todosSalvos.size());
 	
 
+		porNomeParceiro = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		porNomeParceiro.setNome("Agrofertil");
+		porNomeParceiro.setEndereco("Rua 98 de janeiro, 98. Campo Mourão - Paraná");
+		parceiroNegocioService.salvar(porNomeParceiro);
+		LOG.info("Dados alterados com sucesso!", porNomeParceiro.getNome(), porNomeParceiro.getId(), porNomeParceiro.getInscricaoFiscal(), porNomeParceiro.getEndereco(), porIdParceiro.getTelefone());
+
 		
 
 		
