@@ -96,6 +96,10 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setFabricante(parceiroNegocio2);
 		produtoService.salvar(produto);
 		LOG.info("id inserido: {}", produto.getId());
+		
+		List<Produto> buscarTodos = produtoService.buscarTodos();
+		LOG.info("Salvos no total de {} parceiros de negocio.", buscarTodos.size());
+
 
 		
 		

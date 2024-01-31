@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,11 @@ public class ProdutoService {
 	public Produto salvar(Produto produto) {
 		return repository.save(produto);
 	}
+	
+	public List<Produto> buscarTodos(){
+		return repository.findAll();
+	}
+	
 	
 	
 
