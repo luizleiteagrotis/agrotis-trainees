@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -11,25 +12,30 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.List;
 
 @SpringBootApplication
-public class CrudApplication2 implements CommandLineRunner {
+public class CrudApplicationParceiro implements CommandLineRunner {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(CrudApplication2.class);
-
+			.getLogger(CrudApplicationParceiro.class);
+	
 	private final ParceiroNegocioService parceiroNegocioService;
 
-	public CrudApplication2(ParceiroNegocioService parceiroNegocioService) {
+	public CrudApplicationParceiro(ParceiroNegocioService parceiroNegocioService) {
 		this.parceiroNegocioService = parceiroNegocioService;
-	}
-
-	public static void main(String[] args) {
-		LOG.info("Iniciado com sucesso!");
-		SpringApplication.run(CrudApplication2.class, args);
 	}
 
 	@Override
 	public void run(String... args){
 		
+		crudParceiroNegocio();
+	}
+	
+	
+	public static void main(String[] args) {
+		LOG.info("Iniciado com sucesso!");
+		SpringApplication.run(CrudApplicationParceiro.class, args);
+	}
+
+	private void crudParceiroNegocio() {
 		/*--------------------------
 		Inicio CREATE*/
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
@@ -70,4 +76,5 @@ public class CrudApplication2 implements CommandLineRunner {
 		//Insira o nome do parceiro que você quer deletar na linha abaixo;
 		porId.setNome("VR Engenharia");
 	}
+	
 }

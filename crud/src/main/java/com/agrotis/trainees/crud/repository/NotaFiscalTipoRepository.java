@@ -9,7 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface NotaFiscalTipoRepository extends JpaRepository<NotaFiscalTipo, Integer> {
-
+	
+	//Chamando método que busca nome (esse método não está incluso na classe JPA);
     Optional<NotaFiscalTipo> findByNome(String nome);
 
 }
