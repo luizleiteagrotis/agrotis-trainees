@@ -35,7 +35,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+		/*NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 		notaFiscalTipo.setNome("nomeTeste");
 		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
 		LOG.info("id inserido: {}", notaFiscalTipo2.getId());
@@ -53,7 +53,7 @@ public class CrudApplication implements CommandLineRunner {
 
 		//notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
+		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());*/
 		 
 		 LOG.info("---------------------------------------------");
 		 
@@ -71,14 +71,20 @@ public class CrudApplication implements CommandLineRunner {
 		 List<ParceiroNegocio> todosSalvos1 = parceiroNegocioService.listarTodos();
 		 LOG.info("Salvos no total de {}} tipos de notas", todosSalvos1.size());
 		 
+		
+		 ParceiroNegocio porNome1 = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		 porNome1.setNome("Nome Alterado");
+		 parceiroNegocioService.salvar(porNome1);
+		 LOG.info("Buscar por nome, Nome {} id {} ", porNome1.getNome(), porNome1.getId());
 		 
-		 
-		 
+	
+				 porNome1 = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+				 porNome1.setNome("Kleiton");
+				 porNome1.setEndereco("Babilonia");
+				 porNome1.setTelefone("40028922");
+				 porNome1.setInscricaoFiscal("2135498231");
+				 LOG.info("Dados alterados com sucesso");
 				 
-		 
-		 
-		 
-
-
+		
 	}
 }

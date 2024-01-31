@@ -56,6 +56,8 @@ public class ParceiroNegocioService {
 		return repository.save(parceiro);
 		
 		
+		
 	}
+	
 	
 }
