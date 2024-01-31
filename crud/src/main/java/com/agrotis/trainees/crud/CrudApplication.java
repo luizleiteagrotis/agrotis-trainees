@@ -20,7 +20,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
-	}
+	} 
 
 	public static void main(String[] args) {
 		LOG.info("Iniciado com sucesso!");

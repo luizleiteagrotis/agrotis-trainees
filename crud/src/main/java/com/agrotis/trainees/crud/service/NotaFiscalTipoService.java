@@ -24,7 +24,7 @@ public class NotaFiscalTipoService {
 	public NotaFiscalTipo salvar(NotaFiscalTipo entidade) {
 		return repository.save(entidade);
 	}
-
+	
 	public NotaFiscalTipo buscarPorId(Integer id) {
 		return repository.findById(id).orElseGet(() -> {
 			LOG.error("Nota não encontrada para id {}.", id);
