@@ -1,9 +1,12 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -14,7 +17,7 @@ public class ParceiroNegocio {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
+	
 	@NotBlank(message = "Obrigatório preencher o nome do tipo de parceiro de negócio")
 	private String nome;
 
@@ -27,6 +30,17 @@ public class ParceiroNegocio {
 	@NotBlank(message = "Obrigatório preencher o telefone do tipo de parceiro de negócio")
 	private String telefone;
 	
+	@OneToMany(mappedBy = "parceiroNegocio")
+	private List<Produto> produtos;
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
+
 	public Integer getId() {
 		return id;
 	}
