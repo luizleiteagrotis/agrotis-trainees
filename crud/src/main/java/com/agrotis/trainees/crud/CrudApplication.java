@@ -6,11 +6,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
@@ -19,10 +22,13 @@ public class CrudApplication implements CommandLineRunner {
 
     private final NotaFiscalTipoService notaFiscalTipoService;
     private final ParceiroNegocioService parceiroNegocioService;
+    private final ProdutoService produtoService;
 
-    public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService) {
+    public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
+                    ProdutoService produtoService) {
         this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegocioService = parceiroNegocioService;
+        this.produtoService = produtoService;
     }
 
     public static void main(String[] args) {
@@ -35,7 +41,7 @@ public class CrudApplication implements CommandLineRunner {
         try {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
             parceiroNegocio.setNome("Hadassa e Tatiane Esportes Ltda");
-            parceiroNegocio.setInscricaoFiscal("11199704001134");
+            parceiroNegocio.setInscricaoFiscal("10199709302155");
             parceiroNegocio.setEndereco("Moradias Bom Jesus");
             parceiroNegocio.setTelefone("41992477204");
             // Create
@@ -53,17 +59,23 @@ public class CrudApplication implements CommandLineRunner {
                 LOG.info("Buscar por todos. Nome {} inscricao fiscal {}", parceiro.getNome(), parceiro.getInscricaoFiscal());
             }
 
-            ParceiroNegocio atualizar = parceiroNegocioService.atualizar("21212704001134", "Hadassa e Tatiane Esportes Ltda",
-                            "00000704001134", "Moradias Bom Jesus", "41992477204");
+            // update
+            ParceiroNegocio atualizar = parceiroNegocioService.atualizar("19199704001134", "Hadassa e Tatiane Esportes Ltda",
+                            "19199704001134", "Jose Lins do Rego", "41992477204");
             LOG.info("Atualizado. Nome {} inscricao fiscal {}", atualizar.getNome(), atualizar.getInscricaoFiscal());
+
+            // delete
             parceiroNegocioService.deletar(54);
+
         } catch (IllegalArgumentException exp) {
             System.out.println("Houve um erro ao tentar fazer alguma operação no banco");
         }
-        ;
 
+        ParceiroNegocio parceiroProduto = parceiroNegocioService.buscarPorId(45);
+        Produto produto = new Produto("Laranja", Date.valueOf("2024-01-01"), Date.valueOf("2024-06-20"), parceiroProduto);
+        Produto salvarProduto = produtoService.salvar(produto);
+        LOG.info("id inserio: {}", salvarProduto.getId());
         // atualizar.getNome(), atualizar.getInscricaoFiscal());
-
         // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         // notaFiscalTipo.setNome("nomeTeste");
         // NotaFiscalTipo notaFiscalTipo2 =

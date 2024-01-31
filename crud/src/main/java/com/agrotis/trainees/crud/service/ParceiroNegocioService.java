@@ -13,7 +13,7 @@ import com.agrotis.trainees.crud.repository.PaceiroNegocioRepository;
 @Service
 public class ParceiroNegocioService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalTipoService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 
     private final PaceiroNegocioRepository repository;
 
@@ -50,7 +50,7 @@ public class ParceiroNegocioService {
 
     public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
         return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
-            LOG.error("Nota não encontrada para id {}.", inscricaoFiscal);
+            LOG.error("Nota não encontrada para inscriçâo Fiscal {}.", inscricaoFiscal);
             return null;
         });
     }
@@ -72,7 +72,9 @@ public class ParceiroNegocioService {
         if (parceiroOptional.isPresent()) {
             ParceiroNegocio parceiro = parceiroOptional.get();
             parceiro.setNome(nome);
-            parceiro.setInscricaoFiscal(NovaIscricaoFiscal);
+            if (parceiro.getInscricaoFiscal() != NovaIscricaoFiscal) {
+                parceiro.setInscricaoFiscal(NovaIscricaoFiscal);
+            }
             parceiro.setEndereco(endereco);
             parceiro.setTelefone(telefone);
             return repository.save(parceiro);
