@@ -103,6 +103,16 @@ public class CrudApplication implements CommandLineRunner {
 		Produto produtoPorId = produtoService.buscaPeloId(produto.getId());
 		LOG.info("Buscando pelo id: {}", produtoPorId.getId());
 		
+		Produto produtoAtualizado = new Produto();
+		produto.setDescricao("Rolo de Algodão");
+		
+		produtoService.atualizar(produtoPorId.getId(), produtoAtualizado);
+		LOG.info("Atualizando o produto {}", produtoPorId.getId() );
+		
+		
+		
+		
+		
 		
 
 

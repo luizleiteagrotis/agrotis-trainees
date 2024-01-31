@@ -35,6 +35,16 @@ public class ProdutoService {
 		});
 	}
 	
+	public Produto atualizar(Integer id, Produto produto) {
+		Produto byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível buscar pelo id {}", id);
+			return null;
+		});
+		return repository.save(produto);
+		
+	}
+	
+	
 	
 	
 
