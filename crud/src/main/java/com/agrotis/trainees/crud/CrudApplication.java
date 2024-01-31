@@ -2,9 +2,11 @@ package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +25,12 @@ public class CrudApplication implements CommandLineRunner {
 
 
 	private final ParceiroNegocioService parceiroNegocioService;
+	private final ProdutoService produtoService;
 	
 	@Autowired
-	public CrudApplication(ParceiroNegocioService parceiroNegocioService) {
+	public CrudApplication(ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService) {
 		this.parceiroNegocioService = parceiroNegocioService;
+		this.produtoService = produtoService;
 	}
 
 	public static void main(String[] args) {
@@ -37,6 +41,7 @@ public class CrudApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args){
 		testarParceiroNegocio();
+		testarProduto();
 	}
 
 	private void testarParceiroNegocio() {
@@ -62,5 +67,22 @@ public class CrudApplication implements CommandLineRunner {
 			parceiroNegocioService.deletar(parceiro.getId());
 		});
 		LOG.info("Deletado todos os parceiros");
+	}
+	
+	private void testarProduto() {
+		ParceiroNegocio fabricante = new ParceiroNegocio();
+		fabricante.setNome("nomeTeste");
+		fabricante.setInscricaoFiscal("inscricaoTeste");
+		fabricante.setEndereco("enderecoTeste");
+		fabricante.setTelefone("12345");
+		fabricante = parceiroNegocioService.salvar(fabricante);
+		LOG.info("id inserido: {}", fabricante.getId());
+		
+		Produto produto = new Produto();
+		produto.setNome("maca");
+		produto.setDescricao("maca vermelha muito boa, tem seu nome dentro");
+		produto.setFabricante(fabricante);
+		produto = produtoService.salvar(produto);
+		LOG.info("id inserido: {}", produto.getId());
 	}
 }
