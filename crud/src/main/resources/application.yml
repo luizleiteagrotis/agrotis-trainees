@@ -1,33 +1,65 @@
 server:
+
   servlet:
+
     context-path: /crud/api
+
   port: 8081
 
+
+
 management:
+
   endpoint:
+
     health:
+
       show-details: "never"
+
     info:
+
       enabled: false
 
+
+
 spring:
+
   profiles:
+
     active: dev
+
   main:
+
     allow-bean-definition-overriding: false
+
   jpa:
+
     show-sql: true
+
     open-in-view: false
+
     properties:
+
       hibernate:
+
         format-sql: true
-    database-platform: org.hibernate.dialect.SQLServer2008Dialect
+
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+
   data:
+
     redis:
+
       repositories:
+
         enabled: false
+
   datasource:
+
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://localhost:1433;databaseName=crud
+
+    url: jdbc:sqlserver://localhost:14333;databaseName=crud
+
     username: sa
-    password: SuaSenha123
+
+    password: suaSenha123@

@@ -1,7 +1,10 @@
 package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
+import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -17,9 +20,11 @@ public class CrudApplication implements CommandLineRunner {
 			.getLogger(CrudApplication.class);
 
 	private final NotaFiscalTipoService notaFiscalTipoService;
+	private final ParceiroNegocioService parceiroNegocioService;
 
-	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService) {
+	public CrudApplication(ParceiroNegocioService parceiroNegocioService, NotaFiscalTipoService notaFiscalTipoService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
+		this.parceiroNegocioService = parceiroNegocioService;
 	}
 
 	public static void main(String[] args) {
@@ -48,7 +53,19 @@ public class CrudApplication implements CommandLineRunner {
 		//notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-
+		 
+		 
+		 
+		
+		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+		parceiroNegocio.setNome("AgroFertil Ltda");		
+		parceiroNegocio.setInscricaoFiscal("23.745.875/0001-25");
+		parceiroNegocio.setEndereco("Rua Treze de Maio, 46. Curitiba - Paraná");
+		parceiroNegocio.setTelefone("(41)3565-2871");
+		ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
+		LOG.info("id inserido: {}", parceiroNegocio2.getId());
+		
+		
 
 	}
 }
