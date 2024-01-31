@@ -109,13 +109,8 @@ public class CrudApplication implements CommandLineRunner {
 		produtoService.atualizar(produtoPorId.getId(), produtoAtualizado);
 		LOG.info("Atualizando o produto {}", produtoPorId.getId() );
 		
-		
-		
-		
-		
-		
-
-
+		produtoService.deletarPorId(produtoPorId.getId());
+		LOG.info("Deletando o produto {}", produtoPorId.getId() );
 		
 		
 	}
