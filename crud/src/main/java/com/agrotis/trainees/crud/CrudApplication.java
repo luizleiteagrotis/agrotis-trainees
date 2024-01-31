@@ -99,6 +99,11 @@ public class CrudApplication implements CommandLineRunner {
 		
 		List<Produto> buscarTodos = produtoService.buscarTodos();
 		LOG.info("Salvos no total de {} parceiros de negocio.", buscarTodos.size());
+		
+		Produto produtoPorId = produtoService.buscaPeloId(produto.getId());
+		LOG.info("Buscando pelo id: {}", produtoPorId.getId());
+		
+		
 
 
 		

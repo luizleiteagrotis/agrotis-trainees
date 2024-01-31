@@ -28,6 +28,13 @@ public class ProdutoService {
 		return repository.findAll();
 	}
 	
+	public Produto buscaPeloId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível buscar pelo id {}", id);
+			return null;
+		});
+	}
+	
 	
 	
 
