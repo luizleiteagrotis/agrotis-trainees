@@ -36,9 +36,10 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
+		testarParceiroNegocio();
+	}
 
-		////////////////////////////////////////
-		
+	private void testarParceiroNegocio() {
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		parceiroNegocio.setNome("nomeTeste");
 		parceiroNegocio.setInscricaoFiscal("inscricaoTeste");
