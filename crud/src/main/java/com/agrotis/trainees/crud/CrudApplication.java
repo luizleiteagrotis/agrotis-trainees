@@ -68,6 +68,9 @@ public class CrudApplication implements CommandLineRunner {
 		 ParceiroNegocio porId1 = parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
 		 LOG.info("Buscar por id. Nome {} id {} ", porId1.getNome(), porId1.getId());
 		
+		 List<ParceiroNegocio> todosSalvos1 = parceiroNegocioService.listarTodos();
+		 LOG.info("Salvos no total de {}} tipos de notas", todosSalvos1.size());
+		 
 		 
 		 
 		 
