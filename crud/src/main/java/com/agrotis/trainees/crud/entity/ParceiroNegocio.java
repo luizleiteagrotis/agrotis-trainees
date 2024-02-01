@@ -1,57 +1,61 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "parceiro_negocio")
+@Table(name = "parceiro_de_negocio")
 public class ParceiroNegocio {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private Integer nome;
-	private Integer inscricaoFiscal;
-	private Integer endereco;
-	private Integer telefone;
-
-	public Integer getNome() {
-		return nome;
-	}
-
-	public void setNome(Integer nome) {
-		this.nome = nome;
-	}
-
-	public Integer getInscricaoFiscal() {
-		return inscricaoFiscal;
-	}
-
-	public void setInscricaoFiscal(Integer inscricaoFiscal) {
-		this.inscricaoFiscal = inscricaoFiscal;
-	}
-
-	public Integer getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(Integer endereco) {
-		this.endereco = endereco;
-	}
-
-	public Integer getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(Integer telefone) {
-		this.telefone = telefone;
-	}
-
+	private String nome;
+	@Column(name = "inscricao_fiscal")
+	private String inscricaoFiscal;
+	private String endereco;
+	private String telefone;
+	
+	@OneToMany(mappedBy = "fabricante")
+	private List<Produto> produtos;
+	
+	
 	public Integer getId() {
 		return id;
 	}
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getInscricaoFiscal() {
+		return inscricaoFiscal;
+	}
+	public void setInscricaoFiscal(String inscricaoFiscal) {
+		this.inscricaoFiscal = inscricaoFiscal;
+	}
+	public String getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+	public String getTelefone() {
+		return telefone;
+	}
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+
 
 }

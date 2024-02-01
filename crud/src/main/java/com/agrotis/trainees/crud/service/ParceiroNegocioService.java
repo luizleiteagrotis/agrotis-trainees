@@ -25,27 +25,35 @@ public class ParceiroNegocioService {
 	
 	public ParceiroNegocio buscarPorId(Integer id) {
 		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Nota não encontrada para id {}.", id);
+			LOG.error("Parceiro de negocio nao encontrado pelo id {}.", id);
 			return null;
 		});
 	}
 	
 	public ParceiroNegocio buscarPorNome(String nome) {
 		return repository.findByNome(nome).orElseGet(() -> {
-			LOG.error("o nome nao foi encontrado {}.", nome);
+			LOG.error("O Nome do Parceiro de Negocio nao foi encontrado {}.", nome);
 			return null;
 		});
 	}
 	
 	public void deletarPorId(Integer id){
 		repository.findById(id);
-		LOG.info("Deletado com sucesso");
+		LOG.info("Parceiro de Negocio Deletado com sucesso");
 	}
 	
 	public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
 	}
+	
+	public ParceiroNegocio update(Integer id, ParceiroNegocio parceiro) {
+		repository.findById(id).orElseGet(() -> {
+			LOG.error("Parceiro de Negócio não foi encontrado para o Id {}.", parceiro.getNome());
+			return null;
+		});
+		return repository.save(parceiro);
+	
 }
-
+}
 
 
