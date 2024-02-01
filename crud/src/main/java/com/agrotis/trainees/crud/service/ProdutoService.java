@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.repository.produto.ProdutoJpaRepository;
+import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 
 @Service
 public class ProdutoService {
-	
-	private final Logger LOG = LoggerFactory
-			.getLogger(ProdutoService.class);
 	
 	private ProdutoRepository repository;
 	
@@ -24,32 +22,18 @@ public class ProdutoService {
 	}
 	
 	public Produto salvar(Produto produto) {
-		LOG.info("Tentando salvar produto");
-		produto = repository.save(produto);
-		LOG.info("Produto salvo com sucesso. ID: {}", produto.getId());
-		return produto;
+		return repository.salvar(produto);
 	}
 	
-	public Produto buscarPor(long id) {
-		LOG.info("Tentando buscar produto por id {}", id);
-		Produto produto = repository.findById(id).orElseGet(() -> {
-			LOG.error("Produto nao encontrado. ID: {}", id);
-			return null;
-		});
-		LOG.info("Produto encontrado com sucesso");
-		return produto;
+	public Produto buscarPor(long idProduto) {
+		return repository.buscarPor(idProduto);
 	}
 	
 	public List<Produto> listarTodos() {
-		LOG.info("Tentando buscar todos os produtos");
-		List<Produto> produtos = repository.findAll();
-		LOG.info("Produtos buscados com sucesso. Quantidade: {}", produtos.size());
-		return produtos;
+		return repository.buscarTodos();
 	}
 	
 	public void deletar(long idProduto) {
-		LOG.info("tentando deletar produto com id {}", idProduto);
-		repository.deleteById(idProduto);
-		LOG.info("Deletado id {} com sucesso", idProduto);
+		repository.deletar(idProduto);
 	}
 }
