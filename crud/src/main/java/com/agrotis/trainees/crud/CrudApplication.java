@@ -62,10 +62,10 @@ public class CrudApplication implements CommandLineRunner {
 		
 		Produto produto = new Produto();
 		ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
-		parceiroNegocio2.setNome("Abc Company");
-		parceiroNegocio2.setInscricaoFiscal("715921524546");
-		parceiroNegocio2.setEndereco("Rua Saldanha Marinho, 50");
-		parceiroNegocio2.setTelefone("48997655468");
+		parceiroNegocio.setNome("Flut");
+		parceiroNegocio.setInscricaoFiscal("5045648889231");
+		parceiroNegocio.setEndereco("Rua Eunice Prado, 5648");
+		parceiroNegocio.setTelefone("41998775223");
 		parceiroNegocioService.salvar(parceiroNegocio2);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		produto.setDataFabricacao(LocalDate.parse("11/11/2021", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
