@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.sql.Date;
+import java.util.List;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -76,7 +77,7 @@ public class CrudApplication implements CommandLineRunner {
         // parceiroNegocio.setTelefone("41992477204");
         // // Create
         // ParceiroNegocio parceiroNegocio2 =
-        // parceiroNegocioService.salvar(parceiroNegocio);
+        // par java.util.ceiroNegocioService.salvar(parceiroNegocio);
         // LOG.info("id inserio: {}", parceiroNegocio2.getId());
         //
         // // select
@@ -120,7 +121,7 @@ public class CrudApplication implements CommandLineRunner {
         //
         // // create
         // Produto salvarProduto = produtoService.salvar(produto);
-        // LOG.info("id inserio: {}", salvarProduto.getId());
+        // LOG java.util..info("id inserio: {}", salvarProduto.getId());
         //
         // // select por ID
         // Produto procurarProdutoPorID = produtoService.buscarPorId(89);
@@ -183,12 +184,40 @@ public class CrudApplication implements CommandLineRunner {
         ParceiroNegocio parceiroNota = parceiroNegocioService.buscarPorId(40);
         NotaFiscal nota = new NotaFiscal();
         nota.setParceiroNegocio(parceiroNota);
-        nota.setNumero(1);
-        nota.setTipo(tipoEntrada);
-        nota.setData(Date.valueOf("2023-10-10"));
+        nota.setNumero(2);
+        nota.setTipo(tipoSaida);
+        nota.setData(Date.valueOf("2023-01-25"));
 
         NotaFiscal salvar = notaFiscalService.salvar(nota);
-        LOG.info("salvo id {}", salvar);
+        LOG.info("salvo id {}", salvar.getId());
+
+        NotaFiscal buscarPorId = notaFiscalService.buscarPorId(nota.getId());
+        LOG.info("o id que achou foi {}", buscarPorId.getId());
+
+        java.util.List<NotaFiscal> buscarPorParceiro = notaFiscalService.buscarPorParceiroNegocio(parceiroNota);
+        for (NotaFiscal pNota : buscarPorParceiro) {
+            LOG.info("O parceiro é {} ", pNota.getParceiroNegocio().getNome());
+        }
+
+        List<NotaFiscal> buscarPorTipo = notaFiscalService.buscarPorTipoNotaFiscal("saida");
+        for (NotaFiscal tNota : buscarPorTipo) {
+            LOG.info("O tipo é {} ", tNota.getTipo());
+        }
+
+        List<NotaFiscal> buscarPorNumero = notaFiscalService.buscarPorNumero(1);
+        for (NotaFiscal nNota : buscarPorNumero) {
+            LOG.info("O numero é {} ", nNota.getNumero());
+        }
+
+        List<NotaFiscal> buscarPorData = notaFiscalService.buscarPorData(Date.valueOf("2023-01-25"));
+        for (NotaFiscal dNota : buscarPorData) {
+            LOG.info("A data é {} ", dNota.getData());
+        }
+
+        List<NotaFiscal> listarTodos = notaFiscalService.listarTodos();
+        for (NotaFiscal lTodos : listarTodos) {
+            LOG.info(" {} ", lTodos);
+        }
 
     }
 }
