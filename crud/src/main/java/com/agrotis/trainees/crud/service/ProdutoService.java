@@ -71,8 +71,17 @@ public class ProdutoService {
             return repository.save(byId);
 
         }
-
         return null;
+    }
+
+    public void excluir(int id) {
+        if (this.buscarPorId(id) != null) {
+            repository.deleteById(id);
+            LOG.info("Deletado com sucesso");
+        } else {
+            LOG.info("Registro não encontrado");
+        }
+
     }
 
 }

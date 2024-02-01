@@ -160,5 +160,8 @@ public class CrudApplication implements CommandLineRunner {
         Produto atualizar = produtoService.atualizar(produtoAtualizado, 105);
         LOG.info("Produto atualizado {} ", atualizar);
 
+        // delete
+        produtoService.excluir(111);
+
     }
 }
