@@ -66,7 +66,9 @@ public class Produto {
 		this.dataValidade = dataValidade;
 	}
 	
-	
+	public Integer getId1() {
+		return id;
+	}
 
 	
 	

@@ -5,6 +5,7 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @SpringBootApplication
@@ -97,6 +100,19 @@ public class CrudApplication implements CommandLineRunner {
 				 parceiroNegocio1.setTelefone("40028923");
 				 parceiroNegocioService.salvar(parceiroNegocio1);
 				 LOG.info("id inserido: {}", parceiroNegocio1.getId());
+				 
+				 produto.setDataFabricacao(LocalDate.parse("23/062/2003", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+				 produto.setDataValidade(LocalDate.parse("02/08/2004", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+				 produto.setDescricao("Produto Random");
+				 produto.setFabricante(parceiroNegocio1);
+				 ProdutoService.salvar(produto);
+				 LOG.info("if inserido: {}", produto.getId());
+				 
+				 List<Produto> buscarTodos = ProdutoService.buscarTodos();
+					LOG.info("Salvos no total de {} parceiros de negocio.", buscarTodos.size());
+				 
+				 
+				 
 				 
 				 
 				 

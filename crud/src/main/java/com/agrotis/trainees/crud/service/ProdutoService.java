@@ -49,13 +49,17 @@ public class ProdutoService {
 			return null;
 		});
 	}
-		public Produto update(Integer id, ParceiroNegocio produto) {
+		public Produto update(Integer id, Produto produto) {
 			repository.findById(id).orElseGet(() -> {
 				LOG.error("Parceiro de Negócio não encontrado para o Id {}.", produto.getNome());
 				return null;
 			});
-		return repository.saveAll(produto);
+		return repository.save(produto);
 	}
+		public static List<Produto> buscarTodos() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	
 	
 	
