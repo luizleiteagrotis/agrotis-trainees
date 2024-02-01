@@ -166,6 +166,9 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalService.atualizar(notaFiscal2.getId(), notaFiscal2);
 		LOG.info("Atualizando pelo id {}", notaFiscal2.getId());
 		
+		List<NotaFiscal> notas = notaFiscalService.listarTodos();
+		LOG.info("Tamanho da lista: ", notas.size());
+
 		
 		
 		
