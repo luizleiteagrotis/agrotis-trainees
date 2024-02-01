@@ -104,14 +104,23 @@ public class CrudApplication implements CommandLineRunner {
 			
 			
 			Produto produto = new Produto();
-			ParceiroNegocios fabricante = parceiroNegociosService.buscarPorId(50); //Deve associar o fabricante a Lucas Bispo
-			produto.setDescricao("Maça verde");
+			ParceiroNegocios fabricante = parceiroNegociosService.buscarPorId(4); //Deve associar o fabricante a Lucas Bispo
+			produto.setDescricao("Açai");
 			produto.setFabricante(fabricante);
 			produto.setDataFabricacao(Date.valueOf("2021-01-01"));
 			produto.setDataValidade(Date.valueOf("2024-05-05"));
 			Produto produto2 = produtoService.salvar(produto);
 			LOG.info("id inserido: {}", produto2.getId());
-		
+			
+			Produto porId = produtoService.buscarPorId(produto2.getId());
+			LOG.info("Busca por Id. Descrição {}, Fabricante {}", porId.getDescricao(), porId.getFabricante().getNome());
+			
+			Produto porDescricao = produtoService.buscarPorDescricao(produto2.getDescricao());
+			LOG.info("Busca por Descrição {}, Data de Fabricação {}, Data de Validade {}", porDescricao.getDescricao(), 
+						porDescricao.getDataFabricacao(), porDescricao.getDataValidade());
+			
+			List<Produto> todosSalvos = produtoService.listarTodos();
+			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 		}
 		
 
