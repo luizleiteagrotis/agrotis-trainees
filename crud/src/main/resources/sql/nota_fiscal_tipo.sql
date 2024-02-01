@@ -4,3 +4,4 @@ CREATE TABLE nota_fiscal_tipo
     nome varchar(255),
     CONSTRAINT pk_nota_fiscal_tipo PRIMARY KEY (id)
 )
+
