@@ -168,6 +168,10 @@ public class CrudApplication implements CommandLineRunner {
 		
 		List<NotaFiscal> notas = notaFiscalService.listarTodos();
 		LOG.info("Tamanho da lista: ", notas.size());
+		
+		//notaFiscalService.deletarPorId(notaFiscal2.getId());
+		//LOG.info("Deletando a nota {}", notaFiscal2.getId() );
+
 
 		
 		
