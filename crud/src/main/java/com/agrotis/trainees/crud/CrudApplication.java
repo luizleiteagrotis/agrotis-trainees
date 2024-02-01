@@ -1,8 +1,10 @@
 package com.agrotis.trainees.crud;
 
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -25,11 +27,13 @@ public class CrudApplication implements CommandLineRunner {
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
+	private final NotaFiscalService notaFiscalService;
 
-	public CrudApplication(ParceiroNegocioService parceiroNegocioService, NotaFiscalTipoService notaFiscalTipoService, ProdutoService produtoService) {
+	public CrudApplication(ParceiroNegocioService parceiroNegocioService, NotaFiscalTipoService notaFiscalTipoService, ProdutoService produtoService, NotaFiscalService notaFiscalService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
+		this.notaFiscalService = notaFiscalService;
 	}
 
 	public static void main(String[] args) {
@@ -141,6 +145,14 @@ public class CrudApplication implements CommandLineRunner {
 		if (produtoDeletar == true) {
 			produtoService.deletarPorId(produto2.getId());
 		}
+		
+		NotaFiscal notaFiscal = new NotaFiscal();
+		notaFiscal.setNotaFiscalTipo(notaFiscalTipo2);		
+		notaFiscal.setParceiroNegocio(parceiroNegocio2);
+		notaFiscal.setNumeroNota(51581831);
+		notaFiscal.setDataNota(null);
+		NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
+		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		
 	}
 }
