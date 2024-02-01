@@ -62,7 +62,7 @@ LOG.info("----------------------------------------------------------------------
 		 	
 
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-		parceiroNegocio.setNome("Willian");
+		parceiroNegocio.setNome("outro");
 		parceiroNegocio.setInscricaoFiscal("135694442");
 		parceiroNegocio.setEndereco("Rua Rio Xingu");
 		parceiroNegocio.setTelefone("41996483268");
@@ -91,8 +91,8 @@ LOG.info("----------------------------------------------------------------------
 		
 	Produto produto = new Produto();
 	
-	produto.setNome("Algodao");
 	produto.setDescricao("Grao Plantado");
+	produto.setNome("outro");
 	produto.setFabricante(parceiroNegocio);
 	produto.setDataFabricacao(LocalDate.of(2024, 12, 1));
 	produto.setDataValidade(LocalDate.of(2025, 11, 2));
@@ -102,14 +102,27 @@ LOG.info("----------------------------------------------------------------------
 	LOG.info("Salvos no total de {} parceiros de negocio.", buscarTodos.size());
 	
 	Produto novoProduto = new Produto();
-	produto.setDescricao("Trigo");
-	
+	novoProduto.setDescricao("Trigo");
+	novoProduto.setNome("outro");
+	novoProduto.setFabricante(parceiroNegocio);
+	novoProduto.setDataFabricacao(LocalDate.of(2024, 12, 1));
+	novoProduto.setDataValidade(LocalDate.of(2025, 11, 2));	
 	produtoService.update(produto.getId(), novoProduto);
 	LOG.info("Produto Update {}", produto.getId());
 	
 	produtoService.deletarPorId(produto.getId());
 	LOG.info("Produto Deletado {}", produto.getId());
 	
+	
+	
+ LOG.info("---------------------------------------------------------------------------------------------------------------------------------------");	
+	
+	
+ 
+ 
+ 
+ 
+ 
 	
 
 	

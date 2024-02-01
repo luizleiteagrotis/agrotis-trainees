@@ -28,7 +28,7 @@ public class Produto {
 	private String nome;
 	
 	@ManyToOne()
-	@JoinColumn(name = "id_parceiro_fabricante") 
+	@JoinColumn(name = "fabricante_id") 
 	private ParceiroNegocio fabricante;
 	
 	@Column(name = "data_fabricacao")

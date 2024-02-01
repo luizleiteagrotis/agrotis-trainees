@@ -20,7 +20,7 @@ public class ProdutoService {
 	
 	public Produto buscarPeloNome(String nome) {
 		return repository.findByNome(nome).orElseGet(() -> {
-			LOG.error("O produto nao foi encontrador pelo nome{}", nome);
+			LOG.error("O produto nao foi encontrado pelo nome{}", nome);
 			return null;
 		}); 
 	} 

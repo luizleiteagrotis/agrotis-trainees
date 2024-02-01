@@ -1,8 +1,9 @@
 create table produto (
        id integer not null,
+       descricao varchar(255),
+       nome varchar(255),
         data_fabricacao date,
         data_validade date,
-        descricao varchar(255),
         fabricante_id integer,
         primary key (id)
     )
