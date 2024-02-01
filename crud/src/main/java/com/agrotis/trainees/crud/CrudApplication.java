@@ -58,9 +58,6 @@ public class CrudApplication implements CommandLineRunner {
 		//notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-		 
-		 
-		 
 		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		parceiroNegocio.setNome("C.Vale");		
@@ -107,7 +104,27 @@ public class CrudApplication implements CommandLineRunner {
 		Produto produto2 = produtoService.salvar(produto);
 		LOG.info("id inserido: {}", produto.getId());
 		
+		Produto porIdProduto = produtoService.buscarPorId(produto2.getId());
+		LOG.info("Busca por id. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}", porIdProduto.getNome(), porIdProduto.getId(), porIdProduto.getDescricao(), porIdProduto.getParceiroNegocio(), porIdProduto.getFabricante(), porIdProduto.getDataFabricacao(), porIdProduto.getDataValidade()); 
 		
+		Produto porNomeProduto = produtoService.buscarPorNome(produto2.getNome());
+		LOG.info("Busca por nome do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}", porNomeProduto.getNome(), porNomeProduto.getId(), porNomeProduto.getDescricao(), porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(), porNomeProduto.getDataFabricacao(), porNomeProduto.getDataValidade());
+		
+		Produto porFabricanteProduto = produtoService.buscarPorFabricante(produto2.getFabricante());
+		LOG.info("Busca por fabricante do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}", porFabricanteProduto.getNome(), porFabricanteProduto.getId(), porFabricanteProduto.getDescricao(), porFabricanteProduto.getParceiroNegocio(), porFabricanteProduto.getFabricante(), porFabricanteProduto.getDataFabricacao(), porFabricanteProduto.getDataValidade());
+		
+		Produto porDataFabricacaoProduto = produtoService.buscarPorDataFabricacao(produto2.getDataFabricacao());
+		LOG.info("Busca por data de fabricação do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}", porDataFabricacaoProduto.getNome(), porDataFabricacaoProduto.getId(), porDataFabricacaoProduto.getDescricao(), porDataFabricacaoProduto.getParceiroNegocio(), porDataFabricacaoProduto.getFabricante(), porDataFabricacaoProduto.getDataFabricacao(), porDataFabricacaoProduto.getDataValidade());
+		
+		Produto porDataValidadeProduto = produtoService.buscarPorDataValidade(produto2.getDataValidade());
+		LOG.info("Busca por data de validade do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}", porDataValidadeProduto.getNome(), porDataValidadeProduto.getId(), porDataValidadeProduto.getDescricao(), porDataValidadeProduto.getParceiroNegocio(), porDataValidadeProduto.getFabricante(), porDataValidadeProduto.getDataFabricacao(), porDataValidadeProduto.getDataValidade());
+		
+		Produto porParceiroProduto = produtoService.buscarPorParceiro(produto2.getParceiroNegocio());
+		LOG.info("Busca por parceiro de negócio. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}", porParceiroProduto.getNome(), porParceiroProduto.getId(), porParceiroProduto.getDescricao(), porParceiroProduto.getParceiroNegocio(), porParceiroProduto.getFabricante(), porParceiroProduto.getDataFabricacao(), porParceiroProduto.getDataValidade());
+		
+		List<Produto> todosSalvosProduto = produtoService.listarTodos();
+		LOG.info("Salvos no total de {} produtos", todosSalvos.size());
+	
 		
 		
 	}

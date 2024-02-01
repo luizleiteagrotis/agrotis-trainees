@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,5 +69,14 @@ public class ProdutoService {
 			return null;
 		});
 	}
+	
+	public List<Produto> listarTodos() {
+		return repository.findAll();
+	}
 
+	public void deletarPorId(Integer id){
+		repository.deleteById(id);
+		LOG.info("Deletado com sucesso");
+	}
+	
 }
