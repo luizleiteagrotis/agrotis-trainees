@@ -91,7 +91,10 @@ public class CrudApplication implements CommandLineRunner {
 				 
 				 LOG.info("---------------------Produto------------------------");
 				 
-				 
+				 ProdutoService produtoService = new ProdutoService(null);
+				 Produto produtoAtualizado = new Produto();
+
+
 				 Produto produto = new Produto();
 				 ParceiroNegocio parceiroNegocio1 = new ParceiroNegocio();
 				 parceiroNegocio1.setNome("Kleber");
@@ -105,7 +108,7 @@ public class CrudApplication implements CommandLineRunner {
 				 produto.setDataValidade(LocalDate.parse("02/08/2004", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 				 produto.setDescricao("Produto Random");
 				 produto.setFabricante(parceiroNegocio1);
-				 ProdutoService.salvar(produto);
+				 produtoService.salvar(produto);
 				 LOG.info("if inserido: {}", produto.getId());
 				 
 				 List<Produto> buscarTodos = ProdutoService.buscarTodos();
@@ -114,13 +117,13 @@ public class CrudApplication implements CommandLineRunner {
 			     Produto produtoPorId = ProdutoService.buscaPeloId(produto.getId());
 				 LOG.info("Buscando pelo id: {}", produtoPorId.getId());
 				 
-				 Produto produtoAtualizado = new Produto();
 					produto.setDescricao("Rolo de Algodão");
 					
 				 ProdutoService.atualizar(produtoPorId.getId(), produtoAtualizado);
 				 LOG.info("Atualizando o produto {}", produtoPorId.getId() );
 				 
-				 
+				produtoService.deletarPorId(produtoPorId.getId());
+					LOG.info("Deletando o produto {}", produtoPorId.getId() );
 				 
 
 				 

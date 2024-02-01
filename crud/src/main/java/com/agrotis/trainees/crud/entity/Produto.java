@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name = "produto")
 
@@ -24,8 +26,10 @@ public class Produto {
 	@Column(name = "parceiro_de_negocios")
 	private String fabricante;
 	@Column(name = "data_de_fabricacao")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataFabricacao;
 	@Column(name = "data_de_validade")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataValidade;
 	
 	
@@ -68,6 +72,10 @@ public class Produto {
 	
 	public Integer getId1() {
 		return id;
+	}
+	public void setFabricante(ParceiroNegocio parceiroNegocio1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
