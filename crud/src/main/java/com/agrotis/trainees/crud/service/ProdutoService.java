@@ -47,5 +47,4 @@ public class ProdutoService {
 	public void deletarPorId(Integer id) {
 		repository.deleteById(id);
 	}
-
 }

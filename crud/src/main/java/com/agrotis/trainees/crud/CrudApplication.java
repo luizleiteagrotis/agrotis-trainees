@@ -1,6 +1,8 @@
 package com.agrotis.trainees.crud;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -10,9 +12,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -25,12 +29,15 @@ public class CrudApplication implements CommandLineRunner {
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
+	private final NotaFiscalService notaFiscalService;
 
 	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService,
-			ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService) {
+			ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService, 
+			NotaFiscalService notaFiscalService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
+		this.notaFiscalService = notaFiscalService;
 	}
 
 	public static void main(String[] args) {
@@ -40,6 +47,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
+		
 		NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 		notaFiscalTipo.setNome("nomeTeste");
 		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
@@ -81,7 +89,6 @@ public class CrudApplication implements CommandLineRunner {
 		
 		LOG.info("----------------PRODUTO------------------");
 		
-		Produto produto = new Produto();
 		ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
 		parceiroNegocio2.setNome("Copacol");
 		parceiroNegocio2.setInscricaoFiscal("22.338.624/0002-37");
@@ -90,6 +97,7 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroNegocioService.salvar(parceiroNegocio2);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 
+		Produto produto = new Produto();
 		produto.setDataFabricacao(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 		produto.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 		produto.setDescricao("Fertilizante Quebra Nózes");
@@ -103,14 +111,49 @@ public class CrudApplication implements CommandLineRunner {
 		Produto produtoPorId = produtoService.buscaPeloId(produto.getId());
 		LOG.info("Buscando pelo id: {}", produtoPorId.getId());
 		
+		ParceiroNegocio parceiroNegocio3 = new ParceiroNegocio();
+		parceiroNegocio3.setNome("Coamo");
+		parceiroNegocio3.setInscricaoFiscal("22.338.624/0002-37");
+		parceiroNegocio3.setEndereco("Rua dos Sonhadores, 67");
+		parceiroNegocio3.setTelefone("41988556544");
+		parceiroNegocioService.salvar(parceiroNegocio3);
+		LOG.info("id inserido: {}", parceiroNegocio3.getId());
+		
+		
 		Produto produtoAtualizado = new Produto();
-		produto.setDescricao("Rolo de Algodão");
+		produtoAtualizado.setDataFabricacao(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		produtoAtualizado.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		produtoAtualizado.setDescricao("Xalabacataia");
+		produtoAtualizado.setFabricante(parceiroNegocio3);
+		produtoService.salvar(produtoAtualizado);
+		
+		Produto produtoAtualizado2 = new Produto();
+		produtoAtualizado2.setDataFabricacao(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		produtoAtualizado2.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		produtoAtualizado2.setDescricao("Mathias O Brabo");
+		produtoAtualizado2.setFabricante(parceiroNegocio3);
+		produtoService.salvar(produtoAtualizado2);
 		
 		produtoService.atualizar(produtoPorId.getId(), produtoAtualizado);
 		LOG.info("Atualizando o produto {}", produtoPorId.getId() );
 		
-		produtoService.deletarPorId(produtoPorId.getId());
-		LOG.info("Deletando o produto {}", produtoPorId.getId() );
+		//produtoService.deletarPorId(produtoPorId.getId());
+		//LOG.info("Deletando o produto {}", produtoPorId.getId() );
+		
+		LOG.info("----------------Nota Fiscal------------------");
+		
+		NotaFiscal notaFiscal = new NotaFiscal();
+		notaFiscal.setData(LocalDateTime.of(2024, Month.JANUARY, 25, 0, 0));
+		notaFiscal.setNotaFiscalTipo("Entrada");
+		notaFiscal.setNumeroDaNota(159753);
+		notaFiscal.setParceiroNegocio(parceiroNegocio3);
+		notaFiscalService.salvar(notaFiscal);
+		LOG.info("Salvando nota fiscal: {}", notaFiscal.getId());
+		
+		
+
+		
+		
 		
 		
 	}
