@@ -9,48 +9,33 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.CrudApplication;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
+import com.agrotis.trainees.crud.repository.parceironegocio.ParceiroJpaRepository;
+import com.agrotis.trainees.crud.repository.parceironegocio.ParceiroRepository;
+import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapper;
 
 @Service
 public class ParceiroNegocioService {
 	
-	private ParceiroNegocioRepository repository;
-	
-	private final Logger LOG = LoggerFactory
-			.getLogger(ParceiroNegocioService.class);
+	private ParceiroRepository repository;
 	
 	@Autowired
-	public ParceiroNegocioService(ParceiroNegocioRepository repository) {
+	public ParceiroNegocioService(ParceiroRepository repository) {
 		this.repository = repository;
 	}
 	
 	public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-		LOG.info("Tentando salvar parceiro");
-		entidade = repository.save(entidade);
-		LOG.info("Entidade salva com sucesso. ID: {}", entidade.getId());
-		return entidade;
+		return repository.salvar(entidade);
 	}
 	
 	public ParceiroNegocio buscarPorId(long idParceiro) {
-		LOG.info("Tentando buscar parceiro com id: {}", idParceiro);
-		ParceiroNegocio parceiro = repository.findById(idParceiro).orElseGet(() -> {
-			LOG.error("Nota não encontrada para id {}.", idParceiro);
-			return null;
-		});
-		LOG.info("Parceiro encontrado com sucesso. ID: {}", idParceiro);
-		return parceiro;
+		return repository.buscarPor(idParceiro);
 	}
 	
 	public List<ParceiroNegocio> listarTodos() {
-		LOG.info("Tentando buscar todos os parceiros");
-		List<ParceiroNegocio> parceiros = repository.findAll();
-		LOG.info("Parceiros buscados com sucesso. Quantidade: {}", parceiros.size());
-		return parceiros;
+		return repository.buscarTodos();
 	}
 	
 	public void deletar(long idParceiro) {
-		LOG.info("Tentando deletar parceiro. ID: {}", idParceiro);
-		repository.deleteById(idParceiro);
-		LOG.info("Deletado id {} com sucesso", idParceiro);
+		repository.deletar(idParceiro);
 	}
 }
