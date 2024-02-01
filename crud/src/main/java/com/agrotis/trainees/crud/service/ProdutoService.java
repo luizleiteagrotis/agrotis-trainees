@@ -33,13 +33,12 @@ public class ProdutoService {
 	}
 	//UPDATE
 
-	public Produto buscarPorId(Integer id, Produto produto) {
-		Produto byId = repository.findById(id).orElseGet(() -> {
-			LOG.info("Não foi possível buscar pelo id {}", id);
+	public Produto buscarPorNome(String nomeProduto, Produto produto) {
+		Produto byNome = repository.findByNome(nomeProduto).orElseGet(() -> {
+			LOG.info("Não foi possível buscar pelo nome {}", nomeProduto);
 			return null;
 		});
 	return repository.save(produto);
 
-	}
-	
+	}	
 }
