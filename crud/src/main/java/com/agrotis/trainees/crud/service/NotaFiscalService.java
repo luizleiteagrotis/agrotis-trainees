@@ -23,6 +23,12 @@ public class NotaFiscalService {
 		return repository.save(entidade);
 	}
 
+   	public NotaFiscal buscarPorId(Integer id) {
+	return repository.findById(id).orElseGet(() -> {
+		LOG.error("Nota não encontrada para id {}.", id);
+		return null;
+	});
+}
 
 	
 }

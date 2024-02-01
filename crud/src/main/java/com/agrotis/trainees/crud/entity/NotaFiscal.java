@@ -24,7 +24,7 @@ public class NotaFiscal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 
 	@Column(name = "nota_fiscal_tipo_id")
 	private String notaFiscalTipo;
@@ -71,7 +71,7 @@ public class NotaFiscal {
 		this.data = data;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 

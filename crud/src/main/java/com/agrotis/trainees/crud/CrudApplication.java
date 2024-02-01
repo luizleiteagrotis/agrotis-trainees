@@ -150,7 +150,8 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalService.salvar(notaFiscal);
 		LOG.info("Salvando nota fiscal: {}", notaFiscal.getId());
 		
-		
+		notaFiscalService.buscarPorId(notaFiscal.getId());
+		LOG.info("Buscando nota pelo id {}", notaFiscal.getId() );
 
 		
 		
