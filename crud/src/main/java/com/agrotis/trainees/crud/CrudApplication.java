@@ -105,7 +105,7 @@ public class CrudApplication implements CommandLineRunner {
 			
 			Produto produto = new Produto();
 			ParceiroNegocios fabricante = parceiroNegociosService.buscarPorId(4); //Deve associar o fabricante a Lucas Bispo
-			produto.setDescricao("Açai");
+			produto.setDescricao("Jaca");
 			produto.setFabricante(fabricante);
 			produto.setDataFabricacao(Date.valueOf("2021-01-01"));
 			produto.setDataValidade(Date.valueOf("2024-05-05"));
@@ -121,6 +121,16 @@ public class CrudApplication implements CommandLineRunner {
 			
 			List<Produto> todosSalvos = produtoService.listarTodos();
 			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
+			
+			
+			porId = produtoService.buscarPorId(17);
+			porId.setDescricao("Maçã Gala");
+			porId.setDataFabricacao(Date.valueOf("2023-02-07"));
+			porId.setDataValidade(Date.valueOf("2024-07-08"));
+			produtoService.salvar(porId);
+			LOG.info("Dados alterados com sucesso");
+		
+			
 		}
 		
 
