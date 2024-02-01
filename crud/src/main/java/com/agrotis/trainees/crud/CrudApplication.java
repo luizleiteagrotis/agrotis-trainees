@@ -150,9 +150,26 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscal.setNotaFiscalTipo(notaFiscalTipo2);		
 		notaFiscal.setParceiroNegocio(parceiroNegocio2);
 		notaFiscal.setNumeroNota(51581831);
-		notaFiscal.setDataNota(null);
+		notaFiscal.setDataNota(LocalDate.now());
 		NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
 		LOG.info("id inserido: {}", parceiroNegocio2.getId());
 		
+		NotaFiscal porIdNotaFiscal = notaFiscalService.buscarPorId(notaFiscal2.getId());
+		LOG.info("Busca por id. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}", porIdNotaFiscal.getId(), porIdNotaFiscal.getNotaFiscalTipo(), porIdNotaFiscal.getParceiroNegocio(), porIdNotaFiscal.getNumeroNota(), porIdNotaFiscal.getDataNota()) ;
+		
+		NotaFiscal porNotaFiscalTipo = notaFiscalService.buscarPorNotaFiscalTipo(notaFiscalTipo2);
+		LOG.info("Busca por tipo de nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}", porNotaFiscalTipo.getId(), porNotaFiscalTipo.getNotaFiscalTipo(), porNotaFiscalTipo.getParceiroNegocio(), porNotaFiscalTipo.getNumeroNota(), porNotaFiscalTipo.getDataNota()) ;
+		
+		NotaFiscal porParceiroNegocioNota = notaFiscalService.buscarPorParceiroNegocio(parceiroNegocio2);
+		LOG.info("Busca por parceiro de negócio. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}", porParceiroNegocioNota.getId(), porParceiroNegocioNota.getNotaFiscalTipo(), porParceiroNegocioNota.getParceiroNegocio(), porParceiroNegocioNota.getNumeroNota(), porParceiroNegocioNota.getDataNota()) ;
+		
+		NotaFiscal porNumeroNotaFiscal = notaFiscalService.buscarPorNumero(notaFiscal2.getNumeroNota());
+		LOG.info("Busca por número da nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}", porNumeroNotaFiscal.getId(), porNumeroNotaFiscal.getNotaFiscalTipo(), porNumeroNotaFiscal.getParceiroNegocio(), porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getDataNota()) ;
+		
+		NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscal2.getDataNota());
+		LOG.info("Busca por data da nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}", porDataNota.getId(), porDataNota.getNotaFiscalTipo(), porDataNota.getParceiroNegocio(), porDataNota.getNumeroNota(), porDataNota.getDataNota()) ;
+		
+		List<NotaFiscal> todosSalvosNotaFiscal = notaFiscalService.listarTodos();
+		LOG.info("Salvos no total de {} notas fiscais", todosSalvos.size());
 	}
 }

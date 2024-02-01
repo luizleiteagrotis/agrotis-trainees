@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -28,15 +29,25 @@ public class NotaFiscal {
 	@JoinColumn(name = "parceiro_negocio")
     private ParceiroNegocio parceiroNegocio;
 	
-	//@NotNull(message = "Obrigatório preencher o número da Nota Fiscal")
+	@NotNull(message = "Obrigatório preencher o número da Nota Fiscal")
 	@Column(name = "numero_nota")
 	private Integer numeroNota;
 	
+	@FutureOrPresent(message = "A data não pode ser maior que a data de hoje")
 	private LocalDate dataNota;
 	
+	public NotaFiscal() {
+		super();
+		this.dataNota = LocalDate.now();
+	}
+
+
+
 	public Integer getId() {
         return id;
     }
+
+	
 
 	public NotaFiscalTipo getNotaFiscalTipo() {
 		return notaFiscalTipo;
@@ -67,7 +78,7 @@ public class NotaFiscal {
 	}
 
 	public void setDataNota(LocalDate dataNota) {
-		this.dataNota = (dataNota != null) ? dataNota : LocalDate.now();
+		this.dataNota = (dataNota == null) ? dataNota : LocalDate.now();
 	}
 	
 }
