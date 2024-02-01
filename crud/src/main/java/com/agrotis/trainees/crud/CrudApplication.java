@@ -67,7 +67,7 @@ public class CrudApplication implements CommandLineRunner {
 //		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-		parceiroNegocio.setNome("Empresa de ração");
+		parceiroNegocio.setNome("Empresa de adubo");
 		parceiroNegocio.setInscricaoFiscal("020924");
 		parceiroNegocio.setEndereco("Sao Paulo, rua cerveja, 15");
 		parceiroNegocio.setTelefone("11 9 5454 5454");
@@ -95,11 +95,11 @@ public class CrudApplication implements CommandLineRunner {
 //		parceiroNegocioService.salvar(parceiroPorNome2);
 //		LOG.info("Nome, endereco e telefone atualizado com sucesso, novo nome: {}, novo endereco: {}, novo telefone: {} ", 
 //				parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(), parceiroPorNome2.getTelefone() );
-		
+
 //		parceiroNegocioService.deletarPorId(parceiroPorId.getId());
-		
+
 		Produto produto = new Produto();
-		produto.setDescricao("Ração do Brasil");
+		produto.setDescricao("Adubo");
 		produto.setParceiroNegocio(parceiroNegocio);
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -111,26 +111,28 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setDataValidade(validaDate);
 		
 		Produto produto2 = produtoService.salvar(produto);
-				
-//		Produto produtoPorId = produtoService.buscarPorId(produto2.getId());
-//		LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
-//				produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(), produtoPorId.getParceiroNegocio() );
-		
+
+		Produto produtoPorId = produtoService.buscarPorId(produto2.getId());
+		LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
+				produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(), produtoPorId.getParceiroNegocio() );
+
 //		Produto produtoPorDescricao = produtoService.buscarPorDescricao(produto2.getDescricao());
 //		LOG.info("Busca por descricao. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
 //				produtoPorDescricao.getDescricao(), produtoPorDescricao.getDataFabricacao(), produtoPorDescricao.getDataValidade(), produtoPorDescricao.getParceiroNegocio() );
-		
+
 //		List<Produto> todosProdutos = produtoService.listarTodos();
 //		LOG.info("Salvos no total de {} tipos de produtos", todosProdutos.size());
-		
-		Produto produtoPorDescricao2 = produtoService.buscarPorDescricao(produto2.getDescricao());
-		produtoPorDescricao2.setDescricao("Nova ração importada");
-		Date novaValidadeDate = dateFormat.parse("03-07-2016");
-		produtoPorDescricao2.setDataValidade(novaValidadeDate);
-		produtoPorDescricao2.setParceiroNegocio(parceiroNegocio2);
-		produtoService.salvar(produtoPorDescricao2);
-		System.out.println(produtoPorDescricao2.getParceiroNegocio());
-		LOG.info("Nova descrição {}, nova data validade {} e novo parceiro {}: ", produtoPorDescricao2.getDescricao(), produtoPorDescricao2.getDataValidade(), produtoPorDescricao2.getParceiroNegocio());
-	
+
+//		Produto produtoPorDescricao2 = produtoService.buscarPorDescricao(produto2.getDescricao());
+//		produtoPorDescricao2.setDescricao("Nova ração importada");
+//		Date novaValidadeDate = dateFormat.parse("03-07-2016");
+//		produtoPorDescricao2.setDataValidade(novaValidadeDate);
+//		produtoPorDescricao2.setParceiroNegocio(parceiroNegocio2);
+//		produtoService.salvar(produtoPorDescricao2);
+//		System.out.println(produtoPorDescricao2.getParceiroNegocio());
+//		LOG.info("Nova descrição {}, nova data validade {} e novo parceiro {}: ", produtoPorDescricao2.getDescricao(), produtoPorDescricao2.getDataValidade(), produtoPorDescricao2.getParceiroNegocio());
+
+		produtoService.deletarPorId(produtoPorId.getId());
+
 	}
 }

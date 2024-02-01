@@ -42,5 +42,10 @@ public class ProdutoService {
 	public List<Produto> listarTodos() {
 		return repository.findAll();
 	}
+	
+	public void deletarPorId(Integer id) {
+		repository.deleteById(id);
+		LOG.info("Produto deletado com sucesso");
+	}
 
 }
