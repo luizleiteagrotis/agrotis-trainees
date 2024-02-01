@@ -23,5 +23,13 @@ public class ProdutoService {
 	public Produto salvar(Produto entidade) {
 		return repository.save(entidade);	
 	}
+
+
+	public Produto buscarPorId(Long id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.error("Produto não encontrado para id {}.", id);
+			return null;
+		});
+	}
 	
 }

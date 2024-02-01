@@ -15,7 +15,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
@@ -49,6 +48,10 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroNegocio.setTelefone("41998775223");
 		parceiroNegocioService.salvar(parceiroNegocio);
 		LOG.info("id inserido: {}", parceiroNegocio.getId());
+		
+		ParceiroNegocio buscaParceiroID = parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
+		LOG.info("Busca por id. Nome {} id {} ", buscaParceiroID.getNome(), buscaParceiroID.getId());
+		
 		
 		Produto produto = new Produto();
 		ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
