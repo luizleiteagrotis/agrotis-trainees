@@ -21,7 +21,7 @@ public class ProdutoService {
 	}
 	//Create
 	public Produto salvar(Produto entidade) {
-		return repository.save(entidade);
+		return repository.save(entidade);	
 	}
 	
 }
