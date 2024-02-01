@@ -137,7 +137,7 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("Dados alterados com sucesso!", porNomeProduto.getNome(), porNomeProduto.getDescricao(), porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(), porNomeProduto.getDataFabricacao(), porNomeProduto.getDataValidade()); 
 
 		
-		boolean produtoDeletar = true; // o comando funcionou adequadamente, por isso, deixei a variável como false para envio 
+		boolean produtoDeletar = false; // o comando funcionou adequadamente, por isso, deixei a variável como false para envio 
 		if (produtoDeletar == true) {
 			produtoService.deletarPorId(produto2.getId());
 		}
