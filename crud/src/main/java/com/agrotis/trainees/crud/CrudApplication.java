@@ -126,6 +126,18 @@ public class CrudApplication implements CommandLineRunner {
 		LOG.info("Salvos no total de {} produtos", todosSalvos.size());
 	
 		
+		porNomeProduto = produtoService.buscarPorNome(produto.getNome());
+		porNomeProduto.setNome("Milho");
+		porNomeProduto.setDescricao("Para alimentar animais");
+		porNomeProduto.setParceiroNegocio(parceiroNegocio2);
+		porNomeProduto.setFabricante("Lierson Damares");
+		porNomeProduto.setDataFabricacao(LocalDate.of(2023, 10, 01));
+		porNomeProduto.setDataValidade(LocalDate.of(2024, 2, 01));
+		produtoService.salvar(porNomeProduto);
+		LOG.info("Dados alterados com sucesso!", porNomeProduto.getNome(), porNomeProduto.getDescricao(), porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(), porNomeProduto.getDataFabricacao(), porNomeProduto.getDataValidade()); 
+
+		
+		
 		
 	}
 }
