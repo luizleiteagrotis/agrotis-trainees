@@ -9,12 +9,12 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.helper.Validador;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Service
 public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
-
     private final ProdutoRepository repository;
     private final ParceiroNegocioService parceiroNegocioService;
 
@@ -25,11 +25,12 @@ public class ProdutoService {
     }
 
     public Produto salvar(Produto entidade) {
-        if (parceiroNegocioService.buscarPorId(entidade.getFabricante().getId()) == null) {
-            LOG.error("O fabricante não existe");
-            return null;
+
+        if (Validador.validarParceiro(entidade.getFabricante().getId())) {
+            return repository.save(entidade);
         }
-        return repository.save(entidade);
+        LOG.error("O fabricante não existe");
+        return null;
     }
 
     public Produto buscarPorId(int id) {

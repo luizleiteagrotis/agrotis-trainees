@@ -7,10 +7,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.sql.Date;
-import java.util.List;
 
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.helper.TipoNotaFiscal;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -23,12 +24,14 @@ public class CrudApplication implements CommandLineRunner {
     private final NotaFiscalTipoService notaFiscalTipoService;
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
+    private final NotaFiscalService notaFiscalService;
 
     public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
-                    ProdutoService produtoService) {
+                    ProdutoService produtoService, NotaFiscalService notaFiscalService) {
         this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
+        this.notaFiscalService = notaFiscalService;
     }
 
     public static void main(String[] args) {
@@ -110,58 +113,82 @@ public class CrudApplication implements CommandLineRunner {
 
         //////////////////////////////
 
-        ParceiroNegocio parceiroProduto = parceiroNegocioService.buscarPorId(40);
-        Produto produto = new Produto("Manga", Date.valueOf("2024-01-01"), Date.valueOf("2024-06-20"), parceiroProduto);
+        // ParceiroNegocio parceiroProduto =
+        // parceiroNegocioService.buscarPorId(40);
+        // Produto produto = new Produto("Manga", Date.valueOf("2024-01-01"),
+        // Date.valueOf("2024-06-20"), parceiroProduto);
+        //
+        // // create
+        // Produto salvarProduto = produtoService.salvar(produto);
+        // LOG.info("id inserio: {}", salvarProduto.getId());
+        //
+        // // select por ID
+        // Produto procurarProdutoPorID = produtoService.buscarPorId(89);
+        // LOG.info("o ID trazido foi {}", procurarProdutoPorID.getId());
+        //
+        // // select por Data de Fabricacao
+        // List<Produto> procurarDataFabricacao =
+        // produtoService.buscarPorDataFabricacao(Date.valueOf("2024-01-01"));
+        // for (Produto produtos : procurarDataFabricacao) {
+        // LOG.info("o nome trazido foi {}", produtos.getNome());
+        // }
+        //
+        // // select por Data de Validade
+        // List<Produto> procurarDatavalidade =
+        // produtoService.buscarPorDataValidade(Date.valueOf("2024-06-20"));
+        // for (Produto produtos : procurarDatavalidade) {
+        // LOG.info("A data trazida foi {}", produtos.getDataValidade());
+        // }
+        //
+        // // select por nome
+        //
+        // List<Produto> procurarNome = produtoService.buscarPorNome("Mimosa");
+        // for (Produto nProdutos : procurarNome) {
+        // LOG.info("O nome trazido foi {} e o id {} ", nProdutos.getNome(),
+        // nProdutos.getId());
+        // }
+        //
+        // // select por Fornecedor
+        //
+        // List<Produto> procurarFornecedor =
+        // produtoService.buscarPorFornecedor(parceiroProduto);
+        // for (Produto fProdutos : procurarFornecedor) {
+        // LOG.info("O parceiro trazido foi {} e o id {} ",
+        // fProdutos.getFabricante().getNome(),
+        // fProdutos.getFabricante().getId());
+        // }
+        //
+        // // select todos
+        // List<Produto> listarTodos = produtoService.listarTodos();
+        // for (Produto lProdutos : listarTodos) {
+        // LOG.info("O id foi {}", lProdutos.getId());
+        // }
+        //
+        // // update
+        // Produto produtoAtualizado = new Produto("Café",
+        // Date.valueOf("2023-03-01"), Date.valueOf("2024-01-01"),
+        // parceiroProduto);
+        // produtoAtualizado.setDescricao("Produto de alta qualidade");
+        // Produto atualizar = produtoService.atualizar(produtoAtualizado, 105);
+        // LOG.info("Produto atualizado {} ", atualizar);
+        //
+        // // delete
+        // produtoService.excluir(111);
 
-        // create
-        Produto salvarProduto = produtoService.salvar(produto);
-        LOG.info("id inserio: {}", salvarProduto.getId());
+        //////////////////////////////////////////////////////////////
 
-        // select por ID
-        Produto procurarProdutoPorID = produtoService.buscarPorId(89);
-        LOG.info("o ID trazido foi {}", procurarProdutoPorID.getId());
+        String tipoEntrada = TipoNotaFiscal.ENTRADA.getDescricao();
+        String tipoSaida = TipoNotaFiscal.SAIDA.getDescricao();
 
-        // select por Data de Fabricacao
-        List<Produto> procurarDataFabricacao = produtoService.buscarPorDataFabricacao(Date.valueOf("2024-01-01"));
-        for (Produto produtos : procurarDataFabricacao) {
-            LOG.info("o nome trazido foi {}", produtos.getNome());
-        }
+        ParceiroNegocio parceiroNota = parceiroNegocioService.buscarPorId(40);
+        NotaFiscal nota = new NotaFiscal();
+        nota.setParceiroNegocio(parceiroNota);
+        nota.setNumero(1);
+        nota.setTipo(tipoEntrada);
+        nota.setData(Date.valueOf("2023-10-10"));
 
-        // select por Data de Validade
-        List<Produto> procurarDatavalidade = produtoService.buscarPorDataValidade(Date.valueOf("2024-06-20"));
-        for (Produto produtos : procurarDatavalidade) {
-            LOG.info("A data trazida foi {}", produtos.getDataValidade());
-        }
-
-        // select por nome
-
-        List<Produto> procurarNome = produtoService.buscarPorNome("Mimosa");
-        for (Produto nProdutos : procurarNome) {
-            LOG.info("O nome trazido foi {} e o id {} ", nProdutos.getNome(), nProdutos.getId());
-        }
-
-        // select por Fornecedor
-
-        List<Produto> procurarFornecedor = produtoService.buscarPorFornecedor(parceiroProduto);
-        for (Produto fProdutos : procurarFornecedor) {
-            LOG.info("O parceiro trazido foi {} e o id {} ", fProdutos.getFabricante().getNome(),
-                            fProdutos.getFabricante().getId());
-        }
-
-        // select todos
-        List<Produto> listarTodos = produtoService.listarTodos();
-        for (Produto lProdutos : listarTodos) {
-            LOG.info("O id foi {}", lProdutos.getId());
-        }
-
-        // update
-        Produto produtoAtualizado = new Produto("Café", Date.valueOf("2023-03-01"), Date.valueOf("2024-01-01"), parceiroProduto);
-        produtoAtualizado.setDescricao("Produto de alta qualidade");
-        Produto atualizar = produtoService.atualizar(produtoAtualizado, 105);
-        LOG.info("Produto atualizado {} ", atualizar);
-
-        // delete
-        produtoService.excluir(111);
+        NotaFiscal salvar = notaFiscalService.salvar(nota);
+        LOG.info("salvo id {}", salvar);
 
     }
 }
