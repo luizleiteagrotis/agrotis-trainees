@@ -36,7 +36,7 @@ public class ParceiroNegocioService {
 	}
 	public void deletarPorId(Integer id){
 		repository.deleteById(id);
-		LOG.info("Deletado com sucesso");
+		LOG.info("Deletado com sucesso"); 
 	}
 	public List<ParceiroNegocio> listarTodos() {
 		return repository.findAll();
@@ -53,7 +53,7 @@ public class ParceiroNegocioService {
 			LOG.error("Parceiro de Negócio não encontrado para o Id {}.", parceiro.getNome());
 			return null;
 		});
-		return repository.save(parceiro);
+	return repository.save(parceiro);
 		
 		
 		

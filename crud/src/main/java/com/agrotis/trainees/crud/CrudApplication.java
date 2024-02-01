@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
@@ -55,7 +56,7 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		 notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());*/
 		 
-		 LOG.info("---------------------------------------------");
+		 LOG.info("---------------------PN------------------------");
 		 
 		 ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		 parceiroNegocio.setNome("nome");
@@ -85,6 +86,59 @@ public class CrudApplication implements CommandLineRunner {
 				 porNome1.setInscricaoFiscal("2135498231");
 				 LOG.info("Dados alterados com sucesso");
 				 
-		
+				 LOG.info("---------------------Produto------------------------");
+				 
+				 
+				 Produto produto = new Produto();
+				 ParceiroNegocio parceiroNegocio1 = new ParceiroNegocio();
+				 parceiroNegocio1.setNome("Kleber");
+				 parceiroNegocio1.setEndereco("Rua do além");
+				 parceiroNegocio1.setInscricaoFiscal("123.465.7984");
+				 parceiroNegocio1.setTelefone("40028923");
+				 parceiroNegocioService.salvar(parceiroNegocio1);
+				 LOG.info("id inserido: {}", parceiroNegocio1.getId());
+				 
+				 
+				 
+				 
+
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
