@@ -10,9 +10,8 @@ import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 @Service
 public class NotaFiscalService {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(NotaFiscalService.class);
-	
+	private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
+
 	private final NotaFiscalRepository repository;
 
 	public NotaFiscalService(NotaFiscalRepository repository) {
@@ -23,12 +22,19 @@ public class NotaFiscalService {
 		return repository.save(entidade);
 	}
 
-   	public NotaFiscal buscarPorId(Integer id) {
-	return repository.findById(id).orElseGet(() -> {
-		LOG.error("Nota não encontrada para id {}.", id);
-		return null;
-	});
-}
+	public NotaFiscal buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.error("Nota não encontrada para id {}.", id);
+			return null;
+		});
+	}
 
-	
+	public NotaFiscal atualizar(Integer id, NotaFiscal negocio) {
+		NotaFiscal byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
+			return null;
+		});
+		return repository.save(byId);
+	}
+
 }
