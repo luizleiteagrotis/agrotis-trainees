@@ -4,19 +4,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.util.Optional;
+import java.util.List;
 
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
-    // Optional<Produto> findByFornecedor(ParceiroNegocio fornecedor);
+    List<Produto> findByFabricante(ParceiroNegocio fabricante);
 
-    Optional<Produto> findByDataFabricacao(Date data);
+    List<Produto> findByDataFabricacao(Date data);
 
-    Optional<Produto> findByDataValidade(Date data);
+    List<Produto> findByDataValidade(Date data);
 
-    Optional<Produto> findByNome(String nome);
+    List<Produto> findByNome(String nome);
 
 }

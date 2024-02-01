@@ -26,7 +26,6 @@ public class ParceiroNegocio {
     private String telefone;
 
     @OneToMany(mappedBy = "fabricante")
-
     private List<Produto> produtos;
 
     public int getId() {
