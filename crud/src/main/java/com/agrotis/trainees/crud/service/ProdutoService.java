@@ -24,12 +24,22 @@ public class ProdutoService {
 		return repository.save(entidade);	
 	}
 
-
+    //READ
 	public Produto buscarPorId(Long id) {
 		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Produto não encontrado para id {}.", id);
+			LOG.error("Produto não encontrado para este id {}.", id);
 			return null;
 		});
+	}
+	//UPDATE
+
+	public Produto buscarPorId(Integer id, Produto produto) {
+		Produto byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível buscar pelo id {}", id);
+			return null;
+		});
+	return repository.save(produto);
+
 	}
 	
 }

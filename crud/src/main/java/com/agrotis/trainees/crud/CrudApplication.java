@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
@@ -52,6 +53,12 @@ public class CrudApplication implements CommandLineRunner {
 		ParceiroNegocio buscaParceiroID = parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
 		LOG.info("Busca por id. Nome {} id {} ", buscaParceiroID.getNome(), buscaParceiroID.getId());
 		
+		ParceiroNegocio buscaParceiroNome = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+		LOG.info("Busca por nome. Nome {} id {} ", buscaParceiroNome.getNome(), buscaParceiroNome.getId());
+		
+		List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
+		LOG.info("Salvos no total de {} parceiros de negocio.", parceirosSalvos.size());
+		LOG.info("produto:");
 		
 		Produto produto = new Produto();
 		ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
