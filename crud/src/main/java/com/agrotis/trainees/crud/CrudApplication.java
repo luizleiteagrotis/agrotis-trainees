@@ -44,7 +44,7 @@ public class CrudApplication implements CommandLineRunner {
 	        // Operações com a entidade ParceiroNegocio
 	
 	        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-	        parceiroNegocio.setNome("outronome ");
+	        parceiroNegocio.setNome("Agrotis Informatica ");
 	        parceiroNegocio.setInscricaoFiscal("82.413.816/0001-01");
 	        parceiroNegocio.setEndereco("Rua 13 de maio");
 	        parceiroNegocio.setTelefone("4135238200");
@@ -77,18 +77,29 @@ public class CrudApplication implements CommandLineRunner {
 			Produto produto = new Produto();
 			ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
 			parceiroNegocio2.setNome("Agrotis");
-			parceiroNegocio2.setInscricaoFiscal("22.338.624/0002-37");
-			parceiroNegocio2.setEndereco("Rua dos Sonhadores, 67");
-			parceiroNegocio2.setTelefone("41988556544");
+			parceiroNegocio2.setInscricaoFiscal("82.413.816/0001-01");
+			parceiroNegocio2.setEndereco("Rua 13 de maio");
+			parceiroNegocio2.setTelefone("4135238200");
 			parceiroNegocioTipoService.salvar(parceiroNegocio2);
 			LOG.info("id inserido: {}", parceiroNegocio2.getId());
 
-			produto.setDataFabricacao(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-			produto.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-			produto.setDescricao("Fertilizante Quebra Nózes");
+			produto.setDataFabricacao(LocalDate.parse("08/01/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+			produto.setDataValidade(LocalDate.parse("09/12/2014", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+			produto.setDescricao("Algodão");
 			produto.setFabricante(parceiroNegocio2);
 			produtoTipoService.salvar(produto);
-			LOG.info("id inserido: {}", produto.getId());			
+			LOG.info("id inserido: {}", produto.getId());		
+
+			Produto produtoPorId =  produtoTipoService.buscarPorId(produto.getId());
+			LOG.info("Busca por id. Descrição {} id {} ", produtoPorId.getDescricao(), produtoPorId.getId());
+
+			Produto produtoPorDescricao =  produtoTipoService.buscarPorDescricao(produto.getDescricao());
+			LOG.info("Busca por descrição. Nome {} id {} ", produtoPorDescricao.getDescricao(), produtoPorDescricao.getId());
+
+			List<Produto> todosProdutosSalvos = produtoTipoService.listarTodos();
+			LOG.info("Salvos no total de {} tipos de produtos", todosProdutosSalvos.size());
+			
+			
 	    }
 	}
 }
