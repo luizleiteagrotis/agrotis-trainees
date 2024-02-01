@@ -45,7 +45,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		int p = 4;
+		int p = 5;
 		if(p < 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 			notaFiscalTipo.setNome("nomeTeste");
@@ -100,12 +100,12 @@ public class CrudApplication implements CommandLineRunner {
 				LOG.info("O usuario {} foi deletado", porId.getNome());
 			}
 			
-		} else {
+		} else if(p < 6){
 			
 			
 			Produto produto = new Produto();
 			ParceiroNegocios fabricante = parceiroNegociosService.buscarPorId(4); //Deve associar o fabricante a Lucas Bispo
-			produto.setDescricao("Jaca");
+			produto.setDescricao("Jaboticaba");
 			produto.setFabricante(fabricante);
 			produto.setDataFabricacao(Date.valueOf("2021-01-01"));
 			produto.setDataValidade(Date.valueOf("2024-05-05"));
@@ -124,13 +124,17 @@ public class CrudApplication implements CommandLineRunner {
 			
 			
 			porId = produtoService.buscarPorId(17);
-			porId.setDescricao("Maçã Gala");
+			porId.setDescricao("Uva niagara");
 			porId.setDataFabricacao(Date.valueOf("2023-02-07"));
 			porId.setDataValidade(Date.valueOf("2024-07-08"));
 			produtoService.salvar(porId);
 			LOG.info("Dados alterados com sucesso");
 		
-			
+			if(p == 5) {
+				porId = produtoService.buscarPorId(22);
+				produtoService.deletarPorId(porId.getId());
+				
+			}
 		}
 		
 
