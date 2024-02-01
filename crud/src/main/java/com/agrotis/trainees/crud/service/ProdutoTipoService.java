@@ -41,4 +41,9 @@ public class ProdutoTipoService {
 	public List<Produto> listarTodos() {
 	return repository.findAll();
 	}
+	
+	public void deletarProdutoPorId(Integer id){
+		repository.deleteById(id);
+		LOG.info("Deletado com sucesso");
+	}
 }

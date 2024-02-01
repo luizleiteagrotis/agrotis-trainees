@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud;
 
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -41,8 +42,31 @@ public class CrudApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+    	
+    	
         // Operações com a entidade ParceiroNegocio
+    	
+    	NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+		notaFiscalTipo.setNome("nomeTeste");
+		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
+		LOG.info("id inserido: {}", notaFiscalTipo2.getId());
 
+		NotaFiscalTipo porId =  notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
+		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
+
+		List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
+		LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
+
+		NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
+		porNome.setNome("nomeAlterado");
+		notaFiscalTipoService.salvar(porNome);
+		LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+
+		//notaFiscalTipoService.deletarPorId(porId.getId());
+		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
+		notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
+		 
+		 //parceiro
         ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
         parceiroNegocio.setNome("Agrotis Informatica ");
         parceiroNegocio.setInscricaoFiscal("82.413.816/0001-01");
@@ -57,23 +81,27 @@ public class CrudApplication implements CommandLineRunner {
         } else {
             LOG.error("Falha ao criar o Parceiro de Negócio.");
         }
-
+        //Read
         ParceiroNegocio parceiroPorId = parceiroNegocioTipoService.buscarPorId(parceiroNegocio.getId());
         LOG.info("Busca por id. Nome {} id {} ", parceiroPorId.getNome(), parceiroPorId.getId());
 
-        ParceiroNegocio parceiroPorNome = parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
-        LOG.info("Busca por nome. Nome {} id {} ", parceiroPorNome.getNome(), parceiroPorNome.getId());
+        ParceiroNegocio parceiroNegocioPorNome = parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
+        LOG.info("Busca por nome. Nome {} id {} ", parceiroNegocioPorNome.getNome(), parceiroNegocioPorNome.getId());
 
         List<ParceiroNegocio> todosParceirosSalvos = parceiroNegocioTipoService.listarTodos();
         LOG.info("Salvos no total de {} tipos de Parceiros", todosParceirosSalvos.size());
 
-        ParceiroNegocio porNome = parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
-        porNome.setNome("Agrotis informática");
-        parceiroNegocioTipoService.salvar(porNome);
-        LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+        //Update
+        ParceiroNegocio parceiroPorNome = parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
+        parceiroPorNome.setNome("Agrotis informática");
+        parceiroNegocioTipoService.salvar(parceiroPorNome);
+        LOG.info("Busca por nome. Nome {} id {} ", parceiroPorNome.getNome(), parceiroPorNome.getId());
 
+        //delete
         parceiroNegocioTipoService.deletarPorId(parceiroPorId.getId());
 
+        
+        //Produto
         Produto produto = new Produto();
         ParceiroNegocio parceiroNegocio2 = new ParceiroNegocio();
         parceiroNegocio2.setNome("Agrotis");
@@ -103,5 +131,9 @@ public class CrudApplication implements CommandLineRunner {
         porDescricao.setDescricao("Milho");
         produtoTipoService.salvar(porDescricao);
         LOG.info("Busca por descrição. Descrição {} id {} ", porDescricao.getDescricao(), porDescricao.getId());
+        
+        produtoTipoService.deletarProdutoPorId(produtoPorId.getId());
+
+    
     }
 }
