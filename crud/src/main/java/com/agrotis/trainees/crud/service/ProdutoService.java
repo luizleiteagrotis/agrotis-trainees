@@ -59,4 +59,20 @@ public class ProdutoService {
         return repository.findAll();
     }
 
+    public Produto atualizar(Produto produto, int id) {
+
+        Produto byId = buscarPorId(id);
+        if (byId != null) {
+            byId.setNome(produto.getNome());
+            byId.setDescricao(produto.getDescricao());
+            byId.setDataFabricacao(produto.getDataFabricacao());
+            byId.setDataValidade(produto.getDataValidade());
+            byId.setFabricante(produto.getFabricante());
+            return repository.save(byId);
+
+        }
+
+        return null;
+    }
+
 }

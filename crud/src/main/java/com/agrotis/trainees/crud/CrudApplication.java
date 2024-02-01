@@ -110,7 +110,7 @@ public class CrudApplication implements CommandLineRunner {
 
         //////////////////////////////
 
-        ParceiroNegocio parceiroProduto = parceiroNegocioService.buscarPorId(60);
+        ParceiroNegocio parceiroProduto = parceiroNegocioService.buscarPorId(40);
         Produto produto = new Produto("Manga", Date.valueOf("2024-01-01"), Date.valueOf("2024-06-20"), parceiroProduto);
 
         // create
@@ -153,5 +153,12 @@ public class CrudApplication implements CommandLineRunner {
         for (Produto lProdutos : listarTodos) {
             LOG.info("O id foi {}", lProdutos.getId());
         }
+
+        // update
+        Produto produtoAtualizado = new Produto("Café", Date.valueOf("2023-03-01"), Date.valueOf("2024-01-01"), parceiroProduto);
+        produtoAtualizado.setDescricao("Produto de alta qualidade");
+        Produto atualizar = produtoService.atualizar(produtoAtualizado, 105);
+        LOG.info("Produto atualizado {} ", atualizar);
+
     }
 }
