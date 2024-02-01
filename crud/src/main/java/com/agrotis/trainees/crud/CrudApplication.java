@@ -2,8 +2,10 @@ package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootApplication
@@ -21,10 +24,12 @@ public class CrudApplication implements CommandLineRunner {
 
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegocioService parceiroNegocioService;
+	private final ProdutoService produtoService;
 
-	public CrudApplication(ParceiroNegocioService parceiroNegocioService, NotaFiscalTipoService notaFiscalTipoService) {
+	public CrudApplication(ParceiroNegocioService parceiroNegocioService, NotaFiscalTipoService notaFiscalTipoService, ProdutoService produtoService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
+		this.produtoService = produtoService;
 	}
 
 	public static void main(String[] args) {
@@ -91,6 +96,19 @@ public class CrudApplication implements CommandLineRunner {
 		if (parceiroDeletar == true) {
 			parceiroNegocioService.deletarPorId(21);
 		}
+		
+		Produto produto = new Produto();
+		produto.setNome("Soja");		
+		produto.setDescricao("Grão Plantado");
+		produto.setParceiroNegocio(parceiroNegocio2);
+		produto.setFabricante("Coamo");
+		produto.setDataFabricacao(LocalDate.of(2024, 1, 8));
+		produto.setDataValidade(LocalDate.of(2024, 5, 8));
+		Produto produto2 = produtoService.salvar(produto);
+		LOG.info("id inserido: {}", produto.getId());
+		
+		
+		
 		
 	}
 }
