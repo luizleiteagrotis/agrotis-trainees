@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface NotaFiscalTipoRepository extends JpaRepository<NotaFiscalTipo, Integer> {
 
-    Optional<NotaFiscalTipo> findByNome(String nome);
+	Optional<NotaFiscalTipo> findByNome(String nome);
 
 }

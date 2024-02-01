@@ -25,10 +25,11 @@ public class CrudApplication implements CommandLineRunner {
 	private final NotaFiscalTipoService notaFiscalTipoService;
 
 	private final ParceiroNegocioService parceiroNegocioService;
-	
+
 	private final ProdutoService produtoService;
 
-	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService) {
+	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
+			ProdutoService produtoService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
@@ -66,7 +67,7 @@ public class CrudApplication implements CommandLineRunner {
 //		
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-		parceiroNegocio.setNome("Cafe de Minas");
+		parceiroNegocio.setNome("Adubo do Brasil");
 		parceiroNegocio.setInscricaoFiscal("020924");
 		parceiroNegocio.setEndereco("Aracaju, rua Torres, 15");
 		parceiroNegocio.setTelefone("79 9 5454 5454");
@@ -98,7 +99,7 @@ public class CrudApplication implements CommandLineRunner {
 //		parceiroNegocioService.deletarPorId(parceiroPorId.getId());
 		
 		Produto produto = new Produto();
-		produto.setDescricao("Cafe");
+		produto.setDescricao("Adubo");
 		produto.setParceiroNegocio(parceiroNegocio);
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -110,6 +111,17 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setDataValidade(validaDate);
 		
 		Produto produto2 = produtoService.salvar(produto);
+				
+		Produto produtoPorId = produtoService.buscarPorId(produto2.getId());
+		LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
+				produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(), produtoPorId.getParceiroNegocio() );
+		
+		Produto produtoPorDescricao = produtoService.buscarPorDescricao(produto2.getDescricao());
+		LOG.info("Busca por descricao. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
+				produtoPorDescricao.getDescricao(), produtoPorDescricao.getDataFabricacao(), produtoPorDescricao.getDataValidade(), produtoPorDescricao.getParceiroNegocio() );
+		
+		List<Produto> todosProdutos = produtoService.listarTodos();
+		LOG.info("Salvos no total de {} tipos de produtos", todosProdutos.size());
 		
 		
 	}
