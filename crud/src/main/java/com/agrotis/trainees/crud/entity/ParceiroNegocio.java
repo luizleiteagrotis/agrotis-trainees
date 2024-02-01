@@ -17,7 +17,7 @@ public class ParceiroNegocio {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	
+
 	@NotBlank(message = "Obrigatório preencher o nome do tipo de parceiro de negócio")
 	private String nome;
 
@@ -29,7 +29,7 @@ public class ParceiroNegocio {
 
 	@NotBlank(message = "Obrigatório preencher o telefone do tipo de parceiro de negócio")
 	private String telefone;
-	
+
 	@OneToMany(mappedBy = "parceiroNegocio")
 	private List<Produto> produtos;
 
@@ -75,6 +75,11 @@ public class ParceiroNegocio {
 
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+
+	@Override
+	public String toString() {
+		return "ParceiroNegocio [id=" + id + ", nome=" + nome + "]";
 	}
 
 }
