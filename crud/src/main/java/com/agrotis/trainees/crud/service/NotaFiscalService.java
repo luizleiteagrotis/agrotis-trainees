@@ -25,6 +25,10 @@ public class NotaFiscalService {
 	
 	public NotaFiscal salvar(NotaFiscal entidade) {
 		
+		if (repository.hasDuplicates(entidade.getNumero(),  entidade.getNotaFiscalTipo())) {
+			System.out.println("Olaa");
+		}
+		
 		if (repository.hasDuplicates(entidade.getNumero(), entidade.getNotaFiscalTipo()) ) {
 			throw new NotaFiscalDuplicadaException("Nota fiscal já existe");	
 		} 

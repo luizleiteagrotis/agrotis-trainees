@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 
 @Entity
 @Table(name = "produto")
@@ -24,6 +25,7 @@ public class Produto {
 	private String descricao;
 	
 	@NotNull(message = "Obrigatório preencher data de fabricação do produto")
+	@PastOrPresent
 	private Date data_fabricacao ;
 	
 	@NotNull(message = "Obrigatório preencher data de validade do produto")
