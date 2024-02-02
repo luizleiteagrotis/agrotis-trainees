@@ -128,5 +128,9 @@ public class CrudApplication implements CommandLineRunner {
 		CabecalhoNota cabecalhoPorId = notaFiscalService.buscarPor(cabecalhoNota.getId());
 		
 		List<CabecalhoNota> cabecalhos = notaFiscalService.buscarTodosCabecalhos();
+		
+		// UPDATE
+		cabecalhoPorId.setNumero(111111L);
+		notaFiscalService.salvar(cabecalhoPorId);
 	}
 }
