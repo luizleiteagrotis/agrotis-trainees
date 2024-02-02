@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.notafiscal.cabecalho.CabecalhoNotaRepository;
+import com.agrotis.trainees.crud.repository.notafiscal.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.notafiscal.tipo.TipoNotaRepository;
 
 @Service
@@ -15,12 +17,15 @@ public class NotaFiscalService {
 	
 	private CabecalhoNotaRepository cabecalhoRepository;
 	private TipoNotaRepository tipoRepository;
+	private ItemNotaRepository itemRepository;
 	
 	@Autowired
 	public NotaFiscalService(CabecalhoNotaRepository cabecalhoRepository,
-			TipoNotaRepository tipoRepository) {
+			TipoNotaRepository tipoRepository,
+			ItemNotaRepository itemRepository) {
 		this.cabecalhoRepository = cabecalhoRepository;
 		this.tipoRepository = tipoRepository;
+		this.itemRepository = itemRepository;
 	}
 	
 	public CabecalhoNota salvar(CabecalhoNota cabecalho) {
@@ -29,6 +34,10 @@ public class NotaFiscalService {
 	
 	public NotaFiscalTipo salvar(NotaFiscalTipo tipo) {
 		return tipoRepository.salvar(tipo);
+	}
+	
+	public ItemNota salvar(ItemNota item) {
+		return itemRepository.salvar(item);
 	}
 	
 	public CabecalhoNota buscarPor(long idCabecalho) {

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
@@ -47,6 +48,11 @@ public class ItemNota {
 	@PastOrPresent
 	@Column(name = "data_validade")
 	private LocalDate dataValidade;
+	
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "cabecalho_id")
+	private CabecalhoNota cabecalhoNota;
 
 	public long getId() {
 		return id;
@@ -90,5 +96,13 @@ public class ItemNota {
 
 	public void setDataValidade(LocalDate dataValidade) {
 		this.dataValidade = dataValidade;
+	}
+
+	public CabecalhoNota getCabecalhoNota() {
+		return cabecalhoNota;
+	}
+
+	public void setCabecalhoNota(CabecalhoNota cabecalhoNota) {
+		this.cabecalhoNota = cabecalhoNota;
 	}
 }
