@@ -1,16 +1,15 @@
-CREATE TABLE produto (
+create table produto (
 
-    id int not null,
-    nome_produto varchar(255),
-    descricao varchar(255),
-    id_parceiro_fabricante int not null,
-    data_fabricacao date not null,
-    data_validade date not null,
-    CONSTRAINT pk_produto PRIMARY KEY (id),
-    CONSTRAINT fk_produto_parceiro FOREIGN KEY (id_parceiro_fabricante) REFERENCES parceiro_negocio(id)
+	id integer not null,
+	data_fabricacao date,
+	data_validade date,
+	descricao varchar(255),
+	fabricante_id integer,
+	primary key (id)
+)
 
+alter table produto
+add constraint fk_fabricante_id
+foreign key (fabricante_id)
+references parceiro_de_negocio;
 );
-
-
-
-

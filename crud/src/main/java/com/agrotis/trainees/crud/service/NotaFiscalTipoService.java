@@ -4,6 +4,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class NotaFiscalTipoService {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(NotaFiscalTipoService.class);
-	
+	@Autowired
 	private final NotaFiscalTipoRepository repository;
 
 	public NotaFiscalTipoService(NotaFiscalTipoRepository repository) {
