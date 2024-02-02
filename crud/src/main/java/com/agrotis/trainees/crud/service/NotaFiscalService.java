@@ -2,6 +2,8 @@ package com.agrotis.trainees.crud.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
@@ -17,6 +19,13 @@ private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.clas
 		super();
 		this.repository = repository;
 	}
+	
+	public NotaFiscal salvar(NotaFiscal entidade) {
+		return repository.save(entidade);
+	}
+	
+	
+	
 
 
 }

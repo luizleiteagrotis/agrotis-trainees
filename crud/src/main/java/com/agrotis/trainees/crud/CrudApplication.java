@@ -1,7 +1,9 @@
 package com.agrotis.trainees.crud;
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -11,6 +13,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 @SpringBootApplication
@@ -22,11 +26,13 @@ public class CrudApplication implements CommandLineRunner {
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
+	private final NotaFiscalService notaFiscalService;
 
-	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService) {
+	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService, NotaFiscalService notaFiscalService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
+		this.notaFiscalService = notaFiscalService;
 	}
 
 	public static void main(String[] args) {
@@ -58,7 +64,7 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome()); 
 		 
-LOG.info("----------------------------------------------------------------------------------------------------------------------------------------");
+LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS---------------------------------------------------------------------------------------");
 		 	
 
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
@@ -87,38 +93,56 @@ LOG.info("----------------------------------------------------------------------
 		parceiroNegocioService.deletarPorId(parceiroNegocio2.getId());
 		
 		
- LOG.info("---------------------------------------------------------------------------------------------------------------------------------------");	
+ LOG.info("------------------------------------------------------PRODUTO---------------------------------------------------------------------------------");	
 		
-	Produto produto = new Produto();
+		Produto produto = new Produto();
 	
-	produto.setDescricao("Grao Plantado");
-	produto.setNome("outro");
-	produto.setFabricante(parceiroNegocio);
-	produto.setDataFabricacao(LocalDate.of(2024, 12, 1));
-	produto.setDataValidade(LocalDate.of(2025, 11, 2));
-	produtoService.salvar(produto);
+		produto.setDescricao("Grao Plantado");
+		produto.setNome("outro");
+		produto.setFabricante(parceiroNegocio);
+		produto.setDataFabricacao(LocalDate.of(2024, 12, 1));
+		produto.setDataValidade(LocalDate.of(2025, 11, 2));
+		produtoService.salvar(produto);
 	
-	List<Produto> buscarTodos = produtoService.listarTodos();
-	LOG.info("Salvos no total de {} parceiros de negocio.", buscarTodos.size());
+		List<Produto> buscarTodos = produtoService.listarTodos();
+		LOG.info("Salvos no total de {} parceiros de negocio.", buscarTodos.size());
 	
-	Produto novoProduto = new Produto();
-	novoProduto.setDescricao("Trigo");
-	novoProduto.setNome("outro");
-	novoProduto.setFabricante(parceiroNegocio);
-	novoProduto.setDataFabricacao(LocalDate.of(2024, 12, 1));
-	novoProduto.setDataValidade(LocalDate.of(2025, 11, 2));	
-	produtoService.update(produto.getId(), novoProduto);
-	LOG.info("Produto Update {}", produto.getId());
+		Produto novoProduto = new Produto();
+		novoProduto.setDescricao("Trigo");
+		novoProduto.setNome("outro");
+		novoProduto.setFabricante(parceiroNegocio);
+		novoProduto.setDataFabricacao(LocalDate.of(2024, 12, 1));
+		novoProduto.setDataValidade(LocalDate.of(2025, 11, 2));	
+		produtoService.update(produto.getId(), novoProduto);
+		LOG.info("Produto Update {}", produto.getId());
 	
-	produtoService.deletarPorId(produto.getId());
-	LOG.info("Produto Deletado {}", produto.getId());
-	
-	
-	
- LOG.info("---------------------------------------------------------------------------------------------------------------------------------------");	
+		produtoService.deletarPorId(produto.getId());
+		LOG.info("Produto Deletado {}", produto.getId());
 	
 	
- 
+	
+ LOG.info("---------------------------------------------------NOTA FISCAL------------------------------------------------------------------------------------");	
+	
+		NotaFiscal notaFiscal = new NotaFiscal();
+	
+		notaFiscal.setDataNota(LocalDate.of(2024, 01, 2));
+		notaFiscal.setNotaFiscalTipo("Tipo da Nota: Entrada");
+		notaFiscal.setNumeroNota(210798);
+		notaFiscal.setParceiroNegocio(parceiroNegocio2);
+		notaFiscalService.salvar(notaFiscal);
+		LOG.info("Nota Fiscal Salva: {}", notaFiscal.getId());
+		
+		NotaFiscal notaFiscalSaida = new NotaFiscal();
+		notaFiscalSaida.setDataNota(LocalDate.of(2024, 01, 2));
+		notaFiscalSaida.setNotaFiscalTipo("Tipo da Nota: Saida");
+		notaFiscalSaida.setNumeroNota(6193007);
+		notaFiscalSaida.setParceiroNegocio(parceiroNegocio2);
+		notaFiscalService.salvar(notaFiscalSaida);
+		LOG.info("Nota Fiscal Salva: {}", notaFiscalSaida.getId());
+		
+		
+		
+	
  
  
  

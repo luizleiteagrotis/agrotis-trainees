@@ -7,7 +7,5 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 @Repository
 public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>{
 	Optional<NotaFiscal> findBy( );
-	Optional<NotaFiscal> findBy( );
-	Optional<NotaFiscal> findBy( );	
 
 }
