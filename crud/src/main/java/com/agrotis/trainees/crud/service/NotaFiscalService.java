@@ -50,4 +50,8 @@ public class NotaFiscalService {
 	public void deletarCabecalho(long id) {
 		cabecalhoRepository.deletar(id);
 	}
+	
+	public void deletarTipo(int id) {
+		tipoRepository.deletar(id);
+	}
 }

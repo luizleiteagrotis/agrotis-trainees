@@ -154,5 +154,10 @@ public class CrudApplication implements CommandLineRunner {
 		// UPDATE
 		tipoNotaPorId.setNome("entrada e saida");
 		notaFiscalService.salvar(tipoNotaPorId);
+		
+		// DELETE
+		tipos.forEach((tipo) -> {
+			notaFiscalService.deletarTipo(tipo.getId());
+		});
 	}
 }
