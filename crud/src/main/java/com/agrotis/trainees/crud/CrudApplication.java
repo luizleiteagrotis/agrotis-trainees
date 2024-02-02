@@ -6,12 +6,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.Date;
-import java.util.List;
-
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.helper.TipoNotaFiscal;
+import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
@@ -26,13 +24,16 @@ public class CrudApplication implements CommandLineRunner {
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
     private final NotaFiscalService notaFiscalService;
+    private final ItemNotaFiscalService itemNotaFiscalService;
 
     public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
-                    ProdutoService produtoService, NotaFiscalService notaFiscalService) {
+                    ProdutoService produtoService, NotaFiscalService notaFiscalService,
+                    ItemNotaFiscalService itemNotaFiscalService) {
         this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
         this.notaFiscalService = notaFiscalService;
+        this.itemNotaFiscalService = itemNotaFiscalService;
     }
 
     public static void main(String[] args) {
@@ -178,50 +179,64 @@ public class CrudApplication implements CommandLineRunner {
 
         //////////////////////////////////////////////////////////////
 
-        String tipoEntrada = TipoNotaFiscal.ENTRADA.getDescricao();
-        String tipoSaida = TipoNotaFiscal.SAIDA.getDescricao();
+        // String tipoEntrada = TipoNotaFiscal.ENTRADA.getDescricao();
+        // String tipoSaida = TipoNotaFiscal.SAIDA.getDescricao();
+        //
+        // ParceiroNegocio parceiroNota =
+        // parceiroNegocioService.buscarPorId(40);
+        // NotaFiscal nota = new NotaFiscal();
+        // nota.setParceiroNegocio(parceiroNota);
+        // nota.setNumero(2);
+        // nota.setTipo(tipoEntrada);
+        // nota.setData(Date.valueOf("2023-01-25"));
+        //
+        // NotaFiscal salvar = notaFiscalService.salvar(nota);
+        // NotaFiscal buscarPorId = notaFiscalService.buscarPorId(nota.getId());
+        // // LOG.info("o id que achou foi {}", buscarPorId.getId());
+        //
+        // List<NotaFiscal> buscarPorParceiro =
+        // notaFiscalService.buscarPorParceiroNegocio(parceiroNota);
+        // for (NotaFiscal pNota : buscarPorParceiro) {
+        // LOG.info("O parceiro é {} ", pNota.getParceiroNegocio().getNome());
+        // }
+        //
+        // List<NotaFiscal> buscarPorTipo =
+        // notaFiscalService.buscarPorTipoNotaFiscal("saida");
+        // for (NotaFiscal tNota : buscarPorTipo) {
+        // LOG.info("O tipo é {} ", tNota.getTipo());
+        // }
+        //
+        // List<NotaFiscal> buscarPorNumero =
+        // notaFiscalService.buscarPorNumero(1);
+        // for (NotaFiscal nNota : buscarPorNumero) {
+        // LOG.info("O numero é {} ", nNota.getNumero());
+        // }
+        //
+        // List<NotaFiscal> buscarPorData =
+        // notaFiscalService.buscarPorData(Date.valueOf("2023-01-25"));
+        // for (NotaFiscal dNota : buscarPorData) {
+        // LOG.info("A data é {} ", dNota.getData());
+        // }
+        //
+        // List<NotaFiscal> listarTodos = notaFiscalService.listarTodos();
+        // for (NotaFiscal lTodos : listarTodos) {
+        // LOG.info(" {} ", lTodos);
+        // }
+        //
+        // NotaFiscal notaAtualizada = new NotaFiscal();
+        // notaAtualizada.setTipo(tipoEntrada);
+        // NotaFiscal atualizar = notaFiscalService.atualizar(notaAtualizada,
+        // 159);
+        // // LOG.info("O {} foi atualizado ", atualizar.getId());
+        //
+        // // notaFiscalService.deletarPorId(128);
 
-        ParceiroNegocio parceiroNota = parceiroNegocioService.buscarPorId(40);
-        NotaFiscal nota = new NotaFiscal();
-        nota.setParceiroNegocio(parceiroNota);
-        nota.setNumero(2);
-        nota.setTipo(tipoEntrada);
-        nota.setData(Date.valueOf("2023-01-25"));
+        ///////////////////////////////////////////////////////////////////////////////
 
-        NotaFiscal salvar = notaFiscalService.salvar(nota);
-        NotaFiscal buscarPorId = notaFiscalService.buscarPorId(nota.getId());
-        // LOG.info("o id que achou foi {}", buscarPorId.getId());
-
-        List<NotaFiscal> buscarPorParceiro = notaFiscalService.buscarPorParceiroNegocio(parceiroNota);
-        for (NotaFiscal pNota : buscarPorParceiro) {
-            LOG.info("O parceiro é {} ", pNota.getParceiroNegocio().getNome());
-        }
-
-        List<NotaFiscal> buscarPorTipo = notaFiscalService.buscarPorTipoNotaFiscal("saida");
-        for (NotaFiscal tNota : buscarPorTipo) {
-            LOG.info("O tipo é {} ", tNota.getTipo());
-        }
-
-        List<NotaFiscal> buscarPorNumero = notaFiscalService.buscarPorNumero(1);
-        for (NotaFiscal nNota : buscarPorNumero) {
-            LOG.info("O numero é {} ", nNota.getNumero());
-        }
-
-        List<NotaFiscal> buscarPorData = notaFiscalService.buscarPorData(Date.valueOf("2023-01-25"));
-        for (NotaFiscal dNota : buscarPorData) {
-            LOG.info("A data é {} ", dNota.getData());
-        }
-
-        List<NotaFiscal> listarTodos = notaFiscalService.listarTodos();
-        for (NotaFiscal lTodos : listarTodos) {
-            LOG.info(" {} ", lTodos);
-        }
-
-        NotaFiscal notaAtualizada = new NotaFiscal();
-        notaAtualizada.setTipo(tipoEntrada);
-        NotaFiscal atualizar = notaFiscalService.atualizar(notaAtualizada, 159);
-        // LOG.info("O {} foi atualizado ", atualizar.getId());
-
-        // notaFiscalService.deletarPorId(128);
+        Produto produtoItem = produtoService.buscarPorId(78);
+        NotaFiscal notaItem = notaFiscalService.buscarPorId(177);
+        ItemNotaFiscal item = new ItemNotaFiscal(notaItem, produtoItem, 500, 10);
+        ItemNotaFiscal salvar = itemNotaFiscalService.salvar(item);
+        LOG.info("O id {}", salvar.getId());
     }
 }
