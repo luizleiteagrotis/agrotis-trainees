@@ -13,9 +13,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
@@ -30,14 +32,17 @@ public class CrudApplication implements CommandLineRunner {
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
 	private final NotaFiscalService notaFiscalService;
+	private final NotaFiscalItemService notaFiscalItemService;
 
 	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService,
 			ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService, 
-			NotaFiscalService notaFiscalService) {
+			NotaFiscalService notaFiscalService,
+			NotaFiscalItemService notaFiscalItemService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
 		this.notaFiscalService = notaFiscalService;
+		this.notaFiscalItemService = notaFiscalItemService;
 	}
 
 	public static void main(String[] args) {
@@ -173,7 +178,17 @@ public class CrudApplication implements CommandLineRunner {
 		//LOG.info("Deletando a nota {}", notaFiscal2.getId() );
 
 
+		LOG.info("---------------- Nota Fiscal Item ------------------");
 		
+		NotaFiscalItem fiscalItem = new NotaFiscalItem();
+		fiscalItem.setNotaFiscal(notaFiscal2);
+		fiscalItem.setProduto(produto);
+		fiscalItem.setPrecoUnitario(25.99);
+		fiscalItem.setQuantidade(5);
+		fiscalItem.getValorTotal();
+		System.out.println(fiscalItem.getValorTotal());
+
+		notaFiscalItemService.salvar(fiscalItem);
 		
 		
 	}

@@ -1,0 +1,29 @@
+package com.agrotis.trainees.crud.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
+
+@Service
+public class NotaFiscalItemService {
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(NotaFiscalItemService.class);
+	
+	private final NotaFiscalItemRepository repository;
+
+	public NotaFiscalItemService(NotaFiscalItemRepository repository) {
+		this.repository = repository;
+	}
+
+	public NotaFiscalItem salvar(NotaFiscalItem entidade) {
+		return repository.save(entidade);
+	}
+	
+}
+
+	
+
