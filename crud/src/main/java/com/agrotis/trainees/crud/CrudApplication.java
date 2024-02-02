@@ -173,6 +173,13 @@ public class CrudApplication implements CommandLineRunner {
 			porId.setDataEmissao(LocalDate.of(2021, 12, 30));				
 			notaFiscalCamposService.salvar(porId);
 			LOG.info("Dados alterados com sucesso");
+			
+			if(p == 7) {
+				porId = notaFiscalCamposService.buscarPorId(56);
+				notaFiscalCamposService.deletarPorId(porId.getId());
+				
+			}
+			
 		}
 		
 
