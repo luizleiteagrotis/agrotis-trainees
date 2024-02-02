@@ -47,12 +47,10 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		/*
 		testarParceiroNegocio();
 		testarProduto();
 		testarCabecalhoNota();
 		testarTipoNota();
-		*/
 		testarItemNota();
 	}
 
@@ -257,5 +255,15 @@ public class CrudApplication implements CommandLineRunner {
 		//UPDATE
 		itemPorId.setPrecoUnitario(new BigDecimal("1.99"));
 		notaFiscalService.salvar(itemPorId);
+		
+		//DELETE
+		itens.forEach((i) -> {
+			notaFiscalService.deletarItem(i.getId());
+		});
+		
+		produtoService.deletar(produto.getId());
+		notaFiscalService.deletarCabecalho(cabecalhoNota.getId());
+		parceiroNegocioService.deletar(parceiro.getId());
+		notaFiscalService.deletarTipo(tipoNota.getId());
 	}
 }
