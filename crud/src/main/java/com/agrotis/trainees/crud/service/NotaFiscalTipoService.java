@@ -1,58 +1,59 @@
 package com.agrotis.trainees.crud.service;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.exception.CrudException;
+import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
+
 @Service
 public class NotaFiscalTipoService {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(NotaFiscalTipoService.class);
-	
-	private final NotaFiscalTipoRepository repository;
+    private final NotaFiscalTipoRepository repository;
 
-	public NotaFiscalTipoService(NotaFiscalTipoRepository repository) {
-		super();
-		this.repository = repository;
-	}
+    public NotaFiscalTipoService(NotaFiscalTipoRepository repository) {
+        super();
+        this.repository = repository;
+    }
 
-	public NotaFiscalTipo salvar(NotaFiscalTipo entidade) {
-		if (StringUtils.isEmpty(entidade.getNome())) {
-			LOG.error("Obrigatório preencher o nome do tipo de nota fiscal.");
-			return null;
-		}
-		return repository.save(entidade);
-	}
+    public NotaFiscalTipo inserir(NotaFiscalTipo entidade) {
+        if (StringUtils.isEmpty(entidade.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
+        }
+        return repository.save(entidade);
+    }
 
-	public NotaFiscalTipo buscarPorId(Integer id) {
-		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Nota não encontrada para id {}.", id);
-			return null;
-		});
-	}
+    public NotaFiscalTipo atualizar(NotaFiscalTipo entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id do tipo de nota fiscal.");
+        }
+        if (StringUtils.isEmpty(entidade.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
+        }
+        return repository.save(entidade);
+    }
 
+    public NotaFiscalTipo buscarPorId(Integer id) {
+        return repository.findById(id).orElseGet(() -> {
+            throw new CrudException(String.format("Nota não encontrada para id {}.", id));
+        });
+    }
 
-	public NotaFiscalTipo buscarPorNome(String nome) {
-		return repository.findByNome(nome).orElseGet(() -> {
-			LOG.error("Nota não encontrada para o nome {}.", nome);
-			return null;
-		});
-	}
-	public void deletarPorId(Integer id){
-		repository.deleteById(id);
-		LOG.info("Deletado com sucesso");
-	}
+    public NotaFiscalTipo buscarPorNome(String nome) {
+        return repository.findByNome(nome).orElseGet(() -> {
+            throw new CrudException(String.format("Nota não encontrada para o nome {}.", nome));
+        });
+    }
 
-	public List<NotaFiscalTipo> listarTodos() {
-		return repository.findAll();
-	}
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+    }
 
+    public List<NotaFiscalTipo> listarTodos() {
+        return repository.findAll();
+    }
 
-	
 }

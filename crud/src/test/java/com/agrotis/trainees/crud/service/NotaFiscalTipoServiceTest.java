@@ -1,28 +1,36 @@
 package com.agrotis.trainees.crud.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.exception.CrudException;
+import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
+
 public class NotaFiscalTipoServiceTest {
-	
-	private final Integer ID_UM = 1;
-	private final Integer ID_DOIS = 2;
-	private final String ENTRADA = "Entrada";
-	private final String SAIDA = "Saída";
-	private final String INEXISTENTE = "XXX";
+
+    private final Integer ID_ENTRADA = 1;
+    private final Integer ID_SAIDA = 2;
+    private final Integer ID_INEXISTENTE = 9000;
+    private final String ENTRADA = "Entrada";
+    private final String SAIDA = "Saída";
+    private final String INEXISTENTE = "XXXX";
 
     @Mock
     private NotaFiscalTipoRepository repository;
@@ -36,62 +44,98 @@ public class NotaFiscalTipoServiceTest {
     }
 
     @Test
-    public void salvarTipoEntrada() {
+    public void inserirTipoEntrada() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         notaFiscalTipo.setNome(ENTRADA);
         when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
 
-        NotaFiscalTipo result = service.salvar(notaFiscalTipo);
+        NotaFiscalTipo result = service.inserir(notaFiscalTipo);
         assertNotNull(result);
         verify(repository, times(1)).save(any(NotaFiscalTipo.class));
     }
 
     @Test
-    public void salvarTipoSaida() {
+    public void inserirTipoSaida() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         notaFiscalTipo.setNome(SAIDA);
         when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
 
-        NotaFiscalTipo result = service.salvar(notaFiscalTipo);
+        NotaFiscalTipo result = service.inserir(notaFiscalTipo);
         assertNotNull(result);
         verify(repository, times(1)).save(any(NotaFiscalTipo.class));
     }
 
     @Test
-    public void salvarSemSucesso() {
+    public void inserirDeveObrigarNome() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
 
-        NotaFiscalTipo result = service.salvar(notaFiscalTipo);
-        assertNull(result);
-        verify(repository, times(0)).save(any(NotaFiscalTipo.class));
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.inserir(notaFiscalTipo);
+        });
+        assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.", excecao.getMessage());
+    }
+
+    @Test
+    public void atualizarTipoEntrada() {
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setId(ID_ENTRADA);
+        notaFiscalTipo.setNome(ENTRADA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+
+        NotaFiscalTipo result = service.atualizar(notaFiscalTipo);
+        assertNotNull(result);
+        verify(repository, times(1)).save(any(NotaFiscalTipo.class));
+    }
+
+    @Test
+    public void atualizarDeveObrigarId() {
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setNome(ENTRADA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.atualizar(notaFiscalTipo);
+        });
+        assertEquals("Obrigatório preencher o id do tipo de nota fiscal.", excecao.getMessage());
+    }
+
+    @Test
+    public void atualizarDeveObrigarNome() {
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setId(ID_SAIDA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.atualizar(notaFiscalTipo);
+        });
+        assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.", excecao.getMessage());
     }
 
     @Test
     public void buscarPorId() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        notaFiscalTipo.setId(ID_UM);
+        notaFiscalTipo.setId(ID_ENTRADA);
         Optional<NotaFiscalTipo> notaFiscalTipoOptional = Optional.of(notaFiscalTipo);
-        when(repository.findById(ID_UM)).thenReturn(notaFiscalTipoOptional);
+        when(repository.findById(ID_ENTRADA)).thenReturn(notaFiscalTipoOptional);
 
-        NotaFiscalTipo result = service.buscarPorId(ID_UM);
+        NotaFiscalTipo result = service.buscarPorId(ID_ENTRADA);
         assertNotNull(result);
-        verify(repository, times(1)).findById(ID_UM);
+        verify(repository, times(1)).findById(ID_ENTRADA);
     }
 
     @Test
     public void buscarPorIdInexistente() {
-        when(repository.findById(ID_DOIS)).thenReturn(Optional.empty());
+        when(repository.findById(ID_INEXISTENTE)).thenReturn(Optional.empty());
 
-        NotaFiscalTipo result = service.buscarPorId(ID_DOIS);
-        assertNull(result);
-        verify(repository, times(1)).findById(ID_DOIS);
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.buscarPorId(ID_INEXISTENTE);
+        });
+        assertEquals(String.format("Nota não encontrada para id {}.", ID_INEXISTENTE), excecao.getMessage());
     }
 
     @Test
     public void buscarPorNomeExistente() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        notaFiscalTipo.setId(ID_UM);
+        notaFiscalTipo.setId(ID_ENTRADA);
         notaFiscalTipo.setNome(ENTRADA);
         Optional<NotaFiscalTipo> notaFiscalTipoOptional = Optional.of(notaFiscalTipo);
         when(repository.findByNome(ENTRADA)).thenReturn(notaFiscalTipoOptional);
@@ -105,9 +149,10 @@ public class NotaFiscalTipoServiceTest {
     public void buscarPorNomeInexistente() {
         when(repository.findByNome(INEXISTENTE)).thenReturn(Optional.empty());
 
-        NotaFiscalTipo result = service.buscarPorNome(INEXISTENTE);
-        assertNull(result);
-        verify(repository, times(1)).findByNome(INEXISTENTE);
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.buscarPorNome(INEXISTENTE);
+        });
+        assertEquals(String.format("Nota não encontrada para o nome {}.", INEXISTENTE), excecao.getMessage());
     }
 
     @Test
