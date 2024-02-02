@@ -177,6 +177,11 @@ public class CrudApplication implements CommandLineRunner {
 		porNumeroNotaFiscal.setNumeroNota(896178687);
 		porNumeroNotaFiscal.setDataNota(LocalDate.of(2023, 10, 01));
 		notaFiscalService.salvar(porNumeroNotaFiscal);
-		LOG.info("Dados alterados com sucesso!", porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getParceiroNegocio().getEndereco(), porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getDataNota()); 
+		LOG.info("Dados alterados com sucesso!", porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getParceiroNegocio().getEndereco(), porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getDataNota());
+		
+		boolean notaFiscalDeletar = false; // o comando funcionou adequadamente, por isso, deixei a variável como false para envio 
+		if (notaFiscalDeletar == true) {
+			notaFiscalService.deletarPorId(notaFiscal2.getId());
+		}
 	}
 }
