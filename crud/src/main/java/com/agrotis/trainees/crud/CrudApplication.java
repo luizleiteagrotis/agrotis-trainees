@@ -4,6 +4,7 @@ import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.repository.notafiscal.cabecalho.CabecalhoNotaRepositoryException;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -138,6 +139,53 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhos.forEach((cabecalho) -> {
 			notaFiscalService.deletarCabecalho(cabecalho.getId());
 		});
+		
+		// TESTA NUMERO E TIPO
+		// TESTA CRIACAO COM O MESMO NUMERO E TIPO
+		parceiro = new ParceiroNegocio();
+		parceiro.setNome("nomeTeste");
+		parceiro.setInscricaoFiscal("inscricaoTeste");
+		parceiro.setEndereco("enderecoTeste");
+		parceiro.setTelefone("12345");
+		parceiro = parceiroNegocioService.salvar(parceiro);
+		
+		tipoNota = new NotaFiscalTipo();
+		tipoNota.setNome("entrada");
+		notaFiscalService.salvar(tipoNota);
+		
+		cabecalhoNota = new CabecalhoNota();
+		cabecalhoNota.setNumero(123456L);
+		cabecalhoNota.setParceiro(parceiro);
+		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setDataEmissao(LocalDate.now());
+		notaFiscalService.salvar(cabecalhoNota);
+		
+		cabecalhoNota = new CabecalhoNota();
+		cabecalhoNota.setNumero(123456L);
+		cabecalhoNota.setParceiro(parceiro);
+		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setDataEmissao(LocalDate.now());
+		try {
+			notaFiscalService.salvar(cabecalhoNota);
+		} catch (CabecalhoNotaRepositoryException e) {}
+		
+		tipoNota = new NotaFiscalTipo();
+		tipoNota.setNome("saida");
+		notaFiscalService.salvar(tipoNota);
+		cabecalhoNota.setTipo(tipoNota);
+		try {
+			notaFiscalService.salvar(cabecalhoNota);
+		} catch (CabecalhoNotaRepositoryException e) {}
+		
+		cabecalhos = notaFiscalService.buscarTodosCabecalhos();
+		cabecalhos.forEach((cabecalho) -> {
+			notaFiscalService.deletarCabecalho(cabecalho.getId());
+		});
+		List<NotaFiscalTipo> tipos = notaFiscalService.buscarTodosTipos();
+		tipos.forEach((tipo) -> {
+			notaFiscalService.deletarTipo(tipo.getId());
+		});
+		parceiroNegocioService.deletar(parceiro.getId());
 	}
 	
 	private void testarTipoNota() {
