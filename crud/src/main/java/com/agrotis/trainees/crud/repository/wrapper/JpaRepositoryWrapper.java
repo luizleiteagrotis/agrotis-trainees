@@ -22,9 +22,9 @@ import org.springframework.stereotype.Component;
  */
 public class JpaRepositoryWrapper<Service, Entity, ID, Repository extends JpaRepository<Entity, ID>> {
 
-	private final Repository REPOSITORY;
-	private final String NOME_ENTITY;
-	private final Logger LOG;
+	protected final Repository REPOSITORY;
+	protected final String NOME_ENTITY;
+	protected final Logger LOG;
 	
 	public JpaRepositoryWrapper(Repository repository, Class<Entity> entity, 
 			Class<Service> service) {
