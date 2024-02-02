@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -16,6 +17,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -45,10 +47,13 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
+		/*
 		testarParceiroNegocio();
 		testarProduto();
 		testarCabecalhoNota();
 		testarTipoNota();
+		*/
+		testarItemNota();
 	}
 
 	private void testarParceiroNegocio() {
@@ -207,5 +212,41 @@ public class CrudApplication implements CommandLineRunner {
 		tipos.forEach((tipo) -> {
 			notaFiscalService.deletarTipo(tipo.getId());
 		});
+	}
+	
+	private void testarItemNota() {
+		// CREATE
+		ParceiroNegocio parceiro = new ParceiroNegocio();
+		parceiro.setNome("nomeTeste");
+		parceiro.setInscricaoFiscal("inscricaoTeste");
+		parceiro.setEndereco("enderecoTeste");
+		parceiro.setTelefone("12345");
+		parceiro = parceiroNegocioService.salvar(parceiro);
+		
+		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
+		tipoNota.setNome("entrada");
+		notaFiscalService.salvar(tipoNota);
+		
+		CabecalhoNota cabecalhoNota = new CabecalhoNota();
+		cabecalhoNota.setNumero(123456L);
+		cabecalhoNota.setParceiro(parceiro);
+		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setDataEmissao(LocalDate.now());
+		notaFiscalService.salvar(cabecalhoNota);
+		
+		Produto produto = new Produto();
+		produto.setNome("maca");
+		produto.setDescricao("maca vermelha muito boa, tem seu nome dentro");
+		produto.setFabricante(parceiro);
+		produto = produtoService.salvar(produto);
+		
+		ItemNota item = new ItemNota();
+		item.setProduto(produto);
+		item.setQuantidade(5);
+		item.setPrecoUnitario(new BigDecimal("20.01"));
+		item.setDataFabricacao(LocalDate.now());
+		item.setDataValidade(LocalDate.now());
+		item.setCabecalhoNota(cabecalhoNota);
+		notaFiscalService.salvar(item);
 	}
 }
