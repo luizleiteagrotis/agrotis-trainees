@@ -253,5 +253,9 @@ public class CrudApplication implements CommandLineRunner {
 		ItemNota itemPorId = notaFiscalService.bucarItemPor(item.getId());
 		
 		List<ItemNota> itens = notaFiscalService.buscarTodosItens();
+		
+		//UPDATE
+		itemPorId.setPrecoUnitario(new BigDecimal("1.99"));
+		notaFiscalService.salvar(itemPorId);
 	}
 }
