@@ -56,18 +56,13 @@ public class ProdutoService {
 			});
 		return repository.save(produto);
 	}
-		public static List<Produto> buscarTodos() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		public static Produto buscaPeloId(Integer id) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		
+		
+		
 		public static void atualizar(Integer id, Produto produtoAtualizado) {
-			// TODO Auto-generated method stub
 			
 		}
+		
 	
 	
 	
