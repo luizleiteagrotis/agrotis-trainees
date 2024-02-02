@@ -1,7 +1,10 @@
 package com.agrotis.trainees.crud.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.FutureOrPresent;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -38,6 +41,9 @@ public class NotaFiscal {
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDateTime data;
+	
+    @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotaFiscalItem> itens = new ArrayList<>();
 
 	public String getNotaFiscalTipo() {
 		return notaFiscalTipo;
