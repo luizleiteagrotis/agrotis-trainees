@@ -35,8 +35,16 @@ public class NotaFiscalService {
 		return cabecalhoRepository.buscarPor(idCabecalho);
 	}
 	
+	public NotaFiscalTipo buscarPor(int idTipo) {
+		return tipoRepository.buscarPor(idTipo);
+	}
+	
 	public List<CabecalhoNota> buscarTodosCabecalhos() {
 		return cabecalhoRepository.buscarTodos();
+	}
+	
+	public List<NotaFiscalTipo> buscarTodosTipos() {
+		return tipoRepository.buscarTodos();
 	}
 	
 	public void deletarCabecalho(long id) {

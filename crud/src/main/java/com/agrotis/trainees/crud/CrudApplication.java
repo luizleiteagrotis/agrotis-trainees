@@ -47,6 +47,7 @@ public class CrudApplication implements CommandLineRunner {
 		testarParceiroNegocio();
 		testarProduto();
 		testarCabecalhoNota();
+		testarTipoNota();
 	}
 
 	private void testarParceiroNegocio() {
@@ -137,5 +138,18 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhos.forEach((cabecalho) -> {
 			notaFiscalService.deletarCabecalho(cabecalho.getId());
 		});
+	}
+	
+	private void testarTipoNota() {
+		// CREATE
+		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
+		tipoNota.setNome("entrada");
+		notaFiscalService.salvar(tipoNota);
+		
+		// READ
+		NotaFiscalTipo tipoNotaPorId = notaFiscalService.buscarPor(tipoNota.getId());
+		
+		List<NotaFiscalTipo> tipos = notaFiscalService.buscarTodosTipos();
+		
 	}
 }
