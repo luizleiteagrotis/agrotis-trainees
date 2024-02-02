@@ -9,8 +9,7 @@ import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 @Service
 public class ParceiroNegocioService {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(ParceiroNegocioService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 	
 	private final ParceiroNegocioRepository repository;
 

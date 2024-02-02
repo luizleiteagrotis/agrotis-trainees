@@ -10,8 +10,7 @@ import java.util.List;
 @Service
 public class NotaFiscalTipoService {
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(NotaFiscalTipoService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalTipoService.class);
 	
 	private final NotaFiscalTipoRepository repository;
 

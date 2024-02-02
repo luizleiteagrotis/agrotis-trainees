@@ -60,7 +60,7 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalTipoService.salvar(porNome);
 		LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
 
-		//notaFiscalTipoService.deletarPorId(porId.getId());
+		notaFiscalTipoService.deletarPorId(porId.getId());
 		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
 		notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome()); 
 		 
@@ -98,7 +98,7 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 		Produto produto = new Produto();
 	
 		produto.setDescricao("Grao Plantado");
-		produto.setNome("outro");
+		produto.setNome("Rafael");
 		produto.setFabricante(parceiroNegocio);
 		produto.setDataFabricacao(LocalDate.of(2024, 12, 1));
 		produto.setDataValidade(LocalDate.of(2025, 11, 2));
@@ -109,7 +109,7 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 	
 		Produto novoProduto = new Produto();
 		novoProduto.setDescricao("Trigo");
-		novoProduto.setNome("outro");
+		novoProduto.setNome("Willian");
 		novoProduto.setFabricante(parceiroNegocio);
 		novoProduto.setDataFabricacao(LocalDate.of(2024, 12, 1));
 		novoProduto.setDataValidade(LocalDate.of(2025, 11, 2));	
@@ -150,18 +150,15 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 			LOG.info("Listas de notas fiscais: ", notasFiscais.size());
 		}
 		
-		notaFiscalService.deletarPorId(notaFiscalSaida.getId());
-		LOG.info("A nota {}", notaFiscalSaida.getId(), "Foi deletada");
-		
 		NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscalSaida.getDataNota());
 		LOG.info("Buscando por data a nota fiscal: ", porDataNota.getId(), porDataNota.getDataNota());
 		
+		notaFiscalService.deletarPorId(notaFiscalSaida.getId());
+		LOG.info("A nota {}", notaFiscalSaida.getId(), "Foi deletada");
 		
-	
- 
- 
- 
- 
+		
+ LOG.info("---------------------------------------------------------------------------------------------------------------------------------------");	
+
 	
 
 	
