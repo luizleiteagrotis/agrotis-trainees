@@ -44,7 +44,10 @@ private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.clas
 		return repository.findAll();
 	}
 
-	
+	public void deletarPorId(Integer id) {
+		repository.deleteById(id);
+		LOG.info("Deletado com sucesso!");
+	}
 	
 	
 }

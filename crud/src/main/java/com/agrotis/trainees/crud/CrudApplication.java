@@ -150,7 +150,8 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 			LOG.info("Listas de notas fiscais: ", notasFiscais.size());
 		}
 		
-		
+		notaFiscalService.deletarPorId(notaFiscalSaida.getId());
+		LOG.info("A nota {}", notaFiscalSaida.getId(), "Foi deletada");
 		
 		
 		
