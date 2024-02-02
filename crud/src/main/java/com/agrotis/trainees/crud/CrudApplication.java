@@ -163,20 +163,30 @@ public class CrudApplication implements CommandLineRunner {
 
 			NotaFiscal notaFiscal = new NotaFiscal();
 
-			ParceiroNegocio parceiro = parceiroNegocioService.buscarPorId(113);
+//			ParceiroNegocio parceiro = parceiroNegocioService.buscarPorId(113);
+//
+//			notaFiscal.setNumero("10");
+//			NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
+//			notaFiscal.setParceiroNegocio(parceiro);
+//			notaFiscal.setNotaFiscalTipo(notaTipo);
+//			
+//			try {
+//				NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);				
+//				LOG.info("id inserido: {}", notaFiscal2.getId());				
+//			} catch (NotaFiscalDuplicadaException e) {
+//				System.out.println("Tratamento de exceção " + e.getMessage());
+//			}
+			
+			NotaFiscal notaFiscalPorId = notaFiscalService.buscarPorId(178);
+			LOG.info("Busca por id. Numero {} Data {} Nome da empresa parceira {} e tipo {}",
+					notaFiscalPorId.getNumero(), notaFiscalPorId.getData(), notaFiscalPorId.getParceiroNegocio(),
+					notaFiscalPorId.getNotaFiscalTipo());
+			
+			List<NotaFiscal> todasNotasFiscais = notaFiscalService.buscarPorNumero("20");
+			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais.size());
 
-			notaFiscal.setNumero("3");
-			NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
-			notaFiscal.setParceiroNegocio(parceiro);
-			notaFiscal.setNotaFiscalTipo(notaTipo);
-			
-			try {
-				NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);				
-				LOG.info("id inserido: {}", notaFiscal2.getId());				
-			} catch (NotaFiscalDuplicadaException e) {
-				System.out.println("Tratamento de exceção " + e.getMessage());
-			}
-			
+			List<NotaFiscal> todasNotasFiscais2 = notaFiscalService.listarTodos();
+			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais2.size());
 
 		}
 

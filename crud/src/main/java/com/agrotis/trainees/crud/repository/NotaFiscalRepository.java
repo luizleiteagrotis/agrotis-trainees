@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +17,5 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
 	    @Query("SELECT CASE WHEN COUNT(nf) > 0 THEN true ELSE false END FROM NotaFiscal nf WHERE nf.numero = :numero AND nf.notaFiscalTipo = :notaFiscalTipo")
 	    boolean hasDuplicates(@Param("numero") String numero, @Param("notaFiscalTipo") NotaFiscalTipo tipo);
 
-	
+	     List<NotaFiscal> findAllByNumero(String numero);
 }

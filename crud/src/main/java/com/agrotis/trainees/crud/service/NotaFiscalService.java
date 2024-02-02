@@ -31,4 +31,19 @@ public class NotaFiscalService {
 		return repository.save(entidade);
 	}
 	
+	public NotaFiscal buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.error("Nota não encontrada para id {}", id);
+			return null;
+		});
+	}
+	
+	public List<NotaFiscal> buscarPorNumero(String numero) {
+		return repository.findAllByNumero(numero);
+	}
+	
+	public List<NotaFiscal> listarTodos() {
+		return repository.findAll();
+	}
+	
 }
