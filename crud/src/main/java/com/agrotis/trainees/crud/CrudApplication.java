@@ -146,6 +146,12 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 		notaFiscalService.update(notaFiscalSaida.getId(), notaFiscalSaida);
 		LOG.info("Atualizando a Nota Fiscal pelo ID {}", notaFiscalSaida.getId());
 		
+		List<NotaFiscal> notasFiscais = notaFiscalService.listarTodos(); {
+			LOG.info("Listas de notas fiscais: ", notasFiscais.size());
+		}
+		
+		
+		
 		
 		
 	
