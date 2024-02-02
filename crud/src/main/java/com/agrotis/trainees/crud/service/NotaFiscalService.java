@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +29,13 @@ public class NotaFiscalService {
 	
 	public NotaFiscalTipo salvar(NotaFiscalTipo tipo) {
 		return tipoRepository.salvar(tipo);
+	}
+	
+	public CabecalhoNota buscarPor(long idCabecalho) {
+		return cabecalhoRepository.buscarPor(idCabecalho);
+	}
+	
+	public List<CabecalhoNota> buscarTodosCabecalhos() {
+		return cabecalhoRepository.buscarTodos();
 	}
 }

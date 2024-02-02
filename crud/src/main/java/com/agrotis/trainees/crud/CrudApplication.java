@@ -50,6 +50,7 @@ public class CrudApplication implements CommandLineRunner {
 	}
 
 	private void testarParceiroNegocio() {
+		// CREATE
 		ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 		parceiroNegocio.setNome("nomeTeste");
 		parceiroNegocio.setInscricaoFiscal("inscricaoTeste");
@@ -57,19 +58,23 @@ public class CrudApplication implements CommandLineRunner {
 		parceiroNegocio.setTelefone("12345");
 		parceiroNegocio = parceiroNegocioService.salvar(parceiroNegocio);
 		
+		// READ
 		ParceiroNegocio parceiroPorId = parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
 		
 		List<ParceiroNegocio> parceiros = parceiroNegocioService.listarTodos();
 		
+		// UPDATE
 		parceiroPorId.setNome("coxinha cabulosa");
 		parceiroNegocioService.salvar(parceiroPorId);
 		
+		// DELETE
 		parceiros.forEach((parceiro) -> {
 			parceiroNegocioService.deletar(parceiro.getId());
 		});
 	}
 	
 	private void testarProduto() {
+		// CREATE
 		ParceiroNegocio fabricante = new ParceiroNegocio();
 		fabricante.setNome("nomeTeste");
 		fabricante.setInscricaoFiscal("inscricaoTeste");
@@ -84,12 +89,15 @@ public class CrudApplication implements CommandLineRunner {
 		produto = produtoService.salvar(produto);
 		LOG.info("id inserido: {}", produto.getId());
 		
+		// READ
 		Produto produtoPorId = produtoService.buscarPor(produto.getId());
 		List<Produto> produtos = produtoService.listarTodos();
 		
+		// UPDATE
 		produtoPorId.setNome("moranguinho");
 		produtoService.salvar(produtoPorId);
 		
+		// DELETE
 		produtos.forEach((p) -> {
 			produtoService.deletar(p.getId());
 		});
@@ -97,6 +105,7 @@ public class CrudApplication implements CommandLineRunner {
 	}
 	
 	private void testarCabecalhoNota() {
+		// CREATE
 		ParceiroNegocio parceiro = new ParceiroNegocio();
 		parceiro.setNome("nomeTeste");
 		parceiro.setInscricaoFiscal("inscricaoTeste");
@@ -114,5 +123,10 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
 		notaFiscalService.salvar(cabecalhoNota);
+		
+		// READ
+		CabecalhoNota cabecalhoPorId = notaFiscalService.buscarPor(cabecalhoNota.getId());
+		
+		List<CabecalhoNota> cabecalhos = notaFiscalService.buscarTodosCabecalhos();
 	}
 }
