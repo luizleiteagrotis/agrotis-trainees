@@ -190,12 +190,14 @@ public class CrudApplication implements CommandLineRunner {
 //			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais2.size());
 			
 			
-			notaFiscalPorId.setNumero("12");
-			notaFiscalPorId.setData(LocalDate.now());
-			notaFiscalService.salvar(notaFiscalPorId);
-			LOG.info("Novo numero {} e nova data {}", notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
+//			notaFiscalPorId.setNumero("12");
+//			notaFiscalPorId.setData(LocalDate.now());
+//			notaFiscalService.salvar(notaFiscalPorId);
+//			LOG.info("Novo numero {} e nova data {}", notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
 			
-
+			
+			notaFiscalService.deletarPorId(171);
+				
 		}
 
 	}
