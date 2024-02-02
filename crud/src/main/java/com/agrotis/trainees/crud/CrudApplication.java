@@ -12,9 +12,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -30,11 +33,14 @@ public class CrudApplication implements CommandLineRunner {
 
 	private final ProdutoService produtoService;
 
+	private final NotaFiscalService notaFiscalService;
+
 	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
-			ProdutoService produtoService) {
+			ProdutoService produtoService, NotaFiscalService notaFiscalService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
+		this.notaFiscalService = notaFiscalService;
 	}
 
 	public static void main(String[] args) {
@@ -47,14 +53,13 @@ public class CrudApplication implements CommandLineRunner {
 
 		Scanner scan = new Scanner(System.in);
 		System.out.println(
-				"Digite o número correspondente para mexer com o CRUD da nota fiscal, parceiro de negócio ou produto: 1 2 3");
+				"Digite o número correspondente para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto ou nota fiscal: 1 2 3 4");
 		int escolha = scan.nextInt();
-		
 
 		if (escolha == 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 
-			notaFiscalTipo.setNome("nomeTeste5");
+			notaFiscalTipo.setNome("Saída");
 			NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
 			LOG.info("id inserido: {}", notaFiscalTipo2.getId());
 
@@ -64,10 +69,10 @@ public class CrudApplication implements CommandLineRunner {
 			List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
 			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 
-			NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-			porNome.setNome("nomeAlterado");
-			notaFiscalTipoService.salvar(porNome);
-			LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+//			NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
+//			porNome.setNome("nomeAlterado");
+//			notaFiscalTipoService.salvar(porNome);
+//			LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
 
 			// notaFiscalTipoService.deletarPorId(porId.getId());
 			notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
@@ -111,7 +116,7 @@ public class CrudApplication implements CommandLineRunner {
 
 		if (escolha == 3) {
 			Produto produto = new Produto();
-			
+
 			ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(157);
 			produto.setDescricao("Citrus e ração");
 			produto.setParceiroNegocio(fabricante);
@@ -152,6 +157,27 @@ public class CrudApplication implements CommandLineRunner {
 					produtoPorDescricao2.getParceiroNegocio());
 
 //		produtoService.deletarPorId(produtoPorId.getId());
+		}
+
+		if (escolha == 4) {
+
+			NotaFiscal notaFiscal = new NotaFiscal();
+
+			ParceiroNegocio parceiro = parceiroNegocioService.buscarPorId(113);
+
+			notaFiscal.setNumero("3");
+			NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
+			notaFiscal.setParceiroNegocio(parceiro);
+			notaFiscal.setNotaFiscalTipo(notaTipo);
+			
+			try {
+				NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);				
+				LOG.info("id inserido: {}", notaFiscal2.getId());				
+			} catch (NotaFiscalDuplicadaException e) {
+				System.out.println("Tratamento de exceção " + e.getMessage());
+			}
+			
+
 		}
 
 	}
