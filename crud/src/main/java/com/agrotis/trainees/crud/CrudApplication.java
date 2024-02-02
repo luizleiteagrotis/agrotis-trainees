@@ -143,6 +143,11 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 		notaFiscalService.buscarPorId(notaFiscal.getId());
 		LOG.info("Em processo de busca da nota por ID {}", notaFiscal.getId());
 		
+		notaFiscalService.update(notaFiscalSaida.getId(), notaFiscalSaida);
+		LOG.info("Atualizando a Nota Fiscal pelo ID {}", notaFiscalSaida.getId());
+		
+		
+		
 	
  
  

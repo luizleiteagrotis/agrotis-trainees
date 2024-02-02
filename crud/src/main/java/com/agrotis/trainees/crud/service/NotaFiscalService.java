@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
@@ -31,6 +32,13 @@ private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.clas
 		});
 	}
 	
+	public NotaFiscal update(Integer id, NotaFiscal fiscal) {
+		  NotaFiscal byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("A Nota Fiscal nao foi encontrada pelo ID: {}.", id);
+			return null;
+		});
+		return repository.save(byId);
+	
 
-
+	}
 }
