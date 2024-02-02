@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,9 +30,32 @@ public class ParceiroNegocios {
     
     @OneToMany(mappedBy = "fabricante")
     private List<Produto> produtos;
+    
+    @OneToMany(mappedBy = "parceiro")
+    private List<NotaFiscalCampos> notas;
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public List<NotaFiscalCampos> getNotas() {
+		return notas;
+	}
+
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
+
+	public void setNotas(List<NotaFiscalCampos> notas) {
+		this.notas = notas;
+	}
 
 	public Integer getId() {
 		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getNome() {

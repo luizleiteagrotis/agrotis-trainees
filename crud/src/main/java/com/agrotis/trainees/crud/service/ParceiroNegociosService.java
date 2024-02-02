@@ -25,6 +25,10 @@ public class ParceiroNegociosService {
 	
 	//create e update 
 	public ParceiroNegocios salvar(ParceiroNegocios entidade) {
+		if(repository.existsByInscricaoFiscal(entidade.getInscricaoFiscal())) {
+			
+			return entidade;
+		}
 		return repository.save(entidade);
 	}
 	

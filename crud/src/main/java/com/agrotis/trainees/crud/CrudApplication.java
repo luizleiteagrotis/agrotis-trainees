@@ -1,12 +1,9 @@
 package com.agrotis.trainees.crud;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.ParceiroNegocios;
-import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.repository.ParceiroNegociosRepository;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
-import com.agrotis.trainees.crud.service.ParceiroNegociosService;
-import com.agrotis.trainees.crud.service.ProdutoService;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +11,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.Date;
-import java.util.List;
+import com.agrotis.trainees.crud.entity.NotaFiscalCampos;
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.entity.ParceiroNegocios;
+import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalCamposService;
+import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
+import com.agrotis.trainees.crud.service.ParceiroNegociosService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
@@ -26,16 +29,19 @@ public class CrudApplication implements CommandLineRunner {
 	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegociosService parceiroNegociosService;
 	private final ProdutoService produtoService;
+	private final NotaFiscalCamposService notaFiscalCamposService;
 	
 	public CrudApplication(
 			NotaFiscalTipoService notaFiscalTipoService,
 			ParceiroNegociosService parceiroNegociosService,
-			ProdutoService produtoService
+			ProdutoService produtoService,
+			NotaFiscalCamposService notaFiscalCamposService
 				) {
 		
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegociosService = parceiroNegociosService;
 		this.produtoService = produtoService;
+		this.notaFiscalCamposService = notaFiscalCamposService;
 	}
 
 	public static void main(String[] args) {
@@ -45,7 +51,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		int p = 5;
+		int p = 7;
 		if(p < 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 			notaFiscalTipo.setNome("nomeTeste");
@@ -60,8 +66,8 @@ public class CrudApplication implements CommandLineRunner {
 
 			NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 			porNome.setNome("nomeAlterado");
-			notaFiscalTipoService.salvar(porNome);
-			LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+			notaFiscalTipoService.salvar(porId);
+//			LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
 
 			//notaFiscalTipoService.deletarPorId(porId.getId());
 			notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
@@ -76,13 +82,16 @@ public class CrudApplication implements CommandLineRunner {
 			LOG.info("id inserido: {}", parceiroNegocios2.getId());
 			
 			ParceiroNegocios porId = parceiroNegociosService.buscarPorId(parceiroNegocios2.getId());
-			LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());			
+			LOG.info("Busca por id. Nome {}, Inscrição Fiscal {}, Endereço {}, Telefone ", porId.getNome(), porId.getInscricaoFiscal(),
+					porId.getEndereco(), porId.getTelefone());			
 					
 			ParceiroNegocios porInscricao = parceiroNegociosService.buscarPorInscricaoFiscal(parceiroNegocios2.getInscricaoFiscal());
-			LOG.info("Busca por inscrição fiscal. Nome {} inscrição {} ", porInscricao.getNome(), porInscricao.getInscricaoFiscal());
+			LOG.info("Busca por inscrição fiscal. Nome {}, Endereço {}, Telefone {} ", porInscricao.getNome(), porInscricao.getEndereco(),
+					porInscricao.getTelefone());
 			
 			ParceiroNegocios porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios2.getNome());
-			LOG.info("Busca por nome. Nome {} inscricao {} ", porNome.getNome(), porNome.getInscricaoFiscal());
+			LOG.info("Busca pelo nome {}. Inscricao Fiscal {}, Endereço {}, Telefone {} ", porNome.getNome(), porNome.getInscricaoFiscal(),
+					porNome.getEndereco(), porNome.getTelefone());
 			
 			List<ParceiroNegocios> todosSalvos = parceiroNegociosService.listarTodos();
 			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
@@ -135,9 +144,23 @@ public class CrudApplication implements CommandLineRunner {
 				produtoService.deletarPorId(porId.getId());
 				
 			}
+		} else {
+			NotaFiscalCampos notaCabecalho = new NotaFiscalCampos();
+			NotaFiscalTipo tipo = notaFiscalTipoService.buscarPorId(1);
+			ParceiroNegocios parceiro = parceiroNegociosService.buscarPorId(2);
+			
+			
+			
+			notaCabecalho.setTipo(tipo);
+			notaCabecalho.setParceiro(parceiro);			
+			notaCabecalho.setDataEmissao(LocalDate.of(2024, 04, 07));		
+			notaFiscalCamposService.gerarNumero(notaCabecalho);
+			NotaFiscalCampos notaCabecalho2 = notaFiscalCamposService.salvar(notaCabecalho);
+			
 		}
 		
 
 
 	}
+		
 }

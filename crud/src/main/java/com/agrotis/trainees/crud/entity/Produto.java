@@ -24,7 +24,7 @@ public class Produto {
 	
 	@ManyToOne
 	@JoinColumn(name= "fabricante")
-	@NotNull
+	@NotNull(message = "O valor deve ser preenchido")
 	private ParceiroNegocios fabricante;
 	
 	private Date dataFabricacao;

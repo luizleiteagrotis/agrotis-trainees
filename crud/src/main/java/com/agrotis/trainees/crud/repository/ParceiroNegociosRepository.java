@@ -14,5 +14,7 @@ public interface ParceiroNegociosRepository extends JpaRepository<ParceiroNegoci
     Optional<ParceiroNegocios> findByNome(String nome);
     
     Optional<ParceiroNegocios> findByInscricaoFiscal(String inscricaoFiscal);
+    
+    Boolean existsByInscricaoFiscal(String inscricaoFiscal);
 
 }
