@@ -16,5 +16,7 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
 	Optional<NotaFiscal> findByNumeroNota(Integer numeroNota);
 	Optional<NotaFiscal> findByDataNota(LocalDate dataNota);
 	Optional<NotaFiscal> findByNotaFiscalTipo(NotaFiscalTipo tipoNota);
+	Optional<NotaFiscal> findById(NotaFiscal notaFiscal); // adicionado após erro estranho, verificar
+	void deleteById(NotaFiscal notaFiscal); // adicionado após erro estranho, verificar
 	
 }

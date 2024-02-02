@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
 @Service
@@ -30,9 +29,9 @@ public class NotaFiscalService {
 		return repository.save(entidade);
 	}
 
-	public NotaFiscal buscarPorId(Integer id) {
-		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Nota Fiscal não encontrada para id {}.", id);
+	public NotaFiscal buscarPorId(Integer integer) {
+		return repository.findById(integer).orElseGet(() -> {
+			LOG.error("Nota Fiscal não encontrada para id {}.", integer);
 			return null;
 		});
 	}
@@ -69,8 +68,8 @@ public class NotaFiscalService {
 		return repository.findAll();
 	}
 	
-	public void deletarPorId(Integer id){
-		repository.deleteById(id);
+	public void deletarPorId(Integer integer){
+		repository.deleteById(integer);
 		LOG.info("Deletado com sucesso");
 	}
 	

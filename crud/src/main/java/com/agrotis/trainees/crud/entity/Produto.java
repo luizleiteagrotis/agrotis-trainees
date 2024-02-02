@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
 
 @Entity
 @Table(name = "produto")
@@ -31,6 +32,7 @@ public class Produto {
 	@NotBlank(message = "Obrigatório preencher o fabricante do produto")
 	private String fabricante;
 	
+	@PastOrPresent(message = "A data de fabricação deve ser de datas passadas")
     private LocalDate dataFabricacao;
 	
 	private LocalDate dataValidade;

@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity 
@@ -41,15 +40,11 @@ public class NotaFiscal {
 		this.dataNota = LocalDate.now();
 	}
 
+		public Integer getId() {
+		return id;
+	}
 
-
-	public Integer getId() {
-        return id;
-    }
-
-	
-
-	public NotaFiscalTipo getNotaFiscalTipo() {
+		public NotaFiscalTipo getNotaFiscalTipo() {
 		return notaFiscalTipo;
 	}
 
