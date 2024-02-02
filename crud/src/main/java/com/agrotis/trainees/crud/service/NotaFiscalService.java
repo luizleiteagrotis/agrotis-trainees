@@ -38,4 +38,8 @@ public class NotaFiscalService {
 	public List<CabecalhoNota> buscarTodosCabecalhos() {
 		return cabecalhoRepository.buscarTodos();
 	}
+	
+	public void deletarCabecalho(long id) {
+		cabecalhoRepository.deletar(id);
+	}
 }

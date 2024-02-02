@@ -132,5 +132,10 @@ public class CrudApplication implements CommandLineRunner {
 		// UPDATE
 		cabecalhoPorId.setNumero(111111L);
 		notaFiscalService.salvar(cabecalhoPorId);
+		
+		// DELETE
+		cabecalhos.forEach((cabecalho) -> {
+			notaFiscalService.deletarCabecalho(cabecalho.getId());
+		});
 	}
 }
