@@ -185,10 +185,14 @@ public class CrudApplication implements CommandLineRunner {
 		fiscalItem.setProduto(produto);
 		fiscalItem.setPrecoUnitario(25.99);
 		fiscalItem.setQuantidade(5);
-		fiscalItem.getValorTotal();
 		System.out.println(fiscalItem.getValorTotal());
 
 		notaFiscalItemService.salvar(fiscalItem);
+		
+		List<NotaFiscalItem> itens = notaFiscalItemService.buscarTodos();
+		LOG.info("Buscando Nota Fiscal Item {}", itens.size());
+		
+		
 		
 		
 	}

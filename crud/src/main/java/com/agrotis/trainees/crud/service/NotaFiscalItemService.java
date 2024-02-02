@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,10 @@ public class NotaFiscalItemService {
 
 	public NotaFiscalItem salvar(NotaFiscalItem entidade) {
 		return repository.save(entidade);
+	}
+	
+	public List<NotaFiscalItem> buscarTodos(){
+		return repository.findAll();
 	}
 	
 }

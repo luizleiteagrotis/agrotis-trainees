@@ -22,7 +22,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class NotaFiscal {
 
 	public NotaFiscal() {
-		this.data = LocalDateTime.now();
 	}
 
 	@Id
