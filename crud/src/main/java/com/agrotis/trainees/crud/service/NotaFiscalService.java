@@ -48,12 +48,20 @@ public class NotaFiscalService {
 		return tipoRepository.buscarPor(id);
 	}
 	
+	public ItemNota bucarItemPor(long id) {
+		return itemRepository.buscarPor(id);
+	}
+	
 	public List<CabecalhoNota> buscarTodosCabecalhos() {
 		return cabecalhoRepository.buscarTodos();
 	}
 	
 	public List<NotaFiscalTipo> buscarTodosTipos() {
 		return tipoRepository.buscarTodos();
+	}
+	
+	public List<ItemNota> buscarTodosItens() {
+		return itemRepository.buscarTodos();
 	}
 	
 	public void deletarCabecalho(long id) {
