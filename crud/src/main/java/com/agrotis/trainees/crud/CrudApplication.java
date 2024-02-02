@@ -1,7 +1,10 @@
 package com.agrotis.trainees.crud;
 
+import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -12,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootApplication
@@ -22,12 +26,15 @@ public class CrudApplication implements CommandLineRunner {
 
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
+	private final NotaFiscalService notaFiscalService;
 	
 	@Autowired
 	public CrudApplication(ParceiroNegocioService parceiroNegocioService, 
-			ProdutoService produtoService) {
+			ProdutoService produtoService,
+			NotaFiscalService notaFiscalService) {
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
+		this.notaFiscalService = notaFiscalService;
 	}
 
 	public static void main(String[] args) {
@@ -39,6 +46,7 @@ public class CrudApplication implements CommandLineRunner {
 	public void run(String... args){
 		testarParceiroNegocio();
 		testarProduto();
+		testarCabecalhoNota();
 	}
 
 	private void testarParceiroNegocio() {
@@ -85,5 +93,26 @@ public class CrudApplication implements CommandLineRunner {
 		produtos.forEach((p) -> {
 			produtoService.deletar(p.getId());
 		});
+		parceiroNegocioService.deletar(fabricante.getId());
+	}
+	
+	private void testarCabecalhoNota() {
+		ParceiroNegocio parceiro = new ParceiroNegocio();
+		parceiro.setNome("nomeTeste");
+		parceiro.setInscricaoFiscal("inscricaoTeste");
+		parceiro.setEndereco("enderecoTeste");
+		parceiro.setTelefone("12345");
+		parceiro = parceiroNegocioService.salvar(parceiro);
+		
+		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
+		tipoNota.setNome("entrada");
+		notaFiscalService.salvar(tipoNota);
+		
+		CabecalhoNota cabecalhoNota = new CabecalhoNota();
+		cabecalhoNota.setNumero(123456L);
+		cabecalhoNota.setParceiro(parceiro);
+		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setDataEmissao(LocalDate.now());
+		notaFiscalService.salvar(cabecalhoNota);
 	}
 }
