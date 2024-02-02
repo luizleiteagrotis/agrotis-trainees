@@ -167,6 +167,12 @@ public class CrudApplication implements CommandLineRunner {
 			
 			List<NotaFiscalCampos> todosSalvos = notaFiscalCamposService.listarTodos();
 			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
+			
+			porId = notaFiscalCamposService.buscarPorId(41);
+			porId.setParceiro(parceiroNegociosService.buscarPorId(4));
+			porId.setDataEmissao(LocalDate.of(2021, 12, 30));				
+			notaFiscalCamposService.salvar(porId);
+			LOG.info("Dados alterados com sucesso");
 		}
 		
 
