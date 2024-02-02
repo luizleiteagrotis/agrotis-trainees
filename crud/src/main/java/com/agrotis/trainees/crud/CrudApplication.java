@@ -151,5 +151,8 @@ public class CrudApplication implements CommandLineRunner {
 		
 		List<NotaFiscalTipo> tipos = notaFiscalService.buscarTodosTipos();
 		
+		// UPDATE
+		tipoNotaPorId.setNome("entrada e saida");
+		notaFiscalService.salvar(tipoNotaPorId);
 	}
 }
