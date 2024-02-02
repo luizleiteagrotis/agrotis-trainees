@@ -132,7 +132,7 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalService.salvar(cabecalhoNota);
 		
 		// READ
-		CabecalhoNota cabecalhoPorId = notaFiscalService.buscarPor(cabecalhoNota.getId());
+		CabecalhoNota cabecalhoPorId = notaFiscalService.buscarCabecalhoPor(cabecalhoNota.getId());
 		
 		List<CabecalhoNota> cabecalhos = notaFiscalService.buscarTodosCabecalhos();
 		
@@ -200,7 +200,7 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalService.salvar(tipoNota);
 		
 		// READ
-		NotaFiscalTipo tipoNotaPorId = notaFiscalService.buscarPor(tipoNota.getId());
+		NotaFiscalTipo tipoNotaPorId = notaFiscalService.buscarTipoPor(tipoNota.getId());
 		
 		List<NotaFiscalTipo> tipos = notaFiscalService.buscarTodosTipos();
 		
@@ -248,5 +248,7 @@ public class CrudApplication implements CommandLineRunner {
 		item.setDataValidade(LocalDate.now());
 		item.setCabecalhoNota(cabecalhoNota);
 		notaFiscalService.salvar(item);
+		
+		
 	}
 }

@@ -40,12 +40,12 @@ public class NotaFiscalService {
 		return itemRepository.salvar(item);
 	}
 	
-	public CabecalhoNota buscarPor(long idCabecalho) {
-		return cabecalhoRepository.buscarPor(idCabecalho);
+	public CabecalhoNota buscarCabecalhoPor(long id) {
+		return cabecalhoRepository.buscarPor(id);
 	}
 	
-	public NotaFiscalTipo buscarPor(int idTipo) {
-		return tipoRepository.buscarPor(idTipo);
+	public NotaFiscalTipo buscarTipoPor(int id) {
+		return tipoRepository.buscarPor(id);
 	}
 	
 	public List<CabecalhoNota> buscarTodosCabecalhos() {
