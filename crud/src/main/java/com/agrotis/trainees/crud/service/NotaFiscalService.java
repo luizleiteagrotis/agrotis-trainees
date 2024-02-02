@@ -71,4 +71,8 @@ public class NotaFiscalService {
 	public void deletarTipo(int id) {
 		tipoRepository.deletar(id);
 	}
+	
+	public void deletarItem(long id) {
+		itemRepository.deletar(id);
+	}
 }
