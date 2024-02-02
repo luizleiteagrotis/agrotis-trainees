@@ -6,6 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -236,7 +238,26 @@ public class CrudApplication implements CommandLineRunner {
         Produto produtoItem = produtoService.buscarPorId(78);
         NotaFiscal notaItem = notaFiscalService.buscarPorId(177);
         ItemNotaFiscal item = new ItemNotaFiscal(notaItem, produtoItem, 500, 10);
+
+        // create
         ItemNotaFiscal salvar = itemNotaFiscalService.salvar(item);
         LOG.info("O id {}", salvar.getId());
+
+        // select por id
+        ItemNotaFiscal selecionarPorId = itemNotaFiscalService.buscarPorId(item.getId());
+        LOG.info(" id {} ", selecionarPorId.getId());
+
+        // select por produto
+        List<ItemNotaFiscal> selecionarPorProduto = itemNotaFiscalService.buscarPorProduto(item.getProduto());
+        for (ItemNotaFiscal pTodos : selecionarPorProduto) {
+            LOG.info(" {} ", pTodos.getProduto().getNome());
+        }
+
+        // select por nota fiscal
+        List<ItemNotaFiscal> selecionarPorNotaFiscal = itemNotaFiscalService.buscarPorNotaFiscal(item.getNotaFiscal());
+        for (ItemNotaFiscal nfTodos : selecionarPorNotaFiscal) {
+            LOG.info(" {} ", nfTodos.getNotaFiscal().getNumero());
+        }
+
     }
 }

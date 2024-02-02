@@ -4,7 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
+import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 
 @Service
@@ -20,6 +24,37 @@ public class ItemNotaFiscalService {
 
     public ItemNotaFiscal salvar(ItemNotaFiscal itemNotaFiscal) {
         return repository.save(itemNotaFiscal);
+    }
+
+    public ItemNotaFiscal buscarPorId(int id) {
+        return repository.findById(id).orElseGet(() -> {
+            LOG.error("Não foi possível encontrar um registro");
+            return null;
+        });
+    }
+
+    public List<ItemNotaFiscal> buscarPorProduto(Produto produto) {
+        return repository.findByProduto(produto);
+    }
+
+    public List<ItemNotaFiscal> buscarPorNotaFiscal(NotaFiscal notaFiscal) {
+        return repository.findByNotaFiscal(notaFiscal);
+    }
+
+    public List<ItemNotaFiscal> buscarPorQuantidade(double quantidade) {
+        return repository.findByQuantidade(quantidade);
+    }
+
+    public List<ItemNotaFiscal> buscarPorPreco(double preco) {
+        return repository.findByPrecoUnitario(preco);
+    }
+
+    public List<ItemNotaFiscal> buscarPorValorTotal(double valor) {
+        return repository.findByValorTotal(valor);
+    }
+
+    public List<ItemNotaFiscal> listarTodos() {
+        return repository.findAll();
     }
 
 }

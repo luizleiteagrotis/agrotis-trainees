@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -14,7 +13,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 public interface ItemNotaFiscalRepository extends JpaRepository<ItemNotaFiscal, Integer> {
     List<ItemNotaFiscal> findByProduto(Produto produto);
 
-    Optional<ItemNotaFiscal> findByNotaFiscal(NotaFiscal notaFiscal);
+    List<ItemNotaFiscal> findByNotaFiscal(NotaFiscal notaFiscal);
 
     List<ItemNotaFiscal> findByQuantidade(double quantidade);
 
