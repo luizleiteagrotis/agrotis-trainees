@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -178,15 +179,22 @@ public class CrudApplication implements CommandLineRunner {
 //			}
 			
 			NotaFiscal notaFiscalPorId = notaFiscalService.buscarPorId(178);
-			LOG.info("Busca por id. Numero {} Data {} Nome da empresa parceira {} e tipo {}",
-					notaFiscalPorId.getNumero(), notaFiscalPorId.getData(), notaFiscalPorId.getParceiroNegocio(),
-					notaFiscalPorId.getNotaFiscalTipo());
+//			LOG.info("Busca por id. Numero {} Data {} Nome da empresa parceira {} e tipo {}",
+//					notaFiscalPorId.getNumero(), notaFiscalPorId.getData(), notaFiscalPorId.getParceiroNegocio(),
+//					notaFiscalPorId.getNotaFiscalTipo());
+//			
+//			List<NotaFiscal> todasNotasFiscais = notaFiscalService.buscarPorNumero("20");
+//			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais.size());
+//
+//			List<NotaFiscal> todasNotasFiscais2 = notaFiscalService.listarTodos();
+//			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais2.size());
 			
-			List<NotaFiscal> todasNotasFiscais = notaFiscalService.buscarPorNumero("20");
-			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais.size());
-
-			List<NotaFiscal> todasNotasFiscais2 = notaFiscalService.listarTodos();
-			LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais2.size());
+			
+			notaFiscalPorId.setNumero("12");
+			notaFiscalPorId.setData(LocalDate.now());
+			notaFiscalService.salvar(notaFiscalPorId);
+			LOG.info("Novo numero {} e nova data {}", notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
+			
 
 		}
 
