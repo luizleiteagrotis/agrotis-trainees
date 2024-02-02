@@ -185,16 +185,14 @@ public class CrudApplication implements CommandLineRunner {
         NotaFiscal nota = new NotaFiscal();
         nota.setParceiroNegocio(parceiroNota);
         nota.setNumero(2);
-        nota.setTipo(tipoSaida);
+        nota.setTipo(tipoEntrada);
         nota.setData(Date.valueOf("2023-01-25"));
 
         NotaFiscal salvar = notaFiscalService.salvar(nota);
-        LOG.info("salvo id {}", salvar.getId());
-
         NotaFiscal buscarPorId = notaFiscalService.buscarPorId(nota.getId());
-        LOG.info("o id que achou foi {}", buscarPorId.getId());
+        // LOG.info("o id que achou foi {}", buscarPorId.getId());
 
-        java.util.List<NotaFiscal> buscarPorParceiro = notaFiscalService.buscarPorParceiroNegocio(parceiroNota);
+        List<NotaFiscal> buscarPorParceiro = notaFiscalService.buscarPorParceiroNegocio(parceiroNota);
         for (NotaFiscal pNota : buscarPorParceiro) {
             LOG.info("O parceiro é {} ", pNota.getParceiroNegocio().getNome());
         }
@@ -219,5 +217,11 @@ public class CrudApplication implements CommandLineRunner {
             LOG.info(" {} ", lTodos);
         }
 
+        NotaFiscal notaAtualizada = new NotaFiscal();
+        notaAtualizada.setTipo(tipoEntrada);
+        NotaFiscal atualizar = notaFiscalService.atualizar(notaAtualizada, 159);
+        // LOG.info("O {} foi atualizado ", atualizar.getId());
+
+        // notaFiscalService.deletarPorId(128);
     }
 }

@@ -19,4 +19,7 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
     List<NotaFiscal> findByNumero(int numero);
 
     List<NotaFiscal> findByData(Date data);
+
+    List<NotaFiscal> findByNumeroAndTipo(int numero, String tipo);
+
 }
