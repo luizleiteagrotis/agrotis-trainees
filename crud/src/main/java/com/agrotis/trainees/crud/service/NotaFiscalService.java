@@ -24,7 +24,12 @@ private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.clas
 		return repository.save(entidade);
 	}
 	
-	
+	public NotaFiscal buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.error("Nota Fiscal nao encontrada para o ID {} ", id);
+			return null;
+		});
+	}
 	
 
 

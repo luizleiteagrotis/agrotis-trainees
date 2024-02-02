@@ -140,7 +140,8 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 		notaFiscalService.salvar(notaFiscalSaida);
 		LOG.info("Nota Fiscal Salva: {}", notaFiscalSaida.getId());
 		
-		
+		notaFiscalService.buscarPorId(notaFiscal.getId());
+		LOG.info("Em processo de busca da nota por ID {}", notaFiscal.getId());
 		
 	
  
