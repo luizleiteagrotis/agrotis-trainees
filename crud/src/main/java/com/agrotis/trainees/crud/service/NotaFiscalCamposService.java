@@ -44,7 +44,7 @@ public class NotaFiscalCamposService {
 		});
 	}
 	
-	public NotaFiscalCampos buscarPorTipoeNumero(NotaFiscalTipo tipo, String numero) {
+	public NotaFiscalCampos buscarPorTipoeNumero(NotaFiscalTipo tipo, Integer numero) {
 		return repository.findByTipoAndNumero(tipo, numero).orElseGet(() -> {
 			LOG.error("Informações não encontradas para o id {} e numero de nota {}"
 					, tipo, numero);

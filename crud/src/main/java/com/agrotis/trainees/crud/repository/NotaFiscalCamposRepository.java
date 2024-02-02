@@ -13,7 +13,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 @Repository
 public interface NotaFiscalCamposRepository extends JpaRepository<NotaFiscalCampos, Integer>{
 	
-	Optional<NotaFiscalCampos> findByTipoAndNumero(NotaFiscalTipo tipo, String numero);
+	Optional<NotaFiscalCampos> findByTipoAndNumero(NotaFiscalTipo tipo, Integer numero);
 	
 	@Query("SELECT MAX(nc.numero) FROM NotaFiscalCampos nc WHERE nc.tipo = :tipo")
 	Optional<Integer> findMaxNumeroByTipo(@Param("tipo") NotaFiscalTipo tipo);

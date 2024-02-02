@@ -153,10 +153,20 @@ public class CrudApplication implements CommandLineRunner {
 			
 			notaCabecalho.setTipo(tipo);
 			notaCabecalho.setParceiro(parceiro);			
-			notaCabecalho.setDataEmissao(LocalDate.of(2024, 04, 07));		
+			notaCabecalho.setDataEmissao(LocalDate.of(2023, 04, 07));		
 			notaFiscalCamposService.gerarNumero(notaCabecalho);
 			NotaFiscalCampos notaCabecalho2 = notaFiscalCamposService.salvar(notaCabecalho);
 			
+			NotaFiscalCampos porId = notaFiscalCamposService.buscarPorId(notaCabecalho2.getId());
+			LOG.info("Busca por Id. Tipo de nota: {} ; Parceiro: {} ; Numero da nota: {}; Data de Emissão: {}",
+					porId.getTipo().getNome(), porId.getParceiro().getNome(), porId.getNumero(), porId.getDataEmissao());
+			
+			NotaFiscalCampos porNumeroETipo = notaFiscalCamposService.buscarPorTipoeNumero(notaCabecalho2.getTipo(), notaCabecalho2.getNumero());
+			LOG.info("Busca por numero da nota e tipo. Tipo de nota: {} ; Parceiro: {} ; Numero da nota: {}; Data de Emissão: {}",
+					porNumeroETipo.getTipo().getNome(), porNumeroETipo.getParceiro().getNome(), porNumeroETipo.getNumero(), porNumeroETipo.getDataEmissao());
+			
+			List<NotaFiscalCampos> todosSalvos = notaFiscalCamposService.listarTodos();
+			LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 		}
 		
 
