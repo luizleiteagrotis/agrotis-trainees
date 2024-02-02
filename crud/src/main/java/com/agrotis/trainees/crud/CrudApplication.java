@@ -192,6 +192,9 @@ public class CrudApplication implements CommandLineRunner {
 		List<NotaFiscalItem> itens = notaFiscalItemService.buscarTodos();
 		LOG.info("Buscando Nota Fiscal Item {}", itens.size());
 		
+		notaFiscalItemService.buscarPorId(fiscalItem.getId());
+		
+		
 		
 		
 		

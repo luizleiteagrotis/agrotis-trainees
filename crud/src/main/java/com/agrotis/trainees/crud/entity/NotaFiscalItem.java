@@ -15,7 +15,7 @@ public class NotaFiscalItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 
 	@ManyToOne
 	@JoinColumn(name = "nota_fiscal_id")
@@ -80,7 +80,7 @@ public class NotaFiscalItem {
 		this.valorTotal = valorTotal;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 

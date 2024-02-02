@@ -29,6 +29,15 @@ public class NotaFiscalItemService {
 		return repository.findAll();
 	}
 	
+	public NotaFiscalItem buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
+			return null;
+		});
+	}
+	
+	
+	
 }
 
 	
