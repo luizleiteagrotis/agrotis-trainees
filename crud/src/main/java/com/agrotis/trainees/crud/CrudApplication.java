@@ -154,6 +154,13 @@ public class CrudApplication implements CommandLineRunner {
 		notaFiscalCService.buscarPorId(notaFiscalC.getId());
 		LOG.info("Buscando nota pelo id {}", notaFiscalC.getId() );
 		
+		notaFiscalC1.setNumeroNota(777777);
+
+		notaFiscalCService.atualizar(notaFiscalC1.getId(), notaFiscalC1);
+		LOG.info("Atualizando pelo id {}", notaFiscalC1.getId());
+		List<NotaFiscalC> notas = notaFiscalCService.listarTodos();
+		LOG.info("Tamnho da lista: ", notas.size());
+		
 		
 		
 	}
