@@ -249,6 +249,9 @@ public class CrudApplication implements CommandLineRunner {
 		item.setCabecalhoNota(cabecalhoNota);
 		notaFiscalService.salvar(item);
 		
+		// READ
+		ItemNota itemPorId = notaFiscalService.bucarItemPor(item.getId());
 		
+		List<ItemNota> itens = notaFiscalService.buscarTodosItens();
 	}
 }
