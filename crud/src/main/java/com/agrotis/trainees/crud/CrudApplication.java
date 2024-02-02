@@ -194,6 +194,14 @@ public class CrudApplication implements CommandLineRunner {
 		
 		notaFiscalItemService.buscarPorId(fiscalItem.getId());
 		
+		NotaFiscalItem fiscalItemAtualizado = new NotaFiscalItem();
+		fiscalItem.setNotaFiscal(notaFiscal);
+		fiscalItem.setProduto(produto);
+		fiscalItem.setPrecoUnitario(25.99);
+		fiscalItem.setQuantidade(5);
+		
+		notaFiscalItemService.atualizar(fiscalItem.getId(), fiscalItemAtualizado);
+		
 		
 		
 		

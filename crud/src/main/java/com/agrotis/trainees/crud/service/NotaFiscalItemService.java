@@ -36,6 +36,19 @@ public class NotaFiscalItemService {
 		});
 	}
 	
+	public NotaFiscalItem atualizar(Integer id, NotaFiscalItem negocio) {
+		NotaFiscalItem byId = repository.findById(id).orElseGet(() -> {
+			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
+			return null;
+		});
+		return repository.save(byId);
+	}
+	
+	public void deletarPorId(Integer id) {
+		repository.deleteById(id);
+		LOG.info("Deletado com sucesso");
+	}
+	
 	
 	
 }
