@@ -23,7 +23,7 @@ public class NotaFiscal {
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNota;
 	
-	@JoinColumn(name = "tipo_nota") 
+	@Column(name = "tipo_nota") 
 	private String notaFiscalTipo;
 	
 	@Column(name = "numero_nota") 
@@ -74,8 +74,6 @@ public class NotaFiscal {
 	
 
 
-	
-	
 	
 }	
 	

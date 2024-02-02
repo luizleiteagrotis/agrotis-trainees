@@ -153,6 +153,8 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 		notaFiscalService.deletarPorId(notaFiscalSaida.getId());
 		LOG.info("A nota {}", notaFiscalSaida.getId(), "Foi deletada");
 		
+		NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscalSaida.getDataNota());
+		LOG.info("Buscando por data a nota fiscal: ", porDataNota.getId(), porDataNota.getDataNota());
 		
 		
 	

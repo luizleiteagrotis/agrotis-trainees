@@ -6,6 +6,8 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -49,5 +51,11 @@ private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.clas
 		LOG.info("Deletado com sucesso!");
 	}
 	
+	public NotaFiscal buscarPorData(LocalDate dataNota) {
+		return repository.findByDataNota(dataNota).orElseGet(() -> {
+			LOG.error("Nota Fiscal nao encontrada na data {}. ", dataNota);
+			return null;
+		});
+	}
 	
-}
+ }
