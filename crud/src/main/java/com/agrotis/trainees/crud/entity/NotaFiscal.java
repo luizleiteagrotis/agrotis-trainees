@@ -1,9 +1,12 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -18,63 +22,85 @@ import javax.validation.constraints.NotNull;
 @Table(name = "nota_fiscal")
 public class NotaFiscal {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	@NotNull(message = "Obrigatório preencher a data da nota fiscal ")
-	private LocalDate data;
+    @NotNull(message = "Obrigatório preencher a data da nota fiscal ")
+    private LocalDate data;
 
-	@NotBlank(message = "Obrigatório preencher o numero da nota fiscal")
-	private String numero;
+    @NotBlank(message = "Obrigatório preencher o numero da nota fiscal")
+    private String numero;
 
-	@ManyToOne
-	@JoinColumn(name = "id_parceiro_de_negocio")
-	private ParceiroNegocio parceiroNegocio;
+    @ManyToOne
+    @JoinColumn(name = "id_parceiro_de_negocio")
+    private ParceiroNegocio parceiroNegocio;
 
-	@ManyToOne
-	@JoinColumn(name = "id_nota_fiscal_tipo")
-	private NotaFiscalTipo notaFiscalTipo;
+    @ManyToOne
+    @JoinColumn(name = "id_nota_fiscal_tipo")
+    private NotaFiscalTipo notaFiscalTipo;
 
-	public Integer getId() {
-		return id;
-	}
+    @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER)
+    private List<ItemNotaFiscal> itemNotaFiscals = new ArrayList<>();
 
-	public LocalDate getData() {
-		return data;
-	}
+    @NotNull
+    @Digits(integer = 10, fraction = 2)
+    private BigDecimal valor_total;
 
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getNumero() {
-		return numero;
-	}
+    public LocalDate getData() {
+        return data;
+    }
 
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 
-	public ParceiroNegocio getParceiroNegocio() {
-		return parceiroNegocio;
-	}
+    public String getNumero() {
+        return numero;
+    }
 
-	public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-		this.parceiroNegocio = parceiroNegocio;
-	}
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
 
-	public NotaFiscalTipo getNotaFiscalTipo() {
-		return notaFiscalTipo;
-	}
+    public ParceiroNegocio getParceiroNegocio() {
+        return parceiroNegocio;
+    }
 
-	public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo) {
-		this.notaFiscalTipo = notaFiscalTipo;
-	}
+    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+        this.parceiroNegocio = parceiroNegocio;
+    }
 
-	public NotaFiscal() {
-		super();
-		this.data = LocalDate.now();
-	}
+    public NotaFiscalTipo getNotaFiscalTipo() {
+        return notaFiscalTipo;
+    }
 
+    public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo) {
+        this.notaFiscalTipo = notaFiscalTipo;
+    }
+
+    public BigDecimal getValor_total() {
+        return valor_total;
+    }
+
+    public List<ItemNotaFiscal> getItemNotaFiscals() {
+        return itemNotaFiscals;
+    }
+
+    public void setItemNotaFiscals(List<ItemNotaFiscal> itemNotaFiscals) {
+        this.itemNotaFiscals = itemNotaFiscals;
+    }
+
+    public NotaFiscal() {
+        super();
+        this.data = LocalDate.now();
+    }
+
+    public void calcularValorTotal(BigDecimal valorTotal) {
+        this.valor_total = valorTotal;
+    }
 }
