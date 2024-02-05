@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,10 @@ public class NotaFiscalService {
 	
 	public void deletarItem(long id) {
 		itemRepository.deletar(id);
+	}
+	
+	public BigDecimal calcularValorTotal(long idCabecalho) {
+		CabecalhoNota cabecalho = cabecalhoRepository.buscarPor(idCabecalho);
+		return itemRepository.calcularValorTotal(cabecalho);
 	}
 }
