@@ -12,74 +12,72 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "nota_fiscal_item")
 public class NotaFiscalItem {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@ManyToOne
-	@JoinColumn(name = "nota_fiscal")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "nota_fiscal")
     private NotaFiscal notaFiscal;
-	
-	@ManyToOne
-	@JoinColumn(name = "produto")
+
+    @ManyToOne
+    @JoinColumn(name = "produto")
     private Produto produto;
-	
-	@NotNull(message = "Necessário inserir a quantidade do produto")
-	private Integer quantidade; 
-	
-	@NotNull(message = "Necessário inserir o preço unitário")
-	private Double preco;
-	
-	private Double valorTotal;
-	
-	public Integer getId() {
+
+    @NotNull(message = "Necessário inserir a quantidade do produto")
+    private Integer quantidade;
+
+    @NotNull(message = "Necessário inserir o preço unitário")
+    private Double precoUnitario;
+
+    private Double valorTotal;
+
+    public Integer getId() {
         return id;
-	}
+    }
 
-	public NotaFiscal getNotaFiscal() {
-		return notaFiscal;
-	}
+    public NotaFiscal getNotaFiscal() {
+        return notaFiscal;
+    }
 
-	public void setNotaFiscal(NotaFiscal notaFiscal) {
-		this.notaFiscal = notaFiscal;
-	}
+    public void setNotaFiscal(NotaFiscal notaFiscal) {
+        this.notaFiscal = notaFiscal;
+    }
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 
-	public Produto getProduto() {
-		return produto;
-	}
+    public Produto getProduto() {
+        return produto;
+    }
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
 
-	public Integer getQuantidade() {
-		return quantidade;
-	}
+    public Integer getQuantidade() {
+        return quantidade;
+    }
 
-	public void setQuantidade(int i) {
-		this.quantidade = i;
-	}
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
 
-	public Double getPreco() {
-		return preco;
-	}
+    public Double getPrecoUnitario() {
+        return precoUnitario;
+    }
 
-	public void setPreco(Double preco) {
-		this.preco = preco;
-	}
+    public void setPrecoUnitario(Double precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
 
-	public Double getValorTotal() {
-		return valorTotal;
-	}
+    public Double getValorTotal() {
+        return valorTotal;
+    }
 
-	public void setValorTotal(Double valorTotal) {
-		this.valorTotal = valorTotal;
-	}
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = NotaFiscal.getValorTotal();
+    }
 
-	 
-	
 }
