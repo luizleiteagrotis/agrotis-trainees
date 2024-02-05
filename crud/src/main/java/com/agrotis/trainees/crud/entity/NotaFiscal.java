@@ -98,7 +98,12 @@ public class NotaFiscal {
     }
 
     public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
+        if (itensNota != null) {
+            this.valorTotal = atualizarValorTotal();
+        } else {
+            this.valorTotal = 0.0;
+            System.out.println("Valor nulo");
+        }
     }
 
     public void adicionarItem(NotaFiscalItem item) {
@@ -121,11 +126,18 @@ public class NotaFiscal {
         }
     }
 
-    private void atualizarValorTotal() {
-        double novoValorTotal = 0.0;
-        for (NotaFiscalItem item : itensNota) {
-            novoValorTotal += item.getValorTotal();
+    private Double atualizarValorTotal() {
+        if (itensNota != null) {
+            double novoValorTotal = 0.0;
+            for (NotaFiscalItem item : itensNota) {
+                novoValorTotal += item.getValorTotal();
+            }
+            this.valorTotal = novoValorTotal;
+            return novoValorTotal;
+        } else {
+            this.valorTotal = 0.0;
+            System.out.println("Valor nulo!");
+            return valorTotal;
         }
-        this.valorTotal = novoValorTotal;
     }
 }

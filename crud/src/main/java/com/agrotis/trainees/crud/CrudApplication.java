@@ -221,9 +221,13 @@ public class CrudApplication implements CommandLineRunner {
         porNumeroNotaFiscal.setNumeroNota(896178687);
         porNumeroNotaFiscal.setDataNota(LocalDate.of(2023, 10, 01));
         notaFiscalService.salvar(porNumeroNotaFiscal);
-        LOG.info("Dados alterados com sucesso!", porNumeroNotaFiscal.getNumeroNota(),
-                        porNumeroNotaFiscal.getParceiroNegocio().getEndereco(), porNumeroNotaFiscal.getNumeroNota(),
-                        porNumeroNotaFiscal.getDataNota());
+        if (porNumeroNotaFiscal != null && porNumeroNotaFiscal.getParceiroNegocio() != null) {
+            LOG.info("Dados alterados com sucesso! Número da Nota: {} Endereço do Parceiro: {} Data da Nota: {}",
+                            porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getParceiroNegocio().getEndereco(),
+                            porNumeroNotaFiscal.getDataNota());
+        } else {
+            LOG.warn("Não foi possível exibir os dados alterados. Algum valor é nulo.");
+        }
 
         boolean notaFiscalDeletar = false; // o comando funcionou adequadamente,
                                            // por isso, deixei a variável como
@@ -237,9 +241,29 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscalItem.setProduto(produto2);
         notaFiscalItem.setQuantidade(2000);
         notaFiscalItem.setPrecoUnitario(20.0);
+        notaFiscalItem.setValorTotal();
         NotaFiscalItem notaFiscalItem2 = notaFiscalItemService.salvar(notaFiscalItem);
         LOG.info("id inserido: {}", notaFiscalItem2.getId());
 
+        NotaFiscalItem porIdNotaFiscalItem = notaFiscalItemService.buscarPorId(notaFiscalItem2.getId());
+        if (porIdNotaFiscalItem != null) {
+            LOG.info("Busca por id. id {} Nota Fiscal {} Produto {} Quantidade {} Preço Unitário {} Valor Total {}",
+                            porIdNotaFiscalItem.getId(), porIdNotaFiscalItem.getNotaFiscal(), porIdNotaFiscalItem.getProduto(),
+                            porIdNotaFiscalItem.getQuantidade(), porIdNotaFiscalItem.getPrecoUnitario(),
+                            porIdNotaFiscalItem.getValorTotal());
+        } else {
+            LOG.warn("Nota Fiscal não encontrado para o id {}.", notaFiscal2.getId());
+        }
+
+        NotaFiscalItem porProdutoNotaFiscalItem = notaFiscalItemService.buscarPorId(notaFiscalItem2.getId());
+        if (porProdutoNotaFiscalItem != null) {
+            LOG.info("Busca por produto. id {} Nota Fiscal {} Produto {} Quantidade {} Preço Unitário {} Valor Total {}",
+                            porProdutoNotaFiscalItem.getId(), porProdutoNotaFiscalItem.getNotaFiscal(),
+                            porProdutoNotaFiscalItem.getProduto(), porProdutoNotaFiscalItem.getQuantidade(),
+                            porProdutoNotaFiscalItem.getPrecoUnitario(), porProdutoNotaFiscalItem.getValorTotal());
+        } else {
+            LOG.warn("Nota Fiscal não encontrado para o produto {}.", notaFiscal2.getId());
+        }
     }
 
 }

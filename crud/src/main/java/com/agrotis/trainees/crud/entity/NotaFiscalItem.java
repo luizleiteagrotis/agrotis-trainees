@@ -76,8 +76,13 @@ public class NotaFiscalItem {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = NotaFiscal.getValorTotal();
+    public void setValorTotal() {
+        if (notaFiscal != null) {
+            this.valorTotal = NotaFiscal.getValorTotal();
+        } else {
+            this.valorTotal = 0.0;
+            System.out.println("Valor nulo!");
+        }
     }
 
 }
