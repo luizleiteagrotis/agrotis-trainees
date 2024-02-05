@@ -1,38 +1,33 @@
 package com.agrotis.trainees.crud.repository.wrapper;
 
 import java.lang.reflect.ParameterizedType;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 
 /**
  * Classe wrapper para JpaRepository. Ela chama os métodos do repository e também
  * faz o log delas. Como os logs sao muito parecidos entre as services, foi
  * implementado esta classe para evitar repeticao de codigo/logica.
  * 
- * @param <Service> Local onde está sendo utilizada a repository
  * @param <Entity> Entidade manipulado no banco
  * @param <ID> Id da Entidade no banco.
- * @param <Repository> JPARepository da Entidade.
  */
-public class JpaRepositoryWrapper<Service, Entity, ID, Repository extends JpaRepository<Entity, ID>> {
+public class JpaRepositoryWrapper<Entity, ID> {
 
-	protected final Repository REPOSITORY;
+	protected final JpaRepository<Entity, ID> REPOSITORY;
 	protected final String NOME_ENTITY;
 	protected final Logger LOG;
 	
-	public JpaRepositoryWrapper(Repository repository, Class<Entity> entity, 
-			Class<Service> service) {
+	public JpaRepositoryWrapper(JpaRepository<Entity, ID> repository, Class<?> nomeLogger) {
 		this.REPOSITORY = repository;
 		this.NOME_ENTITY = getNomeEntity();
-		this.LOG = LoggerFactory.getLogger(service);
+		this.LOG = LoggerFactory.getLogger(nomeLogger);
 	}
 	
 	public Entity salvar(Entity entity) {
@@ -80,8 +75,19 @@ public class JpaRepositoryWrapper<Service, Entity, ID, Repository extends JpaRep
 	private String getNomeEntity() {
 		ParameterizedType tipo = (ParameterizedType) this.getClass().getGenericSuperclass();
 		Type[] argumentos = tipo.getActualTypeArguments();
-		int entity = 1;
+		int entity = 0;
 		Class<?> classeEntity = (Class<?>) argumentos[entity];
 		return classeEntity.getSimpleName();
+	}
+	
+	/**
+	 * Metodo para maior legibilidade do argumento nomeLogger quando as filhas chamarem 
+	 * o construtor da mae.
+	 * 
+	 * @param nome Classe para ser o nome do logger
+	 * @return Mesma instancia do argumento
+	 */
+	protected static Class<?> nomeLogger(Class<?> nome) {
+		return nome;
 	}
 }

@@ -10,16 +10,12 @@ import com.agrotis.trainees.crud.service.NotaFiscalService;
 
 @Repository
 public class CabecalhoNotaRepository extends JpaRepositoryWrapper<
-										  NotaFiscalService, 
 										  CabecalhoNota, 
-										  Long, 
-										  CabecalhoNotaJpaRepository> {
+										  Long> {
 
 	@Autowired
-	public CabecalhoNotaRepository(CabecalhoNotaJpaRepository repository, 
-			Class<CabecalhoNota> entity,
-			Class<NotaFiscalService> service) {
-		super(repository, entity, service);
+	public CabecalhoNotaRepository(CabecalhoNotaJpaRepository repository) {
+		super(repository, nomeLogger(CabecalhoNotaRepository.class));
 	}
 	
 	@Override
@@ -41,7 +37,8 @@ public class CabecalhoNotaRepository extends JpaRepositoryWrapper<
 	public boolean existeInstanciaCom(NotaFiscalTipo tipo, long numero) {
 		LOG.info("Tentando encontrar {} com tipo {} e numero {}", 
 				NOME_ENTITY, tipo.getNome(), numero);
-		boolean encontrado = REPOSITORY.existsByTipoAndNumero(tipo, numero);
+		CabecalhoNotaJpaRepository repository = (CabecalhoNotaJpaRepository) REPOSITORY;
+		boolean encontrado = repository.existsByTipoAndNumero(tipo, numero);
 		if (encontrado) {
 			LOG.info("Encontrado {} com tipo {} e numero {}", 
 					NOME_ENTITY, tipo.getNome(), numero);

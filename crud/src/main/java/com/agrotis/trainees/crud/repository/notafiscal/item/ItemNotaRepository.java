@@ -2,28 +2,27 @@ package com.agrotis.trainees.crud.repository.notafiscal.item;
 
 import java.math.BigDecimal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapper;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 @Repository
 public class ItemNotaRepository extends JpaRepositoryWrapper<
-										ParceiroNegocioService, 
 										ItemNota, 
-										Long, 
-										ItemNotaJpaRepository>{
+										Long>{
 
-	public ItemNotaRepository(ItemNotaJpaRepository repository, Class<ItemNota> entity,
-			Class<ParceiroNegocioService> service) {
-		super(repository, entity, service);
+	@Autowired
+	public ItemNotaRepository(ItemNotaJpaRepository repository) {
+		super(repository, nomeLogger(ItemNotaRepository.class));
 	}
 	
 	public BigDecimal calcularValorTotal(CabecalhoNota cabecalhoNota) {
+		ItemNotaJpaRepository repository = (ItemNotaJpaRepository) REPOSITORY;
 		LOG.info("Buscando valor total de {} com id {}", NOME_ENTITY, cabecalhoNota.getId());
-		BigDecimal valorTotal = REPOSITORY.calcularValorTotal(cabecalhoNota);
+		BigDecimal valorTotal = repository.calcularValorTotal(cabecalhoNota);
 		LOG.info("Valor total de {} com id {}: {}", NOME_ENTITY, cabecalhoNota.getId(), valorTotal);
 		return valorTotal;
 	}

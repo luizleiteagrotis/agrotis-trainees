@@ -9,15 +9,11 @@ import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 @Repository
 public class ParceiroRepository extends JpaRepositoryWrapper<
-										ParceiroNegocioService, 
 										ParceiroNegocio, 
-										Long, 
-										ParceiroJpaRepository>{
+										Long>{
 
 	@Autowired
-	public ParceiroRepository(ParceiroJpaRepository repository, 
-			Class<ParceiroNegocio> entity,
-			Class<ParceiroNegocioService> service) {
-		super(repository, entity, service);
+	public ParceiroRepository(ParceiroJpaRepository repository) {
+		super(repository, nomeLogger(ParceiroRepository.class));
 	}
 }

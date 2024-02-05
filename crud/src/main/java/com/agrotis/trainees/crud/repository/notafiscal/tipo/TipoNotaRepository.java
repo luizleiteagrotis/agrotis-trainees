@@ -8,14 +8,10 @@ import com.agrotis.trainees.crud.service.NotaFiscalService;
 
 @Service
 public class TipoNotaRepository extends JpaRepositoryWrapper<
-										NotaFiscalService, 
 										NotaFiscalTipo, 
-										Integer, 
-										NotaFiscalTipoJpaRepository> {
+										Integer> {
 
-	public TipoNotaRepository(NotaFiscalTipoJpaRepository repository, 
-			Class<NotaFiscalTipo> entity,
-			Class<NotaFiscalService> service) {
-		super(repository, entity, service);
+	public TipoNotaRepository(NotaFiscalTipoJpaRepository repository) {
+		super(repository, nomeLogger(TipoNotaRepository.class));
 	}
 }
