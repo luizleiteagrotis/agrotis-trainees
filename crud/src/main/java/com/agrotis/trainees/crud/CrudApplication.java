@@ -99,6 +99,8 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setNome("maca");
 		produto.setDescricao("maca vermelha muito boa, tem seu nome dentro");
 		produto.setFabricante(fabricante);
+		produto.setDataFabricacao(LocalDate.now());
+		produto.setDataValidade(LocalDate.now());
 		produto = produtoService.salvar(produto);
 		LOG.info("id inserido: {}", produto.getId());
 		
@@ -249,14 +251,14 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setNome("maca");
 		produto.setDescricao("maca vermelha muito boa, tem seu nome dentro");
 		produto.setFabricante(parceiro);
+		produto.setDataFabricacao(LocalDate.now());
+		produto.setDataValidade(LocalDate.now());
 		produto = produtoService.salvar(produto);
 		
 		ItemNota item = new ItemNota();
 		item.setProduto(produto);
 		item.setQuantidade(5);
 		item.setPrecoUnitario(new BigDecimal("20.01"));
-		item.setDataFabricacao(LocalDate.now());
-		item.setDataValidade(LocalDate.now());
 		item.setCabecalhoNota(cabecalhoNota);
 		itemService.salvar(item);
 		

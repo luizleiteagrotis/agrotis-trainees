@@ -40,16 +40,6 @@ public class ItemNota {
 	private BigDecimal precoUnitario;
 	
 	@NotNull
-	@PastOrPresent
-	@Column(name = "data_fabricacao")
-	private LocalDate dataFabricacao;
-	
-	@NotNull
-	@PastOrPresent
-	@Column(name = "data_validade")
-	private LocalDate dataValidade;
-	
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "cabecalho_id")
 	private CabecalhoNota cabecalhoNota;
@@ -80,22 +70,6 @@ public class ItemNota {
 
 	public void setPrecoUnitario(BigDecimal precoUnitario) {
 		this.precoUnitario = precoUnitario;
-	}
-
-	public LocalDate getDataFabricacao() {
-		return dataFabricacao;
-	}
-
-	public void setDataFabricacao(LocalDate dataFabricacao) {
-		this.dataFabricacao = dataFabricacao;
-	}
-
-	public LocalDate getDataValidade() {
-		return dataValidade;
-	}
-
-	public void setDataValidade(LocalDate dataValidade) {
-		this.dataValidade = dataValidade;
 	}
 
 	public CabecalhoNota getCabecalhoNota() {
