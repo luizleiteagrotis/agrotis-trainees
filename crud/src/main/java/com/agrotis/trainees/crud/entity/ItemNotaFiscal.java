@@ -14,7 +14,7 @@ public class ItemNotaFiscal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 	
 	@Column(name = "preco_unitario")
 	private Double precoUnitario;
@@ -36,8 +36,7 @@ public class ItemNotaFiscal {
 	
 	
 	
-	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -80,6 +79,12 @@ public class ItemNotaFiscal {
 	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
+
+	
+	
+	
+	
+
 	
 	
 	

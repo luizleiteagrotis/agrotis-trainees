@@ -178,6 +178,8 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
  		List<ItemNotaFiscal> listItem = itemNotaFiscalService.buscarTodos();
  		LOG.info("Buscando Item Nota Fiscal: {} ", listItem.size());
  
+ 		itemNotaFiscalService.buscarPorId(itemNota.getId());
+ 		
  		
 	
 	}
