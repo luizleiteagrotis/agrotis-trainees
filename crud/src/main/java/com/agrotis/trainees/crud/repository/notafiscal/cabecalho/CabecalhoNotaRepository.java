@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapper;
-import com.agrotis.trainees.crud.service.NotaFiscalService;
 
 @Repository
 public class CabecalhoNotaRepository extends JpaRepositoryWrapper<

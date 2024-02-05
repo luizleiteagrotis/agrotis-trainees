@@ -6,9 +6,11 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.notafiscal.cabecalho.CabecalhoNotaRepositoryException;
-import com.agrotis.trainees.crud.service.NotaFiscalService;
+import com.agrotis.trainees.crud.service.CabecalhoNotaService;
+import com.agrotis.trainees.crud.service.ItemNotaService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
+import com.agrotis.trainees.crud.service.TipoNotaService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +31,21 @@ public class CrudApplication implements CommandLineRunner {
 
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
-	private final NotaFiscalService notaFiscalService;
+	private final CabecalhoNotaService cabecalhoService;
+	private final TipoNotaService tipoService;
+	private final ItemNotaService itemService;
 	
 	@Autowired
 	public CrudApplication(ParceiroNegocioService parceiroNegocioService, 
 			ProdutoService produtoService,
-			NotaFiscalService notaFiscalService) {
+			CabecalhoNotaService cabecalhoService,
+			TipoNotaService tipoService,
+			ItemNotaService itemService) {
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
-		this.notaFiscalService = notaFiscalService;
+		this.cabecalhoService = cabecalhoService;
+		this.tipoService = tipoService;
+		this.itemService = itemService;
 	}
 
 	public static void main(String[] args) {
@@ -120,28 +128,29 @@ public class CrudApplication implements CommandLineRunner {
 		
 		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
 		tipoNota.setNome("entrada");
-		notaFiscalService.salvar(tipoNota);
+		tipoService.salvar(tipoNota);
 		
 		CabecalhoNota cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
-		notaFiscalService.salvar(cabecalhoNota);
+		cabecalhoService.salvar(cabecalhoNota);
 		
 		// READ
-		CabecalhoNota cabecalhoPorId = notaFiscalService.buscarCabecalhoPor(cabecalhoNota.getId());
+		CabecalhoNota cabecalhoPorId = cabecalhoService.buscar(cabecalhoNota.getId());
 		
-		List<CabecalhoNota> cabecalhos = notaFiscalService.buscarTodosCabecalhos();
+		List<CabecalhoNota> cabecalhos = cabecalhoService.buscarTodos();
 		
 		// UPDATE
 		cabecalhoPorId.setNumero(111111L);
-		notaFiscalService.salvar(cabecalhoPorId);
+		cabecalhoService.salvar(cabecalhoPorId);
 		
 		// DELETE
 		cabecalhos.forEach((cabecalho) -> {
-			notaFiscalService.deletarCabecalho(cabecalho.getId());
+			cabecalhoService.deletar(cabecalho.getId());
 		});
+		
 		
 		// TESTA NUMERO E TIPO
 		// TESTA CRIACAO COM O MESMO NUMERO E TIPO
@@ -152,16 +161,17 @@ public class CrudApplication implements CommandLineRunner {
 		parceiro.setTelefone("12345");
 		parceiro = parceiroNegocioService.salvar(parceiro);
 		
+		
 		tipoNota = new NotaFiscalTipo();
 		tipoNota.setNome("entrada");
-		notaFiscalService.salvar(tipoNota);
+		tipoService.salvar(tipoNota);
 		
 		cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
-		notaFiscalService.salvar(cabecalhoNota);
+		cabecalhoService.salvar(cabecalhoNota);
 		
 		cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
@@ -169,24 +179,27 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
 		try {
-			notaFiscalService.salvar(cabecalhoNota);
+			cabecalhoService.salvar(cabecalhoNota);
 		} catch (CabecalhoNotaRepositoryException e) {}
+		
 		
 		tipoNota = new NotaFiscalTipo();
 		tipoNota.setNome("saida");
-		notaFiscalService.salvar(tipoNota);
+		tipoService.salvar(tipoNota);
 		cabecalhoNota.setTipo(tipoNota);
 		try {
-			notaFiscalService.salvar(cabecalhoNota);
+			cabecalhoService.salvar(cabecalhoNota);
 		} catch (CabecalhoNotaRepositoryException e) {}
 		
-		cabecalhos = notaFiscalService.buscarTodosCabecalhos();
+		
+		cabecalhos = cabecalhoService.buscarTodos();
 		cabecalhos.forEach((cabecalho) -> {
-			notaFiscalService.deletarCabecalho(cabecalho.getId());
+			cabecalhoService.deletar(cabecalho.getId());
 		});
-		List<NotaFiscalTipo> tipos = notaFiscalService.buscarTodosTipos();
+		
+		List<NotaFiscalTipo> tipos = tipoService.buscarTodos();
 		tipos.forEach((tipo) -> {
-			notaFiscalService.deletarTipo(tipo.getId());
+			tipoService.deletar(tipo.getId());
 		});
 		parceiroNegocioService.deletar(parceiro.getId());
 	}
@@ -195,20 +208,20 @@ public class CrudApplication implements CommandLineRunner {
 		// CREATE
 		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
 		tipoNota.setNome("entrada");
-		notaFiscalService.salvar(tipoNota);
+		tipoService.salvar(tipoNota);
 		
 		// READ
-		NotaFiscalTipo tipoNotaPorId = notaFiscalService.buscarTipoPor(tipoNota.getId());
+		NotaFiscalTipo tipoNotaPorId = tipoService.buscar(tipoNota.getId());
 		
-		List<NotaFiscalTipo> tipos = notaFiscalService.buscarTodosTipos();
+		List<NotaFiscalTipo> tipos = tipoService.buscarTodos();
 		
 		// UPDATE
 		tipoNotaPorId.setNome("entrada e saida");
-		notaFiscalService.salvar(tipoNotaPorId);
+		tipoService.salvar(tipoNotaPorId);
 		
 		// DELETE
 		tipos.forEach((tipo) -> {
-			notaFiscalService.deletarTipo(tipo.getId());
+			tipoService.deletar(tipo.getId());
 		});
 	}
 	
@@ -223,14 +236,14 @@ public class CrudApplication implements CommandLineRunner {
 		
 		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
 		tipoNota.setNome("entrada");
-		notaFiscalService.salvar(tipoNota);
+		tipoService.salvar(tipoNota);
 		
 		CabecalhoNota cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
-		notaFiscalService.salvar(cabecalhoNota);
+		cabecalhoService.salvar(cabecalhoNota);
 		
 		Produto produto = new Produto();
 		produto.setNome("maca");
@@ -245,28 +258,28 @@ public class CrudApplication implements CommandLineRunner {
 		item.setDataFabricacao(LocalDate.now());
 		item.setDataValidade(LocalDate.now());
 		item.setCabecalhoNota(cabecalhoNota);
-		notaFiscalService.salvar(item);
+		itemService.salvar(item);
 		
 		// READ
-		ItemNota itemPorId = notaFiscalService.bucarItemPor(item.getId());
+		ItemNota itemPorId = itemService.buscar(item.getId());
 		
-		List<ItemNota> itens = notaFiscalService.buscarTodosItens();
+		List<ItemNota> itens = itemService.buscarTodos();
 		
 		//UPDATE
 		itemPorId.setPrecoUnitario(new BigDecimal("1.99"));
-		notaFiscalService.salvar(itemPorId);
+		itemService.salvar(itemPorId);
 		
 		// TESTA VALOR TOTAL
-		BigDecimal valorTotal = notaFiscalService.calcularValorTotal(cabecalhoNota.getId());
+		BigDecimal valorTotal = itemService.calcularValorTotal(cabecalhoNota);
 		
 		//DELETE
 		itens.forEach((i) -> {
-			notaFiscalService.deletarItem(i.getId());
+			itemService.deletar(i.getId());
 		});
 		
 		produtoService.deletar(produto.getId());
-		notaFiscalService.deletarCabecalho(cabecalhoNota.getId());
+		cabecalhoService.deletar(cabecalhoNota.getId());
 		parceiroNegocioService.deletar(parceiro.getId());
-		notaFiscalService.deletarTipo(tipoNota.getId());
+		tipoService.deletar(tipoNota.getId());
 	}
 }
