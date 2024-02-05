@@ -180,6 +180,14 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
  
  		itemNotaFiscalService.buscarPorId(itemNota.getId());
  		
+ 		ItemNotaFiscal itemUpdate = new ItemNotaFiscal();
+ 		itemNota.setNotaFiscal(notaFiscal);
+ 		itemNota.setProduto(novoProduto);
+ 		itemNota.setPrecoUnitario(null);
+ 		itemNota.setQuantidade(null);
+ 		
+ 		itemNotaFiscalService.update(itemNota.getId(), itemUpdate);
+ 		
  		
 	
 	}
