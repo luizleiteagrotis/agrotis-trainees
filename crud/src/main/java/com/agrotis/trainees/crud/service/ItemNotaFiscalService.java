@@ -9,19 +9,18 @@ import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 
 @Service
 public class ItemNotaFiscalService {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(ItemNotaFiscalService.class);
-	
-	private final ItemNotaFiscalRepository repository;
 
-	public ItemNotaFiscalService(ItemNotaFiscalRepository repository) {
-		super();
-		this.repository = repository;
-	}
-	
-	public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
-		entidade.setValor_total();
-		return repository.save(entidade);
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(ItemNotaFiscalService.class);
 
+    private final ItemNotaFiscalRepository repository;
+
+    public ItemNotaFiscalService(ItemNotaFiscalRepository repository) {
+        super();
+        this.repository = repository;
+    }
+
+    public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
+        entidade.calcularValorTotal();
+        return repository.save(entidade);
+    }
 }
