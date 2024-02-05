@@ -1,9 +1,9 @@
 
-package exercicios.aulas14a17;
+package exercicios.aulas14e15;
 
 import java.util.Scanner;
 
-class Exercicio20{
+class Exercicio5{
 	public static void main (String args[]) {
 		Scanner scan = new Scanner(System.in);
 		
@@ -11,16 +11,15 @@ class Exercicio20{
 		
 		int primeiraNota = scan.nextInt();
 		int segundaNota = scan.nextInt();
-		int terceiraNota = scan.nextInt();
 		
 		double media = (primeiraNota + segundaNota) / 2;
 		
 		if(media == 10) {
-			System.out.println("Aprovado com Distinção" + " - Média: " + media);
+			System.out.println("Aprovado com Distinção");
 		} else if(media < 7) {
-			System.out.println("Reprovado" + " - Média: " + media);
+			System.out.println("Reprovado");
 		} else {
-			System.out.println("Aprovado" + " - Média: " + media);
+			System.out.println("Aprovado");
 		}
 	}
 }

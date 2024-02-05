@@ -1,9 +1,9 @@
 
-package exercicios.aulas14a17;
+package exercicios.aulas14e15;
 
 import java.util.Scanner;
 
-class Exercicio7{
+class Exercicio6{
 	public static void main (String args[]) {
 		Scanner scan = new Scanner(System.in);
 		
@@ -17,10 +17,5 @@ class Exercicio7{
 		maior = maior > num3 ? maior : num3;
 		
 		System.out.println("Maior entre os três : " + maior);
-		
-		int menor = num1 < num2 ? num1 : num2;
-		menor = menor < num3 ? menor : num3;
-		
-		System.out.println("Menor entre os três : " + menor);
 	}
 }
