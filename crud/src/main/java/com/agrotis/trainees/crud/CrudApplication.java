@@ -28,17 +28,15 @@ public class CrudApplication implements CommandLineRunner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CrudApplication.class);
 
-	private final NotaFiscalTipoService notaFiscalTipoService;
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
 	private final NotaFiscalService notaFiscalService;
 	private final NotaFiscalItemService notaFiscalItemService;
 
-	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService,
-			ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService, 
+	public CrudApplication(ParceiroNegocioService parceiroNegocioService,
+			ProdutoService produtoService, 
 			NotaFiscalService notaFiscalService,
 			NotaFiscalItemService notaFiscalItemService) {
-		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
 		this.notaFiscalService = notaFiscalService;
@@ -52,26 +50,6 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		
-		NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-		notaFiscalTipo.setNome("nomeTeste");
-		NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
-		LOG.info("id inserido: {}", notaFiscalTipo2.getId());
-
-		NotaFiscalTipo porId = notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-		LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
-
-		List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
-		LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
-
-		NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-		porNome.setNome("nomeAlterado");
-		notaFiscalTipoService.salvar(porNome);
-		LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
-
-		// notaFiscalTipoService.deletarPorId(porId.getId());
-		notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-		notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 		
 		LOG.info("----------------PDN------------------");
 
@@ -149,7 +127,7 @@ public class CrudApplication implements CommandLineRunner {
 		
 		NotaFiscal notaFiscal = new NotaFiscal();
 		notaFiscal.setData(LocalDateTime.of(2024, Month.JANUARY, 25, 0, 0));
-		notaFiscal.setNotaFiscalTipo("Entrada");
+		notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
 		notaFiscal.setNumeroDaNota(159753);
 		notaFiscal.setParceiroNegocio(parceiroNegocio3);
 		notaFiscalService.salvar(notaFiscal);
@@ -157,7 +135,7 @@ public class CrudApplication implements CommandLineRunner {
 		
 		NotaFiscal notaFiscal2 = new NotaFiscal();
 		notaFiscal2.setData(LocalDateTime.of(2024, Month.JANUARY, 25, 0, 0));
-		notaFiscal2.setNotaFiscalTipo("Saida");
+		notaFiscal2.setNotaFiscalTipo(NotaFiscalTipo.SAIDA);
 		notaFiscal2.setNumeroDaNota(159753);
 		notaFiscal2.setParceiroNegocio(parceiroNegocio3);
 		notaFiscalService.salvar(notaFiscal2);
@@ -201,6 +179,8 @@ public class CrudApplication implements CommandLineRunner {
 		fiscalItem.setQuantidade(5);
 		
 		notaFiscalItemService.atualizar(fiscalItem.getId(), fiscalItemAtualizado);
+		
+		
 		
 		
 		

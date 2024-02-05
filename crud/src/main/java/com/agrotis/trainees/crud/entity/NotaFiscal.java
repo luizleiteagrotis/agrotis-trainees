@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,8 +30,9 @@ public class NotaFiscal {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	@Column(name = "nota_fiscal_tipo_id")
-	private String notaFiscalTipo;
+	@Column(name = "nota_fiscal_tipo")
+	@Enumerated(EnumType.STRING)
+	private NotaFiscalTipo notaFiscalTipo;
 
 	@ManyToOne
 	@JoinColumn(name = "parceiro_de_negocio_id")
@@ -44,11 +47,12 @@ public class NotaFiscal {
     @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NotaFiscalItem> itens = new ArrayList<>();
 
-	public String getNotaFiscalTipo() {
+
+	public NotaFiscalTipo getNotaFiscalTipo() {
 		return notaFiscalTipo;
 	}
 
-	public void setNotaFiscalTipo(String notaFiscalTipo) {
+	public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo) {
 		this.notaFiscalTipo = notaFiscalTipo;
 	}
 
