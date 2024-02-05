@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.repository.wrapper;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class JpaRepositoryWrapper<Service, Entity, ID, Repository extends JpaRep
 	public JpaRepositoryWrapper(Repository repository, Class<Entity> entity, 
 			Class<Service> service) {
 		this.REPOSITORY = repository;
-		this.NOME_ENTITY = entity.getSimpleName();
+		this.NOME_ENTITY = getNomeEntity();
 		this.LOG = LoggerFactory.getLogger(service);
 	}
 	
@@ -73,5 +75,13 @@ public class JpaRepositoryWrapper<Service, Entity, ID, Repository extends JpaRep
 							+ " nao encontrada";
 		LOG.error(mensagemErro);
 		throw new JpaRepositoryWrapperException(mensagemErro);
+	}
+	
+	private String getNomeEntity() {
+		ParameterizedType tipo = (ParameterizedType) this.getClass().getGenericSuperclass();
+		Type[] argumentos = tipo.getActualTypeArguments();
+		int entity = 1;
+		Class<?> classeEntity = (Class<?>) argumentos[entity];
+		return classeEntity.getSimpleName();
 	}
 }
