@@ -40,9 +40,7 @@ public class JpaRepositoryWrapper<Entity, ID> {
 	public Entity buscarPor(ID idEntity) {
 		LOG.info("Tentando buscar entidade {} com id {}", NOME_ENTITY, idEntity);
 		Optional<Entity> entity = REPOSITORY.findById(idEntity);
-		if (entity.isEmpty()) {
-			lancarExceptionNaoEncontrado(idEntity);
-		}
+		if (entity.isEmpty()) naoEncontrada(idEntity);
 		LOG.info("Entidade {} com id {} encontrada com sucesso", NOME_ENTITY, idEntity);
 		return entity.get();
 	}
@@ -62,7 +60,7 @@ public class JpaRepositoryWrapper<Entity, ID> {
 		LOG.info("Entidade {} com id {} deletada com sucesso", NOME_ENTITY, idEntity);
 	}
 
-	private void lancarExceptionNaoEncontrado(ID idEntity) {
+	private void naoEncontrada(ID idEntity) {
 		String mensagemErro = "Entidade " 
 							+ NOME_ENTITY
 							+ " com id "
