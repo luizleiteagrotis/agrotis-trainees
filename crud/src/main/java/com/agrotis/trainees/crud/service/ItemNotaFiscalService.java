@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
+import java.util.List;
 
 @Service
 public class ItemNotaFiscalService {
@@ -18,11 +19,16 @@ private final ItemNotaFiscalRepository repository;
 		this.repository = repository;
 	}
 		
-public ItemNotaFiscal salvar (ItemNotaFiscal entidade) {
+ public ItemNotaFiscal salvar (ItemNotaFiscal entidade) {
 	return repository.save(entidade);
 }
-		
 	
+ 
+ public List<ItemNotaFiscal> buscarTodos(){
+	return repository.findAll();
+}
+
+
 	
 	
 	

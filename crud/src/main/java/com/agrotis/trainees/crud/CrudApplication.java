@@ -175,9 +175,10 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
  		
  		itemNotaFiscalService.salvar(itemNota);
  
+ 		List<ItemNotaFiscal> listItem = itemNotaFiscalService.buscarTodos();
+ 		LOG.info("Buscando Item Nota Fiscal: {} ", listItem.size());
  
- 
-
+ 		
 	
 	}
 	
