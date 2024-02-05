@@ -44,7 +44,10 @@ private final ItemNotaFiscalRepository repository;
 }	
 	
 	
-	
+ public void deletarPorId(Integer id) {
+		repository.deleteById(id);
+		LOG.info("Deletado com sucesso!");
+	}
 	
 		
 	
