@@ -9,6 +9,7 @@ import java.util.List;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.helper.Validador;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 
 @Service
@@ -55,6 +56,39 @@ public class ItemNotaFiscalService {
 
     public List<ItemNotaFiscal> listarTodos() {
         return repository.findAll();
+    }
+
+    public ItemNotaFiscal atualizar(ItemNotaFiscal item, int id) {
+        ItemNotaFiscal itemAtualizar = buscarPorId(id);
+        int idNotaFiscal = item.getNotaFiscal().getId();
+        int idProduto = item.getProduto().getId();
+        if (itemAtualizar != null) {
+            if (item.getNotaFiscal() != null && Validador.validarNotaFiscal(idNotaFiscal)) {
+                itemAtualizar.setNotaFiscal(item.getNotaFiscal());
+            }
+            if (item.getQuantidade() != 0 && item.getQuantidade() > 0) {
+                itemAtualizar.setQuantidade(item.getQuantidade());
+            }
+
+            if (item.getProduto() != null && Validador.validarProduto(idProduto)) {
+                itemAtualizar.setProduto(item.getProduto());
+            }
+
+            if (item.getPrecoUnitario() != 0 && item.getPrecoUnitario() > 0) {
+                itemAtualizar.setPrecoUnitario(item.getPrecoUnitario());
+            }
+
+            itemAtualizar.calcularValorTotal(itemAtualizar.getPrecoUnitario(), itemAtualizar.getQuantidade());
+            LOG.info("Item Atualizado");
+
+            repository.save(itemAtualizar);
+
+            return itemAtualizar;
+        } else {
+            LOG.error("O item que deseja atualiza, não existe.");
+            return null;
+        }
+
     }
 
 }

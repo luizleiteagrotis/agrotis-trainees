@@ -235,8 +235,8 @@ public class CrudApplication implements CommandLineRunner {
 
         ///////////////////////////////////////////////////////////////////////////////
 
-        Produto produtoItem = produtoService.buscarPorId(78);
-        NotaFiscal notaItem = notaFiscalService.buscarPorId(177);
+        Produto produtoItem = produtoService.buscarPorId(82);
+        NotaFiscal notaItem = notaFiscalService.buscarPorId(178);
         ItemNotaFiscal item = new ItemNotaFiscal(notaItem, produtoItem, 500, 10);
 
         // create
@@ -258,6 +258,15 @@ public class CrudApplication implements CommandLineRunner {
         for (ItemNotaFiscal nfTodos : selecionarPorNotaFiscal) {
             LOG.info(" {} ", nfTodos.getNotaFiscal().getNumero());
         }
+
+        // update
+        ItemNotaFiscal novoItem = new ItemNotaFiscal();
+        novoItem.setQuantidade(1001);
+        novoItem.setPrecoUnitario(5.99);
+        novoItem.setNotaFiscal(notaItem);
+        novoItem.setProduto(produtoItem);
+
+        itemNotaFiscalService.atualizar(novoItem, 181);
 
     }
 }

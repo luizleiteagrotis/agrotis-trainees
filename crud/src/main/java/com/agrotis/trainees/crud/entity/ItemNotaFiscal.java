@@ -9,8 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.agrotis.trainees.crud.helper.CalcularValorTotal;
-
 @Entity
 @Table(name = "item_nota_fiscal")
 public class ItemNotaFiscal {
@@ -39,7 +37,7 @@ public class ItemNotaFiscal {
         this.produto = produto;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
-        this.valorTotal = CalcularValorTotal.calcularValorTotal(precoUnitario, quantidade);
+        this.valorTotal = calcularValorTotal(quantidade, precoUnitario);
     }
 
     public int getId() {
@@ -78,8 +76,19 @@ public class ItemNotaFiscal {
         this.precoUnitario = precoUnitario;
     }
 
-    public double getvalorTotal() {
+    public double getValorTotal() {
         return valorTotal;
+    }
+
+    private double setValorTotal(double valorTotal) {
+        return this.valorTotal = valorTotal;
+    }
+
+    public double calcularValorTotal(double quantidade, double precoUnitario) {
+        valorTotal = quantidade * precoUnitario;
+        setValorTotal(valorTotal);
+        return quantidade * precoUnitario;
+
     }
 
 }
