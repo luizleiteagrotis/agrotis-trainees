@@ -42,4 +42,9 @@ public class ItemNotaFiscalService {
         return repository.findAll();
     }
 
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+        LOG.info("Deletado com sucesso");
+    }
+
 }

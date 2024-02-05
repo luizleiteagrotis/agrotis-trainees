@@ -6,7 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -226,9 +225,11 @@ public class CrudApplication implements CommandLineRunner {
             // notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal);
             // notaFiscalService.removerItem(itemNotaFiscal2, notaFiscal);
 
-            ItemNotaFiscal itemPorId = itemNotaFiscalService.buscarPorId(266);
-            LOG.info("Busca por id. Quantidade {} valor unitário {} valor total {}", itemPorId.getQuantidade(),
-                            itemPorId.getValor_unitario(), itemPorId.getValor_total());
+            // ItemNotaFiscal itemPorId =
+            // itemNotaFiscalService.buscarPorId(266);
+            // LOG.info("Busca por id. Quantidade {} valor unitário {} valor
+            // total {}", itemPorId.getQuantidade(),
+            // itemPorId.getValor_unitario(), itemPorId.getValor_total());
 
             // List<ItemNotaFiscal> itemPorProduto =
             // itemNotaFiscalService.buscarPorProduto(produto);
@@ -240,13 +241,18 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} itens notas fiscal",
             // todosItemsFiscals.size());
 
-            itemPorId.setValor_unitario(BigDecimal.valueOf(4000));
-            itemPorId.setQuantidade(2);
-            itemNotaFiscalService.salvar(itemPorId);
+            // itemPorId.setValor_unitario(BigDecimal.valueOf(4000));
+            // itemPorId.setQuantidade(2);
+            // itemNotaFiscalService.salvar(itemPorId);
+            //
+            // NotaFiscal notaFiscal2 =
+            // notaFiscalService.buscarPorId(notaFiscal.getId());
+            //
+            // notaFiscalService.atualizarValorTotal(notaFiscal2);
 
-            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(notaFiscal.getId());
-
-            notaFiscalService.atualizarValorTotal(notaFiscal2);
+            itemNotaFiscalService.deletarPorId(265);
+            NotaFiscal notaFiscal3 = notaFiscalService.buscarPorId(notaFiscal.getId());
+            notaFiscalService.atualizarValorTotal(notaFiscal3);
         }
 
     }
