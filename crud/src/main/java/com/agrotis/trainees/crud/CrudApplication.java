@@ -1,8 +1,10 @@
 package com.agrotis.trainees.crud;
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
@@ -27,12 +29,14 @@ public class CrudApplication implements CommandLineRunner {
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
 	private final NotaFiscalService notaFiscalService;
+	private final ItemNotaFiscalService itemNotaFiscalService;
 
-	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService, NotaFiscalService notaFiscalService) {
+	public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService, NotaFiscalService notaFiscalService, ItemNotaFiscalService itemNotaFiscalService) {
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
 		this.notaFiscalService = notaFiscalService;
+		this.itemNotaFiscalService = itemNotaFiscalService;
 	}
 
 	public static void main(String[] args) {
@@ -157,9 +161,22 @@ LOG.info("-------------------------------------------------PARCEIRO DE NEGOCIOS-
 		LOG.info("A nota {}", notaFiscalSaida.getId(), "Foi deletada");
 		
 		
- LOG.info("---------------------------------------------------------------------------------------------------------------------------------------");	
-
+ LOG.info("-----------------------------------------NOTA FISCAL ITEM----------------------------------------------------------------------------------------------");	
+ 	
 	
+ 		ItemNotaFiscal itemNota = new ItemNotaFiscal();
+ 		
+ 		itemNota.setNotaFiscal(notaFiscalSaida);
+ 		itemNota.setProduto(novoProduto);
+ 		itemNota.setPrecoUnitario(null);
+ 		itemNota.setQuantidade(null);
+ 		System.out.println(itemNota.getValorTotal());
+ 		
+ 		
+ 		itemNotaFiscalService.salvar(itemNota);
+ 
+ 
+ 
 
 	
 	}
