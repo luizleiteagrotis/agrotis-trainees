@@ -39,6 +39,11 @@ public class ItemNota {
 	@Column(name = "preco_unitario")
 	private BigDecimal precoUnitario;
 	
+	@DecimalMin(value = "00.01", inclusive = true)
+	@Digits(integer = 10, fraction = 2)
+	@Column(name = "valor_total")
+	private BigDecimal valorTotal;
+	
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "cabecalho_id")
@@ -62,6 +67,7 @@ public class ItemNota {
 
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
+		atualizarValorTotal();
 	}
 
 	public BigDecimal getPrecoUnitario() {
@@ -70,6 +76,11 @@ public class ItemNota {
 
 	public void setPrecoUnitario(BigDecimal precoUnitario) {
 		this.precoUnitario = precoUnitario;
+		atualizarValorTotal();
+	}
+	
+	public BigDecimal getValorTotal() {
+		return valorTotal;
 	}
 
 	public CabecalhoNota getCabecalhoNota() {
@@ -78,5 +89,10 @@ public class ItemNota {
 
 	public void setCabecalhoNota(CabecalhoNota cabecalhoNota) {
 		this.cabecalhoNota = cabecalhoNota;
+	}
+	
+	private void atualizarValorTotal() {
+		if (precoUnitario == null) precoUnitario = new BigDecimal(1);
+		valorTotal = precoUnitario.multiply(new BigDecimal(quantidade));
 	}
 }
