@@ -1,7 +1,6 @@
 package com.agrotis.trainees.crud;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,10 +11,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalCampos;
+import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocios;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalCamposService;
+import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegociosService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -30,18 +31,21 @@ public class CrudApplication implements CommandLineRunner {
 	private final ParceiroNegociosService parceiroNegociosService;
 	private final ProdutoService produtoService;
 	private final NotaFiscalCamposService notaFiscalCamposService;
+	private final NotaFiscalItemService notaFiscalItemService;
 	
 	public CrudApplication(
 			NotaFiscalTipoService notaFiscalTipoService,
 			ParceiroNegociosService parceiroNegociosService,
 			ProdutoService produtoService,
-			NotaFiscalCamposService notaFiscalCamposService
+			NotaFiscalCamposService notaFiscalCamposService,
+			NotaFiscalItemService notaFiscalItemService
 				) {
 		
 		this.notaFiscalTipoService = notaFiscalTipoService;
 		this.parceiroNegociosService = parceiroNegociosService;
 		this.produtoService = produtoService;
 		this.notaFiscalCamposService = notaFiscalCamposService;
+		this.notaFiscalItemService = notaFiscalItemService;
 	}
 
 	public static void main(String[] args) {
@@ -51,7 +55,7 @@ public class CrudApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		int p = 7;
+		int p = 8;
 		if(p < 1) {
 			NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
 			notaFiscalTipo.setNome("nomeTeste");
@@ -144,7 +148,7 @@ public class CrudApplication implements CommandLineRunner {
 				produtoService.deletarPorId(porId.getId());
 				
 			}
-		} else {
+		} else if(p < 8){
 			NotaFiscalCampos notaCabecalho = new NotaFiscalCampos();
 			NotaFiscalTipo tipo = notaFiscalTipoService.buscarPorId(1);
 			ParceiroNegocios parceiro = parceiroNegociosService.buscarPorId(2);
@@ -179,6 +183,16 @@ public class CrudApplication implements CommandLineRunner {
 				notaFiscalCamposService.deletarPorId(porId.getId());
 				
 			}
+			
+		} else {
+			NotaFiscalItem item = new NotaFiscalItem();
+			Produto produto = produtoService.buscarPorId(16);
+			
+			item.setProduto(produto);
+			item.setQuantidade(5);
+			item.setPreco(15.65);
+			item.setTotal(item.getQuantidade()*item.getPreco());
+			NotaFiscalItem item2 = notaFiscalItemService.salvar(item);
 			
 		}
 		
