@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.CrudApplication;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.repository.parceironegocio.ParceiroJpaRepository;
-import com.agrotis.trainees.crud.repository.parceironegocio.ParceiroRepository;
+import com.agrotis.trainees.crud.repository.parceiro.ParceiroJpaRepository;
+import com.agrotis.trainees.crud.repository.parceiro.ParceiroRepository;
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapper;
 
 @Service

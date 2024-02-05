@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.parceironegocio;
+package com.agrotis.trainees.crud.repository.parceiro;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

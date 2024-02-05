@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.parceironegocio;
+package com.agrotis.trainees.crud.repository.parceiro;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
