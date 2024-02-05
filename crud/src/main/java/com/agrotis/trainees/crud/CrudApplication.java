@@ -210,30 +210,43 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 5) {
             ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
 
-            Produto produto = produtoService.buscarPorId(126);
-            itemNotaFiscal.setProduto(produto);
+            // Produto produto = produtoService.buscarPorId(126);
+            // itemNotaFiscal.setProduto(produto);
+            //
+            NotaFiscal notaFiscal = notaFiscalService.buscarPorId(176);
+            // itemNotaFiscal.setNotaFiscal(notaFiscal);
+            //
+            // itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(2000));
+            // itemNotaFiscal.setQuantidade(1);
+            //
+            // ItemNotaFiscal itemNotaFiscal2 =
+            // itemNotaFiscalService.salvar(itemNotaFiscal);
+            // LOG.info("id inserido {}.", itemNotaFiscal2.getId());
 
-            NotaFiscal notaFiscal = notaFiscalService.buscarPorId(174);
-            itemNotaFiscal.setNotaFiscal(notaFiscal);
-
-            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(130.00));
-            itemNotaFiscal.setQuantidade(3);
-
-            ItemNotaFiscal itemNotaFiscal2 = itemNotaFiscalService.salvar(itemNotaFiscal);
-            LOG.info("id inserido {}.", itemNotaFiscal2.getId());
-
-            notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal);
+            // notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal);
             // notaFiscalService.removerItem(itemNotaFiscal2, notaFiscal);
 
-            ItemNotaFiscal itemPorId = itemNotaFiscalService.buscarPorId(itemNotaFiscal2.getId());
+            ItemNotaFiscal itemPorId = itemNotaFiscalService.buscarPorId(266);
             LOG.info("Busca por id. Quantidade {} valor unitário {} valor total {}", itemPorId.getQuantidade(),
                             itemPorId.getValor_unitario(), itemPorId.getValor_total());
 
-            List<ItemNotaFiscal> itemPorProduto = itemNotaFiscalService.buscarPorProduto(produto);
-            LOG.info("Salvos no total de {} itens notas fiscal", itemPorProduto.size());
+            // List<ItemNotaFiscal> itemPorProduto =
+            // itemNotaFiscalService.buscarPorProduto(produto);
+            // LOG.info("Salvos no total de {} itens notas fiscal",
+            // itemPorProduto.size());
+            //
+            // List<ItemNotaFiscal> todosItemsFiscals =
+            // itemNotaFiscalService.listarTodos();
+            // LOG.info("Salvos no total de {} itens notas fiscal",
+            // todosItemsFiscals.size());
 
-            List<ItemNotaFiscal> todosItemsFiscals = itemNotaFiscalService.listarTodos();
-            LOG.info("Salvos no total de {} itens notas fiscal", todosItemsFiscals.size());
+            itemPorId.setValor_unitario(BigDecimal.valueOf(4000));
+            itemPorId.setQuantidade(2);
+            itemNotaFiscalService.salvar(itemPorId);
+
+            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(notaFiscal.getId());
+
+            notaFiscalService.atualizarValorTotal(notaFiscal2);
         }
 
     }

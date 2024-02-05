@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
@@ -53,6 +55,7 @@ public class NotaFiscalService {
         LOG.info("Deletado com sucesso");
     }
 
+    @Transactional
     public void adicionarItem(ItemNotaFiscal item, NotaFiscal notaFiscal) {
         List<ItemNotaFiscal> itemNotaFiscals = notaFiscal.getItemNotaFiscals();
         if (itemNotaFiscals == null) {
@@ -76,6 +79,7 @@ public class NotaFiscalService {
                 valor_total = valor_total.add(item.getValor_total());
             }
         }
+
         notaFiscal.calcularValorTotal(valor_total);
         repository.save(notaFiscal);
     }
