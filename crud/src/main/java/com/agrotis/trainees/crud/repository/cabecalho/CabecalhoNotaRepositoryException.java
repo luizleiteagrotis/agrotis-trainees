@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.notafiscal.cabecalho;
+package com.agrotis.trainees.crud.repository.cabecalho;
 
 public class CabecalhoNotaRepositoryException extends RuntimeException{
 

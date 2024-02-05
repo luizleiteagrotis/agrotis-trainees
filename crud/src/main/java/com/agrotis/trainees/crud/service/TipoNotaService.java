@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.repository.notafiscal.tipo.TipoNotaRepository;
+import com.agrotis.trainees.crud.repository.tipo.TipoNotaRepository;
 
 @Service
 public class TipoNotaService {

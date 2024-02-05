@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
-import com.agrotis.trainees.crud.repository.notafiscal.item.ItemNotaRepository;
+import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 
 @Service
 public class ItemNotaService {

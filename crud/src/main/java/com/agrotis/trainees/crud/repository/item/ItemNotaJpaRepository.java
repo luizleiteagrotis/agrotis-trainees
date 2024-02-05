@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.notafiscal.item;
+package com.agrotis.trainees.crud.repository.item;
 
 import java.math.BigDecimal;
 

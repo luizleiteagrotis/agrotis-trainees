@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.notafiscal.tipo;
+package com.agrotis.trainees.crud.repository.tipo;
 
 import org.springframework.stereotype.Service;
 

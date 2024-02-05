@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.notafiscal.cabecalho;
+package com.agrotis.trainees.crud.repository.cabecalho;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

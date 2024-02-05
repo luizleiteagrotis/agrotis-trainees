@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.repository.notafiscal.cabecalho;
+package com.agrotis.trainees.crud.repository.cabecalho;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
