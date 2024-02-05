@@ -91,4 +91,23 @@ public class ItemNotaFiscalService {
 
     }
 
+    public void deletarPorId(int id) {
+        if (buscarPorId(id) != null) {
+            repository.deleteById(id);
+            LOG.info("Deletado com sucesso");
+        } else {
+            LOG.info("Registro não encontrado");
+        }
+
+    }
+
+    public double calcularValorTotalNotaFiscal(NotaFiscal nota) {
+        List<ItemNotaFiscal> itens = buscarPorNotaFiscal(nota);
+        double ValorTotalNota = 0;
+        for (ItemNotaFiscal itemNotaFiscal : itens) {
+            ValorTotalNota += itemNotaFiscal.getValorTotal();
+        }
+        return ValorTotalNota;
+    }
+
 }
