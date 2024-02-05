@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalCampos;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
@@ -50,7 +51,7 @@ public class CrudApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        int p = 8;
+        int p = 9;
         if (p < 1) {
             NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
             notaFiscalTipo.setNome("nomeTeste");
@@ -185,16 +186,15 @@ public class CrudApplication implements CommandLineRunner {
 
             }
 
-        } else {
+        } else if (p == 8) {
             NotaFiscalItem item = new NotaFiscalItem();
-            Produto produto = produtoService.buscarPorId(20);
+            Produto produto = produtoService.buscarPorId(17);
 
             item.setProduto(produto);
-            item.setQuantidade(12);
-            item.setPreco(7.56);
+            item.setQuantidade(25);
+            item.setPreco(9.0);
             item.setTotal(item.getQuantidade() * item.getPreco());
             NotaFiscalItem item2 = notaFiscalItemService.salvar(item);
-            Double valorFinal = item.getTotal();
 
             NotaFiscalItem porId = notaFiscalItemService.buscarPorId(item2.getId());
             LOG.info("Busca por Id. Produto {} ; Preço {} ; Quantidade {} ; Preço Total {}", porId.getProduto().getDescricao(),
@@ -206,6 +206,24 @@ public class CrudApplication implements CommandLineRunner {
 
             List<NotaFiscalItem> todosSalvos = notaFiscalItemService.listarTodos();
             LOG.info("Salvos no total de {} itens", todosSalvos.size());
+
+            porId = notaFiscalItemService.buscarPorId(60);
+            porId.setProduto(produtoService.buscarPorId(21));
+            porId.setQuantidade(7);
+            porId.setPreco(21.05);
+            porId.setTotal(porId.getQuantidade() * porId.getPreco());
+            notaFiscalItemService.salvar(porId);
+            LOG.info("Dados alterados com sucesso");
+
+            Optional<Double> valorFinal = notaFiscalItemService.obterOValorTotalDaNota();
+            LOG.info("Valor Total da Nota: {}", valorFinal);
+
+        } else if (p == 9) {
+            NotaFiscalItem porId = notaFiscalItemService.buscarPorId(64);
+            notaFiscalItemService.deletarPorId(porId.getId());
+
+            Optional<Double> valorFinal = notaFiscalItemService.obterOValorTotalDaNota();
+            LOG.info("Valor Total da Nota: {}", valorFinal);
         }
 
     }
