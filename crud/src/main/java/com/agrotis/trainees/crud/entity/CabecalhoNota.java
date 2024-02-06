@@ -20,6 +20,8 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.agrotis.trainees.crud.entity.enums.TipoNota;
+
 @Entity
 @Table(name = "nota_fiscal")
 public class CabecalhoNota {
@@ -83,9 +85,6 @@ public class CabecalhoNota {
     public Integer getId() {
         return id;
     }
-    
-
-    
 
     public List<ItemNota> getItens() {
         return itens;

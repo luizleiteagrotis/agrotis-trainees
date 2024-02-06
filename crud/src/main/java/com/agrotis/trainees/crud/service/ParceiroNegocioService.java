@@ -49,7 +49,7 @@ public class ParceiroNegocioService {
         return repository.findAll();
     }
 
-    public ParceiroNegocio salvar(Integer id, ParceiroNegocio negocio) {
+    public ParceiroNegocio atualizar(Integer id, ParceiroNegocio negocio) {
         return repository.findById(id).map(parceiroExistente -> {
             parceiroExistente.setNome(negocio.getNome());
             parceiroExistente.setInscricaoFiscal(negocio.getInscricaoFiscal());

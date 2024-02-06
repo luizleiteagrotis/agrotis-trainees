@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.entity.TipoNota;
+import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
 @Service
