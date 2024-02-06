@@ -57,30 +57,30 @@ public class NotaFiscalService {
 
     @Transactional
     public void adicionarItem(ItemNotaFiscal item, NotaFiscal notaFiscal) {
-        List<ItemNotaFiscal> itemNotaFiscals = notaFiscal.getItemNotaFiscals();
-        if (itemNotaFiscals == null) {
-            itemNotaFiscals = new ArrayList<>();
+        List<ItemNotaFiscal> itens = notaFiscal.getItens();
+        if (itens == null) {
+            itens = new ArrayList<>();
         }
-        itemNotaFiscals.add(item);
+        itens.add(item);
         atualizarValorTotal(notaFiscal);
     }
 
     public void removerItem(ItemNotaFiscal item, NotaFiscal notaFiscal) {
-        List<ItemNotaFiscal> itemNotaFiscals = notaFiscal.getItemNotaFiscals();
-        itemNotaFiscals.remove(item);
+        List<ItemNotaFiscal> itens = notaFiscal.getItens();
+        itens.remove(item);
         atualizarValorTotal(notaFiscal);
     }
 
     public void atualizarValorTotal(NotaFiscal notaFiscal) {
         BigDecimal valor_total = notaFiscal.getValor_total();
         valor_total = BigDecimal.ZERO;
-        for (ItemNotaFiscal item : notaFiscal.getItemNotaFiscals()) {
+        for (ItemNotaFiscal item : notaFiscal.getItens()) {
             if (item.getValor_total() != null) {
                 valor_total = valor_total.add(item.getValor_total());
             }
         }
 
-        notaFiscal.calcularValorTotal(valor_total);
+        notaFiscal.setValorTotal(valor_total);
         repository.save(notaFiscal);
     }
 

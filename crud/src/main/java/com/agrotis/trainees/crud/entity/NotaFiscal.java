@@ -41,10 +41,10 @@ public class NotaFiscal {
     private NotaFiscalTipo notaFiscalTipo;
 
     @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER)
-    private List<ItemNotaFiscal> itemNotaFiscals = new ArrayList<>();
+    private List<ItemNotaFiscal> itens = new ArrayList<>();
 
     @NotNull
-    @Digits(integer = 10, fraction = 2)
+    @Digits(integer = 19, fraction = 2)
     private BigDecimal valor_total;
 
     public Integer getId() {
@@ -87,12 +87,16 @@ public class NotaFiscal {
         return valor_total;
     }
 
-    public List<ItemNotaFiscal> getItemNotaFiscals() {
-        return itemNotaFiscals;
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valor_total = valorTotal;
     }
 
-    public void setItemNotaFiscals(List<ItemNotaFiscal> itemNotaFiscals) {
-        this.itemNotaFiscals = itemNotaFiscals;
+    public List<ItemNotaFiscal> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemNotaFiscal> itens) {
+        this.itens = itens;
     }
 
     public NotaFiscal() {
@@ -100,7 +104,4 @@ public class NotaFiscal {
         this.data = LocalDate.now();
     }
 
-    public void calcularValorTotal(BigDecimal valorTotal) {
-        this.valor_total = valorTotal;
-    }
 }
