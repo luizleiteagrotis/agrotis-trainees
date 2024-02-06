@@ -48,4 +48,9 @@ public class NotaFiscalService {
         LOG.info("Nota Fiscal deletada com sucesso. ID: {}", id);
     }
 
+    public void atualizarValorTotal(Integer id, Double valorTotalItem) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -115,7 +116,7 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscal.setParceiroNegocio(parceiroNegocio2);
         notaFiscal.setNumero(48686425);
         notaFiscal.setDataEmissao(LocalDate.now());
-        //
+
         NotaFiscal savedNotaFiscal = notaFiscalService.salvar(notaFiscal);
         LOG.info("id inserido: {}", savedNotaFiscal.getId());
 
@@ -130,15 +131,31 @@ public class CrudApplication implements CommandLineRunner {
 
         // notaFiscalService.deletarPorId(notaFiscal2.getId());
         // LOG.info("Deletando a nota {}", notaFiscal2.getId() ); }
-        //
-        // // NotaFiscalItem
-        // NotaFiscalItem notaFiscalItem = new NotaFiscalItem();
-        // NotaFiscal notaFiscal3 = new NotaFiscal();
-        // notaFiscal3.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
-        // notaFiscal3.setParceiroNegocio(parceiroNegocio2);
-        // notaFiscal3.setNumero(48686425);
-        // notaFiscal3.setDataEmissao(LocalDate.now());
-        // notaFiscalItem.setNotaFiscal(notaFiscal3);
 
+        NotaFiscalItem notaFiscalItem = new NotaFiscalItem();
+        notaFiscalItem.setNotaFiscal(savedNotaFiscal);
+        notaFiscalItem.setProduto(produtoPorId);
+        notaFiscalItem.setQuantidade(5);
+        notaFiscalItem.SetPreco_unitario(10.0);
+
+        // Salvar o Item da Nota Fiscal
+        NotaFiscalItem savedNotaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);
+        LOG.info("ID do NotaFiscalItem inserido: {}", savedNotaFiscalItem.getId());
+
+        // Atualizar Item da Nota Fiscal (alterar quantidade e preço)
+        savedNotaFiscalItem.setQuantidade(8);
+        savedNotaFiscalItem.SetPreco_unitario(15.0);
+        notaFiscalItemService.salvar(savedNotaFiscalItem);
+        LOG.info("NotaFiscalItem atualizado com sucesso. ID: {}", savedNotaFiscalItem.getId());
+
+        // Listar todos os itens da Nota Fiscal
+        List<NotaFiscalItem> todosItens = notaFiscalItemService.buscarTodos();
+        LOG.info("Total de NotaFiscalItens: {}", todosItens.size());
+
+        // // Deletar Item da Nota Fiscal
+        // notaFiscalItemService.deletarPorId(savedNotaFiscalItem.getId());
+        // LOG.info("NotaFiscalItem deletado com sucesso. ID: {}",
+        // savedNotaFiscalItem.getId());
     }
+
 }

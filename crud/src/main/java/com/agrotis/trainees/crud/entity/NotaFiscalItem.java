@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "nota_fiscal_item")
 public class NotaFiscalItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -19,18 +22,18 @@ public class NotaFiscalItem {
     @ManyToOne
     @JoinColumn(name = "nota_fiscal_id")
     private NotaFiscal notaFiscal;
-    
+
     @ManyToOne
-    @JoinColumn(name = "produto")
+    @JoinColumn(name = "produto_id")
     private Produto produto;
 
     @NotNull(message = "Necessário inserir a quantidade do produto")
     private Integer quantidade;
 
     @NotNull(message = "Necessário inserir o preço unitário")
-    private Double preco;
+    private Double preco_unitario;
 
-    private Double valorTotal;
+    private Double valorTotal = 0.0;
 
     public Integer getId() {
         return id;
@@ -44,32 +47,33 @@ public class NotaFiscalItem {
         this.notaFiscal = notaFiscal;
     }
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
     public Produto getProduto() {
         return produto;
     }
 
     public void setProduto(Produto produto) {
+        if (Objects.equals(this.produto, produto)) {
+            throw new IllegalArgumentException("O mesmo produto não pode ser adicionado mais de uma vez na nota fiscal.");
+        }
         this.produto = produto;
     }
 
+    @NotNull(message = "Necessário inserir a quantidade do produto")
     public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int i) {
-        this.quantidade = i;
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 
-    public Double getPreco() {
-        return preco;
+    @NotNull(message = "Necessário inserir o preço unitário")
+    public Double getPreco_unitario() {
+        return preco_unitario;
     }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
+    public void SetPreco_unitario(Double preco) {
+        this.preco_unitario = preco;
     }
 
     public Double getValorTotal() {
@@ -79,5 +83,4 @@ public class NotaFiscalItem {
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
     }
-
 }
