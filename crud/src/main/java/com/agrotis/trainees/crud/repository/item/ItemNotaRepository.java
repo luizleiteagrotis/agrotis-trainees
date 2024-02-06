@@ -18,4 +18,14 @@ public class ItemNotaRepository extends JpaRepositoryWrapper<
 	public ItemNotaRepository(ItemNotaJpaRepository repository) {
 		super(repository, nomeLogger(ItemNotaRepository.class));
 	}
+	
+	public boolean existe(ItemNota item) {
+		if (item.getId() == null) return false;
+		return REPOSITORY.existsById(item.getId());
+	}
+	
+	public BigDecimal getValorTotal(Long idItem) {
+		ItemNotaJpaRepository repository = (ItemNotaJpaRepository) REPOSITORY;
+		return repository.getValorTotal(idItem);
+	}
 }

@@ -12,4 +12,7 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 @Repository
 public interface ItemNotaJpaRepository extends JpaRepository<ItemNota, Long>{
 	
+	@Query("SELECT i.valorTotal FROM ItemNota i "
+			+ "WHERE i.id = :idItem")
+	BigDecimal getValorTotal(Long idItem);
 }

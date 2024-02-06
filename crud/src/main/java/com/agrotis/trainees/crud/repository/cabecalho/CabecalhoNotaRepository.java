@@ -19,11 +19,11 @@ public class CabecalhoNotaRepository extends JpaRepositoryWrapper<
 	
 	@Override
 	public CabecalhoNota salvar(CabecalhoNota cabecalho) {
-		if (existeInstanciaCom(cabecalho.getTipo(), cabecalho.getNumero())) {
+		if (cabecalho.getId() == null && existeInstanciaCom(cabecalho.getTipo(), cabecalho.getNumero())) {
 			String mensagemErro = "Ja existe " 
 									+ NOME_ENTITY 
 									+ " com tipo " 
-									+ cabecalho.getTipo()
+									+ cabecalho.getTipo().getNome()
 									+ " e numero "
 									+ cabecalho.getNumero();
 			LOG.error("{} com tipo {} e numero {} nao foi salva", 

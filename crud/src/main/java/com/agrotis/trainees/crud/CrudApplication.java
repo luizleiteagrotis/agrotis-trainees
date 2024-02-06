@@ -54,7 +54,7 @@ public class CrudApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args){
+	public void run(String... args) {
 		testarParceiroNegocio();
 		testarProduto();
 		testarCabecalhoNota();
@@ -239,6 +239,7 @@ public class CrudApplication implements CommandLineRunner {
 		parceiro.setTelefone("12345");
 		parceiro = parceiroNegocioService.salvar(parceiro);
 		
+		
 		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
 		tipoNota.setNome("entrada");
 		tipoService.salvar(tipoNota);
@@ -258,6 +259,7 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setDataFabricacao(LocalDate.now());
 		produto.setDataValidade(LocalDate.now());
 		produto = produtoService.salvar(produto);
+		
 		
 		ItemNota item = new ItemNota();
 		item.setProduto(produto);
