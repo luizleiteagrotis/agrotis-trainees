@@ -172,5 +172,8 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscalService.atualizar(nfPorId.getId(), notaFiscalAtualiza);
         LOG.info("atualiza o produto {}", nfPorId.getId());
 
+        notaFiscalService.deletarPorId(nfPorId.getId());
+        LOG.info("Deletando o produto {}", nfPorId.getId());
+
     }
 }

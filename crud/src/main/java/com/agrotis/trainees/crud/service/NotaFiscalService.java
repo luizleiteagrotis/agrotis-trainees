@@ -43,6 +43,10 @@ public class NotaFiscalService {
         return repository.save(nota_fiscal);
     }
 
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+    }
+
     public static Logger getLog() {
         return LOG;
     }
