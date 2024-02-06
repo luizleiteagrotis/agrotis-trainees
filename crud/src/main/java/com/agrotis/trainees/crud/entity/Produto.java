@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,10 +32,12 @@ public class Produto {
 
     @Column(name = "data_fabricacao")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Past(message = "A data de fabricação não pode ser maior que a data atual.")
     private LocalDate dataFabricacao;
 
     @Column(name = "data_validade")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Future(message = "A data de validade tem de ser no futuro.")
     private LocalDate dataValidade;
 
     @Column(name = "quantidade_estoque")

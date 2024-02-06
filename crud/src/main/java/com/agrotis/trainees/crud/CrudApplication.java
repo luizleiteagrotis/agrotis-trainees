@@ -66,7 +66,7 @@ public class CrudApplication implements CommandLineRunner {
         LOG.info("----------------PRODUTO------------------");
 
         Produto produto = new Produto();
-        produto.setDataFabricacao(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        produto.setDataFabricacao(LocalDate.parse("12/12/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produto.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produto.setDescricao("Fertilizante Quebra Nózes");
         produto.setFabricante(parceiroNegocio);
