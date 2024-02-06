@@ -36,6 +36,9 @@ public class Produto {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataValidade;
 
+    @Column(name = "quantidade_estoque")
+    private Integer quantidadeEstoque;
+
     public String getDescricao() {
         return descricao;
     }
@@ -70,6 +73,14 @@ public class Produto {
 
     public Integer getId() {
         return id;
+    }
+
+    public Integer getQuantidadeEstoque() {
+        return quantidadeEstoque;
+    }
+
+    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+        this.quantidadeEstoque = quantidadeEstoque;
     }
 
     @Override

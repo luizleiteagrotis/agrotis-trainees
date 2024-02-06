@@ -12,11 +12,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
-import com.agrotis.trainees.crud.entity.TipoNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.service.ItemNotaService;
+import com.agrotis.trainees.crud.entity.TipoNota;
 import com.agrotis.trainees.crud.service.CabecalhoNotaService;
+import com.agrotis.trainees.crud.service.ItemNotaService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -27,15 +27,15 @@ public class CrudApplication implements CommandLineRunner {
 
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
-    private final CabecalhoNotaService notaFiscalService;
-    private final ItemNotaService notaFiscalItemService;
+    private final CabecalhoNotaService cabecalhoNotaService;
+    private final ItemNotaService itemNotaService;
 
     public CrudApplication(ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService,
-                    CabecalhoNotaService notaFiscalService, ItemNotaService notaFiscalItemService) {
+                    CabecalhoNotaService notaFiscalService, ItemNotaService itemNotaService) {
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
-        this.notaFiscalService = notaFiscalService;
-        this.notaFiscalItemService = notaFiscalItemService;
+        this.cabecalhoNotaService = notaFiscalService;
+        this.itemNotaService = itemNotaService;
     }
 
     public static void main(String[] args) {
@@ -80,6 +80,7 @@ public class CrudApplication implements CommandLineRunner {
         produto.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produto.setDescricao("Fertilizante Quebra Nózes");
         produto.setFabricante(parceiroNegocio2);
+        produto.setQuantidadeEstoque(0);
         produtoService.salvar(produto);
         LOG.info("id inserido: {}", produto.getId());
 
@@ -102,6 +103,7 @@ public class CrudApplication implements CommandLineRunner {
         produtoAtualizado.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produtoAtualizado.setDescricao("Purificador de Algodão");
         produtoAtualizado.setFabricante(parceiroNegocio3);
+        produtoAtualizado.setQuantidadeEstoque(0);
         produtoService.salvar(produtoAtualizado);
 
         Produto produtoAtualizado2 = new Produto();
@@ -109,6 +111,7 @@ public class CrudApplication implements CommandLineRunner {
         produtoAtualizado2.setDataValidade(LocalDate.parse("12/12/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produtoAtualizado2.setDescricao("Semente de Soja");
         produtoAtualizado2.setFabricante(parceiroNegocio3);
+        produtoAtualizado2.setQuantidadeEstoque(0);
         produtoService.salvar(produtoAtualizado2);
 
         produtoService.atualizar(produtoPorId.getId(), produtoAtualizado);
@@ -124,7 +127,7 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscal.setNotaFiscalTipo(TipoNota.ENTRADA);
         notaFiscal.setNumeroDaNota(159753);
         notaFiscal.setParceiroNegocio(parceiroNegocio3);
-        notaFiscalService.salvar(notaFiscal);
+        cabecalhoNotaService.salvar(notaFiscal);
         LOG.info("Salvando nota fiscal: {}", notaFiscal.getId());
 
         CabecalhoNota notaFiscal3 = new CabecalhoNota();
@@ -132,7 +135,7 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscal3.setNotaFiscalTipo(TipoNota.ENTRADA);
         notaFiscal3.setNumeroDaNota(178954);
         notaFiscal3.setParceiroNegocio(parceiroNegocio3);
-        notaFiscalService.salvar(notaFiscal3);
+        cabecalhoNotaService.salvar(notaFiscal3);
         LOG.info("Salvando nota fiscal: {}", notaFiscal3.getId());
 
         CabecalhoNota notaFiscal2 = new CabecalhoNota();
@@ -140,18 +143,18 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscal2.setNotaFiscalTipo(TipoNota.SAIDA);
         notaFiscal2.setNumeroDaNota(159755);
         notaFiscal2.setParceiroNegocio(parceiroNegocio3);
-        notaFiscalService.salvar(notaFiscal2);
+        cabecalhoNotaService.salvar(notaFiscal2);
         LOG.info("Salvando nota fiscal: {}", notaFiscal2.getId());
 
-        notaFiscalService.buscarPorId(notaFiscal.getId());
+        cabecalhoNotaService.buscarPorId(notaFiscal.getId());
         LOG.info("Buscando nota pelo id {}", notaFiscal.getId());
 
         notaFiscal2.setNumeroDaNota(777777);
 
-        notaFiscalService.atualizar(notaFiscal2.getId(), notaFiscal2);
+        cabecalhoNotaService.atualizar(notaFiscal2.getId(), notaFiscal2);
         LOG.info("Atualizando pelo id {}", notaFiscal2.getId());
 
-        List<CabecalhoNota> notas = notaFiscalService.listarTodos();
+        List<CabecalhoNota> notas = cabecalhoNotaService.listarTodos();
         LOG.info("Tamanho da lista: ", notas.size());
 
         // notaFiscalService.deletarPorId(notaFiscal2.getId());
@@ -167,33 +170,63 @@ public class CrudApplication implements CommandLineRunner {
         parceiroNegocioComNotaFiscal.setEndereco("Rua dos Agropecuários, 158");
         parceiroNegocioService.salvar(parceiroNegocioComNotaFiscal);
         
+        CabecalhoNota cabecalhoNota = new CabecalhoNota();
+        cabecalhoNota.setNotaFiscalTipo(TipoNota.ENTRADA);
+        cabecalhoNota.setData(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        cabecalhoNota.setParceiroNegocio(parceiroNegocioComNotaFiscal);
+        cabecalhoNota.setNumeroDaNota(741852);
+        cabecalhoNotaService.salvar(cabecalhoNota);
         
         Produto produtoDaNotaCompleta = new Produto();
         produtoDaNotaCompleta.setFabricante(parceiroNegocioComNotaFiscal);
         produtoDaNotaCompleta.setDescricao("Pacote de Semente");
         produtoDaNotaCompleta.setDataValidade(LocalDate.parse("05/02/2030", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produtoDaNotaCompleta.setDataFabricacao(LocalDate.parse("05/02/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        produtoDaNotaCompleta.setQuantidadeEstoque(0);
         produtoService.salvar(produtoDaNotaCompleta);
         
-        CabecalhoNota notaFiscalComItens = new CabecalhoNota();
-        notaFiscalComItens.setNotaFiscalTipo(TipoNota.ENTRADA);
-        notaFiscalComItens.setData(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        notaFiscalComItens.setParceiroNegocio(parceiroNegocioComNotaFiscal);
-        notaFiscalComItens.setNumeroDaNota(741852);
-        notaFiscalService.salvar(notaFiscalComItens);
-        
         ItemNota notaFiscalItem = new ItemNota();
-        notaFiscalItem.setNotaFiscal(notaFiscalComItens);
+        notaFiscalItem.setNotaFiscal(cabecalhoNota);
         notaFiscalItem.setProduto(produtoDaNotaCompleta);
         notaFiscalItem.setQuantidade(150);
         notaFiscalItem.setPrecoUnitario(19.90);
-    
         
-        notaFiscalItemService.calcularValorTotal(notaFiscalItem);
-        notaFiscalItemService.salvar(notaFiscalItem);
+        itemNotaService.calcularValorTotal(notaFiscalItem);
+        itemNotaService.salvar(notaFiscalItem);
         
+        
+        LOG.info("---------------- Nota Fiscal Item ------------------");
 
-  
+        ParceiroNegocio parceiroNegocioComNotaFiscal2 = new ParceiroNegocio();
+        parceiroNegocioComNotaFiscal2.setNome("Castano");
+        parceiroNegocioComNotaFiscal2.setTelefone("45951214144");
+        parceiroNegocioComNotaFiscal2.setInscricaoFiscal("22.338.624/0002-37");
+        parceiroNegocioComNotaFiscal2.setEndereco("Rua dos Caetanos, 158");
+        parceiroNegocioService.salvar(parceiroNegocioComNotaFiscal2);
+        
+        CabecalhoNota cabecalhoNota2 = new CabecalhoNota();
+        cabecalhoNota2.setNotaFiscalTipo(TipoNota.SAIDA);
+        cabecalhoNota2.setData(LocalDate.parse("12/12/2015", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        cabecalhoNota2.setParceiroNegocio(parceiroNegocioComNotaFiscal);
+        cabecalhoNota2.setNumeroDaNota(952632);
+        cabecalhoNotaService.salvar(cabecalhoNota2);
+        
+        Produto produtoDaNotaCompleta2 = new Produto();
+        produtoDaNotaCompleta2.setFabricante(parceiroNegocioComNotaFiscal);
+        produtoDaNotaCompleta2.setDescricao("Feijão Gandu");
+        produtoDaNotaCompleta2.setDataValidade(LocalDate.parse("05/02/2030", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        produtoDaNotaCompleta2.setDataFabricacao(LocalDate.parse("05/02/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        produtoDaNotaCompleta2.setQuantidadeEstoque(0);
+        produtoService.salvar(produtoDaNotaCompleta2);
+        
+        ItemNota notaFiscalItem2 = new ItemNota();
+        notaFiscalItem2.setNotaFiscal(cabecalhoNota);
+        notaFiscalItem2.setProduto(produtoDaNotaCompleta2);
+        notaFiscalItem2.setQuantidade(100);
+        notaFiscalItem2.setPrecoUnitario(49.90);     
+        itemNotaService.calcularValorTotal(notaFiscalItem);
+        itemNotaService.salvar(notaFiscalItem);
+        
 
     }
 }

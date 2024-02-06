@@ -1,8 +1,9 @@
-create table produto (
+    create table produto (
        id integer not null,
         data_fabricacao date,
         data_validade date,
         descricao varchar(255),
+        quantidade_estoque integer,
         fabricante_id integer,
         primary key (id)
     )

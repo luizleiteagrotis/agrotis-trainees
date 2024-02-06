@@ -83,6 +83,13 @@ public class CabecalhoNota {
     public Integer getId() {
         return id;
     }
+    
+
+    
+
+    public List<ItemNota> getItens() {
+        return itens;
+    }
 
     @Override
     public int hashCode() {
