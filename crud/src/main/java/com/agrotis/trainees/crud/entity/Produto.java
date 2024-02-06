@@ -16,69 +16,75 @@ import javax.validation.constraints.PastOrPresent;
 @Entity
 @Table(name = "produto")
 public class Produto {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@NotBlank(message = "Obrigatório preencher a descrição do produto")
-	private String descricao;
-	
-	@NotNull(message = "Obrigatório preencher data de fabricação do produto")
-	@PastOrPresent
-	private Date data_fabricacao ;
-	
-	@NotNull(message = "Obrigatório preencher data de validade do produto")
-	private Date data_validade;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_parceiro_de_negocio")
-	private ParceiroNegocio parceiroNegocio;
 
-	public Integer getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	public String getDescricao() {
-		return descricao;
-	}
+    @NotBlank(message = "Obrigatório preencher a descrição do produto")
+    private String descricao;
 
+    @NotNull(message = "Obrigatório preencher data de fabricação do produto")
+    @PastOrPresent
+    private Date data_fabricacao;
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    @NotNull(message = "Obrigatório preencher data de validade do produto")
+    private Date data_validade;
 
-	public Date getDataFabricacao() {
-		return data_fabricacao;
-	}
+    @ManyToOne
+    @JoinColumn(name = "id_parceiro_de_negocio")
+    private ParceiroNegocio parceiroNegocio;
 
-	public void setDataFabricacao(Date data_fabricacao) {
-		this.data_fabricacao = data_fabricacao;
-	}
+    private int quantidade_estoque;
 
-	public Date getDataValidade() {
-		return data_validade;
-	}
+    public int getQuantidade_estoque() {
+        return quantidade_estoque;
+    }
 
-	public void setDataValidade(Date data_validade) {
-		this.data_validade = data_validade;
-	}
+    public void setQuantidade_estoque(int quantidade_estoque) {
+        this.quantidade_estoque = quantidade_estoque;
+    }
 
-	public ParceiroNegocio getParceiroNegocio() {
-		return parceiroNegocio;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-		this.parceiroNegocio = parceiroNegocio;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	@Override
-	public String toString() {
-		return "Produto [id=" + id + ", descricao=" + descricao + ", data_fabricacao=" + data_fabricacao
-				+ ", data_validade=" + data_validade + ", parceiroNegocio=" + parceiroNegocio + "]";
-	}
-	
-	
-	
-	
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Date getDataFabricacao() {
+        return data_fabricacao;
+    }
+
+    public void setDataFabricacao(Date data_fabricacao) {
+        this.data_fabricacao = data_fabricacao;
+    }
+
+    public Date getDataValidade() {
+        return data_validade;
+    }
+
+    public void setDataValidade(Date data_validade) {
+        this.data_validade = data_validade;
+    }
+
+    public ParceiroNegocio getParceiroNegocio() {
+        return parceiroNegocio;
+    }
+
+    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+        this.parceiroNegocio = parceiroNegocio;
+    }
+
+    @Override
+    public String toString() {
+        return "Produto [id=" + id + ", descricao=" + descricao + ", data_fabricacao=" + data_fabricacao + ", data_validade="
+                        + data_validade + ", parceiroNegocio=" + parceiroNegocio + "]";
+    }
+
 }

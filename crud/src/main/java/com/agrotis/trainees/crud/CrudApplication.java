@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -125,7 +124,7 @@ public class CrudApplication implements CommandLineRunner {
             Produto produto = new Produto();
 
             ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(157);
-            produto.setDescricao("Citrus e ração");
+            produto.setDescricao("Arroz");
             produto.setParceiroNegocio(fabricante);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -139,27 +138,35 @@ public class CrudApplication implements CommandLineRunner {
             Produto produto2 = produtoService.salvar(produto);
 
             Produto produtoPorId = produtoService.buscarPorId(produto2.getId());
-            LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
+            LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {} quantidade em estoque {}",
                             produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(),
-                            produtoPorId.getParceiroNegocio());
+                            produtoPorId.getParceiroNegocio(), produtoPorId.getQuantidade_estoque());
 
-            Produto produtoPorDescricao = produtoService.buscarPorDescricao(produto2.getDescricao());
-            LOG.info("Busca por descricao. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {}",
-                            produtoPorDescricao.getDescricao(), produtoPorDescricao.getDataFabricacao(),
-                            produtoPorDescricao.getDataValidade(), produtoPorDescricao.getParceiroNegocio());
-
-            List<Produto> todosProdutos = produtoService.listarTodos();
-            LOG.info("Salvos no total de {} tipos de produtos", todosProdutos.size());
-
-            Produto produtoPorDescricao2 = produtoService.buscarPorDescricao(produto2.getDescricao());
-            produtoPorDescricao2.setDescricao("citrus e ração importados");
-            Date novaValidadeDate = dateFormat.parse("03-07-2016");
-            produtoPorDescricao2.setDataValidade(novaValidadeDate);
-            produtoPorDescricao2.setParceiroNegocio(fabricante);
-            produtoService.salvar(produtoPorDescricao2);
-            System.out.println(produtoPorDescricao2.getParceiroNegocio());
-            LOG.info("Nova descrição {}, nova data validade {} e novo parceiro {}: ", produtoPorDescricao2.getDescricao(),
-                            produtoPorDescricao2.getDataValidade(), produtoPorDescricao2.getParceiroNegocio());
+            // Produto produtoPorDescricao =
+            // produtoService.buscarPorDescricao(produto2.getDescricao());
+            // LOG.info("Busca por descricao. Descrição {} Data Fabricação {}
+            // Data Validade {} Nome da empresa parceira {}",
+            // produtoPorDescricao.getDescricao(),
+            // produtoPorDescricao.getDataFabricacao(),
+            // produtoPorDescricao.getDataValidade(),
+            // produtoPorDescricao.getParceiroNegocio());
+            //
+            // List<Produto> todosProdutos = produtoService.listarTodos();
+            // LOG.info("Salvos no total de {} tipos de produtos",
+            // todosProdutos.size());
+            //
+            // Produto produtoPorDescricao2 =
+            // produtoService.buscarPorDescricao(produto2.getDescricao());
+            // produtoPorDescricao2.setDescricao("citrus e ração importados");
+            // Date novaValidadeDate = dateFormat.parse("03-07-2016");
+            // produtoPorDescricao2.setDataValidade(novaValidadeDate);
+            // produtoPorDescricao2.setParceiroNegocio(fabricante);
+            // produtoService.salvar(produtoPorDescricao2);
+            // System.out.println(produtoPorDescricao2.getParceiroNegocio());
+            // LOG.info("Nova descrição {}, nova data validade {} e novo
+            // parceiro {}: ", produtoPorDescricao2.getDescricao(),
+            // produtoPorDescricao2.getDataValidade(),
+            // produtoPorDescricao2.getParceiroNegocio());
 
             //// produtoService.deletarPorId(produtoPorId.getId());
         }
@@ -207,10 +214,12 @@ public class CrudApplication implements CommandLineRunner {
         }
 
         if (escolha == 5) {
-            ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+            // ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
 
-            // Produto produto = produtoService.buscarPorId(126);
+            Produto produto = produtoService.buscarPorId(126);
             // itemNotaFiscal.setProduto(produto);
+
+            System.out.println(produto.getQuantidade_estoque());
             //
             NotaFiscal notaFiscal = notaFiscalService.buscarPorId(176);
             // itemNotaFiscal.setNotaFiscal(notaFiscal);
@@ -250,9 +259,10 @@ public class CrudApplication implements CommandLineRunner {
             //
             // notaFiscalService.atualizarValorTotal(notaFiscal2);
 
-            itemNotaFiscalService.deletarPorId(265);
-            NotaFiscal notaFiscal3 = notaFiscalService.buscarPorId(notaFiscal.getId());
-            notaFiscalService.atualizarValorTotal(notaFiscal3);
+            // itemNotaFiscalService.deletarPorId(265);
+            // NotaFiscal notaFiscal3 =
+            // notaFiscalService.buscarPorId(notaFiscal.getId());
+            // notaFiscalService.atualizarValorTotal(notaFiscal3);
         }
 
     }
