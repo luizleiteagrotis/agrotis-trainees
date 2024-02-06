@@ -23,7 +23,7 @@ public class ItemNotaFiscalService {
     }
 
     public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
-        entidade.calcularValorTotal();
+        entidade.setValorTotal();
         return repository.save(entidade);
     }
 

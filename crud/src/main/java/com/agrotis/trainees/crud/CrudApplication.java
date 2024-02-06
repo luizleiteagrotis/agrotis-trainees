@@ -6,12 +6,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -90,7 +92,7 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 2) {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-            parceiroNegocio.setNome("Empresa de citrus");
+            parceiroNegocio.setNome("Empresa Arroz");
             parceiroNegocio.setInscricaoFiscal("020924");
             parceiroNegocio.setEndereco("Sao Paulo, rua cerveja, 15");
             parceiroNegocio.setTelefone("11 9 5454 5454");
@@ -109,13 +111,16 @@ public class CrudApplication implements CommandLineRunner {
             List<ParceiroNegocio> todosParceiros = parceiroNegocioService.listarTodos();
             LOG.info("Salvos no total de {} tipos de parceiros", todosParceiros.size());
 
-            ParceiroNegocio parceiroPorNome2 = parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
-            parceiroPorNome2.setNome("Empresa de citrus e ração");
-            parceiroPorNome2.setEndereco("Curitiba, Centro, 333");
-            parceiroPorNome2.setTelefone("41 9 2222 1111");
-            parceiroNegocioService.salvar(parceiroPorNome2);
-            LOG.info("Nome, endereco e telefone atualizado com sucesso, novo nome: {}, novo endereco: {}, novo telefone: {} ",
-                            parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(), parceiroPorNome2.getTelefone());
+            // ParceiroNegocio parceiroPorNome2 =
+            // parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
+            // parceiroPorNome2.setNome("Empresa de citrus e ração");
+            // parceiroPorNome2.setEndereco("Curitiba, Centro, 333");
+            // parceiroPorNome2.setTelefone("41 9 2222 1111");
+            // parceiroNegocioService.salvar(parceiroPorNome2);
+            // LOG.info("Nome, endereco e telefone atualizado com sucesso, novo
+            // nome: {}, novo endereco: {}, novo telefone: {} ",
+            // parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(),
+            // parceiroPorNome2.getTelefone());
 
             // parceiroNegocioService.deletarPorId(parceiroPorId.getId());
         }
@@ -177,7 +182,7 @@ public class CrudApplication implements CommandLineRunner {
 
             ParceiroNegocio parceiro = parceiroNegocioService.buscarPorId(113);
 
-            notaFiscal.setNumero("10");
+            notaFiscal.setNumero("15");
             NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
             notaFiscal.setParceiroNegocio(parceiro);
             notaFiscal.setNotaFiscalTipo(notaTipo);
@@ -193,21 +198,27 @@ public class CrudApplication implements CommandLineRunner {
             LOG.info("Busca por id. Numero {} Data {} Nome da empresa parceira {} e tipo {}", notaFiscalPorId.getNumero(),
                             notaFiscalPorId.getData(), notaFiscalPorId.getParceiroNegocio(), notaFiscalPorId.getNotaFiscalTipo());
 
-            List<NotaFiscal> todasNotasFiscais = notaFiscalService.buscarPorNumero("20");
-            LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais.size());
-
-            List<NotaFiscal> todasNotasFiscais2 = notaFiscalService.listarTodos();
-            LOG.info("Salvos no total de {} tipos de notas fiscais", todasNotasFiscais2.size());
-
-            NotaFiscalTipo novaNotaTipo = notaFiscalTipoService.buscarPorId(162);
-            notaFiscalPorId.setNumero("1");
-            notaFiscalPorId.setNotaFiscalTipo(novaNotaTipo);
-            try {
-                notaFiscalService.salvar(notaFiscalPorId);
-                LOG.info("Novo numero {} e nova data {}", notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
-            } catch (NotaFiscalDuplicadaException e) {
-                System.out.println("Tratamento de exceção: " + e.getMessage());
-            }
+            // List<NotaFiscal> todasNotasFiscais =
+            // notaFiscalService.buscarPorNumero("20");
+            // LOG.info("Salvos no total de {} tipos de notas fiscais",
+            // todasNotasFiscais.size());
+            //
+            // List<NotaFiscal> todasNotasFiscais2 =
+            // notaFiscalService.listarTodos();
+            // LOG.info("Salvos no total de {} tipos de notas fiscais",
+            // todasNotasFiscais2.size());
+            //
+            // NotaFiscalTipo novaNotaTipo =
+            // notaFiscalTipoService.buscarPorId(162);
+            // notaFiscalPorId.setNumero("1");
+            // notaFiscalPorId.setNotaFiscalTipo(novaNotaTipo);
+            // try {
+            // notaFiscalService.salvar(notaFiscalPorId);
+            // LOG.info("Novo numero {} e nova data {}",
+            // notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
+            // } catch (NotaFiscalDuplicadaException e) {
+            // System.out.println("Tratamento de exceção: " + e.getMessage());
+            // }
 
             // notaFiscalService.deletarPorId(171);
 
@@ -215,13 +226,11 @@ public class CrudApplication implements CommandLineRunner {
 
         if (escolha == 5) {
             // ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
-
-            Produto produto = produtoService.buscarPorId(126);
-            // itemNotaFiscal.setProduto(produto);
-
-            System.out.println(produto.getQuantidade_estoque());
             //
-            NotaFiscal notaFiscal = notaFiscalService.buscarPorId(176);
+            // Produto produto = produtoService.buscarPorId(126);
+            // itemNotaFiscal.setProduto(produto);
+            //
+            NotaFiscal notaFiscal = notaFiscalService.buscarPorId(177);
             // itemNotaFiscal.setNotaFiscal(notaFiscal);
             //
             // itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(2000));
@@ -230,15 +239,13 @@ public class CrudApplication implements CommandLineRunner {
             // ItemNotaFiscal itemNotaFiscal2 =
             // itemNotaFiscalService.salvar(itemNotaFiscal);
             // LOG.info("id inserido {}.", itemNotaFiscal2.getId());
-
+            //
             // notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal);
-            // notaFiscalService.removerItem(itemNotaFiscal2, notaFiscal);
+            // // notaFiscalService.removerItem(itemNotaFiscal2, notaFiscal);
 
-            // ItemNotaFiscal itemPorId =
-            // itemNotaFiscalService.buscarPorId(266);
-            // LOG.info("Busca por id. Quantidade {} valor unitário {} valor
-            // total {}", itemPorId.getQuantidade(),
-            // itemPorId.getValor_unitario(), itemPorId.getValor_total());
+            ItemNotaFiscal itemPorId = itemNotaFiscalService.buscarPorId(270);
+            LOG.info("Busca por id. Quantidade {} valor unitário {} valortotal {}", itemPorId.getQuantidade(),
+                            itemPorId.getValor_unitario(), itemPorId.getValor_total());
 
             // List<ItemNotaFiscal> itemPorProduto =
             // itemNotaFiscalService.buscarPorProduto(produto);
@@ -250,14 +257,13 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} itens notas fiscal",
             // todosItemsFiscals.size());
 
-            // itemPorId.setValor_unitario(BigDecimal.valueOf(4000));
-            // itemPorId.setQuantidade(2);
-            // itemNotaFiscalService.salvar(itemPorId);
-            //
-            // NotaFiscal notaFiscal2 =
-            // notaFiscalService.buscarPorId(notaFiscal.getId());
-            //
-            // notaFiscalService.atualizarValorTotal(notaFiscal2);
+            itemPorId.setValor_unitario(BigDecimal.valueOf(8000));
+            itemPorId.setQuantidade(2);
+            itemNotaFiscalService.salvar(itemPorId);
+
+            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(notaFiscal.getId());
+
+            notaFiscalService.atualizarValorTotal(notaFiscal2);
 
             // itemNotaFiscalService.deletarPorId(265);
             // NotaFiscal notaFiscal3 =

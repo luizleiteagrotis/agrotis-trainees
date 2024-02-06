@@ -74,16 +74,16 @@ public class ItemNotaFiscal {
         return valor_total;
     }
 
+    public void setValorTotal() {
+        this.valor_total = this.valor_unitario.multiply(BigDecimal.valueOf(this.quantidade));
+    }
+
     public Produto getProduto() {
         return produto;
     }
 
     public void setProduto(Produto produto) {
         this.produto = produto;
-    }
-
-    public void calcularValorTotal() {
-        this.valor_total = this.valor_unitario.multiply(BigDecimal.valueOf(this.quantidade));
     }
 
 }
