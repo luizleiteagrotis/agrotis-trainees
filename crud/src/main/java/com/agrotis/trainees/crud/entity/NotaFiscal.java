@@ -1,6 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,20 +21,29 @@ public class NotaFiscal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Column(name = "data_nf")
+    private LocalDate data;
+
     @Column(name = "nota_fiscal_tipo_id")
     private String notaFiscalTipo;
+
+    @Column(name = "numero_nota")
+    private Integer numeroDaNota;
 
     @ManyToOne
     @JoinColumn(name = "parceiro_de_negocio_id")
     private ParceiroNegocio parceiroNegocio;
 
-    @Column(name = "numero_nota")
-    private Integer numeroDaNota;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDateTime data;
-
     public NotaFiscal() {
+    }
+
+    public LocalDate getDataNf() {
+        return data;
+    }
+
+    public void setDataNf(LocalDate localDate) {
+        this.data = localDate;
     }
 
     public String getNotaFiscalTipo() {
@@ -59,14 +68,6 @@ public class NotaFiscal {
 
     public void setNumeroDaNota(Integer numeroDaNota) {
         this.numeroDaNota = numeroDaNota;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
     }
 
     public Integer getId() {

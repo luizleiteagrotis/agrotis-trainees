@@ -1,6 +1,6 @@
 create table nota_fiscal (
    id bigint not null,
-    data timestamp,
+    data_nf date,
     nota_fiscal_tipo_id varchar(255),
     numero_nota integer,
     parceiro_de_negocio_id integer,

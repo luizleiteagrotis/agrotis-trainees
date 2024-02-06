@@ -12,15 +12,30 @@ import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 @Service
 public class NotaFiscalService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
 
-	private final NotaFiscalRepository repository;
+    private final NotaFiscalRepository repository;
 
-	public NotaFiscalService(NotaFiscalRepository repository) {
-		this.repository = repository;
-	}
+    public NotaFiscalService(NotaFiscalRepository repository) {
+        this.repository = repository;
+    }
 
-	public NotaFiscal salvar(NotaFiscal entidade) {
-		return repository.save(entidade);
-	}
+    public NotaFiscal salvar(NotaFiscal entidade) {
+        return repository.save(entidade);
+    }
+
+    public List<NotaFiscal> buscarTodos() {
+        return repository.findAll();
+    }
+
+    public NotaFiscal buscaPeloId(Integer id) {
+        return repository.findById(id).orElseGet(() -> {
+            LOG.info("Não foi possível buscar pelo id {}", id);
+            return null;
+        });
+    }
+
+    public static Logger getLog() {
+        return LOG;
+    }
 }
