@@ -19,6 +19,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
+import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -92,9 +93,9 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 2) {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-            parceiroNegocio.setNome("Feijao");
+            parceiroNegocio.setNome("Criador de Grão");
             parceiroNegocio.setInscricaoFiscal("020924");
-            parceiroNegocio.setEndereco("Sao Paulo, rua cerveja, 15");
+            parceiroNegocio.setEndereco("Sao Paulo, rua Grãos, 15");
             parceiroNegocio.setTelefone("11 9 5454 5454");
 
             ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
@@ -129,7 +130,7 @@ public class CrudApplication implements CommandLineRunner {
             Produto produto = new Produto();
 
             ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(272);
-            produto.setDescricao("Feijao");
+            produto.setDescricao("Criador de Grão");
             produto.setFabricante(fabricante);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -137,7 +138,7 @@ public class CrudApplication implements CommandLineRunner {
             Date fabricacaoDate = dateFormat.parse("03-07-2010");
             produto.setDataFabricacao(fabricacaoDate);
 
-            Date validaDate = dateFormat.parse("08-08-2018");
+            Date validaDate = dateFormat.parse("08-08-2024");
             produto.setDataValidade(validaDate);
 
             Produto produto2 = produtoService.salvar(produto);
@@ -259,7 +260,11 @@ public class CrudApplication implements CommandLineRunner {
 
             itemPorId.setValor_unitario(BigDecimal.valueOf(8000));
             itemPorId.setQuantidade(2);
-            itemNotaFiscalService.salvar(itemPorId);
+            try {
+                itemNotaFiscalService.salvar(itemPorId);
+            } catch (QuantidadeInsuficienteException e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
 
             NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(notaFiscal.getId());
 
@@ -271,5 +276,51 @@ public class CrudApplication implements CommandLineRunner {
             // notaFiscalService.atualizarValorTotal(notaFiscal3);
         }
 
+        if (escolha == 6) {
+            NotaFiscalTipo tipoNota = notaFiscalTipoService.buscarPorId(165);
+            ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(274);
+
+            // Produto produto = new Produto();
+            // produto.setDescricao("Aveia");
+            // produto.setFabricante(fabricante);
+            // produto.setQuantidade_estoque(10);
+            //
+            // SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            //
+            // Date dataFabricado = dateFormat.parse("02-09-2010");
+            // Date dataValidade = dateFormat.parse("10-03-2011");
+            // produto.setDataFabricacao(dataFabricado);
+            // produto.setDataValidade(dataValidade);
+            //
+            // Produto produto2 = produtoService.salvar(produto);
+
+            ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+
+            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(32.5));
+            itemNotaFiscal.setQuantidade(4);
+            itemNotaFiscal.setProduto(produtoService.buscarPorId(279));
+
+            // NotaFiscal notaFiscal = new NotaFiscal();
+            //
+            // notaFiscal.setNumero("30");
+            // notaFiscal.setParceiroNegocio(fabricante);
+            // notaFiscal.setNotaFiscalTipo(tipoNota);
+            //
+            // NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
+
+            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(285);
+
+            itemNotaFiscal.setNotaFiscal(notaFiscal2);
+
+            try {
+                ItemNotaFiscal itemNotaFiscal2 = itemNotaFiscalService.salvar(itemNotaFiscal);
+                notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal2);
+            } catch (QuantidadeInsuficienteException e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
+
+            System.out.println(notaFiscal2.getValor_total());
+
+        }
     }
 }

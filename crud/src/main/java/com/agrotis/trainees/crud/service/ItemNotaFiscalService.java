@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 
 @Service
@@ -17,13 +18,17 @@ public class ItemNotaFiscalService {
 
     private final ItemNotaFiscalRepository repository;
 
-    public ItemNotaFiscalService(ItemNotaFiscalRepository repository) {
+    private final ProdutoService produtoService;
+
+    public ItemNotaFiscalService(ItemNotaFiscalRepository repository, ProdutoService produtoService) {
         super();
         this.repository = repository;
+        this.produtoService = produtoService;
     }
 
-    public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
+    public ItemNotaFiscal salvar(ItemNotaFiscal entidade) throws QuantidadeInsuficienteException {
         entidade.setValorTotal();
+        atualizarEstoque(entidade);
         return repository.save(entidade);
     }
 
@@ -45,6 +50,25 @@ public class ItemNotaFiscalService {
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
         LOG.info("Deletado com sucesso");
+    }
+
+    public void atualizarEstoque(ItemNotaFiscal item) throws QuantidadeInsuficienteException {
+        Produto produto = item.getProduto();
+        String tipo = item.getNotaFiscal().getNotaFiscalTipo().getNome();
+        int quantidade = item.getQuantidade();
+        int quantidadeProduto = produto.getQuantidade_estoque();
+
+        if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - quantidade) < 0) {
+            throw new QuantidadeInsuficienteException("Quantidade insuficiente em estoque para a saída do produto: ");
+        }
+
+        if (tipo.equalsIgnoreCase("ENTRADA")) {
+            produto.setQuantidade_estoque(quantidadeProduto + quantidade);
+        } else {
+            produto.setQuantidade_estoque(quantidadeProduto - quantidade);
+        }
+
+        produtoService.salvar(produto);
     }
 
 }
