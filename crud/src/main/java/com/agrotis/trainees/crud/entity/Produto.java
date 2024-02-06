@@ -15,78 +15,78 @@ import javax.validation.constraints.PastOrPresent;
 @Entity
 @Table(name = "produto")
 public class Produto {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@NotBlank(message = "Obrigatório inserir o nome do produto")
-	private String nome;
-	
-	@NotBlank(message = "Obrigatório preencher a descrição do produto")
-	private String descricao;
-	
-	@ManyToOne
-	@JoinColumn(name = "parceiro_negocio")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @NotBlank(message = "Obrigatório inserir o nome do produto")
+    private String nome;
+
+    @NotBlank(message = "Obrigatório preencher a descrição do produto")
+    private String descricao;
+
+    @ManyToOne
+    @JoinColumn(name = "parceiro_negocio")
     private ParceiroNegocio parceiroNegocio;
-	
-	@NotBlank(message = "Obrigatório preencher o fabricante do produto")
-	private String fabricante;
-	
-	@PastOrPresent(message = "A data de fabricação deve ser de datas passadas")
+
+    @NotBlank(message = "Obrigatório preencher o fabricante do produto")
+    private String fabricante;
+
+    @PastOrPresent(message = "A data de fabricação deve ser de datas passadas")
     private LocalDate dataFabricacao;
-	
-	private LocalDate dataValidade;
-	
-	public Integer getId() {
+
+    private LocalDate dataValidade;
+
+    public Integer getId() {
         return id;
     }
-	
-	public String getNome() {
-		return nome;
-	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public ParceiroNegocio getParceiroNegocio() {
-		return parceiroNegocio;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-		this.parceiroNegocio = parceiroNegocio;
-	}
+    public ParceiroNegocio getParceiroNegocio() {
+        return parceiroNegocio;
+    }
 
-	public String getFabricante() {
-		return fabricante;
-	}
+    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+        this.parceiroNegocio = parceiroNegocio;
+    }
 
-	public void setFabricante(String fabricante) {
-		this.fabricante = fabricante;
-	}
+    public String getFabricante() {
+        return fabricante;
+    }
 
-	public LocalDate getDataFabricacao() {
-		return dataFabricacao;
-	}
+    public void setFabricante(String fabricante) {
+        this.fabricante = fabricante;
+    }
 
-	public void setDataFabricacao(LocalDate dataFabricacao) {
-		this.dataFabricacao = dataFabricacao;
-	}
+    public LocalDate getDataFabricacao() {
+        return dataFabricacao;
+    }
 
-	public LocalDate getDataValidade() {
-		return dataValidade;
-	}
+    public void setDataFabricacao(LocalDate dataFabricacao) {
+        this.dataFabricacao = dataFabricacao;
+    }
 
-	public void setDataValidade(LocalDate dataValidade) {
-		this.dataValidade = dataValidade;
-	}
-	
+    public LocalDate getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(LocalDate dataValidade) {
+        this.dataValidade = dataValidade;
+    }
+
 }

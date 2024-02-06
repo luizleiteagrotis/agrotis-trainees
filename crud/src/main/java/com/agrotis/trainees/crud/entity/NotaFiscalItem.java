@@ -42,12 +42,8 @@ public class NotaFiscalItem {
         return notaFiscal;
     }
 
-    public void setNotaFiscal(NotaFiscal notaFiscal2) {
-        this.notaFiscal = notaFiscal2;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
+    public void setNotaFiscal(NotaFiscal notaFiscal) {
+        this.notaFiscal = notaFiscal;
     }
 
     public Produto getProduto() {
@@ -62,7 +58,7 @@ public class NotaFiscalItem {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 

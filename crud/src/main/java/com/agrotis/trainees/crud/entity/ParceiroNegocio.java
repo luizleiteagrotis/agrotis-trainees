@@ -14,15 +14,14 @@ public class ParceiroNegocio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    
+
     @NotBlank(message = "Obrigatório preencher o nome do parceiro de negócio")
     private String nome;
-    
-    
+
     @NotBlank(message = "Obrigatório preencher a inscrição fiscal")
     @Column(name = "inscricao_fiscal")
     private String inscricaoFiscal;
-    
+
     private String endereco;
     private String telefone;
 
@@ -38,28 +37,28 @@ public class ParceiroNegocio {
         this.nome = nome;
     }
 
-	public String getInscricaoFiscal() {
-		return inscricaoFiscal;
-	}
+    public String getInscricaoFiscal() {
+        return inscricaoFiscal;
+    }
 
-	public void setInscricaoFiscal(String inscricaoFiscal) {
-		this.inscricaoFiscal = inscricaoFiscal;
-	}
+    public void setInscricaoFiscal(String inscricaoFiscal) {
+        this.inscricaoFiscal = inscricaoFiscal;
+    }
 
-	public String getEndereco() {
-		return endereco;
-	}
+    public String getEndereco() {
+        return endereco;
+    }
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
 
-	public String getTelefone() {
-		return telefone;
-	}
+    public String getTelefone() {
+        return telefone;
+    }
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-    
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
 }

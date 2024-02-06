@@ -88,7 +88,7 @@ public class NotaFiscal {
     }
 
     public void setDataNota(LocalDate dataNota) {
-        this.dataNota = (dataNota == null) ? dataNota : LocalDate.now();
+        this.dataNota = dataNota;
     }
 
     public List<NotaFiscalItem> getItensNota() {

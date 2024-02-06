@@ -251,23 +251,30 @@ public class CrudApplication implements CommandLineRunner {
             LOG.warn("Nota Fiscal não encontrado para o id {}.", notaFiscalItem2.getId());
         }
 
-        // produto.setNome("Milho");
-        // produto.setDescricao("Grão Plantado");
-        // produto.setParceiroNegocio(parceiroNegocio2);
-        // produto.setFabricante("Coamo");
-        // produto.setDataFabricacao(LocalDate.of(2023, 4, 12));
-        // produto.setDataValidade(LocalDate.of(2023, 5, 10));
-        // Produto produto3 = produtoService.salvar(produto);
-        // LOG.info("id inserido: {}", produto.getId());
-        //
-        // notaFiscalItem.setNotaFiscal(notaFiscal2);
-        // notaFiscalItem.setProduto(produto3);
-        // notaFiscalItem.setQuantidade(1000);
-        // notaFiscalItem.setPrecoUnitario(10.0);
-        // NotaFiscalItem notaFiscalItem3 =
-        // notaFiscalItemService.salvar(notaFiscalItem);
-        // LOG.info("id inserido: {}", notaFiscalItem3.getId());
-        // System.out.println(notaFiscalItem3.getId().toString());
+        produto.setNome("Milho");
+        produto.setDescricao("Grão Plantado");
+        produto.setParceiroNegocio(parceiroNegocio2);
+        produto.setFabricante("Coamo");
+        produto.setDataFabricacao(LocalDate.of(2023, 4, 12));
+        produto.setDataValidade(LocalDate.of(2023, 5, 10));
+        Produto produto3 = produtoService.salvar(produto);
+        LOG.info("id inserido: {}", produto.getId());
+
+        notaFiscalItem.setNotaFiscal(notaFiscal2);
+        notaFiscalItem.setProduto(produto3);
+        notaFiscalItem.setQuantidade(1000);
+        notaFiscalItem.setPrecoUnitario(10.0);
+        NotaFiscalItem notaFiscalItem3 = notaFiscalItemService.salvar(notaFiscalItem);
+        LOG.info("id inserido: {}", notaFiscalItem3.getId());
+        System.out.println(notaFiscalItem3.getId().toString());
+
+        notaFiscalService.adicionarItem(notaFiscal2, notaFiscalItem2);
+        notaFiscalService.adicionarItem(notaFiscal2, notaFiscalItem3);
+
+        NotaFiscal porIdNotaFiscal2 = notaFiscalService.buscarPorId(notaFiscal2.getId());
+        LOG.info("Busca por id. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {} Valor Total",
+                        porIdNotaFiscal2.getId(), porIdNotaFiscal2.getNotaFiscalTipo(), porIdNotaFiscal2.getParceiroNegocio(),
+                        porIdNotaFiscal2.getNumeroNota(), porIdNotaFiscal2.getDataNota(), porIdNotaFiscal2.getValorTotal());
 
     }
 
