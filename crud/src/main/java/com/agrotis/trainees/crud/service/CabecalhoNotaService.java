@@ -6,40 +6,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
 @Service
-public class NotaFiscalService {
+public class CabecalhoNotaService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaService.class);
 
 	private final NotaFiscalRepository repository;
 
-	public NotaFiscalService(NotaFiscalRepository repository) {
+	public CabecalhoNotaService(NotaFiscalRepository repository) {
 		this.repository = repository;
 	}
 
-	public NotaFiscal salvar(NotaFiscal entidade) {
+	public CabecalhoNota salvar(CabecalhoNota entidade) {
 		return repository.save(entidade);
 	}
 
-	public NotaFiscal buscarPorId(Integer id) {
+	public CabecalhoNota buscarPorId(Integer id) {
 		return repository.findById(id).orElseGet(() -> {
 			LOG.error("Nota não encontrada para id {}.", id);
 			return null;
 		});
 	}
 
-	public NotaFiscal atualizar(Integer id, NotaFiscal negocio) {
-		NotaFiscal byId = repository.findById(id).orElseGet(() -> {
+	public CabecalhoNota atualizar(Integer id, CabecalhoNota negocio) {
+		CabecalhoNota byId = repository.findById(id).orElseGet(() -> {
 			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
 			return null;
 		});
 		return repository.save(byId);
 	}
 
-	public List<NotaFiscal> listarTodos() {
+	public List<CabecalhoNota> listarTodos() {
 		return repository.findAll();
 	}
 

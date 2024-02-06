@@ -6,38 +6,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
 @Service
-public class NotaFiscalItemService {
+public class ItemNotaService {
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(NotaFiscalItemService.class);
+			.getLogger(ItemNotaService.class);
 	
 	private final NotaFiscalItemRepository repository;
 
-	public NotaFiscalItemService(NotaFiscalItemRepository repository) {
+	public ItemNotaService(NotaFiscalItemRepository repository) {
 		this.repository = repository;
 	}
 
-	public NotaFiscalItem salvar(NotaFiscalItem entidade) {
+	public ItemNota salvar(ItemNota entidade) {
 		return repository.save(entidade);
 	}
 	
-	public List<NotaFiscalItem> buscarTodos(){
+	public List<ItemNota> buscarTodos(){
 		return repository.findAll();
 	}
 	
-	public NotaFiscalItem buscarPorId(Integer id) {
+	public ItemNota buscarPorId(Integer id) {
 		return repository.findById(id).orElseGet(() -> {
 			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
 			return null;
 		});
 	}
 	
-	public NotaFiscalItem atualizar(Integer id, NotaFiscalItem negocio) {
-		NotaFiscalItem byId = repository.findById(id).orElseGet(() -> {
+	public ItemNota atualizar(Integer id, ItemNota notaFiscalItem) {
+		ItemNota byId = repository.findById(id).orElseGet(() -> {
 			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
 			return null;
 		});
@@ -48,7 +48,15 @@ public class NotaFiscalItemService {
 		repository.deleteById(id);
 		LOG.info("Deletado com sucesso");
 	}
-	
+
+    public void calcularValorTotal(ItemNota notaFiscalItem) {
+        Integer quantidade = notaFiscalItem.getQuantidade();
+        Double precoUnitario = notaFiscalItem.getPrecoUnitario();
+        if (quantidade != null && precoUnitario != null) {
+            Double valorTotal = quantidade * precoUnitario;
+            notaFiscalItem.setValorTotal(valorTotal);
+        }
+    }
 	
 	
 }
