@@ -24,7 +24,7 @@ public class ItemNota {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 	
 	@ManyToOne
 	@NotNull
@@ -49,7 +49,7 @@ public class ItemNota {
 	@JoinColumn(name = "cabecalho_id")
 	private CabecalhoNota cabecalhoNota;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

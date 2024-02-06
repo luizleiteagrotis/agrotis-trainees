@@ -14,7 +14,7 @@ public class ParceiroNegocio {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(name = "nome")
 	@NotBlank
@@ -41,7 +41,7 @@ public class ParceiroNegocio {
 		this.telefone = telefone;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

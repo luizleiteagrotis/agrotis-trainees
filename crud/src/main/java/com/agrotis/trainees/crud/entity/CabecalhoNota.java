@@ -26,7 +26,7 @@ public class CabecalhoNota {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 	
 	@NotNull
 	@Column(name = "numero")
@@ -51,7 +51,7 @@ public class CabecalhoNota {
 	@Column(name = "valor_total")
 	private BigDecimal valorTotal;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
