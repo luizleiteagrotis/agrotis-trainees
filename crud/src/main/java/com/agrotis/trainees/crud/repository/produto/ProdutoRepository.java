@@ -15,4 +15,9 @@ public class ProdutoRepository extends JpaRepositoryWrapper<
 	public ProdutoRepository(ProdutoJpaRepository repository) {
 		super(repository, nomeLogger(ProdutoRepository.class));
 	}
+	
+	public Integer getEstoque(Long idProduto) {
+		ProdutoJpaRepository repository = (ProdutoJpaRepository) REPOSITORY;
+		return repository.getEstoque(idProduto);
+	}
 }

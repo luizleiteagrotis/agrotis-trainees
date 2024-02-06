@@ -36,4 +36,10 @@ public class ProdutoService {
 	public void deletar(long idProduto) {
 		repository.deletar(idProduto);
 	}
+	
+	public Integer pegarEstoque(Long idProduto) {
+		Integer quantidade = repository.getEstoque(idProduto);;
+		if (quantidade == null) return 0;
+		return quantidade;
+	}
 }
