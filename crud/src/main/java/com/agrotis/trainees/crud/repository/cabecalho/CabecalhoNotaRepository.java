@@ -17,22 +17,6 @@ public class CabecalhoNotaRepository extends JpaRepositoryWrapper<
 		super(repository, nomeLogger(CabecalhoNotaRepository.class));
 	}
 	
-	@Override
-	public CabecalhoNota salvar(CabecalhoNota cabecalho) {
-		if (cabecalho.getId() == null && existeInstanciaCom(cabecalho.getTipo(), cabecalho.getNumero())) {
-			String mensagemErro = "Ja existe " 
-									+ NOME_ENTITY 
-									+ " com tipo " 
-									+ cabecalho.getTipo().getNome()
-									+ " e numero "
-									+ cabecalho.getNumero();
-			LOG.error("{} com tipo {} e numero {} nao foi salva", 
-					NOME_ENTITY, cabecalho.getTipo().getNome(), cabecalho.getNumero());
-			throw new CabecalhoNotaRepositoryException(mensagemErro);
-		}
-		return super.salvar(cabecalho);
-	}
-	
 	public boolean existeInstanciaCom(NotaFiscalTipo tipo, long numero) {
 		LOG.info("Tentando encontrar {} com tipo {} e numero {}", 
 				NOME_ENTITY, tipo.getNome(), numero);

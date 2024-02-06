@@ -5,8 +5,8 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepositoryException;
 import com.agrotis.trainees.crud.service.CabecalhoNotaService;
+import com.agrotis.trainees.crud.service.CabecalhoNotaServiceException;
 import com.agrotis.trainees.crud.service.ItemNotaService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -185,7 +185,7 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		try {
 			cabecalhoService.salvar(cabecalhoNota);
-		} catch (CabecalhoNotaRepositoryException e) {}
+		} catch (CabecalhoNotaServiceException e) {}
 		
 		
 		tipoNota = new NotaFiscalTipo();
@@ -194,7 +194,7 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setTipo(tipoNota);
 		try {
 			cabecalhoService.salvar(cabecalhoNota);
-		} catch (CabecalhoNotaRepositoryException e) {}
+		} catch (CabecalhoNotaServiceException e) {}
 		
 		
 		cabecalhos = cabecalhoService.buscarTodos();
