@@ -137,6 +137,7 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
+		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		cabecalhoService.salvar(cabecalhoNota);
 		
 		// READ
@@ -173,6 +174,7 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
+		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		cabecalhoService.salvar(cabecalhoNota);
 		
 		cabecalhoNota = new CabecalhoNota();
@@ -180,6 +182,7 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
+		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		try {
 			cabecalhoService.salvar(cabecalhoNota);
 		} catch (CabecalhoNotaRepositoryException e) {}
@@ -245,6 +248,7 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota.setParceiro(parceiro);
 		cabecalhoNota.setTipo(tipoNota);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
+		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		cabecalhoService.salvar(cabecalhoNota);
 		
 		Produto produto = new Produto();

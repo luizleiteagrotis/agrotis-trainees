@@ -16,15 +16,17 @@ import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 public class ItemNotaService {
 	
 	private ItemNotaRepository repository;
-	private final Logger LOGGER = LoggerFactory.getLogger(ItemNotaService.class);
+	private final Logger LOGGER;
 	
 	@Autowired
 	public ItemNotaService(ItemNotaRepository itemRepository) {
 		this.repository = itemRepository;
+		LOGGER = LoggerFactory.getLogger(ItemNotaService.class);
 	}
 	
 	public ItemNota salvar(ItemNota item) {
 		atualizarValorTotal(item);
+		atualizarValorTotal(item.getCabecalhoNota(), item.getValorTotal());
 		return repository.salvar(item);
 	}
 	
@@ -48,5 +50,15 @@ public class ItemNotaService {
 		item.setValorTotal(quantidade.multiply(precoUnitario));
 		LOGGER.info("Atualizado valor total de {} com id {}: {} x {} = {}", 
 				nomeClasse, item.getId(), quantidade, precoUnitario, item.getValorTotal());
+	}
+	
+	private void atualizarValorTotal(CabecalhoNota cabecalho, BigDecimal valorSomar) {
+		BigDecimal valorTotalResultado = cabecalho.getValorTotal().add(valorSomar);
+		String cabecalhoNome = cabecalho.getClass().getSimpleName();
+		LOGGER.info("Tentando somar {} a {} com valor total {}", 
+				valorSomar, cabecalhoNome, cabecalho.getValorTotal());
+		cabecalho.setValorTotal(cabecalho.getValorTotal().add(valorSomar));
+		LOGGER.info("Valor total de {} atualizada com sucesso. Valor total = {}",
+				cabecalhoNome, cabecalho.getValorTotal());
 	}
 }

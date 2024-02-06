@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
 
 @Service

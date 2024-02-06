@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
@@ -40,7 +44,13 @@ public class CabecalhoNota {
 	@PastOrPresent
 	@Column(name = "data_emissao")
 	private LocalDate dataEmissao;
-
+	
+	@NotNull
+	@DecimalMin(value = "00.00", inclusive = true)
+	@Digits(integer = 10, fraction = 2)
+	@Column(name = "valor_total")
+	private BigDecimal valorTotal;
+	
 	public long getId() {
 		return id;
 	}
@@ -75,5 +85,13 @@ public class CabecalhoNota {
 
 	public void setDataEmissao(LocalDate dataEmissao) {
 		this.dataEmissao = dataEmissao;
+	}
+
+	public BigDecimal getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 }
