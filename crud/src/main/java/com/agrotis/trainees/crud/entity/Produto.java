@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -29,12 +31,14 @@ public class Produto {
     private Date data_fabricacao;
 
     @NotNull(message = "Obrigatório preencher data de validade do produto")
+    @FutureOrPresent
     private Date data_validade;
 
     @ManyToOne
     @JoinColumn(name = "id_fabricante")
     private ParceiroNegocio fabricante;
 
+    @Min(value = 0)
     private int quantidade_estoque;
 
     public int getQuantidade_estoque() {
