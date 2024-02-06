@@ -1,5 +1,8 @@
 package com.agrotis.trainees.crud.entity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "nota_fiscal")
 public class NotaFiscal {
+
+    private static final Logger LOG = LoggerFactory.getLogger(NotaFiscal.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -41,7 +47,7 @@ public class NotaFiscal {
     @OneToMany(mappedBy = "notaFiscal")
     private List<NotaFiscalItem> itensNota;
 
-    private static Double valorTotal;
+    private Double valorTotal;
 
     public NotaFiscal() {
         super();
@@ -93,51 +99,12 @@ public class NotaFiscal {
         this.itensNota = itensNota;
     }
 
-    public static Double getValorTotal() {
+    public Double getValorTotal() {
         return valorTotal;
     }
 
     public void setValorTotal(Double valorTotal) {
-        if (itensNota != null) {
-            this.valorTotal = atualizarValorTotal();
-        } else {
-            this.valorTotal = 0.0;
-            System.out.println("Valor nulo");
-        }
+        this.valorTotal = valorTotal;
     }
 
-    public void adicionarItem(NotaFiscalItem item) {
-        item.setNotaFiscal(this);
-        this.itensNota.add(item);
-        atualizarValorTotal();
-    }
-
-    public void alterarItem(int indice, NotaFiscalItem novoItem) {
-        if (indice >= 0 && indice < itensNota.size()) {
-            this.itensNota.set(indice, novoItem);
-            atualizarValorTotal();
-        }
-    }
-
-    public void deletarItem(int indice) {
-        if (indice >= 0 && indice < itensNota.size()) {
-            this.itensNota.remove(indice);
-            atualizarValorTotal();
-        }
-    }
-
-    private Double atualizarValorTotal() {
-        if (itensNota != null) {
-            double novoValorTotal = 0.0;
-            for (NotaFiscalItem item : itensNota) {
-                novoValorTotal += item.getValorTotal();
-            }
-            this.valorTotal = novoValorTotal;
-            return novoValorTotal;
-        } else {
-            this.valorTotal = 0.0;
-            System.out.println("Valor nulo!");
-            return valorTotal;
-        }
-    }
 }

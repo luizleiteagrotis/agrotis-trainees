@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,9 +29,10 @@ public class NotaFiscalItem {
     private Integer quantidade;
 
     @NotNull(message = "Necessário inserir o preço unitário")
-    private Double precoUnitario;
+    private double precoUnitario;
 
-    private Double valorTotal;
+    @Column(name = "valor_total")
+    private double valorTotal;
 
     public Integer getId() {
         return id;
@@ -40,8 +42,8 @@ public class NotaFiscalItem {
         return notaFiscal;
     }
 
-    public void setNotaFiscal(NotaFiscal notaFiscal) {
-        this.notaFiscal = notaFiscal;
+    public void setNotaFiscal(NotaFiscal notaFiscal2) {
+        this.notaFiscal = notaFiscal2;
     }
 
     public void setQuantidade(Integer quantidade) {
@@ -64,25 +66,20 @@ public class NotaFiscalItem {
         this.quantidade = quantidade;
     }
 
-    public Double getPrecoUnitario() {
+    public double getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setPrecoUnitario(Double precoUnitario) {
+    public void setPrecoUnitario(double precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
-    public Double getValorTotal() {
+    public double getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal() {
-        if (notaFiscal != null) {
-            this.valorTotal = NotaFiscal.getValorTotal();
-        } else {
-            this.valorTotal = 0.0;
-            System.out.println("Valor nulo!");
-        }
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
 }

@@ -221,13 +221,9 @@ public class CrudApplication implements CommandLineRunner {
         porNumeroNotaFiscal.setNumeroNota(896178687);
         porNumeroNotaFiscal.setDataNota(LocalDate.of(2023, 10, 01));
         notaFiscalService.salvar(porNumeroNotaFiscal);
-        if (porNumeroNotaFiscal != null && porNumeroNotaFiscal.getParceiroNegocio() != null) {
-            LOG.info("Dados alterados com sucesso! Número da Nota: {} Endereço do Parceiro: {} Data da Nota: {}",
-                            porNumeroNotaFiscal.getNumeroNota(), porNumeroNotaFiscal.getParceiroNegocio().getEndereco(),
-                            porNumeroNotaFiscal.getDataNota());
-        } else {
-            LOG.warn("Não foi possível exibir os dados alterados. Algum valor é nulo.");
-        }
+        LOG.info("Dados alterados com sucesso!", porNumeroNotaFiscal.getNumeroNota(),
+                        porNumeroNotaFiscal.getParceiroNegocio().getEndereco(), porNumeroNotaFiscal.getNumeroNota(),
+                        porNumeroNotaFiscal.getDataNota());
 
         boolean notaFiscalDeletar = false; // o comando funcionou adequadamente,
                                            // por isso, deixei a variável como
@@ -241,29 +237,38 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscalItem.setProduto(produto2);
         notaFiscalItem.setQuantidade(2000);
         notaFiscalItem.setPrecoUnitario(20.0);
-        notaFiscalItem.setValorTotal();
         NotaFiscalItem notaFiscalItem2 = notaFiscalItemService.salvar(notaFiscalItem);
         LOG.info("id inserido: {}", notaFiscalItem2.getId());
+        System.out.println(notaFiscalItem2.getId().toString());
 
-        NotaFiscalItem porIdNotaFiscalItem = notaFiscalItemService.buscarPorId(notaFiscalItem2.getId());
-        if (porIdNotaFiscalItem != null) {
+        NotaFiscalItem porIdNotaFiscalItem2 = notaFiscalItemService.buscarPorId(notaFiscalItem2.getId());
+        if (porIdNotaFiscalItem2 != null) {
             LOG.info("Busca por id. id {} Nota Fiscal {} Produto {} Quantidade {} Preço Unitário {} Valor Total {}",
-                            porIdNotaFiscalItem.getId(), porIdNotaFiscalItem.getNotaFiscal(), porIdNotaFiscalItem.getProduto(),
-                            porIdNotaFiscalItem.getQuantidade(), porIdNotaFiscalItem.getPrecoUnitario(),
-                            porIdNotaFiscalItem.getValorTotal());
+                            porIdNotaFiscalItem2.getId(), porIdNotaFiscalItem2.getNotaFiscal(), porIdNotaFiscalItem2.getProduto(),
+                            porIdNotaFiscalItem2.getQuantidade(), porIdNotaFiscalItem2.getPrecoUnitario(),
+                            porIdNotaFiscalItem2.getValorTotal());
         } else {
-            LOG.warn("Nota Fiscal não encontrado para o id {}.", notaFiscal2.getId());
+            LOG.warn("Nota Fiscal não encontrado para o id {}.", notaFiscalItem2.getId());
         }
 
-        NotaFiscalItem porProdutoNotaFiscalItem = notaFiscalItemService.buscarPorId(notaFiscalItem2.getId());
-        if (porProdutoNotaFiscalItem != null) {
-            LOG.info("Busca por produto. id {} Nota Fiscal {} Produto {} Quantidade {} Preço Unitário {} Valor Total {}",
-                            porProdutoNotaFiscalItem.getId(), porProdutoNotaFiscalItem.getNotaFiscal(),
-                            porProdutoNotaFiscalItem.getProduto(), porProdutoNotaFiscalItem.getQuantidade(),
-                            porProdutoNotaFiscalItem.getPrecoUnitario(), porProdutoNotaFiscalItem.getValorTotal());
-        } else {
-            LOG.warn("Nota Fiscal não encontrado para o produto {}.", notaFiscal2.getId());
-        }
+        // produto.setNome("Milho");
+        // produto.setDescricao("Grão Plantado");
+        // produto.setParceiroNegocio(parceiroNegocio2);
+        // produto.setFabricante("Coamo");
+        // produto.setDataFabricacao(LocalDate.of(2023, 4, 12));
+        // produto.setDataValidade(LocalDate.of(2023, 5, 10));
+        // Produto produto3 = produtoService.salvar(produto);
+        // LOG.info("id inserido: {}", produto.getId());
+        //
+        // notaFiscalItem.setNotaFiscal(notaFiscal2);
+        // notaFiscalItem.setProduto(produto3);
+        // notaFiscalItem.setQuantidade(1000);
+        // notaFiscalItem.setPrecoUnitario(10.0);
+        // NotaFiscalItem notaFiscalItem3 =
+        // notaFiscalItemService.salvar(notaFiscalItem);
+        // LOG.info("id inserido: {}", notaFiscalItem3.getId());
+        // System.out.println(notaFiscalItem3.getId().toString());
+
     }
 
 }
