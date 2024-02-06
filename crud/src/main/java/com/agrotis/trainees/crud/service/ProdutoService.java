@@ -16,21 +16,21 @@ import com.agrotis.trainees.crud.repository.ProdutoRepository;
 public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
     private final ProdutoRepository repository;
-    private final ParceiroNegocioService parceiroNegocioService;
 
-    public ProdutoService(ProdutoRepository repository, ParceiroNegocioService parceiroNegocioService) {
+    public ProdutoService(ProdutoRepository repository) {
         super();
         this.repository = repository;
-        this.parceiroNegocioService = parceiroNegocioService;
+
     }
 
     public Produto salvar(Produto entidade) {
 
         if (Validador.validarParceiro(entidade.getFabricante().getId())) {
             return repository.save(entidade);
+        } else {
+            LOG.error("O fabricante não existe");
+            return null;
         }
-        LOG.error("O fabricante não existe");
-        return null;
     }
 
     public Produto buscarPorId(int id) {

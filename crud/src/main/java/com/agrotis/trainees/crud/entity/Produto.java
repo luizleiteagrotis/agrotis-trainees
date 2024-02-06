@@ -28,6 +28,7 @@ public class Produto {
     private Date dataFabricacao;
     @Column(name = "data_validade")
     private Date dataValidade;
+    private double estoque;
 
     @Deprecated
     public Produto() {
@@ -83,6 +84,14 @@ public class Produto {
 
     public void setFabricante(ParceiroNegocio parceiroNegocio) {
         this.fabricante = parceiroNegocio;
+    }
+
+    public double getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(double estoque) {
+        this.estoque = estoque;
     }
 
 }

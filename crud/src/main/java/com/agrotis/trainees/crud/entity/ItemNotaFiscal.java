@@ -38,6 +38,7 @@ public class ItemNotaFiscal {
     @NotNull
     private double valorTotal;
 
+    @Deprecated
     public ItemNotaFiscal() {
     };
 

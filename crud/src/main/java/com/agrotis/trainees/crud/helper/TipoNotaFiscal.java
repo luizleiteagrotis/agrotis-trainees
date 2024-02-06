@@ -1,7 +1,7 @@
 package com.agrotis.trainees.crud.helper;
 
 public enum TipoNotaFiscal {
-    ENTRADA("entrada"), SAIDA("Saida");
+    ENTRADA("entrada"), SAIDA("saida");
 
     private final String descricao;
 

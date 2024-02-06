@@ -18,19 +18,26 @@ public class ItemNotaFiscalService {
     private static final Logger LOG = LoggerFactory.getLogger(ItemNotaFiscalService.class);
     private final ItemNotaFiscalRepository repository;
     private final NotaFiscalService notaFiscalService;
+    private final ControleEstoque controleEstoque;
 
-    public ItemNotaFiscalService(ItemNotaFiscalRepository repository, NotaFiscalService notaFiscalService) {
+    public ItemNotaFiscalService(ItemNotaFiscalRepository repository, NotaFiscalService notaFiscalService,
+                    ControleEstoque controleEstoque) {
         super();
         this.repository = repository;
         this.notaFiscalService = notaFiscalService;
-
+        this.controleEstoque = controleEstoque;
     }
 
     public ItemNotaFiscal salvar(ItemNotaFiscal itemNotaFiscal) {
+        if (controleEstoque.controlarQuantidadeEstoque(itemNotaFiscal) < 0) {
+            return null;
+        }
         if (repository.findByNotaFiscalAndProduto(itemNotaFiscal.getNotaFiscal(), itemNotaFiscal.getProduto()).isEmpty()) {
             ItemNotaFiscal itemNota = repository.save(itemNotaFiscal);
+
             // verifica tabela da nota fiscal
             notaFiscalService.verificarValorTotal(itemNotaFiscal.getNotaFiscal().getId());
+
             LOG.info("Item cadastrado com sucesso");
             return itemNota;
         } else {
