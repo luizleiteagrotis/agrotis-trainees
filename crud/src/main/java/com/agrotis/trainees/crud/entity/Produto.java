@@ -1,4 +1,7 @@
 package com.agrotis.trainees.crud.entity;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -11,90 +14,84 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 @Entity
 @Table(name = "produto")
 public class Produto {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@NotBlank(message = "Preenchimento obrigatorio!")
-	private String descricao;
-	
-	@NotBlank(message = "Preenchimento obrigatorio!")
-	private String nome;
-	
-	@ManyToOne()
-	@JoinColumn(name = "fabricante_id") 
-	private ParceiroNegocio fabricante;
-	
-	@Column(name = "data_fabricacao")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataFabricacao;
-	
-	@Column(name = "data_validade")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataValidade;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	public Integer getId() {
-		return id;
-	}
+    @NotBlank(message = "Preenchimento obrigatorio!")
+    private String descricao;
 
-	public String getDescricao() {
-		return descricao;
-	}
+    @NotBlank(message = "Preenchimento obrigatorio!")
+    private String nome;
 
-	public String getNome() {
-		return nome;
-	}
+    @ManyToOne()
+    @JoinColumn(name = "fabricante_id")
+    private ParceiroNegocio fabricante;
 
-	public ParceiroNegocio getFabricante() {
-		return fabricante;
-	}
+    @Column(name = "data_fabricacao")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataFabricacao;
 
-	public LocalDate getDataFabricacao() {
-		return dataFabricacao;
-	}
+    @Column(name = "data_validade")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataValidade;
 
-	public LocalDate getDataValidade() {
-		return dataValidade;
-	}
+    private int estoque;
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setFabricante(ParceiroNegocio fabricante) {
-		this.fabricante = fabricante;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setDataFabricacao(LocalDate dataFabricacao) {
-		this.dataFabricacao = dataFabricacao;
-	}
+    public ParceiroNegocio getFabricante() {
+        return fabricante;
+    }
 
-	public void setDataValidade(LocalDate dataValidade) {
-		this.dataValidade = dataValidade;
-	}
-	
-	
+    public LocalDate getDataFabricacao() {
+        return dataFabricacao;
+    }
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    public LocalDate getDataValidade() {
+        return dataValidade;
+    }
 
-	
-	
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setFabricante(ParceiroNegocio fabricante) {
+        this.fabricante = fabricante;
+    }
+
+    public void setDataFabricacao(LocalDate dataFabricacao) {
+        this.dataFabricacao = dataFabricacao;
+    }
+
+    public void setDataValidade(LocalDate dataValidade) {
+        this.dataValidade = dataValidade;
+    }
+
+    public int getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(int estoque) {
+        this.estoque = estoque;
+    }
+
 }
