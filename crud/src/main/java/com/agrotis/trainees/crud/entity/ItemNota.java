@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name = "nota_fiscal_item")
@@ -28,9 +32,13 @@ public class ItemNota {
     private Produto produto;
 
     @Column(name = "quantidade")
+    @NotNull(message = "A quantidade não pode ser nula")
+    @Positive(message = "A quantidade deve ser um valor positivo")
+    @Min(value = 1, message = "A quantidade deve ser no mínimo 1")
     private Integer quantidade;
 
     @Column(name = "preco_unitario")
+    @DecimalMin(value = "0.01", message = "O preço unitário deve ser no mínimo 0.01")
     private Double precoUnitario;
 
     @Column(name = "valor_total")
