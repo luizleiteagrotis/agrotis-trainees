@@ -13,10 +13,4 @@ CREATE TABLE nota_fiscal_item (
    	add constraint FK_item_nota_fiscal
    	foreign key (nota_fiscal_id)
    	references nota_fiscal
-   	Hibernate:
    	
-   	alter table nota_fiscal_item
-   	add constraint FK_item_nota
-   	foreign key (produto_id)
-   	references produto
-   	Hibernate:

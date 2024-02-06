@@ -1,4 +1,5 @@
 package com.agrotis.trainees.crud.entity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,84 +13,69 @@ import javax.persistence.Table;
 @Table(name = "nota_fiscal_item")
 public class ItemNotaFiscal {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@Column(name = "preco_unitario")
-	private Double precoUnitario;
-	
-	@Column(name = "quantidade")
-	private Integer quantidade;
-	
-	@Column(name = "valor_total")
-	private Double valorTotal;
-	
-	@ManyToOne
-	@JoinColumn(name = "nota_fiscal_id")
-	private NotaFiscal notaFiscal;
-	
-	@ManyToOne
-	@JoinColumn(name = "produto_id")
-	private Produto produto;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	
-	
-	
-	public Integer getId() {
-		return id;
-	}
+    @Column(name = "preco_unitario")
+    private Double precoUnitario;
 
-	public Double getPrecoUnitario() {
-		return precoUnitario;
-	}
+    @Column(name = "quantidade")
+    private Integer quantidade;
 
-	public void setPrecoUnitario(Double precoUnitario) {
-		this.precoUnitario = precoUnitario;
-	}
+    @Column(name = "valor_total")
+    private Double valorTotal;
 
-	public Integer getQuantidade() {
-		return quantidade;
-	}
+    @ManyToOne
+    @JoinColumn(name = "nota_fiscal_id")
+    private NotaFiscal notaFiscal;
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
+    @ManyToOne
+    @JoinColumn(name = "produto_id")
+    private Produto produto;
 
-	public Double getValorTotal() {
-		return valorTotal;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setValorTotal(Double valorTotal) {
-		this.valorTotal = valorTotal;
-	}
+    public Double getPrecoUnitario() {
+        return precoUnitario;
+    }
 
-	public NotaFiscal getNotaFiscal() {
-		return notaFiscal;
-	}
+    public void setPrecoUnitario(Double precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
 
-	public void setNotaFiscal(NotaFiscal notaFiscal) {
-		this.notaFiscal = notaFiscal;
-	}
+    public Integer getQuantidade() {
+        return quantidade;
+    }
 
-	public Produto getProduto() {
-		return produto;
-	}
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
+    public Double getValorTotal() {
+        return valorTotal;
+    }
 
-	
-	
-	
-	
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
 
-	
-	
-	
-	
-	
-	
-	
+    public NotaFiscal getNotaFiscal() {
+        return notaFiscal;
+    }
+
+    public void setNotaFiscal(NotaFiscal notaFiscal) {
+        this.notaFiscal = notaFiscal;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
 }
