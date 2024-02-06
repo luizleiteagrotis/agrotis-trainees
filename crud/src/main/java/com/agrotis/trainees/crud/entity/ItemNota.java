@@ -67,7 +67,6 @@ public class ItemNota {
 
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
-		atualizarValorTotal();
 	}
 
 	public BigDecimal getPrecoUnitario() {
@@ -76,7 +75,10 @@ public class ItemNota {
 
 	public void setPrecoUnitario(BigDecimal precoUnitario) {
 		this.precoUnitario = precoUnitario;
-		atualizarValorTotal();
+	}
+	
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 	
 	public BigDecimal getValorTotal() {
@@ -89,10 +91,5 @@ public class ItemNota {
 
 	public void setCabecalhoNota(CabecalhoNota cabecalhoNota) {
 		this.cabecalhoNota = cabecalhoNota;
-	}
-	
-	private void atualizarValorTotal() {
-		if (precoUnitario == null) precoUnitario = new BigDecimal(1);
-		valorTotal = precoUnitario.multiply(new BigDecimal(quantidade));
 	}
 }

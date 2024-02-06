@@ -3,6 +3,8 @@ package com.agrotis.trainees.crud.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 public class ItemNotaService {
 	
 	private ItemNotaRepository repository;
+	private final Logger LOGGER = LoggerFactory.getLogger(ItemNotaService.class);
 	
 	@Autowired
 	public ItemNotaService(ItemNotaRepository itemRepository) {
@@ -21,6 +24,7 @@ public class ItemNotaService {
 	}
 	
 	public ItemNota salvar(ItemNota item) {
+		atualizarValorTotal(item);
 		return repository.salvar(item);
 	}
 	
@@ -38,5 +42,15 @@ public class ItemNotaService {
 	
 	public BigDecimal calcularValorTotal(CabecalhoNota cabecalho) {
 		return repository.calcularValorTotal(cabecalho);
+	}
+	
+	private void atualizarValorTotal(ItemNota item) {
+		String nomeClasse = item.getClass().getSimpleName();
+		BigDecimal quantidade = new BigDecimal(item.getQuantidade());
+		BigDecimal precoUnitario = item.getPrecoUnitario();
+		LOGGER.info("Atualizando valor total de {} com id {}", nomeClasse, item.getId());
+		item.setValorTotal(quantidade.multiply(precoUnitario));
+		LOGGER.info("Atualizado valor total de {} com id {}: {} x {} = {}", 
+				nomeClasse, item.getId(), quantidade, precoUnitario, item.getValorTotal());
 	}
 }
