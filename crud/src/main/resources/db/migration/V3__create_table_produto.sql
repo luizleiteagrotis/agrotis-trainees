@@ -5,5 +5,6 @@ CREATE TABLE produto (
 	fabricante_id BIGINT,
 	data_fabricacao DATE,
 	data_validade DATE,
+	estoque INT,
 	FOREIGN KEY (fabricante_id) REFERENCES parceiro_de_negocio(id)
 );

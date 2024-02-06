@@ -101,6 +101,7 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setFabricante(fabricante);
 		produto.setDataFabricacao(LocalDate.now());
 		produto.setDataValidade(LocalDate.now());
+		produto.setEstoque(0);
 		produto = produtoService.salvar(produto);
 		LOG.info("id inserido: {}", produto.getId());
 		
@@ -258,6 +259,7 @@ public class CrudApplication implements CommandLineRunner {
 		produto.setFabricante(parceiro);
 		produto.setDataFabricacao(LocalDate.now());
 		produto.setDataValidade(LocalDate.now());
+		produto.setEstoque(0);
 		produto = produtoService.salvar(produto);
 		
 		

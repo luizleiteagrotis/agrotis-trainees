@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -42,6 +43,10 @@ public class Produto {
 	@PastOrPresent
 	@Column(name = "data_validade")
 	private LocalDate dataValidade;
+	
+	@NotNull
+	@Min(0)
+	private Integer estoque;
 	
 	public Produto() {}
 
@@ -87,5 +92,13 @@ public class Produto {
 
 	public void setDataValidade(LocalDate dataValidade) {
 		this.dataValidade = dataValidade;
+	}
+
+	public Integer getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Integer estoque) {
+		this.estoque = estoque;
 	}
 }
