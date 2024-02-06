@@ -32,8 +32,8 @@ public class Produto {
     private Date data_validade;
 
     @ManyToOne
-    @JoinColumn(name = "id_parceiro_de_negocio")
-    private ParceiroNegocio parceiroNegocio;
+    @JoinColumn(name = "id_fabricante")
+    private ParceiroNegocio fabricante;
 
     private int quantidade_estoque;
 
@@ -73,18 +73,18 @@ public class Produto {
         this.data_validade = data_validade;
     }
 
-    public ParceiroNegocio getParceiroNegocio() {
-        return parceiroNegocio;
+    public ParceiroNegocio getFabricante() {
+        return fabricante;
     }
 
-    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-        this.parceiroNegocio = parceiroNegocio;
+    public void setFabricante(ParceiroNegocio fabricante) {
+        this.fabricante = fabricante;
     }
 
     @Override
     public String toString() {
         return "Produto [id=" + id + ", descricao=" + descricao + ", data_fabricacao=" + data_fabricacao + ", data_validade="
-                        + data_validade + ", parceiroNegocio=" + parceiroNegocio + "]";
+                        + data_validade + ", parceiroNegocio=" + fabricante + "]";
     }
 
 }

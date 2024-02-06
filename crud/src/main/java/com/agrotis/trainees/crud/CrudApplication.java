@@ -92,7 +92,7 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 2) {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-            parceiroNegocio.setNome("Empresa Arroz");
+            parceiroNegocio.setNome("Feijao");
             parceiroNegocio.setInscricaoFiscal("020924");
             parceiroNegocio.setEndereco("Sao Paulo, rua cerveja, 15");
             parceiroNegocio.setTelefone("11 9 5454 5454");
@@ -128,9 +128,9 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 3) {
             Produto produto = new Produto();
 
-            ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(157);
-            produto.setDescricao("Arroz");
-            produto.setParceiroNegocio(fabricante);
+            ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(272);
+            produto.setDescricao("Feijao");
+            produto.setFabricante(fabricante);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -145,7 +145,7 @@ public class CrudApplication implements CommandLineRunner {
             Produto produtoPorId = produtoService.buscarPorId(produto2.getId());
             LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {} quantidade em estoque {}",
                             produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(),
-                            produtoPorId.getParceiroNegocio(), produtoPorId.getQuantidade_estoque());
+                            produtoPorId.getFabricante(), produtoPorId.getQuantidade_estoque());
 
             // Produto produtoPorDescricao =
             // produtoService.buscarPorDescricao(produto2.getDescricao());

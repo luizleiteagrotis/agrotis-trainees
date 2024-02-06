@@ -1,6 +1,6 @@
 CREATE TABLE produto (
 	id INT NOT NULL,
-	id_parceiro_de_negocio INT NOT NULL,
+	id_fabricante INT NOT NULL,
 	descricao VARCHAR(255) NOT NULL,
 	data_fabricacao DATE NOT NULL,
 	data_validade DATE NOT NULL,
