@@ -35,6 +35,14 @@ public class NotaFiscalService {
         });
     }
 
+    public NotaFiscal atualizar(Integer id, NotaFiscal nota_fiscal) {
+        NotaFiscal byId = repository.findById(id).orElseGet(() -> {
+            LOG.info("Não foi possível buscar pelo id {}", id);
+            return null;
+        });
+        return repository.save(nota_fiscal);
+    }
+
     public static Logger getLog() {
         return LOG;
     }
