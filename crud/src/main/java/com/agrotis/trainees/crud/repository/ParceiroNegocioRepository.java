@@ -4,16 +4,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.ParceiroNegocios;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 import java.util.Optional;
 
 @Repository
-public interface ParceiroNegociosRepository extends JpaRepository<ParceiroNegocios, Integer> {
+public interface ParceiroNegocioRepository extends JpaRepository<ParceiroNegocio, Integer> {
 
-    Optional<ParceiroNegocios> findByNome(String nome);
+    Optional<ParceiroNegocio> findByNome(String nome);
     
-    Optional<ParceiroNegocios> findByInscricaoFiscal(String inscricaoFiscal);
+    Optional<ParceiroNegocio> findByInscricaoFiscal(String inscricaoFiscal);
     
     Boolean existsByInscricaoFiscal(String inscricaoFiscal);
 

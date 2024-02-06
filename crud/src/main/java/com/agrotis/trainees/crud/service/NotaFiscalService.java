@@ -11,40 +11,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalCampos;
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.repository.NotaFiscalCamposRepository;
+import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
 @Service
-public class NotaFiscalCamposService {
+public class NotaFiscalService {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 	
 	private static final Logger LOG = LoggerFactory
-			.getLogger(NotaFiscalCampos.class);
+			.getLogger(NotaFiscal.class);
 	
-	private final NotaFiscalCamposRepository repository;
+	private final NotaFiscalRepository repository;
 	
 		
-	public NotaFiscalCamposService(NotaFiscalCamposRepository repository) {
+	public NotaFiscalService(NotaFiscalRepository repository) {
 		super();
 		this.repository = repository;
 	}	
 	
 	
-	public NotaFiscalCampos salvar(NotaFiscalCampos entidade) {	
+	public NotaFiscal salvar(NotaFiscal entidade) {	
 			return repository.save(entidade);
 	}
 	
-	public NotaFiscalCampos buscarPorId(Integer id) {
+	public NotaFiscal buscarPorId(Integer id) {
 		return repository.findById(id).orElseGet(() -> {
 			LOG.error("Informações não encontradas para o id {}", id);
 			return null;
 		});
 	}
 	
-	public NotaFiscalCampos buscarPorTipoeNumero(NotaFiscalTipo tipo, Integer numero) {
+	public NotaFiscal buscarPorTipoeNumero(NotaFiscalTipo tipo, Integer numero) {
 		return repository.findByTipoAndNumero(tipo, numero).orElseGet(() -> {
 			LOG.error("Informações não encontradas para o id {} e numero de nota {}"
 					, tipo, numero);
@@ -57,10 +57,10 @@ public class NotaFiscalCamposService {
 		LOG.info("id: {} deletado com sucesso", id);
 	}
 	
-	public List<NotaFiscalCampos> listarTodos(){
+	public List<NotaFiscal> listarTodos(){
 		return repository.findAll();}
 	
-	public void gerarNumero(NotaFiscalCampos notaFiscalCampos) {
+	public void gerarNumero(NotaFiscal notaFiscalCampos) {
 		int tipo = notaFiscalCampos.getTipo().getId();
 		if(notaFiscalCampos.getTipo() != null ) {			
 			

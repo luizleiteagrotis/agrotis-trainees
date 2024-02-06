@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
@@ -20,10 +20,12 @@ public class NotaFiscalItemService {
     private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalItem.class);
 
     private final NotaFiscalItemRepository repository;
+    private final ProdutoService produtoService;
 
-    public NotaFiscalItemService(NotaFiscalItemRepository repository) {
+    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService) {
         super();
         this.repository = repository;
+        this.produtoService = produtoService;
     }
 
     public NotaFiscalItem salvar(NotaFiscalItem entidade) {
@@ -54,11 +56,23 @@ public class NotaFiscalItemService {
     }
 
     @Transactional
-    public Optional<Double> obterOValorTotalDaNota() {
+    public Double obterOValorTotalDaNota(Integer idNota) {
         try {
-            return repository.sumAllTotal();
+            return repository.sumAllTotal(idNota);
         } catch (NoResultException e) {
             return null;
+        }
+    }
+
+    public void alterarEstoque(NotaFiscal nota, NotaFiscalItem item) {
+        Produto produto = item.getProduto();
+
+        if (nota.getTipo().getId() == 1) {
+            produto.setEstoque(produto.getEstoque() + item.getQuantidade());
+            Produto produto2 = produtoService.salvar(produto);
+        } else {
+            produto.setEstoque(produto.getEstoque() - item.getQuantidade());
+            Produto produto2 = produtoService.salvar(produto);
         }
     }
 }

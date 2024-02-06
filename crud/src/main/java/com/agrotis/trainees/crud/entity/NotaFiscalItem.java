@@ -1,6 +1,5 @@
 package com.agrotis.trainees.crud.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,56 +12,67 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "nota_fiscal_item")
 public class NotaFiscalItem {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@OneToOne
-	@JoinColumn(name = "produto")
-	private Produto produto;
-	
-	private Integer quantidade;
-	
-	@Column(name = "preco_unitario")
-	private Double preco;
-	
-	@Column(name = "valor_total")
-	private Double total;
 
-	public Integer getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	public Produto getProduto() {
-		return produto;
-	}
+    @OneToOne
+    @JoinColumn(name = "id_produto")
+    private Produto produto;
 
-	public Integer getQuantidade() {
-		return quantidade;
-	}
+    private Integer quantidade;
 
-	public Double getPreco() {
-		return preco;
-	}
+    @Column(name = "preco_unitario")
+    private Double precoUnitario;
 
-	public Double getTotal() {
-		return total;
-	}
+    @Column(name = "valor_total")
+    private Double valorTotal;
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
+    @Column(name = "id_nota")
+    private Integer idNota;
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
+    public Integer getIdNota() {
+        return idNota;
+    }
 
-	public void setPreco(Double preco) {
-		this.preco = preco;
-	}
+    public void setIdNota(Integer idNota) {
+        this.idNota = idNota;
+    }
 
-	public void setTotal(Double total) {
-		this.total = total;
-	} 
+    public Integer getId() {
+        return id;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public Double getPrecoUnitario() {
+        return precoUnitario;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public void setPrecoUnitario(Double precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
 }
