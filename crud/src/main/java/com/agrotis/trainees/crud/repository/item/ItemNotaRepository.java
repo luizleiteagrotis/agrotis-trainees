@@ -18,12 +18,4 @@ public class ItemNotaRepository extends JpaRepositoryWrapper<
 	public ItemNotaRepository(ItemNotaJpaRepository repository) {
 		super(repository, nomeLogger(ItemNotaRepository.class));
 	}
-	
-	public BigDecimal calcularValorTotal(CabecalhoNota cabecalhoNota) {
-		ItemNotaJpaRepository repository = (ItemNotaJpaRepository) REPOSITORY;
-		LOG.info("Buscando valor total de {} com id {}", NOME_ENTITY, cabecalhoNota.getId());
-		BigDecimal valorTotal = repository.calcularValorTotal(cabecalhoNota);
-		LOG.info("Valor total de {} com id {}: {}", NOME_ENTITY, cabecalhoNota.getId(), valorTotal);
-		return valorTotal;
-	}
 }

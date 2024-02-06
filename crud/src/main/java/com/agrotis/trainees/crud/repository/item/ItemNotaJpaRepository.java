@@ -12,7 +12,4 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 @Repository
 public interface ItemNotaJpaRepository extends JpaRepository<ItemNota, Long>{
 	
-	@Query("SELECT SUM(i.quantidade * i.precoUnitario) FROM ItemNota i "
-			+ "WHERE i.cabecalhoNota = :cabecalhoNota")
-	BigDecimal calcularValorTotal(CabecalhoNota cabecalhoNota);
 }

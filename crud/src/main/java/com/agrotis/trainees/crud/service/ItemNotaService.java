@@ -40,10 +40,6 @@ public class ItemNotaService {
 		repository.deletar(id);
 	}
 	
-	public BigDecimal calcularValorTotal(CabecalhoNota cabecalho) {
-		return repository.calcularValorTotal(cabecalho);
-	}
-	
 	private void atualizarValorTotal(ItemNota item) {
 		String nomeClasse = item.getClass().getSimpleName();
 		BigDecimal quantidade = new BigDecimal(item.getQuantidade());

@@ -271,9 +271,6 @@ public class CrudApplication implements CommandLineRunner {
 		itemPorId.setPrecoUnitario(new BigDecimal("1.99"));
 		itemService.salvar(itemPorId);
 		
-		// TESTA VALOR TOTAL
-		BigDecimal valorTotal = itemService.calcularValorTotal(cabecalhoNota);
-		
 		//DELETE
 		itens.forEach((i) -> {
 			itemService.deletar(i.getId());
