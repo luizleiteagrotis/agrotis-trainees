@@ -10,48 +10,54 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "parceiro_negocio")
 public class ParceiroNegocio {
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @NotBlank(message = "O campo nome é obrigatório")
     private String nome;
-    
+
     @NotBlank(message = "O campo inscrição fiscal obrigatório")
     private String inscricaoFiscal;
-	
+
     private String endereco;
+
     private String telefone;
-    
-    
+
     public Integer getId() {
-		return id;
-	}
-    
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public String getInscricaoFiscal() {
-		return inscricaoFiscal;
-	}
-	public void setInscricaoFiscal(String inscricaoFiscal) {
-		this.inscricaoFiscal = inscricaoFiscal;
-	}
-	public String getEndereco() {
-		return endereco;
-	}
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-	public String getTelefone() {
-		return telefone;
-	}
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-    
-    
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getInscricaoFiscal() {
+        return inscricaoFiscal;
+    }
+
+    public void setInscricaoFiscal(String inscricaoFiscal) {
+        this.inscricaoFiscal = inscricaoFiscal;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
 }
