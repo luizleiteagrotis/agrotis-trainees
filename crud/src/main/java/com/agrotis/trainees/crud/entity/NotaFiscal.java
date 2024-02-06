@@ -1,13 +1,16 @@
 package com.agrotis.trainees.crud.entity;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -25,6 +28,9 @@ public class NotaFiscal {
     private ParceiroNegocio parceiroNegocio;
     private int numero;
     private Date data;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "notaFiscal")
+    private List<ItemNotaFiscal> itemNotaFiscal;
+    private Double valorTotal;
 
     public int getId() {
         return id;
@@ -60,6 +66,18 @@ public class NotaFiscal {
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public List<ItemNotaFiscal> getItemNotaFiscal() {
+        return itemNotaFiscal;
     }
 
 }

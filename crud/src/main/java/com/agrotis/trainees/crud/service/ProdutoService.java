@@ -75,7 +75,7 @@ public class ProdutoService {
         return null;
     }
 
-    public void excluir(int id) {
+    public void deletarPorId(int id) {
         if (this.buscarPorId(id) != null) {
             repository.deleteById(id);
             LOG.info("Deletado com sucesso");

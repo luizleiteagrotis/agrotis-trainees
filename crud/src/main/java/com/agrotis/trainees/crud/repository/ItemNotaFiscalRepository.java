@@ -20,4 +20,6 @@ public interface ItemNotaFiscalRepository extends JpaRepository<ItemNotaFiscal, 
     List<ItemNotaFiscal> findByPrecoUnitario(double precoUnitario);
 
     List<ItemNotaFiscal> findByValorTotal(double valorTotal);
+
+    List<ItemNotaFiscal> findByNotaFiscalAndProduto(NotaFiscal notaFiscal, Produto produto);
 }

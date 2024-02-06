@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.List;
 
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.helper.Validador;
@@ -25,8 +26,8 @@ public class NotaFiscalService {
 
     public NotaFiscal salvar(NotaFiscal notaFiscal) {
 
-        int id = notaFiscal.getParceiroNegocio().getId();
-        if (Validador.validarParceiro(id) && existe(notaFiscal) && existe(notaFiscal.getTipo())) {
+        if (Validador.validarParceiro(notaFiscal.getParceiroNegocio().getId()) && existe(notaFiscal)
+                        && existe(notaFiscal.getTipo())) {
             LOG.info("Salvo no banco");
             return repository.save(notaFiscal);
 
@@ -97,9 +98,9 @@ public class NotaFiscalService {
     public void deletarPorId(int id) {
         if (this.buscarPorId(id) != null) {
             repository.deleteById(id);
-            System.out.println("Deletedado com sucesso");
+            LOG.info("Deletedado com sucesso");
         } else {
-            System.out.println("Registro não encontrado");
+            LOG.error("Registro não encontrado");
         }
 
     }
@@ -112,4 +113,22 @@ public class NotaFiscalService {
         return tipoNota.equalsIgnoreCase("entrada") || tipoNota.equalsIgnoreCase("saida");
 
     }
+
+    /*
+     * busca o id da nota fiscal e todos os item vinculados a ele, fazendo o
+     * calculo do valor total daquela nota e salvando caso tenha alteração
+     */
+    public void verificarValorTotal(int idNotaFiscal) {
+        NotaFiscal notaPorId = buscarPorId(idNotaFiscal);
+        List<ItemNotaFiscal> itens = notaPorId.getItemNotaFiscal();
+        double valorTotal = 0;
+        for (ItemNotaFiscal item : itens) {
+
+            valorTotal += item.getValorTotal();
+        }
+        notaPorId.setValorTotal(valorTotal);
+        repository.save(notaPorId);
+
+    }
+
 }

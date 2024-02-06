@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 
 @Entity
 @Table(name = "item_nota_fiscal")
@@ -15,17 +18,24 @@ public class ItemNotaFiscal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull
     private int id;
     @ManyToOne
     @JoinColumn(name = "id_produto")
+    @NotNull
     private Produto produto;
+
     @ManyToOne
     @JoinColumn(name = "id_nota_fiscal")
+    @NotNull
     private NotaFiscal notaFiscal;
+    @NotNull
     private double quantidade;
     @Column(name = "preco_unitario")
+    @NotNull
     private double precoUnitario;
     @Column(name = "valor_total")
+    @NotNull
     private double valorTotal;
 
     public ItemNotaFiscal() {
@@ -37,7 +47,7 @@ public class ItemNotaFiscal {
         this.produto = produto;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
-        this.valorTotal = calcularValorTotal(quantidade, precoUnitario);
+        this.valorTotal = ItemNotaFiscalService.calcularValorTotal(this.quantidade, this.precoUnitario);
     }
 
     public int getId() {
@@ -80,15 +90,7 @@ public class ItemNotaFiscal {
         return valorTotal;
     }
 
-    private double setValorTotal(double valorTotal) {
-        return this.valorTotal = valorTotal;
+    public void setValorTotal() {
+        this.valorTotal = ItemNotaFiscalService.calcularValorTotal(this.quantidade, this.precoUnitario);
     }
-
-    public double calcularValorTotal(double quantidade, double precoUnitario) {
-        valorTotal = quantidade * precoUnitario;
-        setValorTotal(valorTotal);
-        return quantidade * precoUnitario;
-
-    }
-
 }

@@ -83,7 +83,7 @@ public class ParceiroNegocioService {
 
     }
 
-    public void deletar(Integer id) {
+    public void deletarPorId(Integer id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             LOG.info("Deletado com sucesso");

@@ -15,16 +15,29 @@ import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 @Service
 public class ItemNotaFiscalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ItemNotaFiscalService.class);
     private final ItemNotaFiscalRepository repository;
+    private final NotaFiscalService notaFiscalService;
 
-    public ItemNotaFiscalService(ItemNotaFiscalRepository repository) {
+    public ItemNotaFiscalService(ItemNotaFiscalRepository repository, NotaFiscalService notaFiscalService) {
         super();
         this.repository = repository;
+        this.notaFiscalService = notaFiscalService;
+
     }
 
     public ItemNotaFiscal salvar(ItemNotaFiscal itemNotaFiscal) {
-        return repository.save(itemNotaFiscal);
+        if (repository.findByNotaFiscalAndProduto(itemNotaFiscal.getNotaFiscal(), itemNotaFiscal.getProduto()).isEmpty()) {
+            ItemNotaFiscal itemNota = repository.save(itemNotaFiscal);
+            // verifica tabela da nota fiscal
+            notaFiscalService.verificarValorTotal(itemNotaFiscal.getNotaFiscal().getId());
+            LOG.info("Item cadastrado com sucesso");
+            return itemNota;
+        } else {
+            LOG.error("Não foi possivel cadastrar o item na nota fiscal");
+            return null;
+        }
+
     }
 
     public ItemNotaFiscal buscarPorId(int id) {
@@ -60,17 +73,15 @@ public class ItemNotaFiscalService {
 
     public ItemNotaFiscal atualizar(ItemNotaFiscal item, int id) {
         ItemNotaFiscal itemAtualizar = buscarPorId(id);
-        int idNotaFiscal = item.getNotaFiscal().getId();
-        int idProduto = item.getProduto().getId();
         if (itemAtualizar != null) {
-            if (item.getNotaFiscal() != null && Validador.validarNotaFiscal(idNotaFiscal)) {
+            if (item.getNotaFiscal() != null && Validador.validarNotaFiscal(item.getNotaFiscal().getId())) {
                 itemAtualizar.setNotaFiscal(item.getNotaFiscal());
             }
             if (item.getQuantidade() != 0 && item.getQuantidade() > 0) {
                 itemAtualizar.setQuantidade(item.getQuantidade());
             }
 
-            if (item.getProduto() != null && Validador.validarProduto(idProduto)) {
+            if (item.getProduto() != null && Validador.validarProduto(item.getProduto().getId())) {
                 itemAtualizar.setProduto(item.getProduto());
             }
 
@@ -78,11 +89,12 @@ public class ItemNotaFiscalService {
                 itemAtualizar.setPrecoUnitario(item.getPrecoUnitario());
             }
 
-            itemAtualizar.calcularValorTotal(itemAtualizar.getPrecoUnitario(), itemAtualizar.getQuantidade());
+            itemAtualizar.setValorTotal();
             LOG.info("Item Atualizado");
 
             repository.save(itemAtualizar);
 
+            notaFiscalService.verificarValorTotal(itemAtualizar.getNotaFiscal().getId());
             return itemAtualizar;
         } else {
             LOG.error("O item que deseja atualiza, não existe.");
@@ -92,8 +104,11 @@ public class ItemNotaFiscalService {
     }
 
     public void deletarPorId(int id) {
+
         if (buscarPorId(id) != null) {
+            ItemNotaFiscal itemNotaFiscal = buscarPorId(id);
             repository.deleteById(id);
+            notaFiscalService.verificarValorTotal(itemNotaFiscal.getNotaFiscal().getId());
             LOG.info("Deletado com sucesso");
         } else {
             LOG.info("Registro não encontrado");
@@ -101,13 +116,9 @@ public class ItemNotaFiscalService {
 
     }
 
-    public double calcularValorTotalNotaFiscal(NotaFiscal nota) {
-        List<ItemNotaFiscal> itens = buscarPorNotaFiscal(nota);
-        double ValorTotalNota = 0;
-        for (ItemNotaFiscal itemNotaFiscal : itens) {
-            ValorTotalNota += itemNotaFiscal.getValorTotal();
-        }
-        return ValorTotalNota;
+    public static double calcularValorTotal(double quantidade, double precoUnitario) {
+        return quantidade * precoUnitario;
+
     }
 
 }
