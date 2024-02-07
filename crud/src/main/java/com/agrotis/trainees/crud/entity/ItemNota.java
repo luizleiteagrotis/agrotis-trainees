@@ -27,24 +27,24 @@ public class ItemNota {
 	private Long id;
 	
 	@ManyToOne
-	@NotNull
+	@NotNull(message = "Atributo produto obrigatorio")
 	private Produto produto;
 	
-	@Min(1)
+	@Min(value = 1, message = "Atributo quantidade deve ser maior do que 0")
 	@Column(name = "quantidade")
 	private int quantidade;
 	
-	@DecimalMin(value = "00.01", inclusive = true)
-	@Digits(integer = 10, fraction = 2)
+	@DecimalMin(value = "00.01", inclusive = true, message = "Atributo preco unitario deve ser maior do que 0")
+	@Digits(integer = 10, fraction = 2, message = "Atributo preco unitario deve ter 10 casas inteiras e 2 casas decimais")
 	@Column(name = "preco_unitario")
 	private BigDecimal precoUnitario;
 	
-	@DecimalMin(value = "00.01", inclusive = true)
-	@Digits(integer = 10, fraction = 2)
+	@DecimalMin(value = "00.01", inclusive = true, message = "Atributo valor total deve ser maior do que 0")
+	@Digits(integer = 10, fraction = 2, message = "Atributo valor total deve ter 10 casas inteiras e 2 casas decimais")
 	@Column(name = "valor_total")
 	private BigDecimal valorTotal;
 	
-	@NotNull
+	@NotNull(message = "Atributo cabecalho nota obrigatorio")
 	@ManyToOne
 	@JoinColumn(name = "cabecalho_id")
 	private CabecalhoNota cabecalhoNota;
