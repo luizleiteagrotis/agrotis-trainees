@@ -28,26 +28,26 @@ public class CabecalhoNota {
 	@Column(name = "id")
 	private Long id;
 	
-	@NotNull
+	@NotNull(message = "Atributo numero obrigatorio")
 	@Column(name = "numero")
 	private Long numero;
 	
-	@NotNull
+	@NotNull(message = "Atributo parceiro obrigatorio")
 	@ManyToOne
 	private ParceiroNegocio parceiro;
 	
-	@NotNull
+	@NotNull(message = "Atributo tipo obrigatorio")
 	@ManyToOne
 	@JoinColumn(name = "tipo_nota_id")
 	private NotaFiscalTipo tipo;
 	
-	@PastOrPresent
+	@PastOrPresent(message = "Atributo data emissao nao pode ser futura")
 	@Column(name = "data_emissao")
 	private LocalDate dataEmissao;
 	
-	@NotNull
-	@DecimalMin(value = "00.00", inclusive = true)
-	@Digits(integer = 10, fraction = 2)
+	@NotNull(message = "Atributo valor total obrigatorio")
+	@DecimalMin(value = "00.00", inclusive = true, message = "Atributo valor total deve ser no minimo 0")
+	@Digits(integer = 10, fraction = 2, message = "Atributo valor total deve ter 10 casas inteiras e 2 casas decimais")
 	@Column(name = "valor_total")
 	private BigDecimal valorTotal;
 	
