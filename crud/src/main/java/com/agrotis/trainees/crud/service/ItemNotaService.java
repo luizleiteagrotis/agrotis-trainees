@@ -65,7 +65,7 @@ public class ItemNotaService {
     public void atualizarEstoque(ItemNota itemNota) {
         Produto produto = itemNota.getProduto();
         Integer quantidade = itemNota.getQuantidade();
-        TipoNota notaFiscalTipo = itemNota.getNotaFiscal().getNotaFiscalTipo();
+        TipoNota notaFiscalTipo = itemNota.getCabecalhoNota().getNotaFiscalTipo();
         Integer quantidadeProduto = itemNota.getProduto().getQuantidadeEstoque();
 
         if (notaFiscalTipo == TipoNota.ENTRADA) {

@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Entity
-@Table(name = "nota_fiscal_item")
+@Table(name = "item_nota")
 public class ItemNota {
 
     @Id
@@ -25,7 +25,7 @@ public class ItemNota {
 
     @ManyToOne
     @JoinColumn(name = "nota_fiscal_id")
-    private CabecalhoNota notaFiscal;
+    private CabecalhoNota cabecalhoNota;
 
     @ManyToOne
     @JoinColumn(name = "produto_id")
@@ -44,12 +44,14 @@ public class ItemNota {
     @Column(name = "valor_total")
     private Double valorTotal;
 
-    public CabecalhoNota getNotaFiscal() {
-        return notaFiscal;
+    
+
+    public CabecalhoNota getCabecalhoNota() {
+        return cabecalhoNota;
     }
 
-    public void setNotaFiscal(CabecalhoNota notaFiscal) {
-        this.notaFiscal = notaFiscal;
+    public void setCabecalhoNota(CabecalhoNota cabecalhoNota) {
+        this.cabecalhoNota = cabecalhoNota;
     }
 
     public Produto getProduto() {

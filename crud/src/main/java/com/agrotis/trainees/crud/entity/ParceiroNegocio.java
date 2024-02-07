@@ -14,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "parceiro_de_negocio")
+@Table(name = "parceiro_negocio")
 public class ParceiroNegocio {
     
     @Id

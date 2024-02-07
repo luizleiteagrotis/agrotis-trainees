@@ -23,7 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 
 @Entity
-@Table(name = "nota_fiscal")
+@Table(name = "cabecalho_nota")
 public class CabecalhoNota {
 
     public CabecalhoNota() {
@@ -47,7 +47,7 @@ public class CabecalhoNota {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 
-    @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cabecalhoNota", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemNota> itens = new ArrayList<>();
 
     public TipoNota getNotaFiscalTipo() {
