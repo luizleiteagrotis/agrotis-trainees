@@ -276,6 +276,13 @@ public class CrudApplication implements CommandLineRunner {
                         porIdNotaFiscal2.getId(), porIdNotaFiscal2.getNotaFiscalTipo(), porIdNotaFiscal2.getParceiroNegocio(),
                         porIdNotaFiscal2.getNumeroNota(), porIdNotaFiscal2.getDataNota(), porIdNotaFiscal2.getValorTotal());
 
+        boolean notaFiscalItemDeletar = false; // o comando funcionou
+                                               // adequadamente, por isso deixei
+                                               // false
+        if (notaFiscalItemDeletar == true) {
+            notaFiscalItemService.deletarPorId(notaFiscalItem3.getId());
+        }
+
     }
 
 }
