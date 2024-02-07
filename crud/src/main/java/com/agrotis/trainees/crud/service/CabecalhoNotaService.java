@@ -8,44 +8,48 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 
 @Service
 public class CabecalhoNotaService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaService.class);
 
-	private final NotaFiscalRepository repository;
+    private final NotaFiscalRepository repository;
 
-	public CabecalhoNotaService(NotaFiscalRepository repository) {
-		this.repository = repository;
-	}
+    public CabecalhoNotaService(NotaFiscalRepository repository) {
+        this.repository = repository;
+    }
 
-	public CabecalhoNota salvar(CabecalhoNota entidade) {
-		return repository.save(entidade);
-	}
+    public CabecalhoNota salvar(CabecalhoNota entidade) {
+        return repository.save(entidade);
+    }
 
-	public CabecalhoNota buscarPorId(Integer id) {
-		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Nota não encontrada para id {}.", id);
-			return null;
-		});
-	}
+    public CabecalhoNota buscarPorId(Integer id) {
+        return repository.findById(id)
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
+    }
 
-	public CabecalhoNota atualizar(Integer id, CabecalhoNota negocio) {
-		CabecalhoNota byId = repository.findById(id).orElseGet(() -> {
-			LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
-			return null;
-		});
-		return repository.save(byId);
-	}
+    public CabecalhoNota atualizar(Integer id, CabecalhoNota cabecalhoNota) {
+        return repository.findById(id).map(cabecalhoNotaExistente -> {
+            cabecalhoNotaExistente.setData(cabecalhoNota.getData());
+            cabecalhoNotaExistente.setNotaFiscalTipo(cabecalhoNota.getNotaFiscalTipo());
+            cabecalhoNotaExistente.setNumeroDaNota(cabecalhoNota.getNumeroDaNota());
+            cabecalhoNotaExistente.setParceiroNegocio(cabecalhoNota.getParceiroNegocio());
+            return repository.save(cabecalhoNotaExistente);
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
+    }
 
-	public List<CabecalhoNota> listarTodos() {
-		return repository.findAll();
-	}
+    public List<CabecalhoNota> listarTodos() {
+        return repository.findAll();
+    }
 
-	public void deletarPorId(Integer id) {
-		repository.deleteById(id);
-		LOG.info("Deletado com sucesso");
-	}
+    public void deletarPorId(Integer id) {
+        repository.findById(id).map(entidade -> {
+            repository.deleteById(id);
+            LOG.info("Deletado com sucesso");
+            return entidade;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
+    }
 
 }
