@@ -18,8 +18,8 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.DataValidadeInvalidaException;
 import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
-import com.agrotis.trainees.crud.exception.dataValidadeInvalidaException;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -93,24 +93,36 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 2) {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-            parceiroNegocio.setNome("Criador de Grão");
+            parceiroNegocio.setNome("Criador de Gado");
+
             parceiroNegocio.setInscricaoFiscal("020924");
             parceiroNegocio.setEndereco("Sao Paulo, rua Grãos, 15");
             parceiroNegocio.setTelefone("11 9 5454 5454");
 
-            ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
-            LOG.info("id inserido: {}", parceiroNegocio2.getId());
+            try {
+                ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
+                LOG.info("id inserido: {}", parceiroNegocio2.getId());
+            } catch (Exception e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
 
-            ParceiroNegocio parceiroPorId = parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
-            LOG.info("Busca por id. Nome {} Inscricao Fiscal {} Endereco {} Telefone {} id {}", parceiroPorId.getNome(),
-                            parceiroPorId.getInscricaoFiscal(), parceiroPorId.getEndereco(), parceiroPorId.getTelefone(),
-                            parceiroPorId.getId());
-
-            ParceiroNegocio parceiroPorNome = parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
-            LOG.info("Busca por nome. Nome {} id {}", parceiroPorNome.getNome(), parceiroPorNome.getId());
-
-            List<ParceiroNegocio> todosParceiros = parceiroNegocioService.listarTodos();
-            LOG.info("Salvos no total de {} tipos de parceiros", todosParceiros.size());
+            // ParceiroNegocio parceiroPorId =
+            // parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
+            // LOG.info("Busca por id. Nome {} Inscricao Fiscal {} Endereco {}
+            // Telefone {} id {}", parceiroPorId.getNome(),
+            // parceiroPorId.getInscricaoFiscal(), parceiroPorId.getEndereco(),
+            // parceiroPorId.getTelefone(),
+            // parceiroPorId.getId());
+            //
+            // ParceiroNegocio parceiroPorNome =
+            // parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
+            // LOG.info("Busca por nome. Nome {} id {}",
+            // parceiroPorNome.getNome(), parceiroPorNome.getId());
+            //
+            // List<ParceiroNegocio> todosParceiros =
+            // parceiroNegocioService.listarTodos();
+            // LOG.info("Salvos no total de {} tipos de parceiros",
+            // todosParceiros.size());
 
             // ParceiroNegocio parceiroPorNome2 =
             // parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
@@ -143,7 +155,7 @@ public class CrudApplication implements CommandLineRunner {
 
             try {
                 Produto produto2 = produtoService.salvar(produto);
-            } catch (dataValidadeInvalidaException e) {
+            } catch (DataValidadeInvalidaException e) {
                 System.out.println("Tratamento de exceção: " + e.getMessage());
             }
 

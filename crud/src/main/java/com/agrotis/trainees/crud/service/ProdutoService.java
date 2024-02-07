@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.exception.dataValidadeInvalidaException;
+import com.agrotis.trainees.crud.exception.DataValidadeInvalidaException;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Service
@@ -24,7 +24,7 @@ public class ProdutoService {
 
     public Produto salvar(Produto entidade) {
         if (!verificarValidade(entidade)) {
-            throw new dataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
+            throw new DataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
         }
         return repository.save(entidade);
     }
