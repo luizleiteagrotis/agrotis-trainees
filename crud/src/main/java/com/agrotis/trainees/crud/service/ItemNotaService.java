@@ -52,21 +52,21 @@ public class ItemNotaService {
 	}
 	
 	public void deletar(ItemNota item) {
-		subtrairValorTotalCabecalho(item);
-		subtrairEstoqueProduto(item);
+		retirarTotalCabecalho(item);
+		retirarEstoqueProduto(item);
 		repository.deletar(item.getId());
 	}
 	
 	private ItemNota criar(ItemNota item) {
 		calcularValorTotal(item);
-		adicionarValorTotalCabecalho(item);
+		adicionarTotalCabecalho(item);
 		adicionarEstoqueProduto(item);
 		return repository.salvar(item);
 	}
 	
 	private ItemNota atualizar(ItemNota item) {
 		calcularValorTotal(item);
-		atualizarValorTotalCabecalho(item);
+		atualizarTotalCabecalho(item);
 		atualizarEstoqueProduto(item);
 		return repository.salvar(item);
 	}
@@ -81,111 +81,169 @@ public class ItemNotaService {
 				nomeClasseItem, item.getId(), quantidade, precoUnitario, item.getValorTotal());
 	}
 	
-	// TODO: REFATORAR TODOS OS METODOS ABAIXO
-	
-	private void adicionarValorTotalCabecalho(ItemNota item) {
+	private void adicionarTotalCabecalho(ItemNota item) {
+		BigDecimal comNovoTotal = calcularAdicaoTotal(item); 
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
-		BigDecimal valorTotalItem = item.getValorTotal();
-		BigDecimal valorTotalCabecalho = cabecalho.getValorTotal();
-		String nomeClasseCabecalho = cabecalho.getClass().getSimpleName();
+		salvar(cabecalho, comNovoTotal);
+		emitirLogTotalAtualizado(cabecalho);
+	}
+	
+	private BigDecimal calcularAdicaoTotal(ItemNota item) {
+		CabecalhoNota cabecalho = item.getCabecalhoNota();
+		BigDecimal totalItem = item.getValorTotal();
+		BigDecimal totalCabecalho = cabecalho.getValorTotal();
+		String nomeCabecalho = cabecalho.getClass().getSimpleName();
+		emitirLogSomaValor(totalItem, totalCabecalho, nomeCabecalho);
+		return totalCabecalho.add(totalItem); 
+	}
+	
+	private void atualizarTotalCabecalho(ItemNota item) { 
+		BigDecimal comNovoTotal = calcularAtualizacaoTotal(item);
+		CabecalhoNota cabecalho = item.getCabecalhoNota();
+		salvar(cabecalho, comNovoTotal);
+		emitirLogTotalAtualizado(cabecalho);
+	}
+	
+	private BigDecimal calcularAtualizacaoTotal(ItemNota item) {
+		BigDecimal antigoTotalItem = repository.getValorTotal(item.getId());
+		BigDecimal novoTotalItem = item.getValorTotal();
+		BigDecimal diferencaItem = antigoTotalItem.subtract(novoTotalItem);
+		CabecalhoNota cabecalho = item.getCabecalhoNota();
+		BigDecimal totalCabecalho = cabecalho.getValorTotal();
+		String nomeCabecalho = cabecalho.getClass().getSimpleName();
+		emitirLogSubtracaoValor(diferencaItem, totalCabecalho, nomeCabecalho); 
+		return totalCabecalho.subtract(diferencaItem);
+	}
+	
+	private void retirarTotalCabecalho(ItemNota item) {
+		BigDecimal comNovoTotal = calcularRetiradaTotal(item);
+		CabecalhoNota cabecalho = item.getCabecalhoNota();
+		salvar(cabecalho, comNovoTotal);
+		emitirLogTotalAtualizado(cabecalho);
+	}
+	
+	private BigDecimal calcularRetiradaTotal(ItemNota item) {
+		CabecalhoNota cabecalho = item.getCabecalhoNota();
+		BigDecimal totalItem = item.getValorTotal();
+		BigDecimal totalCabecalho = cabecalho.getValorTotal();
+		String nomeCabecalho = cabecalho.getClass().getSimpleName();
+		emitirLogSubtracaoValor(totalItem, totalCabecalho, nomeCabecalho);
+		return totalCabecalho.subtract(totalItem);
+	}
+	
+	private void emitirLogSomaValor(BigDecimal valorInserir, BigDecimal valorDestinatario, String nomeDestinatario) {
 		LOGGER.info("Somando {} a {} que possui valor total {}", 
-				valorTotalItem, nomeClasseCabecalho, valorTotalCabecalho);
-		cabecalho.setValorTotal(valorTotalCabecalho.add(valorTotalItem));
-		cabecalhoService.salvar(cabecalho);
-		LOGGER.info("Atualizado valor total de {} com sucesso. ValorTotal = {}",
-				nomeClasseCabecalho, cabecalho.getValorTotal());
+				valorInserir, nomeDestinatario, valorDestinatario);
 	}
 	
-	private void atualizarValorTotalCabecalho(ItemNota item) {
-		CabecalhoNota cabecalho = item.getCabecalhoNota();
-		BigDecimal antigoValorTotalItem = repository.getValorTotal(item.getId());
-		BigDecimal novoValorTotalItem = item.getValorTotal();
-		BigDecimal diferencaItem = antigoValorTotalItem.subtract(novoValorTotalItem);
-		BigDecimal valorTotalCabecalho = cabecalho.getValorTotal();
-		String nomeClasseCabecalho = cabecalho.getClass().getSimpleName();
+	private void emitirLogSubtracaoValor(BigDecimal valorSubtrair, BigDecimal valorDestinatario, String nomeDestinatario) {
 		LOGGER.info("Subtraindo {} a {} que possui valor total {}", 
-				diferencaItem, nomeClasseCabecalho, valorTotalCabecalho);
-		cabecalho.setValorTotal(valorTotalCabecalho.subtract(diferencaItem));
-		cabecalhoService.salvar(cabecalho);
-		LOGGER.info("Atualizado valor total de {} com sucesso. ValorTotal = {}",
-				nomeClasseCabecalho, cabecalho.getValorTotal());
+				valorSubtrair, nomeDestinatario, valorDestinatario);
 	}
 	
-	private void subtrairValorTotalCabecalho(ItemNota item) {
-		CabecalhoNota cabecalho = item.getCabecalhoNota();
-		BigDecimal valorTotalItem = item.getValorTotal();
-		BigDecimal valorTotalCabecalho = cabecalho.getValorTotal();
-		String nomeClasseCabecalho = cabecalho.getClass().getSimpleName();
-		LOGGER.info("Subtraindo {} a {} que possui valor total {}", 
-				valorTotalItem, nomeClasseCabecalho, valorTotalCabecalho);
-		cabecalho.setValorTotal(valorTotalCabecalho.subtract(valorTotalItem));
-		cabecalhoService.salvar(cabecalho);
+	private void emitirLogTotalAtualizado(CabecalhoNota cabecalho) {
+		String nomeCabecalho = cabecalho.getClass().getSimpleName();
+		BigDecimal valorTotal = cabecalho.getValorTotal();
 		LOGGER.info("Atualizado valor total de {} com sucesso. ValorTotal = {}",
-				nomeClasseCabecalho, cabecalho.getValorTotal());
+				nomeCabecalho, valorTotal);
 	}
 	
-	private void subtrairEstoqueProduto(ItemNota item) {
-		Integer quantidadeItem = item.getQuantidade();
-		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
+	private void salvar(CabecalhoNota cabecalho, BigDecimal comNovoTotal) {
+		cabecalho.setValorTotal(comNovoTotal);
+		cabecalhoService.salvar(cabecalho);;
+	}
+	
+	private void retirarEstoqueProduto(ItemNota item) {
+		Integer comEstoque = calcularRetiradaEstoque(item);
 		Produto produto = item.getProduto();
-		Integer estoqueResultante;
+		salvar(produto, comEstoque);
+		emitirLogEstoqueAtualizado(produto);
+	}
+	
+	private Integer calcularRetiradaEstoque(ItemNota item) {
+		Integer quantidadeItem = item.getQuantidade();
+		Produto produto = item.getProduto();
+		Integer estoque;
+		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
 		String nomeClasseProduto = produto.getClass().getSimpleName();
 		if (tipoNota.equalsIgnoreCase("entrada")) {
-			LOGGER.info("Subtraindo {} a {} que possui em estoque {}", 
-					quantidadeItem, nomeClasseProduto, produto.getEstoque());
-			estoqueResultante = produto.getEstoque() - quantidadeItem;
+			emitirLogSubtracaoEstoque(quantidadeItem, produto.getEstoque(), nomeClasseProduto); 
+			estoque = produto.getEstoque() - quantidadeItem;
 		} else {
-			LOGGER.info("Somando {} a {} que possui em estoque {}", 
-					quantidadeItem, nomeClasseProduto, produto.getEstoque());
-			estoqueResultante = produto.getEstoque() + quantidadeItem;
+			emitirLogSomaEstoque(quantidadeItem, produto.getEstoque(), nomeClasseProduto);
+			estoque = produto.getEstoque() + quantidadeItem;
 		}
-		produto.setEstoque(estoqueResultante);
-		produtoService.salvar(produto);
-		LOGGER.info("Atualizado estoque de {} com sucesso. Estoque = {}", 
-				nomeClasseProduto, produto.getEstoque());
+		return estoque;
 	}
 	
 	private void adicionarEstoqueProduto(ItemNota item) {
+		Integer comEstoque = calcularAdicaoEstoque(item);
+		Produto produto = item.getProduto();
+		salvar(produto, comEstoque);
+		emitirLogEstoqueAtualizado(produto);
+	}
+	
+	private Integer calcularAdicaoEstoque(ItemNota item) {
 		Integer quantidadeItem = item.getQuantidade();
 		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
 		Produto produto = item.getProduto();
 		String nomeClasseProduto = produto.getClass().getSimpleName();
-		Integer estoqueResultante;
+		Integer estoqueAntigo = produto.getEstoque();
+		Integer estoqueNovo;
 		if (tipoNota.equalsIgnoreCase("entrada")) {
-			LOGGER.info("Somando {} a {} que possui em estoque {}", 
-					quantidadeItem, nomeClasseProduto, produto.getEstoque());
-			estoqueResultante = produto.getEstoque() + quantidadeItem;
+			emitirLogSomaEstoque(quantidadeItem, estoqueAntigo, nomeClasseProduto);
+			estoqueNovo = produto.getEstoque() + quantidadeItem;
 		} else {
-			LOGGER.info("Subtraindo {} a {} que possui em estoque {}", 
-					quantidadeItem, nomeClasseProduto, produto.getEstoque());
-			estoqueResultante = produto.getEstoque() - quantidadeItem;
+			emitirLogSubtracaoEstoque(quantidadeItem, estoqueAntigo, nomeClasseProduto);
+			estoqueNovo = produto.getEstoque() - quantidadeItem;
 		}
-		produto.setEstoque(estoqueResultante);
-		produtoService.salvar(produto);
-		LOGGER.info("Atualizado estoque de {} com sucesso. Estoque = {}", 
-				nomeClasseProduto, produto.getEstoque());
+		return estoqueNovo;
 	}
 	
 	private void atualizarEstoqueProduto(ItemNota item) {
+		Integer comEstoque = calcularAtualizacaoEstoque(item);
+		Produto produto = item.getProduto();
+		salvar(produto, comEstoque);
+		emitirLogEstoqueAtualizado(produto);
+	}
+	
+	private Integer calcularAtualizacaoEstoque(ItemNota item) {
 		Integer quantidadeNova = item.getQuantidade();
-		Integer quantidadeAntiga = produtoService.pegarEstoque(item.getId());
+		Integer quantidadeAntiga = repository.getQuantidade(item.getId());
 		Integer diferencaQuantidade = quantidadeNova - quantidadeAntiga;
 		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
 		Produto produto = item.getProduto();
 		String nomeClasseProduto = produto.getClass().getSimpleName();
-		Integer estoqueResultante;
+		Integer antigoEstoque = produto.getEstoque();
+		Integer novoEstoque;
 		if (tipoNota.equalsIgnoreCase("entrada")) {
-			LOGGER.info("Somando {} a {} que possui em estoque {}", 
-					diferencaQuantidade, nomeClasseProduto, produto.getEstoque());
-			estoqueResultante = produto.getEstoque() + diferencaQuantidade;
+			emitirLogSomaEstoque(diferencaQuantidade, antigoEstoque, nomeClasseProduto);
+			novoEstoque = antigoEstoque + diferencaQuantidade;
 		} else {
-			LOGGER.info("Subtraindo {} a {} que possui em estoque {}", 
-					diferencaQuantidade, nomeClasseProduto, produto.getEstoque());
-			estoqueResultante = produto.getEstoque() - diferencaQuantidade;
+			emitirLogSubtracaoEstoque(diferencaQuantidade, quantidadeAntiga, nomeClasseProduto);
+			novoEstoque = antigoEstoque - diferencaQuantidade;
 		}
-		produto.setEstoque(estoqueResultante);
+		return novoEstoque;
+	}
+	
+	private void emitirLogSubtracaoEstoque(Integer quantidadeSubtrair, Integer quantidadeDestinatario, String nomeDestinatario) {
+		LOGGER.info("Subtraindo {} a {} que possui em estoque {}", 
+				quantidadeSubtrair, nomeDestinatario, quantidadeDestinatario);
+	}
+	
+	private void emitirLogSomaEstoque(Integer quantidadeInserir, Integer quantidadeDestinatario, String nomeDestinatario) {
+		LOGGER.info("Somando {} a {} que possui em estoque {}", 
+				quantidadeInserir, nomeDestinatario, quantidadeDestinatario);
+	}
+	
+	private void emitirLogEstoqueAtualizado(Produto produto) {
+		String nome = produto.getClass().getSimpleName();
+		Integer estoque = produto.getEstoque();
+		LOGGER.info("Atualizado estoque de {} com sucesso. Estoque = {}", nome, estoque);
+	}
+	
+	private void salvar(Produto produto, Integer comNovoEstoque) {
+		produto.setEstoque(comNovoEstoque);
 		produtoService.salvar(produto);
-		LOGGER.info("Atualizado estoque de {} com sucesso. Estoque = {}", 
-				nomeClasseProduto, produto.getEstoque());
 	}
 }

@@ -28,4 +28,9 @@ public class ItemNotaRepository extends JpaRepositoryWrapper<
 		ItemNotaJpaRepository repository = (ItemNotaJpaRepository) REPOSITORY;
 		return repository.getValorTotal(idItem);
 	}
+	
+	public Integer getQuantidade(Long idItem) {
+		ItemNotaJpaRepository repository = (ItemNotaJpaRepository) REPOSITORY;
+		return repository.getQuantidade(idItem);
+	}
 }
