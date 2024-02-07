@@ -17,19 +17,19 @@ public class ParceiroNegocio {
 	private Long id;
 	
 	@Column(name = "nome")
-	@NotBlank
+	@NotBlank(message = "Atributo nome obrigatorio")
 	private String nome;
 	
 	@Column(name = "inscricao_fiscal")
-	@NotBlank
+	@NotBlank(message = "Atributo inscricao fiscal obrigatorio")
 	private String inscricaoFiscal;
 	
 	@Column(name = "endereco")
-	@NotBlank
+	@NotBlank(message = "Atributo endereco obrigatorio")
 	private String endereco;
 	
 	@Column(name = "telefone")
-	@NotBlank
+	@NotBlank(message = "Atributo telefone obrigatorio")
 	private String telefone;
 	
 	public ParceiroNegocio() {}
