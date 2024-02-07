@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.DataValidadeInvalidaException;
+import com.agrotis.trainees.crud.exception.ProdutoDuplicadoException;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Service
@@ -23,8 +24,27 @@ public class ProdutoService {
     }
 
     public Produto salvar(Produto entidade) {
+
         if (!verificarValidade(entidade)) {
             throw new DataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
+        }
+
+        if (buscarPorDescricao(entidade.getDescricao()) != null) {
+            throw new ProdutoDuplicadoException("Descrição do produto já existe");
+        }
+
+        return repository.save(entidade);
+    }
+
+    public Produto atualizar(Produto entidade) {
+        Produto produtoExistente = buscarPorDescricao(entidade.getDescricao());
+        if (produtoExistente == null) {
+            System.out.println("Esse produto não existe");
+            return repository.save(entidade);
+        }
+
+        if (!produtoExistente.getId().equals(entidade.getId())) {
+            throw new ProdutoDuplicadoException("Descrição do produto já existe");
         }
         return repository.save(entidade);
     }

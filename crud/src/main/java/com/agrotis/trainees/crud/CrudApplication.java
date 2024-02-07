@@ -18,7 +18,6 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.exception.DataValidadeInvalidaException;
 import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
@@ -139,33 +138,39 @@ public class CrudApplication implements CommandLineRunner {
         }
 
         if (escolha == 3) {
-            Produto produto = new Produto();
 
-            ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(272);
-            produto.setDescricao("Semente de girassol");
-            produto.setFabricante(fabricante);
-
+            // Produto produto = new Produto();
+            //
+            // ParceiroNegocio fabricante =
+            // parceiroNegocioService.buscarPorId(272);
+            // produto.setDescricao("Arroz");
+            // produto.setFabricante(fabricante);
+            //
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            //
+            // Date fabricacaoDate = dateFormat.parse("31-12-2024");
+            // produto.setDataFabricacao(fabricacaoDate);
+            //
+            // Date validaDate = dateFormat.parse("08-08-2025");
+            // produto.setDataValidade(validaDate);
+            //
+            // try {
+            // Produto produto2 = produtoService.salvar(produto);
+            // } catch (Exception e) {
+            // System.out.println("Tratamento de exceção: " + e.getMessage());
+            // }
 
-            Date fabricacaoDate = dateFormat.parse("31-12-2024");
-            produto.setDataFabricacao(fabricacaoDate);
-
-            Date validaDate = dateFormat.parse("08-08-2024");
-            produto.setDataValidade(validaDate);
-
-            try {
-                Produto produto2 = produtoService.salvar(produto);
-            } catch (DataValidadeInvalidaException e) {
-                System.out.println("Tratamento de exceção: " + e.getMessage());
-            }
-
-            Produto produtoPorId = produtoService.buscarPorId(134);
-            LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {} quantidade em estoque {}",
-                            produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(),
-                            produtoPorId.getFabricante(), produtoPorId.getQuantidade_estoque());
-
-            produtoPorId.setQuantidade_estoque(500);
-            produtoService.salvar(produtoPorId);
+            // Produto produtoPorId = produtoService.buscarPorId(134);
+            // LOG.info("Busca por id. Descrição {} Data Fabricação {} Data
+            // Validade {} Nome da empresa parceira {} quantidade em estoque
+            // {}",
+            // produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(),
+            // produtoPorId.getDataValidade(),
+            // produtoPorId.getFabricante(),
+            // produtoPorId.getQuantidade_estoque());
+            //
+            // produtoPorId.setQuantidade_estoque(500);
+            // produtoService.salvar(produtoPorId);
             // Produto produtoPorDescricao =
             // produtoService.buscarPorDescricao(produto2.getDescricao());
             // LOG.info("Busca por descricao. Descrição {} Data Fabricação {}
@@ -179,43 +184,45 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} tipos de produtos",
             // todosProdutos.size());
             //
-            // Produto produtoPorDescricao2 =
-            // produtoService.buscarPorDescricao(produto2.getDescricao());
-            // produtoPorDescricao2.setDescricao("citrus e ração importados");
-            // Date novaValidadeDate = dateFormat.parse("03-07-2016");
-            // produtoPorDescricao2.setDataValidade(novaValidadeDate);
-            // produtoPorDescricao2.setParceiroNegocio(fabricante);
-            // produtoService.salvar(produtoPorDescricao2);
-            // System.out.println(produtoPorDescricao2.getParceiroNegocio());
-            // LOG.info("Nova descrição {}, nova data validade {} e novo
-            // parceiro {}: ", produtoPorDescricao2.getDescricao(),
-            // produtoPorDescricao2.getDataValidade(),
-            // produtoPorDescricao2.getParceiroNegocio());
+            Produto produtoPorDescricao2 = produtoService.buscarPorDescricao("Areia do mar azul");
+            Date novaValidadeDate = dateFormat.parse("03-07-2016");
+            produtoPorDescricao2.setDataValidade(novaValidadeDate);
+            produtoPorDescricao2.setDescricao("Arroz3");
+            try {
+                produtoService.atualizar(produtoPorDescricao2);
+                LOG.info("Nova descrição {}, nova data validade {} e novo parceiro {}: ", produtoPorDescricao2.getDescricao(),
+                                produtoPorDescricao2.getDataValidade(), produtoPorDescricao2.getFabricante());
+            } catch (Exception e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
 
             //// produtoService.deletarPorId(produtoPorId.getId());
         }
 
         if (escolha == 4) {
 
-            NotaFiscal notaFiscal = new NotaFiscal();
-
-            ParceiroNegocio parceiro = parceiroNegocioService.buscarPorId(113);
-
-            notaFiscal.setNumero("51");
-            NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
-            notaFiscal.setParceiroNegocio(parceiro);
-            notaFiscal.setNotaFiscalTipo(notaTipo);
-
-            try {
-                NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
-                LOG.info("id inserido: {}", notaFiscal2.getId());
-            } catch (NotaFiscalDuplicadaException e) {
-                System.out.println("Tratamento de exceção " + e.getMessage());
-            }
-
+            // NotaFiscal notaFiscal = new NotaFiscal();
+            //
+            // ParceiroNegocio parceiro =
+            // parceiroNegocioService.buscarPorId(113);
+            //
+            // notaFiscal.setNumero("51");
+            // NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
+            // notaFiscal.setParceiroNegocio(parceiro);
+            // notaFiscal.setNotaFiscalTipo(notaTipo);
+            //
+            // try {
+            // NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
+            // LOG.info("id inserido: {}", notaFiscal2.getId());
+            // } catch (NotaFiscalDuplicadaException e) {
+            // System.out.println("Tratamento de exceção " + e.getMessage());
+            // }
+            //
             NotaFiscal notaFiscalPorId = notaFiscalService.buscarPorId(178);
-            LOG.info("Busca por id. Numero {} Data {} Nome da empresa parceira {} e tipo {}", notaFiscalPorId.getNumero(),
-                            notaFiscalPorId.getData(), notaFiscalPorId.getParceiroNegocio(), notaFiscalPorId.getNotaFiscalTipo());
+            // LOG.info("Busca por id. Numero {} Data {} Nome da empresa
+            // parceira {} e tipo {}", notaFiscalPorId.getNumero(),
+            // notaFiscalPorId.getData(), notaFiscalPorId.getParceiroNegocio(),
+            // notaFiscalPorId.getNotaFiscalTipo());
 
             // List<NotaFiscal> todasNotasFiscais =
             // notaFiscalService.buscarPorNumero("20");
@@ -229,15 +236,13 @@ public class CrudApplication implements CommandLineRunner {
             //
             // NotaFiscalTipo novaNotaTipo =
             // notaFiscalTipoService.buscarPorId(162);
-            // notaFiscalPorId.setNumero("1");
-            // notaFiscalPorId.setNotaFiscalTipo(novaNotaTipo);
-            // try {
-            // notaFiscalService.salvar(notaFiscalPorId);
-            // LOG.info("Novo numero {} e nova data {}",
-            // notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
-            // } catch (NotaFiscalDuplicadaException e) {
-            // System.out.println("Tratamento de exceção: " + e.getMessage());
-            // }
+            notaFiscalPorId.setParceiroNegocio(parceiroNegocioService.buscarPorId(274));
+            try {
+                notaFiscalService.salvar(notaFiscalPorId);
+                LOG.info("Novo numero {} e nova data {}", notaFiscalPorId.getNumero(), notaFiscalPorId.getData());
+            } catch (NotaFiscalDuplicadaException e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
 
             // notaFiscalService.deletarPorId(171);
 
