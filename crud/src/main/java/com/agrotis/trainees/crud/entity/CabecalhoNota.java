@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,8 @@ public class CabecalhoNota {
     @OneToMany(mappedBy = "cabecalhoNota", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemNota> itens = new ArrayList<>();
 
+    private BigDecimal valorTotal;
+
     public TipoNota getNotaFiscalTipo() {
         return notaFiscalTipo;
     }
@@ -88,6 +91,14 @@ public class CabecalhoNota {
 
     public List<ItemNota> getItens() {
         return itens;
+    }
+
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     @Override

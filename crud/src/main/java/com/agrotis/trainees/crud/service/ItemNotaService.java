@@ -10,6 +10,8 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
+import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.service.exceptions.QuantidadeEmEstoqueException;
 
 @Service
 public class ItemNotaService {
@@ -25,6 +27,7 @@ public class ItemNotaService {
     }
 
     public ItemNota salvar(ItemNota entidade) {
+        calcularValorTotal(entidade);
         atualizarEstoque(entidade);
         return repository.save(entidade);
     }
@@ -34,23 +37,28 @@ public class ItemNotaService {
     }
 
     public ItemNota buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
-            return null;
-        });
+        return repository.findById(id)
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 
     public ItemNota atualizar(Integer id, ItemNota notaFiscalItem) {
-        ItemNota byId = repository.findById(id).orElseGet(() -> {
-            LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
-            return null;
-        });
-        return repository.save(byId);
+        return repository.findById(id).map(itemNotaExistente -> {
+            itemNotaExistente.setCabecalhoNota(notaFiscalItem.getCabecalhoNota());
+            itemNotaExistente.setPrecoUnitario(notaFiscalItem.getPrecoUnitario());
+            itemNotaExistente.setProduto(notaFiscalItem.getProduto());
+            itemNotaExistente.setQuantidade(notaFiscalItem.getQuantidade());
+            itemNotaExistente.setValorTotal(notaFiscalItem.getValorTotal());
+            return repository.save(itemNotaExistente);
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 
     public void deletarPorId(Integer id) {
-        repository.deleteById(id);
-        LOG.info("Deletado com sucesso");
+        repository.findById(id).map(entidade -> {
+            repository.deleteById(id);
+            LOG.info("Deletado com sucesso");
+            return entidade;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+
     }
 
     public void calcularValorTotal(ItemNota notaFiscalItem) {
@@ -74,7 +82,7 @@ public class ItemNotaService {
             if (quantidadeProduto - quantidade >= 0) {
                 produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
             } else {
-                throw new IllegalArgumentException("Não é possível remover mais itens do que o disponível em estoque.");
+                throw new QuantidadeEmEstoqueException("Não é possível remover mais itens do que o disponível em estoque.");
             }
         }
         produtoService.salvar(produto);
