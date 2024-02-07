@@ -11,7 +11,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
-import com.agrotis.trainees.crud.service.exceptions.QuantidadeEmEstoqueException;
+import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
 public class ItemNotaService {
@@ -76,15 +76,18 @@ public class ItemNotaService {
         TipoNota notaFiscalTipo = itemNota.getCabecalhoNota().getNotaFiscalTipo();
         Integer quantidadeProduto = itemNota.getProduto().getQuantidadeEstoque();
 
+        ValidacaoUtils.validarQuantidadeNaoNegativa(quantidade);
+
+        if (notaFiscalTipo == TipoNota.SAIDA) {
+            ValidacaoUtils.validarQuantidadeEstoqueSuficiente(quantidadeProduto, quantidade);
+        }
+
         if (notaFiscalTipo == TipoNota.ENTRADA) {
             produto.setQuantidadeEstoque(quantidadeProduto + quantidade);
         } else {
-            if (quantidadeProduto - quantidade >= 0) {
-                produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
-            } else {
-                throw new QuantidadeEmEstoqueException("Não é possível remover mais itens do que o disponível em estoque.");
-            }
+            produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
         }
+
         produtoService.salvar(produto);
     }
 

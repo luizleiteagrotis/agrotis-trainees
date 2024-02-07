@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.service.exceptions.CampoVazioOuNuloException;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
 public class ProdutoService {
@@ -20,10 +22,15 @@ public class ProdutoService {
     public ProdutoService(ProdutoRepository repository) {
         this.repository = repository;
     }
-
-    public Produto salvar(Produto produto) {
+    
+    public Produto salvar(Produto produto){
+        if (ValidacaoUtils.isProdutoEmptyOrNull(produto)) {
+            throw new CampoVazioOuNuloException("Preencha todos os campos obrigatórios de produto.");
+        }
         return repository.save(produto);
     }
+
+
 
     public List<Produto> buscarTodos() {
         return repository.findAll();
