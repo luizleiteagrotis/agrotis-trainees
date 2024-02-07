@@ -43,9 +43,8 @@ public class NotaFiscal {
     @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER)
     private List<ItemNotaFiscal> itens = new ArrayList<>();
 
-    @NotNull
     @Digits(integer = 19, fraction = 2)
-    private BigDecimal valor_total;
+    private BigDecimal valor_total = BigDecimal.ZERO;
 
     public Integer getId() {
         return id;
