@@ -1,0 +1,46 @@
+
+package exercicios.aula19;
+
+
+class Exercicio29{
+	public static void main (String args[]) {
+		
+		int[] A = new int[20];
+		int[] B = new int[10];
+		int[] C = new int[10];
+		
+		int k = 0;
+		int j = 0;
+		
+		System.out.print("Vetor A : ");
+		for(int i = 0; i< A.length; i++) {
+			
+			A[i] = (int) Math.round(Math.random() * 10);
+			System.out.print(A[i] + " ");
+			
+			
+			if(A[i]%2 == 0 ) {
+				if( j < 10) {
+					B[j] = A[i];
+					j++;
+				}
+			} else if(k < 10){
+				C[k] = A[i];
+				k++;
+			}
+			
+		}
+		
+		System.out.print("\nVetor B : ");
+		for(int i = 0; i< B.length; i++) {
+			System.out.print(B[i] + " ");
+		}
+		
+		System.out.print("\nVetor C : ");
+		for(int i = 0; i< C.length; i++) {
+			System.out.print(C[i] + " ");
+		}
+		
+		
+	}
+}
