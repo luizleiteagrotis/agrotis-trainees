@@ -127,17 +127,17 @@ public class CrudApplication implements CommandLineRunner {
 
         NotaFiscal notaFiscal = new NotaFiscal();
 
-        notaFiscal.setDataNota(LocalDate.of(2024, 01, 2));
-        notaFiscal.setNotaFiscalTipo("Tipo da Nota: Entrada");
-        notaFiscal.setNumeroNota(210798);
+        notaFiscal.setData(LocalDate.of(2024, 01, 2));
+        notaFiscal.setTipo("Tipo da Nota: Entrada");
+        notaFiscal.setNumero(210798);
         notaFiscal.setParceiroNegocio(parceiroNegocio2);
         notaFiscalService.salvar(notaFiscal);
         LOG.info("Nota Fiscal Salva: {}", notaFiscal.getId());
 
         NotaFiscal notaFiscalSaida = new NotaFiscal();
-        notaFiscalSaida.setDataNota(LocalDate.of(2024, 01, 2));
-        notaFiscalSaida.setNotaFiscalTipo("Tipo da Nota: Saida");
-        notaFiscalSaida.setNumeroNota(6193007);
+        notaFiscalSaida.setData(LocalDate.of(2024, 01, 2));
+        notaFiscalSaida.setTipo("Tipo da Nota: Saida");
+        notaFiscalSaida.setNumero(6193007);
         notaFiscalSaida.setParceiroNegocio(parceiroNegocio2);
         notaFiscalService.salvar(notaFiscalSaida);
         LOG.info("Nota Fiscal Salva: {}", notaFiscalSaida.getId());
@@ -153,13 +153,13 @@ public class CrudApplication implements CommandLineRunner {
             LOG.info("Listas de notas fiscais: ", notasFiscais.size());
         }
 
-        NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscalSaida.getDataNota());
-        LOG.info("Buscando por data a nota fiscal: ", porDataNota.getId(), porDataNota.getDataNota());
+        NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscalSaida.getData());
+        LOG.info("Buscando por data a nota fiscal: ", porDataNota.getId(), porDataNota.getData());
 
         notaFiscalService.deletarPorId(notaFiscalSaida.getId());
         LOG.info("A nota {}", notaFiscalSaida.getId(), "Foi deletada");
 
-        LOG.info("-----------------------------------------NOTA FISCAL ITEM----------------------------------------------------------------------------------------------");
+        LOG.info("---------------------------------------------NOTA FISCAL ITEM----------------------------------------------------------------------------------------------");
 
         ItemNotaFiscal itemNota = new ItemNotaFiscal();
 

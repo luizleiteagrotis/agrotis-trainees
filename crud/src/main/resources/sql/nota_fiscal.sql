@@ -1,13 +1,13 @@
-CREATE TABLE nota_fiscal (
+ CREATE TABLE nota_fiscal (
        id bigint not null,
-        data_nota DATE,
-        nota_fiscal_tipo_id varchar(255),
-        numero_nota integer,
-        parceiro_de_negocio_id integer,
+        data DATE,
+        tipo varchar(255),
+        numero integer,
+        parceiro_negocio_id integer,
         primary key (id)
     )
     
-    	alter table nota_fiscal 
-       	add constraint FK_parceiro_negocio
-       	foreign key (parceiro_de_negocio_id) 
-       	references parceiro_de_negocio
+        alter table nota_fiscal 
+        add constraint fk_parceiro_negocio
+        foreign key (parceiro_negocio_id) 
+        references parceiro_negocio

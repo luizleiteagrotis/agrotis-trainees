@@ -1,5 +1,9 @@
 package com.agrotis.trainees.crud.entity;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,72 +12,63 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "nota_fiscal")
 public class NotaFiscal {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@Column(name = "data_nota")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataNota;
-	
-	@Column(name = "tipo_nota") 
-	private String notaFiscalTipo;
-	
-	@Column(name = "numero_nota") 
-	private Integer numeroNota;
-	
-	@ManyToOne
-	@JoinColumn(name = "parceiro_negocio_id") 
-	private ParceiroNegocio parceiroNegocio;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-	
-	
-	public Integer getId() {
-		return id;
-	}
+    @Column(name = "[data]")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate data;
 
-	public LocalDate getDataNota() {
-		return dataNota;
-	}
+    @Column(name = "tipo")
+    private NotaFiscalTipo tipo;
 
-	public void setDataNota(LocalDate dataNota) {
-		this.dataNota = dataNota;
-	}
+    @Column(name = "numero")
+    private Integer numero;
 
-	public String getNotaFiscalTipo() {
-		return notaFiscalTipo;
-	}
+    @ManyToOne
+    @JoinColumn(name = "parceiro_negocio_id")
+    private ParceiroNegocio parceiroNegocio;
 
-	public void setNotaFiscalTipo(String notaFiscalTipo) {
-		this.notaFiscalTipo = notaFiscalTipo;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public Integer getNumeroNota() {
-		return numeroNota;
-	}
+    public LocalDate getData() {
+        return data;
+    }
 
-	public void setNumeroNota(Integer numeroNota) {
-		this.numeroNota = numeroNota;
-	}
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 
-	public ParceiroNegocio getParceiroNegocio() {
-		return parceiroNegocio;
-	}
+    public NotaFiscalTipo getTipo() {
+        return tipo;
+    }
 
-	public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-		this.parceiroNegocio = parceiroNegocio;
-	}
-	
-	
+    public void setTipo(NotaFiscalTipo tipo) {
+        this.tipo = tipo;
+    }
 
+    public Integer getNumero() {
+        return numero;
+    }
 
-	
-}	
-	
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
+
+    public ParceiroNegocio getParceiroNegocio() {
+        return parceiroNegocio;
+    }
+
+    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+        this.parceiroNegocio = parceiroNegocio;
+    }
+
+}

@@ -1,4 +1,4 @@
-CREATE TABLE parceiro_de_negocio
+CREATE TABLE parceiro_negocio
 
 (
 

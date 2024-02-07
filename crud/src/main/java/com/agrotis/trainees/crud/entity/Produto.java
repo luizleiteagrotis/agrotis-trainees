@@ -40,6 +40,7 @@ public class Produto {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataValidade;
 
+    @Column(name = "estoque")
     private int estoque;
 
     public Integer getId() {
