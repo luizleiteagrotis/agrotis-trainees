@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.ItemDuplicadoException;
 import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 
@@ -26,8 +27,9 @@ public class ItemNotaFiscalService {
         this.produtoService = produtoService;
     }
 
-    public ItemNotaFiscal salvar(ItemNotaFiscal entidade) throws QuantidadeInsuficienteException {
+    public ItemNotaFiscal salvar(ItemNotaFiscal entidade) throws QuantidadeInsuficienteException, ItemDuplicadoException {
         entidade.setValorTotal();
+        itemDuplicado(entidade);
         atualizarEstoque(entidade);
         return repository.save(entidade);
     }
@@ -50,6 +52,12 @@ public class ItemNotaFiscalService {
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
         LOG.info("Deletado com sucesso");
+    }
+
+    public void itemDuplicado(ItemNotaFiscal item) throws ItemDuplicadoException {
+        if (repository.existsByProdutoAndNotaFiscal(item.getProduto(), item.getNotaFiscal())) {
+            throw new ItemDuplicadoException("O item já existe na nota");
+        }
     }
 
     public void atualizarEstoque(ItemNotaFiscal item) throws QuantidadeInsuficienteException {
