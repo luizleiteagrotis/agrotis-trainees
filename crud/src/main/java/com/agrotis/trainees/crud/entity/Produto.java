@@ -77,6 +77,10 @@ public class Produto {
 		// TODO Auto-generated method stub
 		
 	}
+    public Integer getQuantidade() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	
 	

@@ -161,7 +161,8 @@ public class CrudApplication implements CommandLineRunner {
 		List<NotaFiscalC> notas = notaFiscalCService.listarTodos();
 		LOG.info("Tamnho da lista: ", notas.size());
 		
-		
+	      LOG.info("---------------------Item Nota------------------------");
+
 		
 	}
 }

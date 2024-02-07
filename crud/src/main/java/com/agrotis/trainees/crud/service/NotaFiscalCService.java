@@ -25,31 +25,7 @@ public class NotaFiscalCService {
 		return repository.save(entidade);
 	}
 
-	public NotaFiscalC buscarPorId(Integer id) {
-		return repository.findById(id).orElseGet(() -> {
-			((org.slf4j.Logger) LOG).error("Nota não encontrada para id {}.", id);
-			return null;
-		});
-
+	
 	}
 
-	public NotaFiscalC atualizar(Integer id, NotaFiscalC negocio) {
-		NotaFiscalC byId = repository.findById(id).orElseGet(() -> {
-			((org.slf4j.Logger) LOG).info("Não foi possivel encontrar a nota fiscal pelo ID {}", id);
-			return null;
-		});
-		return repository.save(byId);
-	}
 
-	public List<NotaFiscalC> listarTodos() {
-		return repository.findAll();
-
-	}
-
-	public void deleterPorId(Integer id) {
-		repository.deleteById(id);
-		((org.slf4j.Logger) LOG).info("Deletado com sucesso");
-
-	}
-
-}
