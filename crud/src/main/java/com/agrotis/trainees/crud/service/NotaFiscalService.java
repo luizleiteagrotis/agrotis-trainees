@@ -26,7 +26,7 @@ public class NotaFiscalService {
 
     public NotaFiscal salvar(NotaFiscal notaFiscal) {
 
-        if (Validador.validarParceiro(notaFiscal.getParceiroNegocio().getId()) && existe(notaFiscal)
+        if (Validador.existeParceiroPorId(notaFiscal.getParceiroNegocio().getId()) && existe(notaFiscal)
                         && existe(notaFiscal.getTipo())) {
             LOG.info("Salvo no banco");
             return repository.save(notaFiscal);
@@ -40,7 +40,7 @@ public class NotaFiscalService {
 
     public NotaFiscal buscarPorId(int id) {
         return repository.findById(id).orElseGet(() -> {
-            LOG.error("Não foi possível encontrar um registro");
+            LOG.error("Não foi possível encontrar uma nota fiscal com este id {}", id);
             return null;
         });
     }
@@ -118,7 +118,7 @@ public class NotaFiscalService {
      * busca o id da nota fiscal e todos os item vinculados a ele, fazendo o
      * calculo do valor total daquela nota e salvando caso tenha alteração
      */
-    public void verificarValorTotal(int idNotaFiscal) {
+    public void persistirValorTotal(int idNotaFiscal) {
         NotaFiscal notaPorId = buscarPorId(idNotaFiscal);
         List<ItemNotaFiscal> itens = notaPorId.getItemNotaFiscal();
         double valorTotal = 0;

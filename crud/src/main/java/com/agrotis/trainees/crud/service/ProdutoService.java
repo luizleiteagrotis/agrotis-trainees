@@ -25,7 +25,7 @@ public class ProdutoService {
 
     public Produto salvar(Produto entidade) {
 
-        if (Validador.validarParceiro(entidade.getFabricante().getId())) {
+        if (Validador.existeParceiroPorId(entidade.getFabricante().getId())) {
             return repository.save(entidade);
         } else {
             LOG.error("O fabricante não existe");
@@ -35,7 +35,7 @@ public class ProdutoService {
 
     public Produto buscarPorId(int id) {
         return repository.findById(id).orElseGet(() -> {
-            LOG.error("Nota não encontrada para id {}.", id);
+            LOG.error("Não foi possível encontrar um  produto com este id {}.", id);
             return null;
         });
     }

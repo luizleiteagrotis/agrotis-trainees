@@ -1,13 +1,10 @@
 package com.agrotis.trainees.crud.entity;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -25,8 +22,25 @@ public class ParceiroNegocio {
     private String endereco;
     private String telefone;
 
-    @OneToMany(mappedBy = "fabricante")
-    private List<Produto> produtos;
+    @Deprecated
+    public ParceiroNegocio() {
+    }
+
+    public ParceiroNegocio(@NotBlank(message = "Este campo é obrigatório") String nome,
+                    @NotBlank(message = "Este campo é obrigatório") String inscricaoFiscal, String endereco, String telefone) {
+        super();
+        this.nome = nome;
+        this.inscricaoFiscal = inscricaoFiscal;
+        this.endereco = endereco;
+        this.telefone = telefone;
+    }
+
+    public ParceiroNegocio(@NotBlank(message = "Este campo é obrigatório") String nome, String endereco, String telefone) {
+        super();
+        this.nome = nome;
+        this.endereco = endereco;
+        this.telefone = telefone;
+    }
 
     public int getId() {
         return id;

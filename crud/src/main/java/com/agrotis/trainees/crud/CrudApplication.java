@@ -6,13 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.Date;
-
-import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
-import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.helper.TipoNotaFiscal;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -49,50 +42,9 @@ public class CrudApplication implements CommandLineRunner {
 
     public void run(String... args) {
 
-        String tipoEntrada = TipoNotaFiscal.ENTRADA.getDescricao();
-        String tipoSaida = TipoNotaFiscal.SAIDA.getDescricao();
-
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-        parceiroNegocio.setNome("Antonio e Levi Filmagens ME");
-        parceiroNegocio.setInscricaoFiscal("76826798000197");
-        parceiroNegocio.setEndereco("Praça Candida Maria da Silva");
-        parceiroNegocio.setTelefone("11983090235");
-        parceiroNegocioService.salvar(parceiroNegocio);
-
-        // ParceiroNegocio parceiroNegocioId =
-        // parceiroNegocioService.buscarPorId(235);
-
-        Produto produto = new Produto("Laranja", Date.valueOf("2024-01-01"), Date.valueOf("2024-06-06"), parceiroNegocio);
-        produto.setDescricao("Produto de alta qualidade");
-        produtoService.salvar(produto);
-
-        // Produto produtoPorId = produtoService.buscarPorId(243);
-
-        // NOTA FISCAL ENTRADA
-        NotaFiscal notaFiscal = new NotaFiscal();
-        notaFiscal.setData(Date.valueOf("2024-01-10"));
-        notaFiscal.setNumero(101011);
-        notaFiscal.setParceiroNegocio(parceiroNegocio);
-        notaFiscal.setTipo(tipoEntrada);
-        notaFiscalService.salvar(notaFiscal);
-
-        // NotaFiscal notaFiscalId = notaFiscalService.buscarPorId(247);
-
-        // NOTA FISCAL SAIDA
-        NotaFiscal notaFiscalSaida = new NotaFiscal();
-        notaFiscalSaida.setData(Date.valueOf("2024-01-10"));
-        notaFiscalSaida.setNumero(101011);
-        notaFiscalSaida.setParceiroNegocio(parceiroNegocio);
-        notaFiscalSaida.setTipo(tipoSaida);
-        notaFiscalService.salvar(notaFiscalSaida);
-
-        // item nota entrada
-        ItemNotaFiscal itemNota = new ItemNotaFiscal(notaFiscal, produto, 100, 50);
-        itemNotaFiscalService.salvar(itemNota);
-
-        // item nota saida
-        ItemNotaFiscal itemNotaSaida = new ItemNotaFiscal(notaFiscalSaida, produto, 99, 50);
-        itemNotaFiscalService.salvar(itemNotaSaida);
+        // ParceiroNegocio parceiro = new ParceiroNegocio("Oliver e Daniela Pães
+        // e Doces Ltda ", "Teste Gralha-do-cerrado",
+        // "4325067331");
 
     }
 }

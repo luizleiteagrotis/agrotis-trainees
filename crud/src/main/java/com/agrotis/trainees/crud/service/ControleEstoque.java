@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.ControleEstoqueException;
 
 @Service
 public class ControleEstoque {
@@ -19,6 +20,14 @@ public class ControleEstoque {
     }
 
     public int controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
+        try {
+            if (itemNotaFiscal == null || itemNotaFiscal.getNotaFiscal() == null || itemNotaFiscal.getProduto() == null) {
+                throw new ControleEstoqueException("Informe um produto ou nota fiscal válida");
+            }
+        } catch (ControleEstoqueException exp) {
+            return -1;
+        }
+
         String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
         Produto produto = produtoService.buscarPorId(itemNotaFiscal.getProduto().getId());
         double quantidadeEstoque = produto.getEstoque();

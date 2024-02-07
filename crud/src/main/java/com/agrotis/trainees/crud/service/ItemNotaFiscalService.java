@@ -36,12 +36,11 @@ public class ItemNotaFiscalService {
             ItemNotaFiscal itemNota = repository.save(itemNotaFiscal);
 
             // verifica tabela da nota fiscal
-            notaFiscalService.verificarValorTotal(itemNotaFiscal.getNotaFiscal().getId());
-
+            notaFiscalService.persistirValorTotal(itemNotaFiscal.getNotaFiscal().getId());
             LOG.info("Item cadastrado com sucesso");
             return itemNota;
         } else {
-            LOG.error("Não foi possivel cadastrar o item na nota fiscal");
+            LOG.error("Já existe este item cadastrado no banco de dados");
             return null;
         }
 
@@ -49,7 +48,7 @@ public class ItemNotaFiscalService {
 
     public ItemNotaFiscal buscarPorId(int id) {
         return repository.findById(id).orElseGet(() -> {
-            LOG.error("Não foi possível encontrar um registro");
+            LOG.error("Não foi possível encontrar um item com este id {}", id);
             return null;
         });
     }
@@ -81,14 +80,14 @@ public class ItemNotaFiscalService {
     public ItemNotaFiscal atualizar(ItemNotaFiscal item, int id) {
         ItemNotaFiscal itemAtualizar = buscarPorId(id);
         if (itemAtualizar != null) {
-            if (item.getNotaFiscal() != null && Validador.validarNotaFiscal(item.getNotaFiscal().getId())) {
+            if (item.getNotaFiscal() != null && Validador.existeNotaFiscalPorId(item.getNotaFiscal().getId())) {
                 itemAtualizar.setNotaFiscal(item.getNotaFiscal());
             }
             if (item.getQuantidade() != 0 && item.getQuantidade() > 0) {
                 itemAtualizar.setQuantidade(item.getQuantidade());
             }
 
-            if (item.getProduto() != null && Validador.validarProduto(item.getProduto().getId())) {
+            if (item.getProduto() != null && Validador.existeProdutoPorId(item.getProduto().getId())) {
                 itemAtualizar.setProduto(item.getProduto());
             }
 
@@ -101,7 +100,7 @@ public class ItemNotaFiscalService {
 
             repository.save(itemAtualizar);
 
-            notaFiscalService.verificarValorTotal(itemAtualizar.getNotaFiscal().getId());
+            notaFiscalService.persistirValorTotal(itemAtualizar.getNotaFiscal().getId());
             return itemAtualizar;
         } else {
             LOG.error("O item que deseja atualiza, não existe.");
@@ -115,7 +114,7 @@ public class ItemNotaFiscalService {
         if (buscarPorId(id) != null) {
             ItemNotaFiscal itemNotaFiscal = buscarPorId(id);
             repository.deleteById(id);
-            notaFiscalService.verificarValorTotal(itemNotaFiscal.getNotaFiscal().getId());
+            notaFiscalService.persistirValorTotal(itemNotaFiscal.getNotaFiscal().getId());
             LOG.info("Deletado com sucesso");
         } else {
             LOG.info("Registro não encontrado");

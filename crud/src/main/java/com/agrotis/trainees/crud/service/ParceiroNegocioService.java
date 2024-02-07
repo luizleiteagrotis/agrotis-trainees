@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.exception.ParceiroNegocioExcecao;
 import com.agrotis.trainees.crud.repository.PaceiroNegocioRepository;
 
 @Service
@@ -23,34 +23,29 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-
-        if (buscarPorInscricaoFiscal(entidade.getInscricaoFiscal()) != null) {
-            LOG.error("Falha ao salvar no banco: Inscrição fiscal já está cadastrada.");
-            throw new IllegalArgumentException("Inscrição fiscal já está cadastrada");
-
-        }
-        if (entidade.getTelefone() == null) {
+        try {
+            validarInscricaoFiscal(entidade);
+            validarParceiro(entidade);
+            LOG.info("Salvo com sucesso.");
             return repository.save(entidade);
-        }
-        if (entidade.getInscricaoFiscal().length() > 14 || entidade.getInscricaoFiscal().length() < 14
-                        || entidade.getTelefone().length() > 14) {
-            LOG.error("Falha de validação: Não foi possivel salvar no banco de dados.");
-            throw new IllegalArgumentException("Dado de cadastro inválido");
 
+        } catch (ParceiroNegocioExcecao e) {
+            LOG.error(e.getMessage());
+            return null;
         }
-        return repository.save(entidade);
+
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
         return repository.findById(id).orElseGet(() -> {
-            LOG.error("Nota não encontrada para id {}.", id);
+            LOG.error("Não foi possível encontrar um parceiro com este id {}.", id);
             return null;
         });
     }
 
     public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
         return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
-            LOG.error("Nota não encontrada para inscriçâo Fiscal {}.", inscricaoFiscal);
+            LOG.error("Não foi possível encontrar esta inscriçâo Fiscal {}.", inscricaoFiscal);
             return null;
         });
     }
@@ -59,27 +54,21 @@ public class ParceiroNegocioService {
         return repository.findAll();
     }
 
-    public ParceiroNegocio atualizar(String incricaoFiscal, String nome, String NovaIscricaoFiscal, String endereco,
-                    String telefone) {
-        if (buscarPorInscricaoFiscal(incricaoFiscal) == null) {
-            LOG.error("Inscrição fiscal não encontrada.");
-            throw new IllegalArgumentException("Inscrição fiscal não encontrada.");
-
-        }
-
-        Optional<ParceiroNegocio> parceiroOptional = repository.findByInscricaoFiscal(incricaoFiscal);
-
-        if (parceiroOptional.isPresent()) {
-            ParceiroNegocio parceiro = parceiroOptional.get();
-            parceiro.setNome(nome);
-            if (parceiro.getInscricaoFiscal() != NovaIscricaoFiscal) {
-                parceiro.setInscricaoFiscal(NovaIscricaoFiscal);
+    public ParceiroNegocio atualizarPorId(ParceiroNegocio parceiro, int id) {
+        try {
+            ParceiroNegocio parceiroAtualizar = buscarPorId(id);
+            validarParceiro(parceiro);
+            if (parceiro.getInscricaoFiscal() != null) {
+                parceiroAtualizar.setInscricaoFiscal(parceiro.getInscricaoFiscal());
             }
-            parceiro.setEndereco(endereco);
-            parceiro.setTelefone(telefone);
-            return repository.save(parceiro);
+            parceiroAtualizar.setNome(parceiro.getNome());
+            parceiroAtualizar.setEndereco(parceiro.getEndereco());
+            parceiroAtualizar.setTelefone(parceiro.getTelefone());
+            return repository.save(parceiroAtualizar);
+        } catch (ParceiroNegocioExcecao e) {
+            LOG.error(e.getMessage());
+            return null;
         }
-        return null;
 
     }
 
@@ -88,9 +77,37 @@ public class ParceiroNegocioService {
             repository.deleteById(id);
             LOG.info("Deletado com sucesso");
         } else {
-            LOG.info("Este registro não existe");
+            LOG.error("Este registro não existe");
+        }
+    }
+
+    private void validarParceiro(ParceiroNegocio entidade) throws ParceiroNegocioExcecao {
+        if (entidade == null) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira valores válidos.");
         }
 
+        if (entidade.getNome().isEmpty()) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira um nome válido.");
+        }
+
+        if (entidade.getInscricaoFiscal() != null && entidade.getInscricaoFiscal().length() != 14) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Digite uma inscrição válida.");
+
+        }
+
+        if (entidade.getTelefone().length() < 10 || entidade.getTelefone().length() > 11) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Digite um telefone válido.");
+        }
+
+    }
+
+    private void validarInscricaoFiscal(ParceiroNegocio parceiro) throws ParceiroNegocioExcecao {
+        if (repository.findByInscricaoFiscal(parceiro.getInscricaoFiscal()).isPresent()) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Inscrição fiscal já está cadastrada.");
+        }
+        if (parceiro.getInscricaoFiscal() == null) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Informe uma inscrição fiscal.");
+        }
     }
 
 }
