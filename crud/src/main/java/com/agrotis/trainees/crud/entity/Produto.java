@@ -23,6 +23,10 @@ public class Produto {
 
     private String descricao;
 
+    // @Min(value = 0)
+    @Column(name = "estoque_produto")
+    private Integer estoque;
+
     @ManyToOne
     @JoinColumn(name = "fabricante_id")
     private ParceiroNegocio fabricante;
@@ -69,6 +73,14 @@ public class Produto {
 
     public Integer getId() {
         return id;
+    }
+
+    public int getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(int estoque) {
+        this.estoque = estoque;
     }
 
 }

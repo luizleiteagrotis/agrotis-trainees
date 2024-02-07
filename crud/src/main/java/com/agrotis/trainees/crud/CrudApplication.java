@@ -60,16 +60,20 @@ public class CrudApplication implements CommandLineRunner {
         ParceiroNegocio parceiroPorId = parceiroNegocioTipoService.buscarPorId(parceiroNegocio.getId());
         LOG.info("Busca por id. Nome {} id {} ", parceiroPorId.getNome(), parceiroPorId.getId());
 
-        ParceiroNegocio parceiroNegocioPorNome = parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
-        LOG.info("Busca por nome. Nome {} id {} ", parceiroNegocioPorNome.getNome(), parceiroNegocioPorNome.getId());
+        // ParceiroNegocio parceiroNegocioPorNome =
+        // parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
+        // LOG.info("Busca por nome. Nome {} id {} ",
+        // parceiroNegocioPorNome.getNome(), parceiroNegocioPorNome.getId());
 
         List<ParceiroNegocio> todosParceirosSalvos = parceiroNegocioTipoService.listarTodos();
         LOG.info("Salvos no total de {} tipos de Parceiros", todosParceirosSalvos.size());
 
-        ParceiroNegocio parceiroPorNome = parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
-        parceiroPorNome.setNome("Agrotis informática");
-        parceiroNegocioTipoService.salvar(parceiroPorNome);
-        LOG.info("Busca por nome. Nome {} id {} ", parceiroPorNome.getNome(), parceiroPorNome.getId());
+        // ParceiroNegocio parceiroPorNome =
+        // parceiroNegocioTipoService.buscarPorNome(parceiroNegocio.getNome());
+        // parceiroPorNome.setNome("Agrotis informática");
+        // parceiroNegocioTipoService.salvar(parceiroPorNome);
+        // LOG.info("Busca por nome. Nome {} id {} ", parceiroPorNome.getNome(),
+        // parceiroPorNome.getId());
 
         // parceiroNegocioTipoService.deletarPorId(parceiroPorId.getId());
 
@@ -88,6 +92,7 @@ public class CrudApplication implements CommandLineRunner {
         produto.setDataValidade(LocalDate.parse("09/12/2014", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         produto.setDescricao("Algodão");
         produto.setFabricante(parceiroNegocio2);
+        produto.setEstoque(15);
 
         produtoTipoService.salvar(produto);
         LOG.info("id inserido: {}", produto.getId());
@@ -95,24 +100,28 @@ public class CrudApplication implements CommandLineRunner {
         Produto produtoPorId = produtoTipoService.buscarPorId(produto.getId());
         LOG.info("Busca por id. Descrição {} id {} ", produtoPorId.getDescricao(), produtoPorId.getId());
 
-        Produto produtoPorDescricao = produtoTipoService.buscarPorDescricao(produto.getDescricao());
-        LOG.info("Busca por descrição. Nome {} id {} ", produtoPorDescricao.getDescricao(), produtoPorDescricao.getId());
+        // Produto produtoPorDescricao =
+        // produtoTipoService.buscarPorDescricao(produto.getDescricao());
+        // LOG.info("Busca por descrição. Nome {} id {} ",
+        // produtoPorDescricao.getDescricao(), produtoPorDescricao.getId());
         //
 
         List<Produto> todosProdutosSalvos = produtoTipoService.listarTodos();
         LOG.info("Salvos no total de {} tipos de produtos", todosProdutosSalvos.size());
 
-        Produto porDescricao = produtoTipoService.buscarPorDescricao(produto.getDescricao());
-        porDescricao.setDescricao("Milho");
-        produtoTipoService.salvar(porDescricao);
-        LOG.info("Busca por descrição. Descrição {} id {} ", porDescricao.getDescricao(), porDescricao.getId());
+        // Produto porDescricao =
+        // produtoTipoService.buscarPorDescricao(produto.getDescricao());
+        // porDescricao.setDescricao("Milho");
+        // produtoTipoService.salvar(porDescricao);
+        // LOG.info("Busca por descrição. Descrição {} id {} ",
+        // porDescricao.getDescricao(), porDescricao.getId());
 
         // produtoTipoService.deletarProdutoPorId(produtoPorId.getId());
 
         // NotaFiscal
 
         NotaFiscal notaFiscal = new NotaFiscal();
-        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.SAIDA);
         notaFiscal.setParceiroNegocio(parceiroNegocio2);
         notaFiscal.setNumero(48686425);
         notaFiscal.setDataEmissao(LocalDate.now());
@@ -137,6 +146,7 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscalItem.setProduto(produtoPorId);
         notaFiscalItem.setQuantidade(5);
         notaFiscalItem.SetPreco_unitario(10.0);
+        notaFiscalItemService.controlarEstoque(notaFiscalItem);
 
         // Salvar o Item da Nota Fiscal
         NotaFiscalItem savedNotaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);

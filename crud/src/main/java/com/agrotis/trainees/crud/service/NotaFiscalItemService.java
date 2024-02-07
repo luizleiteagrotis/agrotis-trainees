@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
 @Service
@@ -17,10 +18,13 @@ public class NotaFiscalItemService {
 
     private final NotaFiscalItemRepository repository;
     private final NotaFiscalService notaFiscalService;
+    private final ProdutoTipoService produtoTipoService;
 
-    public NotaFiscalItemService(NotaFiscalItemRepository repository, NotaFiscalService notaFiscalService) {
+    public NotaFiscalItemService(NotaFiscalItemRepository repository, NotaFiscalService notaFiscalService,
+                    ProdutoTipoService produtoTipoService) {
         this.repository = repository;
         this.notaFiscalService = notaFiscalService;
+        this.produtoTipoService = produtoTipoService;
     }
 
     public NotaFiscalItem salvar(NotaFiscalItem notaFiscalItem) {
@@ -66,5 +70,17 @@ public class NotaFiscalItemService {
             Double valorTotal = quantidade * precoUnitario;
             notaFiscalItem.setValorTotal(valorTotal);
         }
+    }
+
+    public void controlarEstoque(NotaFiscalItem notaFiscalItem) {
+        Integer quantidade = notaFiscalItem.getQuantidade();
+        Produto produto = notaFiscalItem.getProduto();
+        if (notaFiscalItem.getNotaFiscal().getNotaFiscalTipo() != notaFiscalItem.getNotaFiscal().getNotaFiscalTipo().SAIDA) {
+            produto.setEstoque(produto.getEstoque() + quantidade);
+        } else {
+            produto.setEstoque(produto.getEstoque() - quantidade);
+
+        }
+        produtoTipoService.salvar(produto);
     }
 }

@@ -6,3 +6,6 @@ CREATE TABLE produto (
     data_validade DATE NOT NULL,
     FOREIGN KEY (id_fabricante_fornecedor) REFERENCES parceiro_negocio(id)
 ); 
+
+	ALTER TABLE produto
+	ADD estoque_produto int;
