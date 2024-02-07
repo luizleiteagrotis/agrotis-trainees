@@ -23,9 +23,9 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-
-        if (buscarPorNome(entidade.getNome()) != null) {
-            throw new FabricanteDuplicadoException("Nome do fabricante já existe");
+        System.out.println(repository.findByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal()));
+        if (repository.findByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal())) {
+            throw new FabricanteDuplicadoException("Nome do fabricante ou inscrição fiscal já existem");
         }
         return repository.save(entidade);
     }

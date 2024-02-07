@@ -93,10 +93,10 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 2) {
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
 
-            parceiroNegocio.setNome("Criador de Gado");
+            parceiroNegocio.setNome("Fazendas do Rio Grnade");
 
-            parceiroNegocio.setInscricaoFiscal("020924");
-            parceiroNegocio.setEndereco("Sao Paulo, rua Grãos, 15");
+            parceiroNegocio.setInscricaoFiscal("77775345377");
+            parceiroNegocio.setEndereco("Rio Grande, rua Grãos, 15");
             parceiroNegocio.setTelefone("11 9 5454 5454");
 
             try {
