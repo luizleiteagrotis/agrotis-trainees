@@ -19,7 +19,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
-import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
+import com.agrotis.trainees.crud.exception.dataValidadeInvalidaException;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -130,24 +130,30 @@ public class CrudApplication implements CommandLineRunner {
             Produto produto = new Produto();
 
             ParceiroNegocio fabricante = parceiroNegocioService.buscarPorId(272);
-            produto.setDescricao("Criador de Grão");
+            produto.setDescricao("Semente de girassol");
             produto.setFabricante(fabricante);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-            Date fabricacaoDate = dateFormat.parse("03-07-2010");
+            Date fabricacaoDate = dateFormat.parse("31-12-2024");
             produto.setDataFabricacao(fabricacaoDate);
 
             Date validaDate = dateFormat.parse("08-08-2024");
             produto.setDataValidade(validaDate);
 
-            Produto produto2 = produtoService.salvar(produto);
+            try {
+                Produto produto2 = produtoService.salvar(produto);
+            } catch (dataValidadeInvalidaException e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
 
-            Produto produtoPorId = produtoService.buscarPorId(produto2.getId());
+            Produto produtoPorId = produtoService.buscarPorId(134);
             LOG.info("Busca por id. Descrição {} Data Fabricação {} Data Validade {} Nome da empresa parceira {} quantidade em estoque {}",
                             produtoPorId.getDescricao(), produtoPorId.getDataFabricacao(), produtoPorId.getDataValidade(),
                             produtoPorId.getFabricante(), produtoPorId.getQuantidade_estoque());
 
+            produtoPorId.setQuantidade_estoque(500);
+            produtoService.salvar(produtoPorId);
             // Produto produtoPorDescricao =
             // produtoService.buscarPorDescricao(produto2.getDescricao());
             // LOG.info("Busca por descricao. Descrição {} Data Fabricação {}
@@ -183,7 +189,7 @@ public class CrudApplication implements CommandLineRunner {
 
             ParceiroNegocio parceiro = parceiroNegocioService.buscarPorId(113);
 
-            notaFiscal.setNumero("15");
+            notaFiscal.setNumero("51");
             NotaFiscalTipo notaTipo = notaFiscalTipoService.buscarPorId(165);
             notaFiscal.setParceiroNegocio(parceiro);
             notaFiscal.setNotaFiscalTipo(notaTipo);
@@ -226,27 +232,32 @@ public class CrudApplication implements CommandLineRunner {
         }
 
         if (escolha == 5) {
-            // ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
-            //
-            // Produto produto = produtoService.buscarPorId(126);
-            // itemNotaFiscal.setProduto(produto);
-            //
+            ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+
+            Produto produto = produtoService.buscarPorId(134);
+            itemNotaFiscal.setProduto(produto);
+
             NotaFiscal notaFiscal = notaFiscalService.buscarPorId(177);
-            // itemNotaFiscal.setNotaFiscal(notaFiscal);
-            //
-            // itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(2000));
-            // itemNotaFiscal.setQuantidade(1);
-            //
-            // ItemNotaFiscal itemNotaFiscal2 =
-            // itemNotaFiscalService.salvar(itemNotaFiscal);
-            // LOG.info("id inserido {}.", itemNotaFiscal2.getId());
-            //
-            // notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal);
+            itemNotaFiscal.setNotaFiscal(notaFiscal);
+            notaFiscalService.atualizarValorTotal(notaFiscal);
+            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(2000));
+            itemNotaFiscal.setQuantidade(1);
+
+            try {
+                ItemNotaFiscal itemNotaFiscal2 = itemNotaFiscalService.salvar(itemNotaFiscal);
+                LOG.info("id inserido {}.", itemNotaFiscal2.getId());
+                notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal);
+            } catch (Exception e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
+
             // // notaFiscalService.removerItem(itemNotaFiscal2, notaFiscal);
 
-            ItemNotaFiscal itemPorId = itemNotaFiscalService.buscarPorId(270);
-            LOG.info("Busca por id. Quantidade {} valor unitário {} valortotal {}", itemPorId.getQuantidade(),
-                            itemPorId.getValor_unitario(), itemPorId.getValor_total());
+            // ItemNotaFiscal itemPorId =
+            // itemNotaFiscalService.buscarPorId(270);
+            // LOG.info("Busca por id. Quantidade {} valor unitário {}
+            // valortotal {}", itemPorId.getQuantidade(),
+            // itemPorId.getValor_unitario(), itemPorId.getValor_total());
 
             // List<ItemNotaFiscal> itemPorProduto =
             // itemNotaFiscalService.buscarPorProduto(produto);
@@ -258,17 +269,18 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} itens notas fiscal",
             // todosItemsFiscals.size());
 
-            itemPorId.setValor_unitario(BigDecimal.valueOf(8000));
-            itemPorId.setQuantidade(2);
-            try {
-                itemNotaFiscalService.salvar(itemPorId);
-            } catch (QuantidadeInsuficienteException e) {
-                System.out.println("Tratamento de exceção: " + e.getMessage());
-            }
+            // itemPorId.setValor_unitario(BigDecimal.valueOf(8000));
+            // itemPorId.setQuantidade(2);
+            // try {
+            // itemNotaFiscalService.salvar(itemPorId);
+            // } catch (QuantidadeInsuficienteException e) {
+            // System.out.println("Tratamento de exceção: " + e.getMessage());
+            // }
 
-            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(notaFiscal.getId());
-
-            notaFiscalService.atualizarValorTotal(notaFiscal2);
+            // NotaFiscal notaFiscal2 =
+            // notaFiscalService.buscarPorId(notaFiscal.getId());
+            //
+            // notaFiscalService.atualizarValorTotal(notaFiscal2);
 
             // itemNotaFiscalService.deletarPorId(265);
             // NotaFiscal notaFiscal3 =
@@ -296,30 +308,45 @@ public class CrudApplication implements CommandLineRunner {
 
             ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
 
-            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(32.5));
-            itemNotaFiscal.setQuantidade(4);
-            itemNotaFiscal.setProduto(produtoService.buscarPorId(279));
+            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(1170));
+            itemNotaFiscal.setQuantidade(300);
+            itemNotaFiscal.setProduto(produtoService.buscarPorId(134));
+
+            // ItemNotaFiscal itemNotaFiscal2 = new ItemNotaFiscal();
+            //
+            // itemNotaFiscal2.setValor_unitario(BigDecimal.valueOf(200));
+            // itemNotaFiscal2.setQuantidade(5);
+            // itemNotaFiscal2.setProduto(produtoService.buscarPorId(295));
 
             // NotaFiscal notaFiscal = new NotaFiscal();
             //
-            // notaFiscal.setNumero("30");
+            // notaFiscal.setNumero("34");
             // notaFiscal.setParceiroNegocio(fabricante);
             // notaFiscal.setNotaFiscalTipo(tipoNota);
             //
             // NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
 
-            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(285);
+            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(309);
 
+            // itemNotaFiscal2.setNotaFiscal(notaFiscal2);
             itemNotaFiscal.setNotaFiscal(notaFiscal2);
 
             try {
-                ItemNotaFiscal itemNotaFiscal2 = itemNotaFiscalService.salvar(itemNotaFiscal);
-                notaFiscalService.adicionarItem(itemNotaFiscal2, notaFiscal2);
-            } catch (QuantidadeInsuficienteException e) {
+                ItemNotaFiscal itemNotaFiscal3 = itemNotaFiscalService.salvar(itemNotaFiscal);
+                notaFiscalService.adicionarItem(itemNotaFiscal3, notaFiscal2);
+                System.out.println(notaFiscal2.getValor_total());
+            } catch (Exception e) {
                 System.out.println("Tratamento de exceção: " + e.getMessage());
             }
 
-            System.out.println(notaFiscal2.getValor_total());
+            // try {
+            // ItemNotaFiscal itemNotaFiscal4 =
+            // itemNotaFiscalService.salvar(itemNotaFiscal2);
+            // notaFiscalService.adicionarItem(itemNotaFiscal4, notaFiscal2);
+            // System.out.println(notaFiscal2.getValor_total());
+            // } catch (QuantidadeInsuficienteException e) {
+            // System.out.println("Tratamento de exceção: " + e.getMessage());
+            // }
 
         }
     }
