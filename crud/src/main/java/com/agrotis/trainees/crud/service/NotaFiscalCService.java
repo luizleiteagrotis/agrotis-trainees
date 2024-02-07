@@ -25,7 +25,16 @@ public class NotaFiscalCService {
 		return repository.save(entidade);
 	}
 
-	
+	public NotaFiscalC buscarPorId(Integer id) {
+		return repository.findById(id).orElseGet(() -> {
+			((org.slf4j.Logger) LOG).error("Nota não encontrada para id {}.", id);
+			return null;
+		});
+
 	}
 
+	
 
+	
+
+}
