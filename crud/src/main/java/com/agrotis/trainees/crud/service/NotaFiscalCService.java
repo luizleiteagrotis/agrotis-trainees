@@ -33,7 +33,18 @@ public class NotaFiscalCService {
 
 	}
 
-	
+	public NotaFiscalC atualizar(Integer id, NotaFiscalC negocio) {
+		NotaFiscalC byId = repository.findById(id).orElseGet(() -> {
+			((org.slf4j.Logger) LOG).info("Não foi possivel encontrar a nota fiscal pelo ID {}", id);
+			return null;
+		});
+		return repository.save(byId);
+	}
+
+	public List<NotaFiscalC> listarTodos() {
+		return repository.findAll();
+
+	}
 
 	
 
