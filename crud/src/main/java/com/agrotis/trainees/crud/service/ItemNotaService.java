@@ -1,11 +1,13 @@
 package com.agrotis.trainees.crud.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
@@ -20,14 +22,18 @@ public class ItemNotaService {
 
     private final NotaFiscalItemRepository repository;
     private final ProdutoService produtoService;
+    private final CabecalhoNotaService cabecalhoNotaService;
 
-    public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService) {
+    public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService,
+                    CabecalhoNotaService cabecalhoNotaService) {
         this.repository = repository;
         this.produtoService = produtoService;
+        this.cabecalhoNotaService = cabecalhoNotaService;
     }
 
     public ItemNota salvar(ItemNota entidade) {
         calcularValorTotal(entidade);
+        adicionarValorTotalCabecalho(entidade);
         atualizarEstoque(entidade);
         return repository.save(entidade);
     }
@@ -89,6 +95,15 @@ public class ItemNotaService {
         }
 
         produtoService.salvar(produto);
+    }
+
+    private void adicionarValorTotalCabecalho(ItemNota item) {
+        CabecalhoNota cabecalho = item.getCabecalhoNota();
+        Double valorTotalItem = item.getValorTotal();
+        Double valorTotalCabecalho = cabecalho.getValorTotal();
+        cabecalho.setValorTotal(valorTotalCabecalho);
+        cabecalhoNotaService.salvar(cabecalho);
+
     }
 
 }

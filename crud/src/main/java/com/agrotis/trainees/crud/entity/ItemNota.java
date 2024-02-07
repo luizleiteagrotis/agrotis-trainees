@@ -44,8 +44,6 @@ public class ItemNota {
     @Column(name = "valor_total")
     private Double valorTotal;
 
-    
-
     public CabecalhoNota getCabecalhoNota() {
         return cabecalhoNota;
     }

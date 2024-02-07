@@ -25,15 +25,11 @@ public class ValidacaoUtils {
         if (produto == null) {
             return true;
         }
-
-        // Verifica se algum dos campos obrigatórios está nulo
         if (produto.getDescricao() == null || produto.getFabricante() == null ||
             produto.getDataFabricacao() == null || produto.getDataValidade() == null ||
             produto.getQuantidadeEstoque() == null) {
             return true;
         }
-
-        // Se nenhum campo obrigatório estiver nulo, retorna false
         return false;
     }
 

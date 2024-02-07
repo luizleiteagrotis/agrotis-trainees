@@ -69,15 +69,14 @@ public class CrudApplication implements CommandLineRunner {
             produto.setDataValidade(LocalDate.parse("09/05/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             produto.setDescricao("Sementes Sorria");
             produto.setQuantidadeEstoque(0);
-
+            produto.setFabricante(parceiroNegocio);
             produtoService.salvar(produto);
-            
+
         } catch (CampoVazioOuNuloException e) {
             LOG.error("Erro ao salvar o produto: " + e.getMessage());
         } catch (EntidadeNaoEncontradaException e) {
             LOG.error("Entidade não encontrada: " + e.getMessage());
-        } 
-
+        }
 
     }
 }
