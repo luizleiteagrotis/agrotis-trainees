@@ -22,28 +22,29 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "Atributo nome obrigatorio")
 	@Column(name = "nome")
 	private String nome;
 	
-	@NotBlank
+	@NotBlank(message = "Atributo descricao obrigatorio")
 	@Column(name = "descricao")
 	private String descricao;
 	
+	@NotNull(message = "Atributo fabricante obrigatorio")
 	@ManyToOne
 	private ParceiroNegocio fabricante;
 	
-	@NotNull
-	@PastOrPresent
+	@NotNull(message = "Atributo data de fabricacao obrigatorio")
+	@PastOrPresent(message = "Atributo data de fabricacao nao deve ser futuro")
 	@Column(name = "data_fabricacao")
 	private LocalDate dataFabricacao;
 	
-	@NotNull
+	@NotNull(message = "Atributo data de validade obrigatorio")
 	@Column(name = "data_validade")
 	private LocalDate dataValidade;
 	
-	@NotNull
-	@Min(0)
+	@NotNull(message = "Atributo estoque obrigatorio")
+	@Min(value = 0, message = "Atributo estoque deve ser no minimo 0")
 	private Integer estoque;
 	
 	public Produto() {}
