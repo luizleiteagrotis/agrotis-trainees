@@ -114,7 +114,7 @@ public class CrudApplication implements CommandLineRunner {
         produto.setDescricao("Grão Plantado");
         produto.setParceiroNegocio(parceiroNegocio2);
         produto.setFabricante("Coamo");
-        produto.setDataFabricacao(LocalDate.of(2024, 1, 8));
+        produto.setDataFabricacao(LocalDate.of(2024, 1, 1));
         produto.setDataValidade(LocalDate.of(2024, 5, 8));
         Produto produto2 = produtoService.salvar(produto);
         LOG.info("id inserido: {}", produto.getId());
@@ -165,7 +165,7 @@ public class CrudApplication implements CommandLineRunner {
         porNomeProduto.setParceiroNegocio(parceiroNegocio2);
         porNomeProduto.setFabricante("Lierson Damares");
         porNomeProduto.setDataFabricacao(LocalDate.of(2023, 10, 01));
-        porNomeProduto.setDataValidade(LocalDate.of(2024, 2, 01));
+        porNomeProduto.setDataValidade(LocalDate.of(2024, 1, 01));
         produtoService.salvar(porNomeProduto);
         LOG.info("Dados alterados com sucesso!", porNomeProduto.getNome(), porNomeProduto.getDescricao(),
                         porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(), porNomeProduto.getDataFabricacao(),

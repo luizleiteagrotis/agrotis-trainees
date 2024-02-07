@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -41,7 +40,6 @@ public class NotaFiscal {
     @Column(name = "numero_nota")
     private Integer numeroNota;
 
-    @FutureOrPresent(message = "A data não pode ser maior que a data de hoje")
     private LocalDate dataNota;
 
     @OneToMany(mappedBy = "notaFiscal")
