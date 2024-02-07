@@ -46,6 +46,10 @@ public class NotaFiscalCService {
 
 	}
 
-	
+	public void deleterPorId(Integer id) {
+		repository.deleteById(id);
+		((org.slf4j.Logger) LOG).info("Deletado com sucesso");
+
+	}
 
 }
