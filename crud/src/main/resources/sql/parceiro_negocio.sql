@@ -1,22 +1,15 @@
-CREATE TABLE parceiro_negocio
-
-(
-
-    id int,
-    nome varchar(255),
-    inscricao_fiscal int,
-	endereco varchar(255),
-	telefone varchar(255),
-    CONSTRAINT pk_parceiro_negocio_tipo PRIMARY KEY (id)
-)
+   create table parceiro_negocio (
+       id int not null,
+        endereco varchar(255),
+        inscricao_fiscal varchar(255),
+        nome varchar(255),
+        telefone varchar(255),
+        primary key (id)
+    )
 
 
+Hibernate: create sequence hibernate_sequence start with 1 increment by 1
 
-CREATE SEQUENCE hibernate_sequence
-
- AS INTEGER
-
- START WITH 1;
 
 
 

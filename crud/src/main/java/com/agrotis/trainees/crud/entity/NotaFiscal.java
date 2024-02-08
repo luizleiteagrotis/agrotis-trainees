@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,11 +23,12 @@ public class NotaFiscal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "[data]")
+    @Column(name = "data_nota")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 
     @Column(name = "tipo")
+    @Enumerated(EnumType.STRING)
     private NotaFiscalTipo tipo;
 
     @Column(name = "numero")
@@ -34,6 +37,9 @@ public class NotaFiscal {
     @ManyToOne
     @JoinColumn(name = "parceiro_negocio_id")
     private ParceiroNegocio parceiroNegocio;
+
+    @Column(name = "valor_total")
+    private Double valorTotal;
 
     public Integer getId() {
         return id;
@@ -69,6 +75,14 @@ public class NotaFiscal {
 
     public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
         this.parceiroNegocio = parceiroNegocio;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
 }

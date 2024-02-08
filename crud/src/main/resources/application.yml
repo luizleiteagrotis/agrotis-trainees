@@ -15,8 +15,6 @@ spring:
     active: dev
   main:
     allow-bean-definition-overriding: false
-  jpa:
-    show-sql: true
     open-in-view: false
     properties:
       hibernate:
@@ -31,3 +29,5 @@ spring:
     url: jdbc:sqlserver://localhost:1433;databaseName=crud
     username: sa
     password: Idkmysenha21.
+
+

@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -75,7 +77,9 @@ public class ItemNotaFiscal {
     }
 
     public void setProduto(Produto produto) {
+        if (Objects.equals(this.produto, produto)) {
+            throw new IllegalArgumentException("O mesmo produto nao pode ser adicionado na nota mais de uma vez!");
+        }
         this.produto = produto;
     }
-
 }
