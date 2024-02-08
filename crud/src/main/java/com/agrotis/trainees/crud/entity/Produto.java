@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,28 +24,32 @@ public class Produto {
     private Integer id;
 
     @NotBlank(message = "Obrigatório preencher a descrição do produto")
+    @Column(unique = true)
     private String descricao;
 
     @NotNull(message = "Obrigatório preencher data de fabricação do produto")
+    @Column(name = "data_fabricacao", nullable = false)
     @PastOrPresent
-    private Date data_fabricacao;
+    private Date dataFabricacao;
 
     @NotNull(message = "Obrigatório preencher data de validade do produto")
-    private Date data_validade;
+    @Column(name = "data_validade", nullable = false)
+    private Date dataValidade;
 
     @ManyToOne
     @JoinColumn(name = "id_fabricante")
     private ParceiroNegocio fabricante;
 
     @Min(value = 0)
-    private int quantidade_estoque;
+    @Column(name = "quantidade_estoque")
+    private int quantidadeEstoque;
 
-    public int getQuantidade_estoque() {
-        return quantidade_estoque;
+    public int getQuantidadeEstoque() {
+        return quantidadeEstoque;
     }
 
-    public void setQuantidade_estoque(int quantidade_estoque) {
-        this.quantidade_estoque = quantidade_estoque;
+    public void setQuantidadeEstoque(int quantidadeEstoque) {
+        this.quantidadeEstoque = quantidadeEstoque;
     }
 
     public Integer getId() {
@@ -60,19 +65,19 @@ public class Produto {
     }
 
     public Date getDataFabricacao() {
-        return data_fabricacao;
+        return dataFabricacao;
     }
 
-    public void setDataFabricacao(Date data_fabricacao) {
-        this.data_fabricacao = data_fabricacao;
+    public void setDataFabricacao(Date dataFabricacao) {
+        this.dataFabricacao = dataFabricacao;
     }
 
     public Date getDataValidade() {
-        return data_validade;
+        return dataValidade;
     }
 
-    public void setDataValidade(Date data_validade) {
-        this.data_validade = data_validade;
+    public void setDataValidade(Date dataValidade) {
+        this.dataValidade = dataValidade;
     }
 
     public ParceiroNegocio getFabricante() {
@@ -85,8 +90,8 @@ public class Produto {
 
     @Override
     public String toString() {
-        return "Produto [id=" + id + ", descricao=" + descricao + ", data_fabricacao=" + data_fabricacao + ", data_validade="
-                        + data_validade + ", parceiroNegocio=" + fabricante + "]";
+        return "Produto [id=" + id + ", descricao=" + descricao + ", data_fabricacao=" + dataFabricacao + ", data_validade="
+                        + dataValidade + ", parceiroNegocio=" + fabricante + "]";
     }
 
 }
