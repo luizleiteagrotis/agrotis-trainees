@@ -53,6 +53,7 @@ public class CabecalhoNota {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @PastOrPresent
+    @NotNull(message = "Preencha o campo data.")
     private LocalDate data;
 
     @OneToMany(mappedBy = "cabecalhoNota", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,6 +62,7 @@ public class CabecalhoNota {
     @DecimalMin(value = "00.00", inclusive = true)
     @Digits(integer = 10, fraction = 2)
     @Column(name = "valor_total")
+    @NotNull(message = "Preencha o valor total.")
     private Double valorTotal;
 
     public TipoNota getNotaFiscalTipo() {
