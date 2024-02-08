@@ -94,7 +94,7 @@ public class CrudApplication implements CommandLineRunner {
 
             parceiroNegocio.setNome("Fazendas do Rio Grnade");
 
-            parceiroNegocio.setInscricaoFiscal("77775345377");
+            parceiroNegocio.setInscricaoFiscal("92939495");
             parceiroNegocio.setEndereco("Rio Grande, rua Grãos, 15");
             parceiroNegocio.setTelefone("11 9 5454 5454");
 
@@ -124,15 +124,17 @@ public class CrudApplication implements CommandLineRunner {
             // todosParceiros.size());
 
             // ParceiroNegocio parceiroPorNome2 =
-            // parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
-            // parceiroPorNome2.setNome("Empresa de citrus e ração");
-            // parceiroPorNome2.setEndereco("Curitiba, Centro, 333");
-            // parceiroPorNome2.setTelefone("41 9 2222 1111");
-            // parceiroNegocioService.salvar(parceiroPorNome2);
+            // parceiroNegocioService.buscarPorNome("Parceiro2");
+            // parceiroPorNome2.setEndereco("Rua das merces");
+            // try {
+            // parceiroNegocioService.atualizar(parceiroPorNome2);
             // LOG.info("Nome, endereco e telefone atualizado com sucesso, novo
             // nome: {}, novo endereco: {}, novo telefone: {} ",
             // parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(),
             // parceiroPorNome2.getTelefone());
+            // } catch (Exception e) {
+            // System.out.println("Tratamento de exceção: " + e.getMessage());
+            // }
 
             // parceiroNegocioService.deletarPorId(parceiroPorId.getId());
         }
@@ -184,10 +186,10 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} tipos de produtos",
             // todosProdutos.size());
             //
-            Produto produtoPorDescricao2 = produtoService.buscarPorDescricao("Areia do mar azul");
-            Date novaValidadeDate = dateFormat.parse("03-07-2016");
+            Produto produtoPorDescricao2 = produtoService.buscarPorDescricao("Arroz6");
+            Date novaValidadeDate = dateFormat.parse("03-07-2050");
             produtoPorDescricao2.setDataValidade(novaValidadeDate);
-            produtoPorDescricao2.setDescricao("Arroz3");
+            produtoPorDescricao2.setDescricao("Arroz10");
             try {
                 produtoService.atualizar(produtoPorDescricao2);
                 LOG.info("Nova descrição {}, nova data validade {} e novo parceiro {}: ", produtoPorDescricao2.getDescricao(),
@@ -251,14 +253,14 @@ public class CrudApplication implements CommandLineRunner {
         if (escolha == 5) {
             ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
 
-            Produto produto = produtoService.buscarPorId(134);
+            Produto produto = produtoService.buscarPorId(183);
             itemNotaFiscal.setProduto(produto);
 
-            NotaFiscal notaFiscal = notaFiscalService.buscarPorId(177);
+            NotaFiscal notaFiscal = notaFiscalService.buscarPorId(276);
             itemNotaFiscal.setNotaFiscal(notaFiscal);
             notaFiscalService.atualizarValorTotal(notaFiscal);
-            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(2000));
-            itemNotaFiscal.setQuantidade(1);
+            itemNotaFiscal.setValorUnitario(BigDecimal.valueOf(2000));
+            itemNotaFiscal.setQuantidade(30);
 
             try {
                 ItemNotaFiscal itemNotaFiscal2 = itemNotaFiscalService.salvar(itemNotaFiscal);
@@ -270,11 +272,9 @@ public class CrudApplication implements CommandLineRunner {
 
             // // notaFiscalService.removerItem(itemNotaFiscal2, notaFiscal);
 
-            // ItemNotaFiscal itemPorId =
-            // itemNotaFiscalService.buscarPorId(270);
-            // LOG.info("Busca por id. Quantidade {} valor unitário {}
-            // valortotal {}", itemPorId.getQuantidade(),
-            // itemPorId.getValor_unitario(), itemPorId.getValor_total());
+            ItemNotaFiscal itemPorId = itemNotaFiscalService.buscarPorId(326);
+            LOG.info("Busca por id. Quantidade {} valor unitário {} valortotal {}", itemPorId.getQuantidade(),
+                            itemPorId.getValorUnitario(), itemPorId.getValorTotal());
 
             // List<ItemNotaFiscal> itemPorProduto =
             // itemNotaFiscalService.buscarPorProduto(produto);
@@ -286,11 +286,12 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} itens notas fiscal",
             // todosItemsFiscals.size());
 
-            // itemPorId.setValor_unitario(BigDecimal.valueOf(8000));
-            // itemPorId.setQuantidade(2);
+            itemPorId.setQuantidade(100);
             // try {
-            // itemNotaFiscalService.salvar(itemPorId);
-            // } catch (QuantidadeInsuficienteException e) {
+            // ItemNotaFiscal novoItemNotaFiscal =
+            // itemNotaFiscalService.atualizar(itemPorId);
+            // notaFiscalService.atualizarValorTotal(novoItemNotaFiscal.getNotaFiscal());
+            // } catch (Exception e) {
             // System.out.println("Tratamento de exceção: " + e.getMessage());
             // }
 
@@ -325,9 +326,9 @@ public class CrudApplication implements CommandLineRunner {
 
             ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
 
-            itemNotaFiscal.setValor_unitario(BigDecimal.valueOf(1170));
+            itemNotaFiscal.setValorUnitario(BigDecimal.valueOf(1170));
             itemNotaFiscal.setQuantidade(300);
-            itemNotaFiscal.setProduto(produtoService.buscarPorId(134));
+            itemNotaFiscal.setProduto(produtoService.buscarPorId(296));
 
             // ItemNotaFiscal itemNotaFiscal2 = new ItemNotaFiscal();
             //
@@ -343,7 +344,7 @@ public class CrudApplication implements CommandLineRunner {
             //
             // NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
 
-            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(309);
+            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(276);
 
             // itemNotaFiscal2.setNotaFiscal(notaFiscal2);
             itemNotaFiscal.setNotaFiscal(notaFiscal2);
@@ -351,7 +352,7 @@ public class CrudApplication implements CommandLineRunner {
             try {
                 ItemNotaFiscal itemNotaFiscal3 = itemNotaFiscalService.salvar(itemNotaFiscal);
                 notaFiscalService.adicionarItem(itemNotaFiscal3, notaFiscal2);
-                System.out.println(notaFiscal2.getValor_total());
+                System.out.println(notaFiscal2.getValorTotal());
             } catch (Exception e) {
                 System.out.println("Tratamento de exceção: " + e.getMessage());
             }
@@ -365,6 +366,10 @@ public class CrudApplication implements CommandLineRunner {
             // System.out.println("Tratamento de exceção: " + e.getMessage());
             // }
 
+        }
+
+        if (escolha == 7) {
+            notaFiscalService.atualizarValorTotal(notaFiscalService.buscarPorId(276));
         }
     }
 }

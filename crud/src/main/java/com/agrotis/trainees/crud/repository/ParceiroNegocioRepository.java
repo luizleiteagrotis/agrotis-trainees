@@ -11,9 +11,12 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 @Repository
 public interface ParceiroNegocioRepository extends JpaRepository<ParceiroNegocio, Integer> {
 
-    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM ParceiroNegocio p WHERE p.nome = :nome OR p.inscricao_fiscal = :inscricaoFiscal")
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM ParceiroNegocio p WHERE p.nome = :nome OR p.inscricaoFiscal = :inscricaoFiscal")
     boolean findByNomeOrInscricaoFiscal(String nome, String inscricaoFiscal);
 
     Optional<ParceiroNegocio> findByNome(String nome);
+
+    @Query("SELECT p FROM ParceiroNegocio p WHERE p.inscricaoFiscal = :inscricaoFiscal")
+    Optional<ParceiroNegocio> findByInscricaoFiscal(String inscricaoFiscal);
 
 }

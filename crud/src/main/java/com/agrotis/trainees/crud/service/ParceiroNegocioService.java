@@ -23,16 +23,37 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-        System.out.println(repository.findByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal()));
         if (repository.findByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal())) {
             throw new FabricanteDuplicadoException("Nome do fabricante ou inscrição fiscal já existem");
         }
         return repository.save(entidade);
     }
 
+    public ParceiroNegocio atualizar(ParceiroNegocio entidade) {
+        ParceiroNegocio parceiroPorNome = buscarPorNome(entidade.getNome());
+        ParceiroNegocio parceiroPorInscricao = buscarPorInscricao(entidade.getInscricaoFiscal());
+        if (parceiroPorNome != null && !parceiroPorNome.getId().equals(entidade.getId())) {
+            throw new FabricanteDuplicadoException("Já existe um fabricante com o mesmo nome: " + entidade.getNome());
+        }
+
+        if (parceiroPorInscricao != null && !parceiroPorInscricao.getId().equals(entidade.getId())) {
+            throw new FabricanteDuplicadoException(
+                            "Já existe um fabricante com a mesma inscrição: " + entidade.getInscricaoFiscal());
+        }
+
+        return repository.save(entidade);
+    }
+
     public ParceiroNegocio buscarPorId(Integer id) {
         return repository.findById(id).orElseGet(() -> {
             LOG.error("Parceiro não encontrado para id {}.", id);
+            return null;
+        });
+    }
+
+    public ParceiroNegocio buscarPorInscricao(String inscricao) {
+        return repository.findByInscricaoFiscal(inscricao).orElseGet(() -> {
+            LOG.error("Parceiro não encontrado para a inscrição fiscal {}.", inscricao);
             return null;
         });
     }
