@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,23 +18,13 @@ public class ParceiroNegocio {
     @NotBlank(message = "Campo nome obrigatório")
     private String nome;
 
+    @Column(unique = true)
     @NotBlank(message = "Campo inscrição fiscal obrigatório")
     private String inscricaoFiscal;
 
     private String endereco;
 
     private String telefone;
-
-    // @OneToMany(mappedBy = "parceiro")
-    // private List<NotaFiscal> notas;
-
-    // public List<NotaFiscal> getNotas() {
-    // return notas;
-    // }
-    //
-    // public void setNotas(List<NotaFiscal> notas) {
-    // this.notas = notas;
-    // }
 
     public Integer getId() {
         return id;

@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
+import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
 @Service
@@ -21,15 +22,30 @@ public class NotaFiscalItemService {
 
     private final NotaFiscalItemRepository repository;
     private final ProdutoService produtoService;
+    private final NotaFiscalService notaFiscalService;
 
-    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService) {
+    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService,
+                    NotaFiscalService notaFiscalService) {
         super();
         this.repository = repository;
         this.produtoService = produtoService;
+        this.notaFiscalService = notaFiscalService;
+
     }
 
     public NotaFiscalItem salvar(NotaFiscalItem entidade) {
-        return repository.save(entidade);
+
+        try {
+            alterarEstoque(entidade);
+
+        } catch (EstoqueZeradoException e) {
+            System.out.println("Erro: " + e.getMessage());
+            return null;
+        } catch (ValorDiferenteException e) {
+            System.out.println("Erro: " + e.getMessage());
+            return null;
+        }
+        return entidade;
     }
 
     public NotaFiscalItem buscarPorId(Integer id) {
@@ -56,23 +72,48 @@ public class NotaFiscalItemService {
     }
 
     @Transactional
-    public Double obterOValorTotalDaNota(Integer idNota) {
-        try {
-            return repository.sumAllTotal(idNota);
-        } catch (NoResultException e) {
-            return null;
-        }
+    public NotaFiscalItem obterValorTotal(NotaFiscalItem entidade, NotaFiscalItem entidadeNova) {
+        NotaFiscalItem buscarPorProdutoAndId = repository.findByProdutoAndIdNota(entidade.getProduto(), entidade.getIdNota());
+
+        entidade.setValorTotal(entidade.getPrecoUnitario() * entidade.getQuantidade());
+        notaFiscalService.atualizarValorTotalNota(entidadeNova);
+        return entidade;
     }
 
-    public void alterarEstoque(NotaFiscal nota, NotaFiscalItem item) {
-        Produto produto = item.getProduto();
+    public NotaFiscalItem alterarEstoque(NotaFiscalItem item) throws EstoqueZeradoException, ValorDiferenteException {
+        NotaFiscal nota = item.getIdNota();
+        Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
         if (nota.getTipo().getId() == 1) {
             produto.setEstoque(produto.getEstoque() + item.getQuantidade());
+            validarNotaEItem(item);
             Produto produto2 = produtoService.salvar(produto);
         } else {
+            if (produto.getEstoque() - item.getQuantidade() < 0) {
+                throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
+            }
             produto.setEstoque(produto.getEstoque() - item.getQuantidade());
+            validarNotaEItem(item);
             Produto produto2 = produtoService.salvar(produto);
         }
+        return item;
     }
+
+    public NotaFiscalItem validarNotaEItem(NotaFiscalItem entidade) throws ValorDiferenteException {
+        NotaFiscalItem buscarPorProdutoAndId = repository.findByProdutoAndIdNota(entidade.getProduto(), entidade.getIdNota());
+
+        if (buscarPorProdutoAndId != null) {
+            if (buscarPorProdutoAndId.getPrecoUnitario() == entidade.getPrecoUnitario()) {
+                buscarPorProdutoAndId.setQuantidade(buscarPorProdutoAndId.getQuantidade() + entidade.getQuantidade());
+                obterValorTotal(buscarPorProdutoAndId, entidade);
+                return repository.save(buscarPorProdutoAndId);
+            }
+            throw new ValorDiferenteException("Item com preço diferente do original");
+        } else {
+            obterValorTotal(entidade, entidade);
+            return repository.save(entidade);
+        }
+
+    }
+
 }

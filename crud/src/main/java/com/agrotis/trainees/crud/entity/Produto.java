@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -29,6 +30,7 @@ public class Produto {
 
     private Date dataValidade;
 
+    @Min(value = 0)
     private Integer estoque;
 
     public Integer getEstoque() {

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,19 +25,25 @@ public class NotaFiscalItem {
     private Integer quantidade;
 
     @Column(name = "preco_unitario")
-    private Double precoUnitario;
+    // @Digits(integer = 19, fraction = 2)
+    private double precoUnitario;
 
     @Column(name = "valor_total")
     private Double valorTotal;
 
-    @Column(name = "id_nota")
-    private Integer idNota;
+    @ManyToOne
+    @JoinColumn(name = "id_nota")
+    private NotaFiscal idNota;
 
-    public Integer getIdNota() {
+    public void setPrecoUnitario(double precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
+
+    public NotaFiscal getIdNota() {
         return idNota;
     }
 
-    public void setIdNota(Integer idNota) {
+    public void setIdNota(NotaFiscal idNota) {
         this.idNota = idNota;
     }
 
@@ -52,11 +59,11 @@ public class NotaFiscalItem {
         return quantidade;
     }
 
-    public Double getPrecoUnitario() {
+    public double getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public Double getValorTotal() {
+    public double getValorTotal() {
         return valorTotal;
     }
 
@@ -66,10 +73,6 @@ public class NotaFiscalItem {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
-    }
-
-    public void setPrecoUnitario(Double precoUnitario) {
-        this.precoUnitario = precoUnitario;
     }
 
     public void setValorTotal(Double valorTotal) {

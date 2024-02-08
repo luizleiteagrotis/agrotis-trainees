@@ -74,8 +74,8 @@ public class CrudApplication implements CommandLineRunner {
             notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
         } else if (atividadeAtual < 4) {
             ParceiroNegocio parceiroNegocios = new ParceiroNegocio();
-            parceiroNegocios.setNome("Sabrina Sato");
-            parceiroNegocios.setInscricaoFiscal("854.569.84");
+            parceiroNegocios.setNome("Fabio Santos");
+            parceiroNegocios.setInscricaoFiscal("854.965.92");
             parceiroNegocios.setEndereco("Disney, 2");
             parceiroNegocios.setTelefone("587489632");
             ParceiroNegocio parceiroNegocios2 = parceiroNegociosService.salvar(parceiroNegocios);
@@ -89,24 +89,31 @@ public class CrudApplication implements CommandLineRunner {
             LOG.info("Busca por inscrição fiscal. Nome {}, Endereço {}, Telefone {} ", porInscricao.getNome(),
                             porInscricao.getEndereco(), porInscricao.getTelefone());
 
-            ParceiroNegocio porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios2.getNome());
-            LOG.info("Busca pelo nome {}. Inscricao Fiscal {}, Endereço {}, Telefone {} ", porNome.getNome(),
-                            porNome.getInscricaoFiscal(), porNome.getEndereco(), porNome.getTelefone());
+            List<ParceiroNegocio> porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios2.getNome());
+            if (!porNome.isEmpty()) {
+                for (ParceiroNegocio parceiro : porNome) {
+                    LOG.info("Nome: {}, Inscrição Fiscal {}, Endereço {}, Telefone {}", parceiro.getNome(),
+                                    parceiro.getInscricaoFiscal(), parceiro.getEndereco(), parceiro.getTelefone());
+                }
+            } else {
+                LOG.info("Nenhum Resultado encontrado para o nome : {}", parceiroNegocios2.getNome());
+            }
 
             List<ParceiroNegocio> todosSalvos = parceiroNegociosService.listarTodos();
             LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
 
-            porNome = parceiroNegociosService.buscarPorNome(parceiroNegocios.getNome());
-            porNome.setNome("Sabrina");
-            porNome.setEndereco("globo");
-            porNome.setTelefone("258749632");
-            parceiroNegociosService.salvar(porNome);
+            // porNome =
+            // parceiroNegociosService.buscarPorNome(parceiroNegocios.getNome());
+            // porNome.setNome("Sabrina");
+            // porNome.setEndereco("globo");
+            // porNome.setTelefone("258749632");
+            // parceiroNegociosService.salvar(porNome);
             LOG.info("Dados alterados com sucesso");
 
             if (atividadeAtual == 3) {
-                porId = parceiroNegociosService.buscarPorId(12);
-                parceiroNegociosService.deletarPorId(porId.getId());
-                LOG.info("O usuario {} foi deletado", porId.getNome());
+                // porId = parceiroNegociosService.buscarPorId(12);
+                // parceiroNegociosService.deletarPorId(porId.getId());
+                // LOG.info("O usuario {} foi deletado", porId.getNome());
             }
 
         } else if (atividadeAtual < 6) {
@@ -114,11 +121,11 @@ public class CrudApplication implements CommandLineRunner {
             Produto produto = new Produto();
             ParceiroNegocio fabricante = parceiroNegociosService.buscarPorId(4);
 
-            produto.setDescricao("Manga");
+            produto.setDescricao("Limão");
             produto.setIdParceiro(fabricante);
             produto.setDataFabricacao(Date.valueOf("2021-01-01"));
             produto.setDataValidade(Date.valueOf("2024-05-05"));
-            produto.setEstoque(100);
+            produto.setEstoque(0);
             Produto produto2 = produtoService.salvar(produto);
             LOG.info("id inserido: {}", produto2.getId());
 
@@ -181,42 +188,47 @@ public class CrudApplication implements CommandLineRunner {
             }
 
         } else if (atividadeAtual == 8) {
+            NotaFiscal nota = notaFiscalService.buscarPorId(73);
             NotaFiscalItem item = new NotaFiscalItem();
-            Produto produto = produtoService.buscarPorId(69);
-            NotaFiscal campoValor = notaFiscalService.buscarPorId(72);
+            Produto produto = produtoService.buscarPorId(24);
 
+            item.setIdNota(nota);
             item.setProduto(produto);
             item.setQuantidade(30);
-            item.setPrecoUnitario(6.99);
-            item.setValorTotal(item.getQuantidade() * item.getPrecoUnitario());
-            item.setIdNota(campoValor.getId());
+            item.setPrecoUnitario(4.99);
             NotaFiscalItem item2 = notaFiscalItemService.salvar(item);
-            notaFiscalItemService.alterarEstoque(campoValor, item2);
 
-            Double valorFinal = notaFiscalItemService.obterOValorTotalDaNota(item.getIdNota());
-            campoValor.setValorTotalNota(valorFinal);
-            NotaFiscal campoValor2 = notaFiscalService.salvar(campoValor);
-            NotaFiscalItem porId = notaFiscalItemService.buscarPorId(item2.getId());
-            LOG.info("Busca por Id. Produto {} ; Preço {} ; Quantidade {} ;Preço Total {}", porId.getProduto().getDescricao(),
-                            porId.getPrecoUnitario(), porId.getQuantidade(), porId.getValorTotal());
-
-            NotaFiscalItem porProduto = notaFiscalItemService.buscarPorProduto(item2.getProduto());
-            LOG.info("Buscar pelo Produto {}. Preço {} ; Quantidade ; PreçoTotal {}", porProduto.getProduto().getDescricao(),
-                            porProduto.getPrecoUnitario(), porProduto.getQuantidade(), porProduto.getValorTotal());
-
-            List<NotaFiscalItem> todosSalvos = notaFiscalItemService.listarTodos();
-            LOG.info("Salvos no total de {} itens", todosSalvos.size());
-
-            porId = notaFiscalItemService.buscarPorId(60);
-            porId.setProduto(produtoService.buscarPorId(21));
-            porId.setQuantidade(7);
-            porId.setPrecoUnitario(21.05);
-            porId.setValorTotal(porId.getQuantidade() * porId.getPrecoUnitario());
-            notaFiscalItemService.salvar(porId);
-            LOG.info("Dados alterados com sucesso");
-
-            valorFinal = notaFiscalItemService.obterOValorTotalDaNota(porId.getIdNota());
-            LOG.info("Valor Total da Nota: {}", valorFinal);
+            // NotaFiscal nota2 = notaFiscalService.salvar(nota);
+            // NotaFiscalItem porId =
+            // notaFiscalItemService.buscarPorId(item2.getId());
+            // LOG.info("Busca por Id. Produto {} ; Preço {} ; Quantidade {}
+            // ;Preço Total {}", porId.getProduto().getDescricao(),
+            // porId.getPrecoUnitario(), porId.getQuantidade(),
+            // porId.getValorTotal());
+            //
+            // NotaFiscalItem porProduto =
+            // notaFiscalItemService.buscarPorProduto(item2.getProduto());
+            // LOG.info("Buscar pelo Produto {}. Preço {} ; Quantidade ;
+            // PreçoTotal {}", porProduto.getProduto().getDescricao(),
+            // porProduto.getPrecoUnitario(), porProduto.getQuantidade(),
+            // porProduto.getValorTotal());
+            //
+            // List<NotaFiscalItem> todosSalvos =
+            // notaFiscalItemService.listarTodos();
+            // LOG.info("Salvos no total de {} itens", todosSalvos.size());
+            //
+            // porId = notaFiscalItemService.buscarPorId(60);
+            // porId.setProduto(produtoService.buscarPorId(21));
+            // porId.setQuantidade(7);
+            // porId.setPrecoUnitario(21.05);
+            // porId.setValorTotal(porId.getQuantidade() *
+            // porId.getPrecoUnitario());
+            // notaFiscalItemService.salvar(porId);
+            // LOG.info("Dados alterados com sucesso");
+            //
+            // valorFinal =
+            // notaFiscalItemService.obterOValorTotalDaNota(porId.getIdNota());
+            // LOG.info("Valor Total da Nota: {}", valorFinal);
 
         } else if (atividadeAtual == 9) {
             NotaFiscalItem porId = notaFiscalItemService.buscarPorId(64);

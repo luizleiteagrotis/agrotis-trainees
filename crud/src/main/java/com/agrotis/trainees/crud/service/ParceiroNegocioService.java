@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.exception.InscricaoExisteException;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 
 @Service
@@ -22,11 +23,15 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-        if (repository.existsByInscricaoFiscal(entidade.getInscricaoFiscal())) {
-
-            return entidade;
+        try {
+            verificarInscricao(entidade.getInscricaoFiscal());
+            return repository.save(entidade);
+        } catch (InscricaoExisteException e) {
+            System.out.println("Erro: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
-        return repository.save(entidade);
+
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
@@ -36,11 +41,8 @@ public class ParceiroNegocioService {
         });
     }
 
-    public ParceiroNegocio buscarPorNome(String nome) {
-        return repository.findByNome(nome).orElseGet(() -> {
-            LOG.error("Nota não encontrada para o nome {}. ", nome);
-            return null;
-        });
+    public List<ParceiroNegocio> buscarPorNome(String nome) {
+        return repository.findByNomeOrderById(nome);
     }
 
     public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
@@ -57,6 +59,12 @@ public class ParceiroNegocioService {
 
     public List<ParceiroNegocio> listarTodos() {
         return repository.findAll();
+    }
+
+    public void verificarInscricao(String inscricaoFiscal) throws InscricaoExisteException {
+        if (repository.existsByInscricaoFiscal(inscricaoFiscal) == true) {
+            throw new InscricaoExisteException("A inscrição fiscal já existe");
+        }
     }
 
 }
