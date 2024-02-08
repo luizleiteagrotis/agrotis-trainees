@@ -30,13 +30,11 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocio atualizar(ParceiroNegocio entidade) {
-        ParceiroNegocio parceiroPorNome = buscarPorNome(entidade.getNome());
-        ParceiroNegocio parceiroPorInscricao = buscarPorInscricao(entidade.getInscricaoFiscal());
-        if (parceiroPorNome != null && !parceiroPorNome.getId().equals(entidade.getId())) {
+        if (repository.existsByNomeAndIdNot(entidade.getNome(), entidade.getId())) {
             throw new FabricanteDuplicadoException("Já existe um fabricante com o mesmo nome: " + entidade.getNome());
         }
 
-        if (parceiroPorInscricao != null && !parceiroPorInscricao.getId().equals(entidade.getId())) {
+        if (repository.existsByInscricaoFiscalAndIdNot(entidade.getInscricaoFiscal(), entidade.getId())) {
             throw new FabricanteDuplicadoException(
                             "Já existe um fabricante com a mesma inscrição: " + entidade.getInscricaoFiscal());
         }

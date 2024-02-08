@@ -19,4 +19,8 @@ public interface ParceiroNegocioRepository extends JpaRepository<ParceiroNegocio
     @Query("SELECT p FROM ParceiroNegocio p WHERE p.inscricaoFiscal = :inscricaoFiscal")
     Optional<ParceiroNegocio> findByInscricaoFiscal(String inscricaoFiscal);
 
+    boolean existsByNomeAndIdNot(String nome, Integer id);
+
+    boolean existsByInscricaoFiscalAndIdNot(String InscricaoFiscal, Integer id);
+
 }
