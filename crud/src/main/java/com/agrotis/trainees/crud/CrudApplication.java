@@ -2,15 +2,15 @@ package com.agrotis.trainees.crud;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.entity.TipoNota;
+import com.agrotis.trainees.crud.menu.CrudMenu;
 import com.agrotis.trainees.crud.service.CabecalhoNotaService;
 import com.agrotis.trainees.crud.service.CabecalhoNotaServiceException;
 import com.agrotis.trainees.crud.service.ItemNotaService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
-import com.agrotis.trainees.crud.service.TipoNotaService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,19 +32,17 @@ public class CrudApplication implements CommandLineRunner {
 	private final ParceiroNegocioService parceiroNegocioService;
 	private final ProdutoService produtoService;
 	private final CabecalhoNotaService cabecalhoService;
-	private final TipoNotaService tipoService;
 	private final ItemNotaService itemService;
 	
 	@Autowired
 	public CrudApplication(ParceiroNegocioService parceiroNegocioService, 
 			ProdutoService produtoService,
 			CabecalhoNotaService cabecalhoService,
-			TipoNotaService tipoService,
-			ItemNotaService itemService) {
+			ItemNotaService itemService,
+			CrudMenu menu) {
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
 		this.cabecalhoService = cabecalhoService;
-		this.tipoService = tipoService;
 		this.itemService = itemService;
 	}
 
@@ -58,7 +56,6 @@ public class CrudApplication implements CommandLineRunner {
 		testarParceiroNegocio();
 		testarProduto();
 		testarCabecalhoNota();
-		testarTipoNota();
 		testarItemNota();
 	}
 
@@ -129,14 +126,10 @@ public class CrudApplication implements CommandLineRunner {
 		parceiro.setTelefone("12345");
 		parceiro = parceiroNegocioService.salvar(parceiro);
 		
-		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
-		tipoNota.setNome("entrada");
-		tipoService.salvar(tipoNota);
-		
 		CabecalhoNota cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
-		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setTipo(TipoNota.ENTRADA);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
 		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		cabecalhoService.salvar(cabecalhoNota);
@@ -165,15 +158,10 @@ public class CrudApplication implements CommandLineRunner {
 		parceiro.setTelefone("12345");
 		parceiro = parceiroNegocioService.salvar(parceiro);
 		
-		
-		tipoNota = new NotaFiscalTipo();
-		tipoNota.setNome("entrada");
-		tipoService.salvar(tipoNota);
-		
 		cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
-		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setTipo(TipoNota.ENTRADA);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
 		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		cabecalhoService.salvar(cabecalhoNota);
@@ -181,54 +169,24 @@ public class CrudApplication implements CommandLineRunner {
 		cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
-		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setTipo(TipoNota.ENTRADA);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
 		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		try {
 			cabecalhoService.salvar(cabecalhoNota);
 		} catch (CabecalhoNotaServiceException e) {}
 		
-		
-		tipoNota = new NotaFiscalTipo();
-		tipoNota.setNome("saida");
-		tipoService.salvar(tipoNota);
-		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setTipo(TipoNota.SAIDA);
 		try {
 			cabecalhoService.salvar(cabecalhoNota);
 		} catch (CabecalhoNotaServiceException e) {}
-		
 		
 		cabecalhos = cabecalhoService.buscarTodos();
 		cabecalhos.forEach((cabecalho) -> {
 			cabecalhoService.deletar(cabecalho.getId());
 		});
 		
-		List<NotaFiscalTipo> tipos = tipoService.buscarTodos();
-		tipos.forEach((tipo) -> {
-			tipoService.deletar(tipo.getId());
-		});
 		parceiroNegocioService.deletar(parceiro.getId());
-	}
-	
-	private void testarTipoNota() {
-		// CREATE
-		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
-		tipoNota.setNome("entrada");
-		tipoService.salvar(tipoNota);
-		
-		// READ
-		NotaFiscalTipo tipoNotaPorId = tipoService.buscar(tipoNota.getId());
-		
-		List<NotaFiscalTipo> tipos = tipoService.buscarTodos();
-		
-		// UPDATE
-		tipoNotaPorId.setNome("entrada e saida");
-		tipoService.salvar(tipoNotaPorId);
-		
-		// DELETE
-		tipos.forEach((tipo) -> {
-			tipoService.deletar(tipo.getId());
-		});
 	}
 	
 	private void testarItemNota() {
@@ -240,15 +198,10 @@ public class CrudApplication implements CommandLineRunner {
 		parceiro.setTelefone("12345");
 		parceiro = parceiroNegocioService.salvar(parceiro);
 		
-		
-		NotaFiscalTipo tipoNota = new NotaFiscalTipo();
-		tipoNota.setNome("entrada");
-		tipoService.salvar(tipoNota);
-		
 		CabecalhoNota cabecalhoNota = new CabecalhoNota();
 		cabecalhoNota.setNumero(123456L);
 		cabecalhoNota.setParceiro(parceiro);
-		cabecalhoNota.setTipo(tipoNota);
+		cabecalhoNota.setTipo(TipoNota.ENTRADA);
 		cabecalhoNota.setDataEmissao(LocalDate.now());
 		cabecalhoNota.setValorTotal(BigDecimal.ZERO);
 		cabecalhoService.salvar(cabecalhoNota);
@@ -287,6 +240,5 @@ public class CrudApplication implements CommandLineRunner {
 		produtoService.deletar(produto.getId());
 		cabecalhoService.deletar(cabecalhoNota.getId());
 		parceiroNegocioService.deletar(parceiro.getId());
-		tipoService.deletar(tipoNota.getId());
 	}
 }

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.entity.TipoNota;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 
 @Service
@@ -164,9 +164,9 @@ public class ItemNotaService {
 		Integer quantidadeItem = item.getQuantidade();
 		Produto produto = item.getProduto();
 		Integer estoque;
-		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
+		TipoNota tipoNota = item.getCabecalhoNota().getTipo();
 		String nomeClasseProduto = produto.getClass().getSimpleName();
-		if (tipoNota.equalsIgnoreCase("entrada")) {
+		if (tipoNota == TipoNota.ENTRADA) {
 			emitirLogSubtracaoEstoque(quantidadeItem, produto.getEstoque(), nomeClasseProduto); 
 			estoque = produto.getEstoque() - quantidadeItem;
 		} else {
@@ -185,12 +185,12 @@ public class ItemNotaService {
 	
 	private Integer calcularAdicaoEstoque(ItemNota item) {
 		Integer quantidadeItem = item.getQuantidade();
-		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
+		TipoNota tipoNota = item.getCabecalhoNota().getTipo();
 		Produto produto = item.getProduto();
 		String nomeClasseProduto = produto.getClass().getSimpleName();
 		Integer estoqueAntigo = produto.getEstoque();
 		Integer estoqueNovo;
-		if (tipoNota.equalsIgnoreCase("entrada")) {
+		if (tipoNota == TipoNota.ENTRADA) {
 			emitirLogSomaEstoque(quantidadeItem, estoqueAntigo, nomeClasseProduto);
 			estoqueNovo = produto.getEstoque() + quantidadeItem;
 		} else {
@@ -211,12 +211,12 @@ public class ItemNotaService {
 		Integer quantidadeNova = item.getQuantidade();
 		Integer quantidadeAntiga = repository.getQuantidade(item.getId());
 		Integer diferencaQuantidade = quantidadeNova - quantidadeAntiga;
-		String tipoNota = item.getCabecalhoNota().getTipo().getNome();
+		TipoNota tipoNota = item.getCabecalhoNota().getTipo();
 		Produto produto = item.getProduto();
 		String nomeClasseProduto = produto.getClass().getSimpleName();
 		Integer antigoEstoque = produto.getEstoque();
 		Integer novoEstoque;
-		if (tipoNota.equalsIgnoreCase("entrada")) {
+		if (tipoNota == TipoNota.ENTRADA) {
 			emitirLogSomaEstoque(diferencaQuantidade, antigoEstoque, nomeClasseProduto);
 			novoEstoque = antigoEstoque + diferencaQuantidade;
 		} else {

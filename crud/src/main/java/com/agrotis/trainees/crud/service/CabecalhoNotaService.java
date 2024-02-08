@@ -35,7 +35,7 @@ public class CabecalhoNotaService {
 			String mensagemErro = "Ja existe " 
 									+ nomeClasseCabecalho
 									+ " com tipo " 
-									+ cabecalho.getTipo().getNome()
+									+ cabecalho.getTipo()
 									+ " e numero "
 									+ cabecalho.getNumero();
 			LOGGER.error(mensagemErro);

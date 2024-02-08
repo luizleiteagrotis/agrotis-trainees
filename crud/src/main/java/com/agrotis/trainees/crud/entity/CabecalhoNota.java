@@ -37,9 +37,9 @@ public class CabecalhoNota {
 	private ParceiroNegocio parceiro;
 	
 	@NotNull(message = "Atributo tipo obrigatorio")
-	@ManyToOne
-	@JoinColumn(name = "tipo_nota_id")
-	private NotaFiscalTipo tipo;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo_nota")
+	private TipoNota tipo;
 	
 	@PastOrPresent(message = "Atributo data emissao nao pode ser futura")
 	@Column(name = "data_emissao")
@@ -71,11 +71,11 @@ public class CabecalhoNota {
 		this.parceiro = parceiro;
 	}
 
-	public NotaFiscalTipo getTipo() {
+	public TipoNota getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(NotaFiscalTipo tipo) {
+	public void setTipo(TipoNota tipo) {
 		this.tipo = tipo;
 	}
 
