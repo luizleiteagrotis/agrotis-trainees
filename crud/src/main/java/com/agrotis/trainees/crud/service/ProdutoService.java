@@ -39,7 +39,6 @@ public class ProdutoService {
     public Produto atualizar(Produto entidade) {
         Produto produtoExistente = buscarPorDescricao(entidade.getDescricao());
         if (produtoExistente == null) {
-            System.out.println("Esse produto não existe");
             return repository.save(entidade);
         }
 
