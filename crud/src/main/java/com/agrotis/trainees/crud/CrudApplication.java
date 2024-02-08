@@ -156,19 +156,13 @@ public class CrudApplication implements CommandLineRunner {
 
         // Inicio ItemNotaFiscal
 
-        // ItemNotaFiscal itemnf = new ItemNotaFiscal();
-        // itemnf.setNotaFiscal(null);
-        // itemnf.setProduto(null);
-        // itemnf.setPreco_unitario(155);
-        // itemnf.setQuantidade(3);
-        // itemnf.setValorTotal(3 * 155);
-        // itemNotaFiscalService.salvar(itemnf);
+        ItemNotaFiscal itemnf = new ItemNotaFiscal();
+        itemnf.setNotaFiscal(notaFiscalAtualiza);
+        itemnf.setProduto(produtoAtualizado);
+        itemnf.setPreco_unitario(155);
+        itemnf.setQuantidade(3);
+        itemnf.setValorTotal(465);
+        itemNotaFiscalService.salvar(itemnf);
 
-        ItemNotaFiscal itensNotaFiscal = new ItemNotaFiscal();
-        itensNotaFiscal.setNotaFiscal(notaFiscal);
-        itensNotaFiscal.setProduto(produtoAtualizado);
-        itensNotaFiscal.setQuantidade(150);
-        itensNotaFiscal.setPreco_unitario(149);
-        itemNotaFiscalService.salvar(itensNotaFiscal);
     }
 }

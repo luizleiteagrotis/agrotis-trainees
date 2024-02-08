@@ -17,6 +17,8 @@ public class ItemNotaFiscalService {
     private final ItemNotaFiscalRepository repository;
     private final ProdutoService produtoService;
 
+    private NotaFiscal notaFiscal;
+
     public ItemNotaFiscalService(ItemNotaFiscalRepository repository, ProdutoService produtoService) {
         super();
         this.repository = repository;
@@ -30,7 +32,7 @@ public class ItemNotaFiscalService {
     }
 
     private void atualizarValorTotalNotaFiscal(ItemNotaFiscal item) {
-        NotaFiscal notaFiscal = item.getNotaFiscal();
+        setNotaFiscal(item.getNotaFiscal());
         float valorTotalItem = (float) calcularValorTotalItem(item);
         item.setValorTotal(valorTotalItem);
     }
@@ -50,6 +52,18 @@ public class ItemNotaFiscalService {
     public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
         adicionarItem(entidade);
         return repository.save(entidade);
+    }
+
+    public ProdutoService getProdutoService() {
+        return produtoService;
+    }
+
+    public NotaFiscal getNotaFiscal() {
+        return notaFiscal;
+    }
+
+    public void setNotaFiscal(NotaFiscal notaFiscal) {
+        this.notaFiscal = notaFiscal;
     }
 
 }
