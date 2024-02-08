@@ -37,14 +37,10 @@ public class ProdutoService {
     }
 
     public Produto atualizar(Produto entidade) {
-        Produto produtoExistente = buscarPorDescricao(entidade.getDescricao());
-        if (produtoExistente == null) {
-            return repository.save(entidade);
-        }
-
-        if (!produtoExistente.getId().equals(entidade.getId())) {
+        if (repository.existsByDescricaoAndIdNot(entidade.getDescricao(), entidade.getId())) {
             throw new ProdutoDuplicadoException("Descrição do produto já existe");
         }
+
         return repository.save(entidade);
     }
 

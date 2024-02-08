@@ -90,29 +90,30 @@ public class CrudApplication implements CommandLineRunner {
         }
 
         if (escolha == 2) {
-            ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-            parceiroNegocio.setNome("Fazendas do Rio Grnade");
-
-            parceiroNegocio.setInscricaoFiscal("92939495");
-            parceiroNegocio.setEndereco("Rio Grande, rua Grãos, 15");
-            parceiroNegocio.setTelefone("11 9 5454 5454");
-
-            try {
-                ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
-                LOG.info("id inserido: {}", parceiroNegocio2.getId());
-            } catch (Exception e) {
-                System.out.println("Tratamento de exceção: " + e.getMessage());
-            }
+            // ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+            //
+            // parceiroNegocio.setNome("Fazendas do Rio Grnade");
+            //
+            // parceiroNegocio.setInscricaoFiscal("92939495");
+            // parceiroNegocio.setEndereco("Rio Grande, rua Grãos, 15");
+            // parceiroNegocio.setTelefone("11 9 5454 5454");
+            //
+            // try {
+            // ParceiroNegocio parceiroNegocio2 =
+            // parceiroNegocioService.salvar(parceiroNegocio);
+            // LOG.info("id inserido: {}", parceiroNegocio2.getId());
+            // } catch (Exception e) {
+            // System.out.println("Tratamento de exceção: " + e.getMessage());
+            // }
 
             // ParceiroNegocio parceiroPorId =
-            // parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
+            // parceiroNegocioService.buscarPorId(1);
             // LOG.info("Busca por id. Nome {} Inscricao Fiscal {} Endereco {}
             // Telefone {} id {}", parceiroPorId.getNome(),
             // parceiroPorId.getInscricaoFiscal(), parceiroPorId.getEndereco(),
             // parceiroPorId.getTelefone(),
             // parceiroPorId.getId());
-            //
+
             // ParceiroNegocio parceiroPorNome =
             // parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
             // LOG.info("Busca por nome. Nome {} id {}",
@@ -123,18 +124,17 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} tipos de parceiros",
             // todosParceiros.size());
 
-            // ParceiroNegocio parceiroPorNome2 =
-            // parceiroNegocioService.buscarPorNome("Parceiro2");
-            // parceiroPorNome2.setEndereco("Rua das merces");
-            // try {
-            // parceiroNegocioService.atualizar(parceiroPorNome2);
-            // LOG.info("Nome, endereco e telefone atualizado com sucesso, novo
-            // nome: {}, novo endereco: {}, novo telefone: {} ",
-            // parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(),
-            // parceiroPorNome2.getTelefone());
-            // } catch (Exception e) {
-            // System.out.println("Tratamento de exceção: " + e.getMessage());
-            // }
+            ParceiroNegocio parceiroPorNome2 = parceiroNegocioService.buscarPorNome("Parceiro3");
+            parceiroPorNome2.setEndereco("Rua das merces");
+            parceiroPorNome2.setNome("Parceiro4");
+            parceiroPorNome2.setInscricaoFiscal("776655");
+            try {
+                parceiroNegocioService.atualizar(parceiroPorNome2);
+                LOG.info("Nome, endereco e telefone atualizado com sucesso, novo nome: {}, novo endereco: {}, novo telefone: {} ",
+                                parceiroPorNome2.getNome(), parceiroPorNome2.getEndereco(), parceiroPorNome2.getTelefone());
+            } catch (Exception e) {
+                System.out.println("Tratamento de exceção: " + e.getMessage());
+            }
 
             // parceiroNegocioService.deletarPorId(parceiroPorId.getId());
         }
@@ -186,10 +186,10 @@ public class CrudApplication implements CommandLineRunner {
             // LOG.info("Salvos no total de {} tipos de produtos",
             // todosProdutos.size());
             //
-            Produto produtoPorDescricao2 = produtoService.buscarPorDescricao("Arroz6");
-            Date novaValidadeDate = dateFormat.parse("03-07-2050");
+            Produto produtoPorDescricao2 = produtoService.buscarPorDescricao("Arroz");
+            Date novaValidadeDate = dateFormat.parse("03-07-2060");
             produtoPorDescricao2.setDataValidade(novaValidadeDate);
-            produtoPorDescricao2.setDescricao("Arroz10");
+            produtoPorDescricao2.setDescricao("Abacaxi verde");
             try {
                 produtoService.atualizar(produtoPorDescricao2);
                 LOG.info("Nova descrição {}, nova data validade {} e novo parceiro {}: ", produtoPorDescricao2.getDescricao(),
