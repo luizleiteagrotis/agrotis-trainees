@@ -31,12 +31,30 @@ public class NotaFiscalService {
         });
     }
 
-    public NotaFiscal atualizar(Integer id, NotaFiscal parceiroNegocio) {
-        NotaFiscal byId = repository.findById(id).orElseGet(() -> {
+    public NotaFiscal atualizar(Integer id, NotaFiscal notaFiscal) {
+        // Verifica se a nota fiscal com o ID especificado existe no banco de
+        // dados
+        NotaFiscal existingNotaFiscal = repository.findById(id).orElseGet(() -> {
             LOG.info("Não foi possível encontrar a nota fiscal pelo ID {}", id);
             return null;
         });
-        return repository.save(byId);
+
+        if (existingNotaFiscal != null) {
+            // Atualiza os campos relevantes com os valores da nova nota fiscal
+            existingNotaFiscal.setDataEmissao(notaFiscal.getDataEmissao());
+            existingNotaFiscal.setNumero(notaFiscal.getNumero());
+            existingNotaFiscal.setNotaFiscalTipo(notaFiscal.getNotaFiscalTipo());
+            existingNotaFiscal.setParceiroNegocio(notaFiscal.getParceiroNegocio());
+
+            // Salva a nota fiscal atualizada no banco de dados
+            return repository.save(existingNotaFiscal);
+        } else {
+            // Se a nota fiscal com o ID especificado não existe, você pode
+            // lidar de acordo com sua lógica de negócios
+            LOG.error("Nota Fiscal não encontrada para id {}.", id);
+            return null; // Ou lança uma exceção ou retorna null, dependendo da
+                         // lógica desejada
+        }
     }
 
     public List<NotaFiscal> listarTodos() {

@@ -62,7 +62,7 @@ public class NotaFiscal {
         this.notaFiscalTipo = notaFiscalTipo;
     }
 
-    ParceiroNegocio getParceiroNegocio() {
+    public ParceiroNegocio getParceiroNegocio() {
         return parceiroNegocio;
     }
 
