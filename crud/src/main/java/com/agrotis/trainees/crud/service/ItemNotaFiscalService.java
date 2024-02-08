@@ -25,26 +25,26 @@ public class ItemNotaFiscalService {
         this.produtoService = produtoService;
     }
 
-    public void adicionarItem(ItemNotaFiscal item) {
-        if (item != null) {
-            atualizarValorTotalNotaFiscal(item);
-        }
-    }
-
-    private void atualizarValorTotalNotaFiscal(ItemNotaFiscal item) {
-        setNotaFiscal(item.getNotaFiscal());
-        float valorTotalItem = (float) calcularValorTotalItem(item);
-        item.setValorTotal(valorTotalItem);
-    }
-
-    private double calcularValorTotalItem(ItemNotaFiscal item) {
+    private double calcularValorTotal(ItemNotaFiscal item) {
         double valorTotal = item.getQuantidade() * item.getPreco_unitario();
         return valorTotal;
     }
 
+    public void adicionarItem(ItemNotaFiscal item) {
+        if (item != null) {
+            atualizaTotal(item);
+        }
+    }
+
+    private void atualizaTotal(ItemNotaFiscal item) {
+        setNotaFiscal(item.getNotaFiscal());
+        float valorTotal = (float) calcularValorTotal(item);
+        item.setValorTotal(valorTotal);
+    }
+
     public ItemNotaFiscal buscarPorProduto(Produto produto) {
         return repository.findByProduto(produto).orElseGet(() -> {
-            LOG.error("Item da nota fiscal não encontrado para o produto {}.", produto);
+            LOG.error("Item não encontrado{}.", produto);
             return null;
         });
     }

@@ -159,9 +159,9 @@ public class CrudApplication implements CommandLineRunner {
         ItemNotaFiscal itemnf = new ItemNotaFiscal();
         itemnf.setNotaFiscal(notaFiscalAtualiza);
         itemnf.setProduto(produtoAtualizado);
-        itemnf.setPreco_unitario(155);
+        itemnf.setPreco_unitario(200);
         itemnf.setQuantidade(3);
-        itemnf.setValorTotal(465);
+        itemnf.setValorTotal(itemnf.getPreco_unitario() * itemnf.getQuantidade());
         itemNotaFiscalService.salvar(itemnf);
 
     }
