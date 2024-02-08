@@ -54,7 +54,7 @@ public class CrudApplication implements CommandLineRunner {
             
             
             ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-            parceiroNegocio.setNome(" ");
+            parceiroNegocio.setNome("Copersucar");
             parceiroNegocio.setInscricaoFiscal("22.338.624/0002-37");
             parceiroNegocio.setEndereco("Rua dos Sonhadores, 67");
             parceiroNegocio.setTelefone("41988556544");

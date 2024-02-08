@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,22 +26,28 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @NotBlank(message= "Preencha o campo descrição.")
+    @Column(name = "descricao", length = 100)
     private String descricao;
 
     @ManyToOne
     @JoinColumn(name = "fabricante_id")
+    @NotNull(message = "Preencha o campo fabricante.")
     private ParceiroNegocio fabricante;
 
     @Column(name = "data_fabricacao")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Past(message = "A data de fabricação não pode ser maior que a data atual.")
+    @NotNull(message = "O campo data de fabricação não pode ser nulo")
     private LocalDate dataFabricacao;
 
     @Column(name = "data_validade")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Future(message = "A data de validade tem de ser no futuro.")
+    @NotNull(message = "O campo data de validade não pode ser nulo.")
     private LocalDate dataValidade;
 
+    @NotNull(message = "Preencha o campo quantidade de estoque")
     @Column(name = "quantidade_estoque")
     private Integer quantidadeEstoque;
 
