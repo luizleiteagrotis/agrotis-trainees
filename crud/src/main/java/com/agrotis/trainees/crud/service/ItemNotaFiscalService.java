@@ -9,6 +9,7 @@ import java.util.List;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ItemDuplicadoException;
+import com.agrotis.trainees.crud.exception.ProdutoDuplicadoException;
 import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 
@@ -30,6 +31,25 @@ public class ItemNotaFiscalService {
     public ItemNotaFiscal salvar(ItemNotaFiscal entidade) throws QuantidadeInsuficienteException, ItemDuplicadoException {
         entidade.setValorTotal();
         itemDuplicado(entidade);
+        atualizarEstoque(entidade);
+        return repository.save(entidade);
+    }
+
+    public ItemNotaFiscal atualizar(ItemNotaFiscal entidade) {
+        boolean itemExistente = repository.existsByProdutoAndNotaFiscal(entidade.getProduto(), entidade.getNotaFiscal());
+        if (!itemExistente) {
+            entidade.setValorTotal();
+            atualizarEstoque(entidade);
+            return repository.save(entidade);
+        }
+
+        ItemNotaFiscal itemExistentePorParametro = repository.findByProdutoAndNotaFiscal(entidade.getProduto(),
+                        entidade.getNotaFiscal());
+
+        if (!itemExistentePorParametro.getId().equals(entidade.getId())) {
+            throw new ProdutoDuplicadoException("Já existe um item de nota fiscal com o mesmo produto e nota fiscal");
+        }
+        entidade.setValorTotal();
         atualizarEstoque(entidade);
         return repository.save(entidade);
     }
@@ -64,19 +84,27 @@ public class ItemNotaFiscalService {
         Produto produto = item.getProduto();
         String tipo = item.getNotaFiscal().getNotaFiscalTipo().getNome();
         int quantidade = item.getQuantidade();
-        int quantidadeProduto = produto.getQuantidade_estoque();
+        int quantidadeProduto = produto.getQuantidadeEstoque();
 
-        if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - quantidade) < 0) {
-            throw new QuantidadeInsuficienteException("Quantidade insuficiente em estoque para a saída do produto: ");
-        }
+        ItemNotaFiscal itemExistente = repository.findByProdutoAndNotaFiscal(item.getProduto(), item.getNotaFiscal());
 
-        if (tipo.equalsIgnoreCase("ENTRADA")) {
-            produto.setQuantidade_estoque(quantidadeProduto + quantidade);
+        if (itemExistente != null) {
+            int diferencaQuantidade = quantidade - itemExistente.getProduto().getQuantidadeEstoque();
+            produto.setQuantidadeEstoque(quantidadeProduto + diferencaQuantidade);
         } else {
-            produto.setQuantidade_estoque(quantidadeProduto - quantidade);
+
+            if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - quantidade) < 0) {
+                throw new QuantidadeInsuficienteException("Quantidade insuficiente em estoque para a saída do produto: ");
+            }
+
+            if (tipo.equalsIgnoreCase("ENTRADA")) {
+                produto.setQuantidadeEstoque(quantidadeProduto + quantidade);
+            } else {
+                produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
+            }
         }
 
-        produtoService.salvar(produto);
+        produtoService.atualizar(produto);
     }
 
 }

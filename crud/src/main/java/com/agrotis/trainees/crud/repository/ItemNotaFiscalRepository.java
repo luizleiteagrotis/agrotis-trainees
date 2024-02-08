@@ -15,4 +15,6 @@ public interface ItemNotaFiscalRepository extends JpaRepository<ItemNotaFiscal, 
     List<ItemNotaFiscal> findAllByProduto(Produto produto);
 
     boolean existsByProdutoAndNotaFiscal(Produto produto, NotaFiscal notaFiscal);
+
+    ItemNotaFiscal findByProdutoAndNotaFiscal(Produto produto, NotaFiscal notaFiscal);
 }
