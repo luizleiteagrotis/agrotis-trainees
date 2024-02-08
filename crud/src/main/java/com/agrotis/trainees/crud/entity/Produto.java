@@ -74,12 +74,10 @@ public class Produto {
 		return id;
 	}
 	public void setFabricante(ParceiroNegocio parceiroNegocio1) {
-		// TODO Auto-generated method stub
-		
+        this.fabricante = fabricante;
 	}
     public Integer getQuantidade() {
-        // TODO Auto-generated method stub
-        return null;
+                return null;
     }
 
 	

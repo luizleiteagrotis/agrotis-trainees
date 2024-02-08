@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,6 +31,7 @@ public class NotaFiscalC {
 
 	@ManyToOne
 	@JoinColumn(name = "parceiro_de_negocio_id")
+    @NotNull(message = "Informe um parceiro de negócio.")
 	private ParceiroNegocio parceiroNegocio;
 	
 	@Column(name = "numero_nota")

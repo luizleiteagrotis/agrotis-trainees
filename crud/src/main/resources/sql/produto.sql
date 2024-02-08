@@ -6,6 +6,7 @@ CREATE TABLE produto
     fabricante varchar(255),
     data_fabricacao DATE,
     data_validade DATE,
+    estoque int,
     FOREIGN KEY (parceiro_negocio) REFERENCES parceiro_negocio(id),
     CONSTRAINT pk_produto PRIMARY KEY (id)
 )
