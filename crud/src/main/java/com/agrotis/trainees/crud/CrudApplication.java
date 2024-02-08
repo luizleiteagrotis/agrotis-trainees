@@ -10,11 +10,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -26,14 +27,14 @@ public class CrudApplication implements CommandLineRunner {
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
     private final NotaFiscalService notaFiscalService;
-    private final NotaFiscalTipoService notaFiscalTipoService;
+    private final ItemNotaFiscalService itemNotaFiscalService;
 
     public CrudApplication(ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService,
-                    NotaFiscalService notaFiscalService, NotaFiscalTipoService notaFiscalTipoService) {
+                    NotaFiscalService notaFiscalService, ItemNotaFiscalService itemNotaFiscalService) {
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
         this.notaFiscalService = notaFiscalService;
-        this.notaFiscalTipoService = notaFiscalTipoService;
+        this.itemNotaFiscalService = itemNotaFiscalService;
     }
 
     public static void main(String[] args) {
@@ -43,28 +44,6 @@ public class CrudApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // notaFiscalTipo.setNome("nomeTeste");
-        // NotaFiscalTipo notaFiscalTipo2 =
-        // notaFiscalTipoService.salvar(notaFiscalTipo);
-        // LOG.info("id inserido: {}", notaFiscalTipo2.getId());
-        // NotaFiscalTipo porId =
-        // notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-        // LOG.info("Busca por id. Nome {} id {} ", porId.getNome(),
-        // porId.getId());
-        // List<NotaFiscalTipo> todosSalvos =
-        // notaFiscalTipoService.listarTodos();
-        // LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
-        // NotaFiscalTipo porNome =
-        // notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-        // porNome.setNome("nomeAlterado");
-        // notaFiscalTipoService.salvar(porNome);
-        // LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(),
-        // porNome.getId());
-        // notaFiscalTipoService.deletarPorId(porId.getId());
-        // notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-        // notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
 
         LOG.info("Parceiro NEGOCIO");
         // ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
@@ -117,17 +96,17 @@ public class CrudApplication implements CommandLineRunner {
         // LOG.info("Buscando id: {}", produtoPorId.getId());
 
         ParceiroNegocio parceiroNegocio3 = new ParceiroNegocio();
-        parceiroNegocio3.setNome("Dnamy");
-        parceiroNegocio3.setInscricaoFiscal("1066997339847993");
-        parceiroNegocio3.setEndereco("Avenida Iguaçu, 9458, Rebouças - Curitiba, Paraná");
-        parceiroNegocio3.setTelefone("41998756845");
+        parceiroNegocio3.setNome("NFS Produção Alimenticia");
+        parceiroNegocio3.setInscricaoFiscal("10722429000127");
+        parceiroNegocio3.setEndereco("BR 277, KM 18");
+        parceiroNegocio3.setTelefone("4132164263");
         parceiroNegocioService.salvar(parceiroNegocio3);
         LOG.info("id inserido: {}", parceiroNegocio3.getId());
 
         Produto produtoAtualizado = new Produto();
-        produtoAtualizado.setDataFabricacao(LocalDate.parse("15/10/2010", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        produtoAtualizado.setDataValidade(LocalDate.parse("11/07/2020", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        produtoAtualizado.setDescricao("Batata");
+        produtoAtualizado.setDataFabricacao(LocalDate.parse("14/07/2022", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        produtoAtualizado.setDataValidade(LocalDate.parse("11/07/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        produtoAtualizado.setDescricao("Chips de Abobora");
         produtoAtualizado.setFabricante(parceiroNegocio3);
         produtoService.salvar(produtoAtualizado);
 
@@ -162,9 +141,9 @@ public class CrudApplication implements CommandLineRunner {
         LOG.info("Buscando id: {}", nfPorId.getId());
 
         NotaFiscal notaFiscalAtualiza = new NotaFiscal();
-        notaFiscalAtualiza.setDataNf(LocalDate.parse("12/01/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        notaFiscalAtualiza.setDataNf(LocalDate.parse("30/05/2024", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         notaFiscalAtualiza.setNotaFiscalTipo("ENTRADA");
-        notaFiscalAtualiza.setNumeroDaNota(159753);
+        notaFiscalAtualiza.setNumeroDaNota(147896);
         notaFiscalAtualiza.setParceiroNegocio(parceiroNegocio3);
         notaFiscalService.salvar(notaFiscalAtualiza);
         LOG.info("salva nota fiscal: {}", notaFiscalAtualiza.getId());
@@ -175,5 +154,21 @@ public class CrudApplication implements CommandLineRunner {
         notaFiscalService.deletarPorId(nfPorId.getId());
         LOG.info("Deletando o produto {}", nfPorId.getId());
 
+        // Inicio ItemNotaFiscal
+
+        // ItemNotaFiscal itemnf = new ItemNotaFiscal();
+        // itemnf.setNotaFiscal(null);
+        // itemnf.setProduto(null);
+        // itemnf.setPreco_unitario(155);
+        // itemnf.setQuantidade(3);
+        // itemnf.setValorTotal(3 * 155);
+        // itemNotaFiscalService.salvar(itemnf);
+
+        ItemNotaFiscal itensNotaFiscal = new ItemNotaFiscal();
+        itensNotaFiscal.setNotaFiscal(notaFiscal);
+        itensNotaFiscal.setProduto(produtoAtualizado);
+        itensNotaFiscal.setQuantidade(150);
+        itensNotaFiscal.setPreco_unitario(149);
+        itemNotaFiscalService.salvar(itensNotaFiscal);
     }
 }
