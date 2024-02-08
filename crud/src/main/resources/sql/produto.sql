@@ -14,3 +14,6 @@ ALTER TABLE produto
 ADD CONSTRAINT fk_parceiro_negocio_id
 FOREIGN KEY (parceiro_negocio)
 REFERENCES parceiro_negocio;
+
+ALTER TABLE produto
+ADD estoque_produto INT;

@@ -34,6 +34,20 @@ public class NotaFiscalItem {
     @Column(name = "valor_total")
     private double valorTotal;
 
+    public NotaFiscalItem() {
+        super();
+    }
+
+    public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto,
+                    @NotNull(message = "Necessário inserir a quantidade do produto") Integer quantidade,
+                    @NotNull(message = "Necessário inserir o preço unitário") double precoUnitario) {
+        super();
+        this.notaFiscal = notaFiscal;
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
+    }
+
     public Integer getId() {
         return id;
     }

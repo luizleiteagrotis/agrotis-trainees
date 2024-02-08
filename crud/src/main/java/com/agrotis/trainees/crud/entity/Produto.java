@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 
@@ -36,6 +37,30 @@ public class Produto {
     private LocalDate dataFabricacao;
 
     private LocalDate dataValidade;
+
+    @Min(value = 0)
+    private Integer estoque;
+
+    public Produto() {
+        super();
+        this.estoque = 0;
+    }
+
+    public Produto(@NotBlank(message = "Obrigatório inserir o nome do produto") String nome,
+                    @NotBlank(message = "Obrigatório preencher a descrição do produto") String descricao,
+                    ParceiroNegocio parceiroNegocio,
+                    @NotBlank(message = "Obrigatório preencher o fabricante do produto") String fabricante,
+                    @PastOrPresent(message = "A data de fabricação deve ser de datas passadas") LocalDate dataFabricacao,
+                    LocalDate dataValidade) {
+        super();
+        this.nome = nome;
+        this.descricao = descricao;
+        this.parceiroNegocio = parceiroNegocio;
+        this.fabricante = fabricante;
+        this.dataFabricacao = dataFabricacao;
+        this.dataValidade = dataValidade;
+        this.estoque = 0;
+    }
 
     public Integer getId() {
         return id;
@@ -87,6 +112,14 @@ public class Produto {
 
     public void setDataValidade(LocalDate dataValidade) {
         this.dataValidade = dataValidade;
+    }
+
+    public Integer getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
     }
 
 }

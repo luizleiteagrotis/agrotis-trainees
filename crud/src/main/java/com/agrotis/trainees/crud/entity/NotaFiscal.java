@@ -1,14 +1,13 @@
 package com.agrotis.trainees.crud.entity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,14 +21,12 @@ import javax.validation.constraints.NotNull;
 @Table(name = "nota_fiscal")
 public class NotaFiscal {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NotaFiscal.class);
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_nota")
+    @Column(name = "tipo_nota")
+    @Enumerated(EnumType.STRING)
     private NotaFiscalTipo notaFiscalTipo;
 
     @ManyToOne
@@ -51,6 +48,18 @@ public class NotaFiscal {
         super();
         this.dataNota = LocalDate.now();
         this.itensNota = new ArrayList<>();
+        this.valorTotal = 0.0;
+    }
+
+    public NotaFiscal(NotaFiscalTipo notaFiscalTipo, ParceiroNegocio parceiroNegocio,
+                    @NotNull(message = "Obrigatório preencher o número da Nota Fiscal") Integer numeroNota, LocalDate dataNota) {
+        super();
+        this.notaFiscalTipo = notaFiscalTipo;
+        this.parceiroNegocio = parceiroNegocio;
+        this.numeroNota = numeroNota;
+        this.dataNota = dataNota;
+        this.itensNota = new ArrayList<>();
+        this.valorTotal = 0.0;
     }
 
     public Integer getId() {

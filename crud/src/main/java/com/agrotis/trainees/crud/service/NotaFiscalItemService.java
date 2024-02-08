@@ -17,10 +17,12 @@ public class NotaFiscalItemService {
     private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalItemService.class);
 
     private final NotaFiscalItemRepository repository;
+    private final ProdutoService produtoService;
 
-    public NotaFiscalItemService(NotaFiscalItemRepository repository) {
+    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService) {
         super();
         this.repository = repository;
+        this.produtoService = produtoService;
     }
 
     public NotaFiscalItem salvar(NotaFiscalItem entidade) {
@@ -73,6 +75,17 @@ public class NotaFiscalItemService {
     private double calcularValorTotalItem(NotaFiscalItem item) {
         double valorTotal = item.getQuantidade() * item.getPrecoUnitario();
         return valorTotal;
+    }
+
+    public void controlarEstoque(NotaFiscalItem item) {
+        Produto produto = item.getProduto();
+        if (item.getNotaFiscal().getNotaFiscalTipo() != item.getNotaFiscal().getNotaFiscalTipo().SAIDA) {
+            produto.setEstoque(produto.getEstoque() + item.getQuantidade());
+        } else {
+            produto.setEstoque(produto.getEstoque() - item.getQuantidade());
+        }
+        produtoService.salvar(produto);
+        atualizarValorTotalNotaFiscal(item);
     }
 
 }

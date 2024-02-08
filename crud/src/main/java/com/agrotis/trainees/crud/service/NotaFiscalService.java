@@ -77,21 +77,19 @@ public class NotaFiscalService {
         repository.save(notaFiscal);
     }
 
-    public void atualizarValorTotal(NotaFiscal notaFiscal) {
-        double total = 0.0;
-        for (NotaFiscalItem item : notaFiscal.getItensNota()) {
-            total += item.getQuantidade() * item.getPrecoUnitario();
-        }
-        notaFiscal.setValorTotal(total);
-        repository.save(notaFiscal);
+    public void adicionarItem(NotaFiscalItem item) {
+        NotaFiscal nota = item.getNotaFiscal();
+        // BigDecimal
+        double novoValorTotal = nota.getValorTotal() + item.getValorTotal();
+        nota.setValorTotal(novoValorTotal);
+        atualizarNotaFiscal(nota);
     }
 
-    public void adicionarItem(NotaFiscal notaFiscal, NotaFiscalItem item) {
-        if (notaFiscal != null && item != null) {
-            notaFiscal.getItensNota().add(item);
-            atualizarValorTotal(notaFiscal);
-            repository.save(notaFiscal);
-        }
+    public void atualizarItem(NotaFiscalItem item) {
+        NotaFiscal nota = item.getNotaFiscal();
+        double novoValorTotal = item.getValorTotal() - item.getValorTotal();
+        nota.setValorTotal(nota.getValorTotal() + novoValorTotal);
+        atualizarNotaFiscal(nota);
     }
 
 }

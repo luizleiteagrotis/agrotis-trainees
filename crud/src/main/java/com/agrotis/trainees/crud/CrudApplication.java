@@ -16,7 +16,6 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -25,16 +24,13 @@ public class CrudApplication implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(CrudApplication.class);
 
-    private final NotaFiscalTipoService notaFiscalTipoService;
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
     private final NotaFiscalService notaFiscalService;
     private final NotaFiscalItemService notaFiscalItemService;
 
-    public CrudApplication(ParceiroNegocioService parceiroNegocioService, NotaFiscalTipoService notaFiscalTipoService,
-                    ProdutoService produtoService, NotaFiscalService notaFiscalService,
-                    NotaFiscalItemService notaFiscalItemService) {
-        this.notaFiscalTipoService = notaFiscalTipoService;
+    public CrudApplication(ParceiroNegocioService parceiroNegocioService, ProdutoService produtoService,
+                    NotaFiscalService notaFiscalService, NotaFiscalItemService notaFiscalItemService) {
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
         this.notaFiscalService = notaFiscalService;
@@ -48,240 +44,272 @@ public class CrudApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        notaFiscalTipo.setNome("nomeTeste");
-        NotaFiscalTipo notaFiscalTipo2 = notaFiscalTipoService.salvar(notaFiscalTipo);
-        LOG.info("id inserido: {}", notaFiscalTipo2.getId());
 
-        NotaFiscalTipo porId = notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-        LOG.info("Busca por id. Nome {} id {} ", porId.getNome(), porId.getId());
+        ParceiroNegocio parceiroNegocio = new ParceiroNegocio("Cocamar", "01.005.009/0001-01", "Rua Maringá, 195 - Maringá (PR)",
+                        "(44) 3567-0119");
+        parceiroNegocio = parceiroNegocioService.salvar(parceiroNegocio);
+        LOG.info("id inserido: {}", parceiroNegocio.getId());
 
-        List<NotaFiscalTipo> todosSalvos = notaFiscalTipoService.listarTodos();
-        LOG.info("Salvos no total de {} tipos de notas", todosSalvos.size());
+        parceiroNegocio = new ParceiroNegocio("Agrofertil", "02.006.012/0001-12", "Rua Curitiba, 1830 - Curitiba (PR)",
+                        "(41) 3692-1009");
+        parceiroNegocio = parceiroNegocioService.salvar(parceiroNegocio);
+        LOG.info("id inserido: {}", parceiroNegocio.getId());
 
-        NotaFiscalTipo porNome = notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-        porNome.setNome("nomeAlterado");
-        notaFiscalTipoService.salvar(porNome);
-        LOG.info("Busca por nome. Nome {} id {} ", porNome.getNome(), porNome.getId());
+        parceiroNegocio = new ParceiroNegocio("Coamo", "03.010.020/0001-02", "Rua Campo Mourão, 10 - Campo Mourão (PR)",
+                        "(44) 3522-0223");
+        parceiroNegocio = parceiroNegocioService.salvar(parceiroNegocio);
+        LOG.info("id inserido: {}", parceiroNegocio.getId());
 
-        // notaFiscalTipoService.deletarPorId(porId.getId());
-        notaFiscalTipoService.buscarPorId(notaFiscalTipo2.getId());
-        notaFiscalTipoService.buscarPorNome(notaFiscalTipo.getNome());
-
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-        parceiroNegocio.setNome("C.Vale");
-        parceiroNegocio.setInscricaoFiscal("32.761.087/0001-31");
-        parceiroNegocio.setEndereco("Rua São Paulo. Paulo - São Paulo");
-        parceiroNegocio.setTelefone("(11)3248-6139");
-        ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
-        LOG.info("id inserido: {}", parceiroNegocio2.getId());
-
-        ParceiroNegocio porIdParceiro = parceiroNegocioService.buscarPorId(parceiroNegocio2.getId());
+        ParceiroNegocio porIdParceiro = parceiroNegocioService.buscarPorId(parceiroNegocio.getId());
         LOG.info("Busca por id. Nome {} id {} inscricaoFiscal {} endereco {} telefone {}", porIdParceiro.getNome(),
                         porIdParceiro.getId(), porIdParceiro.getInscricaoFiscal(), porIdParceiro.getEndereco(),
                         porIdParceiro.getTelefone());
 
-        ParceiroNegocio porNomeParceiro = parceiroNegocioService.buscarPorNome(parceiroNegocio2.getNome());
+        ParceiroNegocio porNomeParceiro = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
         LOG.info("Busca por id. Nome {} id {} inscricaoFiscal {} endereco {} telefone {}", porNomeParceiro.getNome(),
                         porNomeParceiro.getId(), porNomeParceiro.getInscricaoFiscal(), porNomeParceiro.getEndereco(),
                         porNomeParceiro.getTelefone());
 
         ParceiroNegocio porInscricaoFiscalParceiro = parceiroNegocioService
-                        .buscarPorInscricaoFiscal(parceiroNegocio2.getInscricaoFiscal());
+                        .buscarPorInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
         LOG.info("Busca por id. Nome {} id {} inscricaoFiscal {} endereco {} telefone {}", porInscricaoFiscalParceiro.getNome(),
                         porInscricaoFiscalParceiro.getId(), porInscricaoFiscalParceiro.getInscricaoFiscal(),
                         porInscricaoFiscalParceiro.getEndereco(), porInscricaoFiscalParceiro.getTelefone());
 
         List<ParceiroNegocio> todosSalvosParceiro = parceiroNegocioService.listarTodos();
-        LOG.info("Salvos no total de {} parceiros de negócio", todosSalvos.size());
+        LOG.info("Salvos no total de {} parceiros de negócio", todosSalvosParceiro.size());
 
-        porNomeParceiro = parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
-        porNomeParceiro.setNome("Agrofertil");
-        porNomeParceiro.setEndereco("Rua 98 de janeiro, 98. Campo Mourão - Paraná");
-        parceiroNegocioService.salvar(porNomeParceiro);
-        LOG.info("Dados alterados com sucesso!", porNomeParceiro.getNome(), porNomeParceiro.getId(),
-                        porNomeParceiro.getInscricaoFiscal(), porNomeParceiro.getEndereco(), porIdParceiro.getTelefone());
+        // Ficou comentado para que não sejam perdidos os dados cadastrados
+        // inicialmente
+        // porNomeParceiro =
+        // parceiroNegocioService.buscarPorNome(parceiroNegocio.getNome());
+        // porNomeParceiro.setNome("Agrofertil");
+        // porNomeParceiro.setEndereco("Rua 98 de janeiro, 98. Campo Mourão -
+        // Paraná");
+        // parceiroNegocioService.salvar(porNomeParceiro);
+        // LOG.info("Dados alterados com sucesso!", porNomeParceiro.getNome(),
+        // porNomeParceiro.getId(),
+        // porNomeParceiro.getInscricaoFiscal(), porNomeParceiro.getEndereco(),
+        // porIdParceiro.getTelefone());
 
-        boolean parceiroDeletar = false; // o comando funcionou adequadamente,
-                                         // por isso, deixei a variável como
-                                         // false
-        if (parceiroDeletar == true) {
-            parceiroNegocioService.deletarPorId(21);
-        }
+        // o comando funcionou adequadamente, por isso, deixei a variável
+        // comentada
+        // parceiroNegocioService.deletarPorId(21);
 
         Produto produto = new Produto();
         produto.setNome("Soja");
         produto.setDescricao("Grão Plantado");
-        produto.setParceiroNegocio(parceiroNegocio2);
+        produto.setParceiroNegocio(parceiroNegocio);
         produto.setFabricante("Coamo");
         produto.setDataFabricacao(LocalDate.of(2024, 1, 1));
         produto.setDataValidade(LocalDate.of(2024, 5, 8));
-        Produto produto2 = produtoService.salvar(produto);
+        produto = produtoService.salvar(produto);
         LOG.info("id inserido: {}", produto.getId());
 
-        Produto porIdProduto = produtoService.buscarPorId(produto2.getId());
+        Produto porIdProduto = produtoService.buscarPorId(produto.getId());
         LOG.info("Busca por id. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}",
                         porIdProduto.getNome(), porIdProduto.getId(), porIdProduto.getDescricao(),
                         porIdProduto.getParceiroNegocio(), porIdProduto.getFabricante(), porIdProduto.getDataFabricacao(),
                         porIdProduto.getDataValidade());
 
-        Produto porNomeProduto = produtoService.buscarPorNome(produto2.getNome());
+        Produto porNomeProduto = produtoService.buscarPorNome(produto.getNome());
         LOG.info("Busca por nome do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}",
                         porNomeProduto.getNome(), porNomeProduto.getId(), porNomeProduto.getDescricao(),
                         porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(), porNomeProduto.getDataFabricacao(),
                         porNomeProduto.getDataValidade());
 
-        Produto porFabricanteProduto = produtoService.buscarPorFabricante(produto2.getFabricante());
+        Produto porFabricanteProduto = produtoService.buscarPorFabricante(produto.getFabricante());
         LOG.info("Busca por fabricante do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}",
                         porFabricanteProduto.getNome(), porFabricanteProduto.getId(), porFabricanteProduto.getDescricao(),
                         porFabricanteProduto.getParceiroNegocio(), porFabricanteProduto.getFabricante(),
                         porFabricanteProduto.getDataFabricacao(), porFabricanteProduto.getDataValidade());
 
-        Produto porDataFabricacaoProduto = produtoService.buscarPorDataFabricacao(produto2.getDataFabricacao());
+        Produto porDataFabricacaoProduto = produtoService.buscarPorDataFabricacao(produto.getDataFabricacao());
         LOG.info("Busca por data de fabricação do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}",
                         porDataFabricacaoProduto.getNome(), porDataFabricacaoProduto.getId(),
                         porDataFabricacaoProduto.getDescricao(), porDataFabricacaoProduto.getParceiroNegocio(),
                         porDataFabricacaoProduto.getFabricante(), porDataFabricacaoProduto.getDataFabricacao(),
                         porDataFabricacaoProduto.getDataValidade());
 
-        Produto porDataValidadeProduto = produtoService.buscarPorDataValidade(produto2.getDataValidade());
+        Produto porDataValidadeProduto = produtoService.buscarPorDataValidade(produto.getDataValidade());
         LOG.info("Busca por data de validade do Produto. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}",
                         porDataValidadeProduto.getNome(), porDataValidadeProduto.getId(), porDataValidadeProduto.getDescricao(),
                         porDataValidadeProduto.getParceiroNegocio(), porDataValidadeProduto.getFabricante(),
                         porDataValidadeProduto.getDataFabricacao(), porDataValidadeProduto.getDataValidade());
 
-        Produto porParceiroProduto = produtoService.buscarPorParceiro(produto2.getParceiroNegocio());
+        Produto porParceiroProduto = produtoService.buscarPorParceiro(produto.getParceiroNegocio());
         LOG.info("Busca por parceiro de negócio. Nome {} id {} Descricao {} Parceiro de Negócio {} Fabricante {} Data de Fabricação {} Data de Validade {}",
                         porParceiroProduto.getNome(), porParceiroProduto.getId(), porParceiroProduto.getDescricao(),
                         porParceiroProduto.getParceiroNegocio(), porParceiroProduto.getFabricante(),
                         porParceiroProduto.getDataFabricacao(), porParceiroProduto.getDataValidade());
 
         List<Produto> todosSalvosProduto = produtoService.listarTodos();
-        LOG.info("Salvos no total de {} produtos", todosSalvos.size());
+        LOG.info("Salvos no total de {} produtos", todosSalvosProduto.size());
 
-        porNomeProduto = produtoService.buscarPorNome(produto.getNome());
-        porNomeProduto.setNome("Milho");
-        porNomeProduto.setDescricao("Para alimentar animais");
-        porNomeProduto.setParceiroNegocio(parceiroNegocio2);
-        porNomeProduto.setFabricante("Lierson Damares");
-        porNomeProduto.setDataFabricacao(LocalDate.of(2023, 10, 01));
-        porNomeProduto.setDataValidade(LocalDate.of(2024, 1, 01));
-        produtoService.salvar(porNomeProduto);
-        LOG.info("Dados alterados com sucesso!", porNomeProduto.getNome(), porNomeProduto.getDescricao(),
-                        porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(), porNomeProduto.getDataFabricacao(),
-                        porNomeProduto.getDataValidade());
+        // Ficou comentado para que não sejam perdidos os dados cadastrados
+        // inicialmente
+        // porNomeProduto = produtoService.buscarPorNome(produto.getNome());
+        // porNomeProduto.setNome("Milho");
+        // porNomeProduto.setDescricao("Para alimentar animais");
+        // porNomeProduto.setParceiroNegocio(parceiroNegocio);
+        // porNomeProduto.setFabricante("Lierson Damares");
+        // porNomeProduto.setDataFabricacao(LocalDate.of(2023, 10, 01));
+        // porNomeProduto.setDataValidade(LocalDate.of(2024, 1, 01));
+        // produtoService.salvar(porNomeProduto);
+        // LOG.info("Dados alterados com sucesso!", porNomeProduto.getNome(),
+        // porNomeProduto.getDescricao(),
+        // porNomeProduto.getParceiroNegocio(), porNomeProduto.getFabricante(),
+        // porNomeProduto.getDataFabricacao(),
+        // porNomeProduto.getDataValidade());
 
-        boolean produtoDeletar = false; // o comando funcionou adequadamente,
-                                        // por isso, deixei a variável como
-                                        // false para envio
-        if (produtoDeletar == true) {
-            produtoService.deletarPorId(produto2.getId());
-        }
+        // o comando funcionou adequadamente, por isso, deixei a variável
+        // comentada
+        // produtoService.deletarPorId(produto.getId());
 
         NotaFiscal notaFiscal = new NotaFiscal();
-        notaFiscal.setNotaFiscalTipo(notaFiscalTipo2);
-        notaFiscal.setParceiroNegocio(parceiroNegocio2);
+        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+        notaFiscal.setParceiroNegocio(parceiroNegocio);
         notaFiscal.setNumeroNota(51581831);
         notaFiscal.setDataNota(LocalDate.now());
-        NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
-        LOG.info("id inserido: {}", parceiroNegocio2.getId());
+        notaFiscal = notaFiscalService.salvar(notaFiscal);
+        LOG.info("id inserido: {}", parceiroNegocio.getId());
 
-        NotaFiscal porIdNotaFiscal = notaFiscalService.buscarPorId(notaFiscal2.getId());
+        NotaFiscal porIdNotaFiscal = notaFiscalService.buscarPorId(notaFiscal.getId());
         LOG.info("Busca por id. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}",
                         porIdNotaFiscal.getId(), porIdNotaFiscal.getNotaFiscalTipo(), porIdNotaFiscal.getParceiroNegocio(),
                         porIdNotaFiscal.getNumeroNota(), porIdNotaFiscal.getDataNota());
 
-        NotaFiscal porNotaFiscalTipo = notaFiscalService.buscarPorNotaFiscalTipo(notaFiscalTipo2);
-        LOG.info("Busca por tipo de nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}",
+        NotaFiscal porNotaFiscalTipo = notaFiscalService.buscarPorNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+        LOG.info("Busca por tipo de nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal{}",
                         porNotaFiscalTipo.getId(), porNotaFiscalTipo.getNotaFiscalTipo(), porNotaFiscalTipo.getParceiroNegocio(),
                         porNotaFiscalTipo.getNumeroNota(), porNotaFiscalTipo.getDataNota());
 
-        NotaFiscal porParceiroNegocioNota = notaFiscalService.buscarPorParceiroNegocio(parceiroNegocio2);
+        NotaFiscal porParceiroNegocioNota = notaFiscalService.buscarPorParceiroNegocio(parceiroNegocio);
         LOG.info("Busca por parceiro de negócio. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}",
                         porParceiroNegocioNota.getId(), porParceiroNegocioNota.getNotaFiscalTipo(),
                         porParceiroNegocioNota.getParceiroNegocio(), porParceiroNegocioNota.getNumeroNota(),
                         porParceiroNegocioNota.getDataNota());
 
-        NotaFiscal porNumeroNotaFiscal = notaFiscalService.buscarPorNumero(notaFiscal2.getNumeroNota());
+        NotaFiscal porNumeroNotaFiscal = notaFiscalService.buscarPorNumero(notaFiscal.getNumeroNota());
         LOG.info("Busca por número da nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}",
                         porNumeroNotaFiscal.getId(), porNumeroNotaFiscal.getNotaFiscalTipo(),
                         porNumeroNotaFiscal.getParceiroNegocio(), porNumeroNotaFiscal.getNumeroNota(),
                         porNumeroNotaFiscal.getDataNota());
 
-        NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscal2.getDataNota());
+        NotaFiscal porDataNota = notaFiscalService.buscarPorData(notaFiscal.getDataNota());
         LOG.info("Busca por data da nota fiscal. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {}",
                         porDataNota.getId(), porDataNota.getNotaFiscalTipo(), porDataNota.getParceiroNegocio(),
                         porDataNota.getNumeroNota(), porDataNota.getDataNota());
 
         List<NotaFiscal> todosSalvosNotaFiscal = notaFiscalService.listarTodos();
-        LOG.info("Salvos no total de {} notas fiscais", todosSalvos.size());
+        LOG.info("Salvos no total de {} notas fiscais", todosSalvosNotaFiscal.size());
 
-        porNumeroNotaFiscal = notaFiscalService.buscarPorNumero(notaFiscal.getNumeroNota());
-        porNumeroNotaFiscal.setParceiroNegocio(parceiroNegocio2);
-        porNumeroNotaFiscal.setNumeroNota(896178687);
-        porNumeroNotaFiscal.setDataNota(LocalDate.of(2023, 10, 01));
-        notaFiscalService.salvar(porNumeroNotaFiscal);
-        LOG.info("Dados alterados com sucesso!", porNumeroNotaFiscal.getNumeroNota(),
-                        porNumeroNotaFiscal.getParceiroNegocio().getEndereco(), porNumeroNotaFiscal.getNumeroNota(),
-                        porNumeroNotaFiscal.getDataNota());
+        // Ficou comentado para que não sejam perdidos os dados cadastrados
+        // inicialmente
+        // porNumeroNotaFiscal =
+        // notaFiscalService.buscarPorNumero(notaFiscal.getNumeroNota());
+        // porNumeroNotaFiscal.setParceiroNegocio(parceiroNegocio);
+        // porNumeroNotaFiscal.setNumeroNota(896178687);
+        // porNumeroNotaFiscal.setDataNota(LocalDate.of(2023, 10, 01));
+        // notaFiscalService.salvar(porNumeroNotaFiscal);
+        // LOG.info("Dados alterados com sucesso!",
+        // porNumeroNotaFiscal.getNumeroNota(),
+        // porNumeroNotaFiscal.getParceiroNegocio().getEndereco(),
+        // porNumeroNotaFiscal.getNumeroNota(),
+        // porNumeroNotaFiscal.getDataNota());
 
-        boolean notaFiscalDeletar = false; // o comando funcionou adequadamente,
-                                           // por isso, deixei a variável como
-                                           // false para envio
-        if (notaFiscalDeletar == true) {
-            notaFiscalService.deletarPorId(notaFiscal2.getId());
-        }
+        // o comando funcionou adequadamente, por isso, deixei a variável
+        // comentada
+        // notaFiscalService.deletarPorId(notaFiscal.getId());
 
         NotaFiscalItem notaFiscalItem = new NotaFiscalItem();
-        notaFiscalItem.setNotaFiscal(notaFiscal2);
-        notaFiscalItem.setProduto(produto2);
-        notaFiscalItem.setQuantidade(2000);
-        notaFiscalItem.setPrecoUnitario(20.0);
-        NotaFiscalItem notaFiscalItem2 = notaFiscalItemService.salvar(notaFiscalItem);
-        LOG.info("id inserido: {}", notaFiscalItem2.getId());
-        System.out.println(notaFiscalItem2.getId().toString());
+        notaFiscalItem.setNotaFiscal(notaFiscal);
+        notaFiscalItem.setProduto(produto);
+        notaFiscalItem.setQuantidade(5000);
+        notaFiscalItem.setPrecoUnitario(50.0);
+        notaFiscalItemService.controlarEstoque(notaFiscalItem);
+        notaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);
+        LOG.info("id inserido: {}", notaFiscalItem.getId());
+        System.out.println(notaFiscalItem.getId().toString());
+        notaFiscalService.adicionarItem(notaFiscalItem);
 
-        NotaFiscalItem porIdNotaFiscalItem2 = notaFiscalItemService.buscarPorId(notaFiscalItem2.getId());
-        if (porIdNotaFiscalItem2 != null) {
+        NotaFiscalItem porIdNotaFiscalItem = notaFiscalItemService.buscarPorId(notaFiscalItem.getId());
+        if (porIdNotaFiscalItem != null) {
             LOG.info("Busca por id. id {} Nota Fiscal {} Produto {} Quantidade {} Preço Unitário {} Valor Total {}",
-                            porIdNotaFiscalItem2.getId(), porIdNotaFiscalItem2.getNotaFiscal(), porIdNotaFiscalItem2.getProduto(),
-                            porIdNotaFiscalItem2.getQuantidade(), porIdNotaFiscalItem2.getPrecoUnitario(),
-                            porIdNotaFiscalItem2.getValorTotal());
+                            porIdNotaFiscalItem.getId(), porIdNotaFiscalItem.getNotaFiscal(), porIdNotaFiscalItem.getProduto(),
+                            porIdNotaFiscalItem.getQuantidade(), porIdNotaFiscalItem.getPrecoUnitario(),
+                            porIdNotaFiscalItem.getValorTotal());
         } else {
-            LOG.warn("Nota Fiscal não encontrado para o id {}.", notaFiscalItem2.getId());
+            LOG.warn("Nota Fiscal não encontrado para o id {}.", notaFiscalItem.getId());
         }
 
+        produto = new Produto();
         produto.setNome("Milho");
-        produto.setDescricao("Grão Plantado");
-        produto.setParceiroNegocio(parceiroNegocio2);
-        produto.setFabricante("Coamo");
+        produto.setDescricao("Grão para alimentar animais");
+        produto.setParceiroNegocio(parceiroNegocio);
+        produto.setFabricante("Cocamar");
         produto.setDataFabricacao(LocalDate.of(2023, 4, 12));
         produto.setDataValidade(LocalDate.of(2023, 5, 10));
-        Produto produto3 = produtoService.salvar(produto);
+        produto = produtoService.salvar(produto);
         LOG.info("id inserido: {}", produto.getId());
 
-        notaFiscalItem.setNotaFiscal(notaFiscal2);
-        notaFiscalItem.setProduto(produto3);
+        notaFiscalItem = new NotaFiscalItem();
+        notaFiscalItem.setNotaFiscal(notaFiscal);
+        notaFiscalItem.setProduto(produto);
         notaFiscalItem.setQuantidade(1000);
         notaFiscalItem.setPrecoUnitario(10.0);
-        NotaFiscalItem notaFiscalItem3 = notaFiscalItemService.salvar(notaFiscalItem);
-        LOG.info("id inserido: {}", notaFiscalItem3.getId());
-        System.out.println(notaFiscalItem3.getId().toString());
+        notaFiscalItemService.controlarEstoque(notaFiscalItem);
+        notaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);
+        LOG.info("id inserido: {}", notaFiscalItem.getId());
+        System.out.println(notaFiscalItem.getId().toString());
+        notaFiscalService.adicionarItem(notaFiscalItem);
 
-        notaFiscalService.adicionarItem(notaFiscal2, notaFiscalItem2);
-        notaFiscalService.adicionarItem(notaFiscal2, notaFiscalItem3);
-
-        NotaFiscal porIdNotaFiscal2 = notaFiscalService.buscarPorId(notaFiscal2.getId());
+        NotaFiscal porIdNotaFiscal2 = notaFiscalService.buscarPorId(notaFiscal.getId());
         LOG.info("Busca por id. id {} Tipo de Nota Fiscal {} Parceiro de Negócio {} Número da Nota fiscal {} Data da Nota Fiscal {} Valor Total",
                         porIdNotaFiscal2.getId(), porIdNotaFiscal2.getNotaFiscalTipo(), porIdNotaFiscal2.getParceiroNegocio(),
                         porIdNotaFiscal2.getNumeroNota(), porIdNotaFiscal2.getDataNota(), porIdNotaFiscal2.getValorTotal());
 
-        boolean notaFiscalItemDeletar = false; // o comando funcionou
-                                               // adequadamente, por isso deixei
-                                               // false
-        if (notaFiscalItemDeletar == true) {
-            notaFiscalItemService.deletarPorId(notaFiscalItem3.getId());
-        }
+        // o comando funcionou adequadamente, por isso, deixei a variável
+        // comentada
+        // notaFiscalItemService.deletarPorId(notaFiscalItem3.getId());
+
+        produto = new Produto();
+        produto.setNome("Aveia");
+        produto.setDescricao("Cereal Plantado entre safras");
+        produto.setParceiroNegocio(parceiroNegocioService.buscarPorNome("Cocamar"));
+        produto.setFabricante("Coamo");
+        produto.setDataFabricacao(LocalDate.of(2024, 1, 1));
+        produto.setDataValidade(LocalDate.of(2024, 5, 8));
+        produto = produtoService.salvar(produto);
+        LOG.info("id inserido: {}", produto.getId());
+
+        notaFiscalItem = new NotaFiscalItem();
+        notaFiscalItem.setNotaFiscal(notaFiscal);
+        notaFiscalItem.setProduto(produto);
+        notaFiscalItem.setQuantidade(2000);
+        notaFiscalItem.setPrecoUnitario(20.0);
+        notaFiscalItemService.controlarEstoque(notaFiscalItem);
+        notaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);
+
+        // adicionando uma saída de estoque teste
+        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.SAIDA);
+        notaFiscalItem.setQuantidade(1000);
+        notaFiscalItemService.controlarEstoque(notaFiscalItem);
+        notaFiscalService.atualizarItem(notaFiscalItem);
+        notaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);
+        LOG.info("id inserido: {}", notaFiscalItem.getId());
+        System.out.println(notaFiscalItem.getId().toString());
+        notaFiscalService.adicionarItem(notaFiscalItem);
+
+        // adicionando uma entrada de estoque teste
+        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+        notaFiscalItem.setQuantidade(1000);
+        notaFiscalItemService.controlarEstoque(notaFiscalItem);
+        notaFiscalService.atualizarItem(notaFiscalItem);
+        notaFiscalItem = notaFiscalItemService.salvar(notaFiscalItem);
+        LOG.info("id inserido: {}", notaFiscalItem.getId());
+        System.out.println(notaFiscalItem.getId().toString());
+        notaFiscalService.adicionarItem(notaFiscalItem);
 
     }
 

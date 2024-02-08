@@ -25,6 +25,20 @@ public class ParceiroNegocio {
     private String endereco;
     private String telefone;
 
+    public ParceiroNegocio() {
+        super();
+    }
+
+    public ParceiroNegocio(@NotBlank(message = "Obrigatório preencher o nome do parceiro de negócio") String nome,
+                    @NotBlank(message = "Obrigatório preencher a inscrição fiscal") String inscricaoFiscal, String endereco,
+                    String telefone) {
+        super();
+        this.nome = nome;
+        this.inscricaoFiscal = inscricaoFiscal;
+        this.endereco = endereco;
+        this.telefone = telefone;
+    }
+
     public Integer getId() {
         return id;
     }
