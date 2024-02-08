@@ -27,10 +27,9 @@ public class ProdutoService {
         if (ValidacaoUtils.isProdutoEmptyOrNull(produto)) {
             throw new CampoVazioOuNuloException("Preencha todos os campos obrigatórios de produto.");
         }
+        LOG.info("Salvando o produto {} ", produto.getDescricao());
         return repository.save(produto);
     }
-
-
 
     public List<Produto> buscarTodos() {
         return repository.findAll();
@@ -47,6 +46,7 @@ public class ProdutoService {
             produtoExistente.setQuantidadeEstoque(produto.getQuantidadeEstoque());
             produtoExistente.setDataValidade(produto.getDataValidade());
             produtoExistente.setDataFabricacao(produto.getDataFabricacao());
+            LOG.info("Atualizando o produto: {} ", produtoExistente.getDescricao());
             return repository.save(produto);
         }).orElseThrow(() -> {
             LOG.info("Não foi possível encontrar o produto pelo ID {}", id);

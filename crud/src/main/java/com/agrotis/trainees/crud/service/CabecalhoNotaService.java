@@ -34,7 +34,7 @@ public class CabecalhoNotaService {
         return repository.findById(id).map(cabecalhoNotaExistente -> {
             cabecalhoNotaExistente.setData(cabecalhoNota.getData());
             cabecalhoNotaExistente.setNotaFiscalTipo(cabecalhoNota.getNotaFiscalTipo());
-            cabecalhoNotaExistente.setNumeroDaNota(cabecalhoNota.getNumeroDaNota());
+            cabecalhoNotaExistente.setNumero(cabecalhoNota.getNumero());
             cabecalhoNotaExistente.setParceiroNegocio(cabecalhoNota.getParceiroNegocio());
             return repository.save(cabecalhoNotaExistente);
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));

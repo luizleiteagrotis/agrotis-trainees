@@ -1,6 +1,5 @@
 package com.agrotis.trainees.crud.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
+import com.agrotis.trainees.crud.service.exceptions.CabecalhoNuloException;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
@@ -76,11 +76,11 @@ public class ItemNotaService {
         }
     }
 
-    public void atualizarEstoque(ItemNota itemNota) {
+    private void atualizarEstoque(ItemNota itemNota) {
         Produto produto = itemNota.getProduto();
         Integer quantidade = itemNota.getQuantidade();
         TipoNota notaFiscalTipo = itemNota.getCabecalhoNota().getNotaFiscalTipo();
-        Integer quantidadeProduto = itemNota.getProduto().getQuantidadeEstoque();
+        Integer quantidadeProduto = produto.getQuantidadeEstoque();
 
         ValidacaoUtils.validarQuantidadeNaoNegativa(quantidade);
 
@@ -94,14 +94,14 @@ public class ItemNotaService {
             produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
         }
 
+        // Salvar as alterações no produto
         produtoService.salvar(produto);
     }
 
     private void adicionarValorTotalCabecalho(ItemNota item) {
         CabecalhoNota cabecalho = item.getCabecalhoNota();
         Double valorTotalItem = item.getValorTotal();
-        Double valorTotalCabecalho = cabecalho.getValorTotal();
-        cabecalho.setValorTotal(valorTotalCabecalho);
+        cabecalho.setValorTotal(valorTotalItem);
         cabecalhoNotaService.salvar(cabecalho);
 
     }

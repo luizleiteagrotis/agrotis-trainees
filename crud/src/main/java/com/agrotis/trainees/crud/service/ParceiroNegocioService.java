@@ -21,7 +21,8 @@ public class ParceiroNegocioService {
         this.repository = repository;
     }
 
-    public ParceiroNegocio salvar(ParceiroNegocio negocio) {
+        public ParceiroNegocio salvar(ParceiroNegocio negocio) {
+            LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());
         return repository.save(negocio);
     }
 

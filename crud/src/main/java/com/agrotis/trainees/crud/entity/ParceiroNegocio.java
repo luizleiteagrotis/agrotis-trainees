@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -21,17 +22,18 @@ public class ParceiroNegocio {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @NotEmpty(message = "O campo nome tem de ser preenchido.")
+    @NotBlank(message = "O campo nome tem de ser preenchido.")
     private String nome;
 
     @Column(name = "inscricao_fiscal")
-    @NotEmpty(message = "O campo inscrição fiscal deve ser preenchido")
+    @NotBlank(message = "O campo inscrição fiscal deve ser preenchido")
     private String inscricaoFiscal;
 
-    @NotEmpty(message = "O campo endereço tem de ser preenchido.")
+    @NotBlank(message = "O campo endereço tem de ser preenchido.")
     private String endereco;
 
     @Size(min = 8, max = 11, message = "O campo telefone tem de conter entre 8 e 11 caracteres")
+    @NotBlank
     private String telefone;
 
     @OneToMany(mappedBy = "fabricante")

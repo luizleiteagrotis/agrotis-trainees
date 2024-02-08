@@ -48,10 +48,9 @@ public class CabecalhoNota {
     private ParceiroNegocio parceiroNegocio;
 
     @NotNull(message = "Informe o numero da nota.")
-    @Column(name = "numero_nota", unique = true)
-    private Integer numeroDaNota;
+    @Column(name = "numero", unique = true)
+    private Integer numero;
 
-    
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @PastOrPresent
     private LocalDate data;
@@ -59,7 +58,6 @@ public class CabecalhoNota {
     @OneToMany(mappedBy = "cabecalhoNota", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemNota> itens = new ArrayList<>();
 
-    @NotNull
     @DecimalMin(value = "00.00", inclusive = true)
     @Digits(integer = 10, fraction = 2)
     @Column(name = "valor_total")
@@ -81,12 +79,12 @@ public class CabecalhoNota {
         this.parceiroNegocio = parceiroNegocio;
     }
 
-    public Integer getNumeroDaNota() {
-        return numeroDaNota;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setNumeroDaNota(Integer numeroDaNota) {
-        this.numeroDaNota = numeroDaNota;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
     public LocalDate getData() {
