@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -27,12 +29,15 @@ public class ItemNotaFiscal {
     private int quantidade;
 
     @NotNull
-    @Digits(integer = 10, fraction = 2)
-    private BigDecimal valor_unitario;
+    @Digits(integer = 19, fraction = 2)
+    @DecimalMin(value = "0.01")
+    @Column(name = "valor_unitario")
+    private BigDecimal valorUnitario;
 
     @NotNull
-    @Digits(integer = 10, fraction = 2)
-    private BigDecimal valor_total;
+    @Digits(integer = 19, fraction = 2)
+    @Column(name = "valor_total")
+    private BigDecimal valorTotal;
 
     @OneToOne
     @JoinColumn(name = "id_produto")
@@ -62,20 +67,20 @@ public class ItemNotaFiscal {
         this.notaFiscal = notaFiscal;
     }
 
-    public BigDecimal getValor_unitario() {
-        return valor_unitario;
+    public BigDecimal getValorUnitario() {
+        return valorUnitario;
     }
 
-    public void setValor_unitario(BigDecimal valor_unitario) {
-        this.valor_unitario = valor_unitario;
+    public void setValorUnitario(BigDecimal valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 
-    public BigDecimal getValor_total() {
-        return valor_total;
+    public BigDecimal getValorTotal() {
+        return valorTotal;
     }
 
     public void setValorTotal() {
-        this.valor_total = this.valor_unitario.multiply(BigDecimal.valueOf(this.quantidade));
+        this.valorTotal = this.valorUnitario.multiply(BigDecimal.valueOf(this.quantidade));
     }
 
     public Produto getProduto() {
