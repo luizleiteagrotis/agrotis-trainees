@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,8 @@ public class NotaFiscal {
     private List<ItemNotaFiscal> itens = new ArrayList<>();
 
     @Digits(integer = 19, fraction = 2)
-    private BigDecimal valor_total = BigDecimal.ZERO;
+    @Column(name = "valor_total")
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public Integer getId() {
         return id;
@@ -82,12 +84,12 @@ public class NotaFiscal {
         this.notaFiscalTipo = notaFiscalTipo;
     }
 
-    public BigDecimal getValor_total() {
-        return valor_total;
+    public BigDecimal getValorTotal() {
+        return valorTotal;
     }
 
     public void setValorTotal(BigDecimal valorTotal) {
-        this.valor_total = valorTotal;
+        this.valorTotal = valorTotal;
     }
 
     public List<ItemNotaFiscal> getItens() {
