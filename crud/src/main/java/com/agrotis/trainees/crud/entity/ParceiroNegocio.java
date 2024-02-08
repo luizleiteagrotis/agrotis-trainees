@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +20,8 @@ public class ParceiroNegocio {
     private String nome;
 
     @NotBlank(message = "Obrigatório preencher a inscrição fiscal do tipo de parceiro de negócio")
-    private String inscricao_fiscal;
+    @Column(name = "inscricao_fiscal")
+    private String inscricaoFiscal;
 
     @NotBlank(message = "Obrigatório preencher o endereço do tipo de parceiro de negócio")
     private String endereco;
@@ -40,11 +42,11 @@ public class ParceiroNegocio {
     }
 
     public String getInscricaoFiscal() {
-        return inscricao_fiscal;
+        return inscricaoFiscal;
     }
 
     public void setInscricaoFiscal(String inscricaoFiscal) {
-        this.inscricao_fiscal = inscricaoFiscal;
+        this.inscricaoFiscal = inscricaoFiscal;
     }
 
     public String getEndereco() {
