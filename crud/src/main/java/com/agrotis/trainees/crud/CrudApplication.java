@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -41,10 +42,16 @@ public class CrudApplication implements CommandLineRunner {
     @Override
 
     public void run(String... args) {
+        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+        parceiroNegocio.setNome("Hadassa e Tatiane Esportes Ltda");
+        parceiroNegocio.setInscricaoFiscal("10199709302155");
+        parceiroNegocio.setEndereco("Moradias Bom Jesus");
+        parceiroNegocio.setTelefone("41992477204");
 
-        // ParceiroNegocio parceiro = new ParceiroNegocio("Oliver e Daniela Pães
-        // e Doces Ltda ", "Teste Gralha-do-cerrado",
-        // "4325067331");
+        ParceiroNegocio parceiro361 = parceiroNegocioService.buscarPorId(361);
+        ParceiroNegocio parceiro362 = parceiroNegocioService.buscarPorId(362);
+        ParceiroNegocio parceiro363 = parceiroNegocioService.buscarPorId(363);
+        ParceiroNegocio parceiro364 = parceiroNegocioService.buscarPorId(364);
 
     }
 }

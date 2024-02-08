@@ -106,7 +106,7 @@ public class ParceiroNegocioService {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Inscrição fiscal já está cadastrada.");
         }
         if (parceiro.getInscricaoFiscal() == null) {
-            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Informe uma inscrição fiscal.");
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: É obrigatorio inserir uma inscrição fiscal.");
         }
     }
 
