@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "nota_fiscal")
@@ -25,12 +28,44 @@ public class NotaFiscal {
     private String tipo;
     @ManyToOne
     @JoinColumn(name = "id_parceiro")
+    @NotNull
     private ParceiroNegocio parceiroNegocio;
+    @NotNull
     private int numero;
-    private Date data;
+    @NotNull
+    private LocalDate data;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "notaFiscal")
     private List<ItemNotaFiscal> itemNotaFiscal;
-    private Double valorTotal;
+    @DecimalMin(value = "0.0", message = "O valor total deve ser maior que 0")
+    private BigDecimal valorTotal;
+
+    @Deprecated
+    public NotaFiscal() {
+
+    }
+
+    public NotaFiscal(@NotBlank(message = "É necessário um tipo de nota fiscal") String tipo,
+                    @NotNull ParceiroNegocio parceiroNegocio, @NotNull int numero, @NotNull LocalDate data) {
+        super();
+        this.tipo = tipo;
+        this.parceiroNegocio = parceiroNegocio;
+        this.numero = numero;
+        this.data = data;
+
+    }
+
+    public NotaFiscal(@NotBlank(message = "É necessário um tipo de nota fiscal") String tipo, @NotNull int numero,
+                    @NotNull LocalDate data) {
+        super();
+        this.tipo = tipo;
+        this.numero = numero;
+        this.data = data;
+    }
+
+    public NotaFiscal(@NotNull LocalDate data) {
+        super();
+        this.data = data;
+    }
 
     public int getId() {
         return id;
@@ -60,19 +95,19 @@ public class NotaFiscal {
         this.numero = numero;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

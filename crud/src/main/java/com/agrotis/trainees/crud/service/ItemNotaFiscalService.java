@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
@@ -33,6 +34,7 @@ public class ItemNotaFiscalService {
             return null;
         }
         if (repository.findByNotaFiscalAndProduto(itemNotaFiscal.getNotaFiscal(), itemNotaFiscal.getProduto()).isEmpty()) {
+            itemNotaFiscal.setValorTotal(calcularValorTotal(itemNotaFiscal.getQuantidade(), itemNotaFiscal.getPrecoUnitario()));
             ItemNotaFiscal itemNota = repository.save(itemNotaFiscal);
 
             // verifica tabela da nota fiscal
@@ -83,7 +85,7 @@ public class ItemNotaFiscalService {
             if (item.getNotaFiscal() != null && Validador.existeNotaFiscalPorId(item.getNotaFiscal().getId())) {
                 itemAtualizar.setNotaFiscal(item.getNotaFiscal());
             }
-            if (item.getQuantidade() != 0 && item.getQuantidade() > 0) {
+            if (item.getQuantidade() != null && item.getQuantidade().doubleValue() > 0) {
                 itemAtualizar.setQuantidade(item.getQuantidade());
             }
 
@@ -91,11 +93,11 @@ public class ItemNotaFiscalService {
                 itemAtualizar.setProduto(item.getProduto());
             }
 
-            if (item.getPrecoUnitario() != 0 && item.getPrecoUnitario() > 0) {
+            if (item.getPrecoUnitario() != null && item.getPrecoUnitario().doubleValue() > 0) {
                 itemAtualizar.setPrecoUnitario(item.getPrecoUnitario());
             }
 
-            itemAtualizar.setValorTotal();
+            itemAtualizar.setValorTotal(calcularValorTotal(item.getQuantidade(), item.getPrecoUnitario()));
             LOG.info("Item Atualizado");
 
             repository.save(itemAtualizar);
@@ -122,8 +124,8 @@ public class ItemNotaFiscalService {
 
     }
 
-    public static double calcularValorTotal(double quantidade, double precoUnitario) {
-        return quantidade * precoUnitario;
+    public static BigDecimal calcularValorTotal(BigDecimal quantidade, BigDecimal precoUnitario) {
+        return precoUnitario.multiply(quantidade);
 
     }
 

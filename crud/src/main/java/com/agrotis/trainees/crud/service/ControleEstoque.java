@@ -7,15 +7,18 @@ import org.springframework.stereotype.Service;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ControleEstoqueException;
+import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Service
 public class ControleEstoque {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControleEstoque.class);
     private final ProdutoService produtoService;
+    private final ProdutoRepository produtoRepository;
 
-    ControleEstoque(ProdutoService produtoService) {
+    ControleEstoque(ProdutoService produtoService, ProdutoRepository produtoRepository) {
         this.produtoService = produtoService;
+        this.produtoRepository = produtoRepository;
 
     }
 
@@ -33,16 +36,17 @@ public class ControleEstoque {
         double quantidadeEstoque = produto.getEstoque();
 
         if (tipoNotaFiscal.equals("entrada")) {
-            quantidadeEstoque += itemNotaFiscal.getQuantidade();
+            quantidadeEstoque += itemNotaFiscal.getQuantidade().doubleValue();
             produto.setEstoque(quantidadeEstoque);
-            produtoService.salvar(produto);
+            produtoRepository.save(produto);
             return 1;
         }
 
-        if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade()) && tipoNotaFiscal.equals("saida")) {
-            quantidadeEstoque -= itemNotaFiscal.getQuantidade();
+        if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue())
+                        && tipoNotaFiscal.equals("saida")) {
+            quantidadeEstoque -= itemNotaFiscal.getQuantidade().doubleValue();
             produto.setEstoque(quantidadeEstoque);
-            produtoService.salvar(produto);
+            produtoRepository.save(produto);
             return 1;
         } else {
             LOG.error("A quantidade de saida é maior do que tem em estoque");

@@ -4,19 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.exception.NotaFiscalExcecao;
+import com.agrotis.trainees.crud.helper.TipoNotaFiscal;
 import com.agrotis.trainees.crud.helper.Validador;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
 @Service
 public class NotaFiscalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
     private final NotaFiscalRepository repository;
 
     public NotaFiscalService(NotaFiscalRepository notaFiscalRepository) {
@@ -25,17 +28,14 @@ public class NotaFiscalService {
     }
 
     public NotaFiscal salvar(NotaFiscal notaFiscal) {
-
-        if (Validador.existeParceiroPorId(notaFiscal.getParceiroNegocio().getId()) && existe(notaFiscal)
-                        && existe(notaFiscal.getTipo())) {
-            LOG.info("Salvo no banco");
+        try {
+            validar(notaFiscal);
+            LOG.info("Salvo com sucesso");
             return repository.save(notaFiscal);
-
-        } else {
-            LOG.error("Não foi possivel salvar a nota fiscal");
+        } catch (NotaFiscalExcecao nfe) {
+            LOG.error(nfe.getMessage());
             return null;
         }
-
     }
 
     public NotaFiscal buscarPorId(int id) {
@@ -67,30 +67,25 @@ public class NotaFiscalService {
     }
 
     public NotaFiscal atualizar(NotaFiscal notaFiscal, int id) {
-        NotaFiscal nota = this.buscarPorId(id);
-        Integer numeroNotaFiscal = notaFiscal.getNumero();
-        if (nota != null) {
+        try {
+            NotaFiscal nota = this.buscarPorId(id);
             if (notaFiscal.getTipo() != null) {
                 nota.setTipo(notaFiscal.getTipo());
             }
             if (notaFiscal.getParceiroNegocio() != null) {
                 nota.setParceiroNegocio(notaFiscal.getParceiroNegocio());
             }
-            if (numeroNotaFiscal != null && numeroNotaFiscal != 0) {
-                nota.setNumero(numeroNotaFiscal);
-            }
             if (notaFiscal.getData() != null) {
                 nota.setData(notaFiscal.getData());
             }
-            LOG.info("Registro atualizado");
-            if (existe(notaFiscal)) {
-                return repository.save(nota);
-            } else {
-                LOG.error("Não foi possivel atualizar este registro");
-                return null;
+            if (notaFiscal.getNumero() != 0) {
+                nota.setNumero(notaFiscal.getNumero());
             }
-        } else {
-            LOG.error("Não foi possivel atualizar este registro");
+            validar(nota);
+            return repository.save(nota);
+
+        } catch (NotaFiscalExcecao nfe) {
+            LOG.error(nfe.getMessage());
             return null;
         }
     }
@@ -110,8 +105,28 @@ public class NotaFiscalService {
     }
 
     private boolean existe(String tipoNota) {
-        return tipoNota.equalsIgnoreCase("entrada") || tipoNota.equalsIgnoreCase("saida");
+        String tipoEntrada = TipoNotaFiscal.ENTRADA.getDescricao();
+        String tipoSaida = TipoNotaFiscal.SAIDA.getDescricao();
+        return tipoNota.equalsIgnoreCase(tipoEntrada) || tipoNota.equalsIgnoreCase(tipoSaida);
 
+    }
+
+    private void validar(NotaFiscal notaFiscal) throws NotaFiscalExcecao {
+        if (notaFiscal.getParceiroNegocio() == null || !Validador.existeParceiroPorId(notaFiscal.getParceiroNegocio().getId())) {
+            throw new NotaFiscalExcecao("Falha ao salvar no banco: Informe um parceiro válido.");
+        }
+
+        if (!existe(notaFiscal)) {
+            throw new NotaFiscalExcecao("Falha ao salvar no banco: Já existe uma nota registrada com esses dados.");
+        }
+
+        if (!existe(notaFiscal.getTipo())) {
+            throw new NotaFiscalExcecao("Falhao ao salvar no banco: Informe um tipo válido");
+        }
+        Integer numeroNotaFiscal = notaFiscal.getNumero();
+        if (numeroNotaFiscal == null || numeroNotaFiscal < 0) {
+            throw new NotaFiscalExcecao("Falha ao salvar no banco: Informe um número válido.");
+        }
     }
 
     /*
@@ -121,12 +136,13 @@ public class NotaFiscalService {
     public void persistirValorTotal(int idNotaFiscal) {
         NotaFiscal notaPorId = buscarPorId(idNotaFiscal);
         List<ItemNotaFiscal> itens = notaPorId.getItemNotaFiscal();
-        double valorTotal = 0;
+        BigDecimal valorTotalNota = BigDecimal.valueOf(0);
         for (ItemNotaFiscal item : itens) {
 
-            valorTotal += item.getValorTotal();
+            valorTotalNota = valorTotalNota.add(item.getValorTotal());
+
         }
-        notaPorId.setValorTotal(valorTotal);
+        notaPorId.setValorTotal(valorTotalNota);
         repository.save(notaPorId);
 
     }

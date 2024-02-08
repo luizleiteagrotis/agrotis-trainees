@@ -6,7 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
+
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.helper.TipoNotaFiscal;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
@@ -52,6 +58,20 @@ public class CrudApplication implements CommandLineRunner {
         ParceiroNegocio parceiro362 = parceiroNegocioService.buscarPorId(362);
         ParceiroNegocio parceiro363 = parceiroNegocioService.buscarPorId(363);
         ParceiroNegocio parceiro364 = parceiroNegocioService.buscarPorId(364);
+
+        Produto produto366 = produtoService.buscarPorId(366);
+        Produto produto367 = produtoService.buscarPorId(367);
+        Produto produto370 = produtoService.buscarPorId(370);
+
+        String tipoEntrada = TipoNotaFiscal.ENTRADA.getDescricao();
+        String tipoSaida = TipoNotaFiscal.SAIDA.getDescricao();
+
+        NotaFiscal notaFiscalS377 = notaFiscalService.buscarPorId(377);
+        NotaFiscal notaFiscalE374 = notaFiscalService.buscarPorId(374);
+        BigDecimal quantidade = new BigDecimal(9999);
+        BigDecimal preco = BigDecimal.valueOf(60.95);
+        ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal(notaFiscalS377, produto367, quantidade, preco);
+        itemNotaFiscalService.salvar(itemNotaFiscal);
 
     }
 }
