@@ -14,10 +14,14 @@ public class ParceiroNegocio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     private String nome;
+
     @Column(name = "inscricao_fiscal")
     private String inscricaoFiscal;
+
     private String endereco;
+
     private String telefone;
 
     public Integer getId() {

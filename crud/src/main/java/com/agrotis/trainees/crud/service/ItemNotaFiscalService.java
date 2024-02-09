@@ -11,6 +11,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
+import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 
 @Service
 public class ItemNotaFiscalService {
@@ -32,6 +33,7 @@ public class ItemNotaFiscalService {
     public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
         atualizarEstoque(entidade);
         calcularValorTotal(entidade);
+        addValorTotal(entidade);
         return repository.save(entidade);
     }
 
@@ -40,18 +42,13 @@ public class ItemNotaFiscalService {
     }
 
     public ItemNotaFiscal buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.info("Nao foi identificada a nota fiscal pelo ID {} ", id);
-            return null;
+        return repository.findById(id).orElseThrow(() -> {
+            throw new EntidadeNaoEncontradaException("Entidade nao encontrada pelo id ");
         });
     }
 
-    public ItemNotaFiscal update(Integer id, ItemNotaFiscal fiscal) {
-        ItemNotaFiscal byId = repository.findById(id).orElseGet(() -> {
-            LOG.info("A Nota Fiscal nao foi encontrada pelo ID: {}.", id);
-            return null;
-        });
-        return repository.save(byId);
+    public ItemNotaFiscal update(ItemNotaFiscal itemNotaFiscal) {
+        return repository.save(itemNotaFiscal);
     }
 
     public void deletarPorId(Integer id) {
@@ -68,10 +65,13 @@ public class ItemNotaFiscalService {
 
     }
 
-    public Double calcularValorTotal(ItemNotaFiscal itemNotaFiscal) {
+    public void calcularValorTotal(ItemNotaFiscal itemNotaFiscal) {
         Integer quantidadeNotaFiscal = itemNotaFiscal.getQuantidade();
         Double precoUnitarioItemNotaFiscal = itemNotaFiscal.getPrecoUnitario();
-        return quantidadeNotaFiscal * precoUnitarioItemNotaFiscal;
+        if (quantidadeNotaFiscal != null && precoUnitarioItemNotaFiscal != null) {
+            Double valorTotal = quantidadeNotaFiscal * precoUnitarioItemNotaFiscal;
+            itemNotaFiscal.setValorTotal(valorTotal);
+        }
     }
 
     public void atualizarEstoque(ItemNotaFiscal itemNotaFiscal) {
@@ -79,13 +79,13 @@ public class ItemNotaFiscalService {
         Produto produto = itemNotaFiscal.getProduto();
         Integer quantidade = itemNotaFiscal.getQuantidade();
         NotaFiscalTipo notaFiscalTipo = itemNotaFiscal.getNotaFiscal().getTipo();
-        Integer quantidadeProduto = itemNotaFiscal.getProduto().getEstoque();
+        Integer estoque = itemNotaFiscal.getProduto().getEstoque();
         if (notaFiscalTipo == NotaFiscalTipo.ENTRADA) {
-            produto.setEstoque(quantidadeProduto + quantidade);
+            produto.setEstoque(estoque + quantidade);
             System.out.println("Nota Fiscal TIPO Entrada");
         } else {
-            if (quantidadeProduto - quantidade >= 0) {
-                produto.setEstoque(quantidadeProduto - quantidade);
+            if (estoque - quantidade >= 0) {
+                produto.setEstoque(estoque - quantidade);
                 System.out.println("Nota Fiscal TIPO Saida");
             } else {
                 throw new IllegalArgumentException("Nao e possivel remover mais itens que o disponivel em estoque.");

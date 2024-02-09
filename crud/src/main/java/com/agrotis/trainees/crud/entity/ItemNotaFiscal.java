@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "item_nota_fiscal")
@@ -19,9 +20,11 @@ public class ItemNotaFiscal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @NotNull(message = "Obrigatorio inserir o preco unitario!")
     @Column(name = "preco_unitario")
     private Double precoUnitario;
 
+    @NotNull(message = "Obrigatorio inserir a quantidade!")
     @Column(name = "quantidade")
     private Integer quantidade;
 
@@ -40,6 +43,7 @@ public class ItemNotaFiscal {
         return id;
     }
 
+    @NotNull(message = "Obrigatorio inserir o preco unitario!")
     public Double getPrecoUnitario() {
         return precoUnitario;
     }
@@ -48,6 +52,7 @@ public class ItemNotaFiscal {
         this.precoUnitario = precoUnitario;
     }
 
+    @NotNull(message = "Obrigatorio inserir a quantidade do produto")
     public Integer getQuantidade() {
         return quantidade;
     }

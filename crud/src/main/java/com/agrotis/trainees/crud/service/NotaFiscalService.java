@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 
 @Service
 public class NotaFiscalService {
@@ -26,16 +27,14 @@ public class NotaFiscalService {
     }
 
     public NotaFiscal buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Nota Fiscal nao encontrada para o ID {} ", id);
-            return null;
+        return repository.findById(id).orElseThrow(() -> {
+            throw new EntidadeNaoEncontradaException("Nota Fiscal nao encontrada para o ID {} ");
         });
     }
 
     public NotaFiscal update(Integer id, NotaFiscal fiscal) {
-        NotaFiscal byId = repository.findById(id).orElseGet(() -> {
-            LOG.info("A Nota Fiscal nao foi encontrada pelo ID: {}.", id);
-            return null;
+        NotaFiscal byId = repository.findById(id).orElseThrow(() -> {
+            throw new EntidadeNaoEncontradaException("A Nota Fiscal nao foi encontrada pelo ID: ");
         });
         return repository.save(byId);
     }
