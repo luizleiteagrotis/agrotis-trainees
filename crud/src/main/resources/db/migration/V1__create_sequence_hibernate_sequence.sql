@@ -1,0 +1,3 @@
+CREATE SEQUENCE hibernate_sequence
+	AS INTEGER
+	START WITH 1;

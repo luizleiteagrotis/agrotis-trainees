@@ -1,0 +1,1 @@
+DROP TABLE nota_fiscal_tipo;
