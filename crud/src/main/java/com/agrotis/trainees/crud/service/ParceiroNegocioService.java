@@ -6,9 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.utils.DtoUtils;
 
 @Service
 public class ParceiroNegocioService {
@@ -21,9 +23,11 @@ public class ParceiroNegocioService {
         this.repository = repository;
     }
 
-        public ParceiroNegocio salvar(ParceiroNegocio negocio) {
+        public ParceiroNegocioDto salvar(ParceiroNegocioDto negocio) {
+            ParceiroNegocio entidade = DtoUtils.converteParaEntidade(negocio);
+            repository.save(entidade);
             LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());
-        return repository.save(negocio);
+        return DtoUtils.converteParaDto(entidade);
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
