@@ -39,14 +39,11 @@ public class ParceiroNegocioService {
     }
 
     public List<ParceiroNegocioDto> listarTodos() {
-        return repository.findAll().stream()
-                .map(DtoUtils::converteParaDto)
-                .collect(Collectors.toList());
+        return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
 
-
-    public ParceiroNegocio buscarPorNome(String nome) {
-        return repository.findByNome(nome).orElseThrow(() -> {
+    public ParceiroNegocioDto buscarPorNome(String nome) {
+        return repository.findByNome(nome).map(p -> DtoUtils.converteParaDto(p)).orElseThrow(() -> {
             LOG.info("Não foi possível encontrar o parceiro de negócio pelo nome {}", nome);
             return new EntidadeNaoEncontradaException("Parceiro de negócio com o nome '" + nome + "' não encontrado");
         });

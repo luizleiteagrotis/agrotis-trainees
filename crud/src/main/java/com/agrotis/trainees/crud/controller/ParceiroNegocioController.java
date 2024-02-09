@@ -44,9 +44,17 @@ public class ParceiroNegocioController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
     
+    @GetMapping("/buscarPorNome/{nome}")
+    public ResponseEntity<?> buscarPorId(@PathVariable String nome){
+        return ResponseEntity.ok(service.buscarPorNome(nome));
+    }
+    
     @GetMapping
     public ResponseEntity<?> listarTodos(){
         return ResponseEntity.ok(service.listarTodos());
     }
+    
+    
 
+    
 }
