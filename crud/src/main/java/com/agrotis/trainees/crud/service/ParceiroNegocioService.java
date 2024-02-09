@@ -39,7 +39,10 @@ public class ParceiroNegocioService {
     }
 
     public List<ParceiroNegocioDto> listarTodos() {
-        return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
+        return repository.findAll()
+                        .stream()
+                        .map(DtoUtils::converteParaDto)
+                        .collect(Collectors.toList());
     }
 
     public ParceiroNegocioDto buscarPorNome(String nome) {

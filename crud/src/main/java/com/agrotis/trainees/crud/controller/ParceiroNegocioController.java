@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +46,7 @@ public class ParceiroNegocioController {
     }
     
     @GetMapping("/buscarPorNome/{nome}")
-    public ResponseEntity<?> buscarPorId(@PathVariable String nome){
+    public ResponseEntity<?> buscarPorNome(@PathVariable String nome){
         return ResponseEntity.ok(service.buscarPorNome(nome));
     }
     
@@ -53,6 +54,16 @@ public class ParceiroNegocioController {
     public ResponseEntity<?> listarTodos(){
         return ResponseEntity.ok(service.listarTodos());
     }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarPorId(@PathVariable Integer id){
+        service.deletarPorId(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    
+    
+    
     
     
 
