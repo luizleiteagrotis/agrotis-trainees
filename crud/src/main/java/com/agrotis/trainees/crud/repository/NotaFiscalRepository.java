@@ -17,4 +17,16 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
 
     @Query("SELECT MAX(nf.numero) FROM NotaFiscal nf WHERE nf.tipo = :id_tipo")
     Optional<Integer> findMaxNumeroByTipo(@Param("id_tipo") NotaFiscalTipo tipo);
+
+    Optional<NotaFiscal> existsByTipoAndNumero(Integer tipo, Integer numero); // Implementar
+                                                                              // depois
+                                                                              // para
+                                                                              // verificar
+                                                                              // se
+                                                                              // o
+                                                                              // numero
+                                                                              // da
+                                                                              // nota
+                                                                              // já
+                                                                              // existe.
 }

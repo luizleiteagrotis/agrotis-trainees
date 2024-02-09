@@ -73,6 +73,7 @@ public class NotaFiscalService {
 
     @Transactional
     public Integer obterUltimoNumeroPorTipo(NotaFiscalTipo tipo) {
+
         try {
             return repository.findMaxNumeroByTipo(tipo).orElse(null);
         } catch (NoResultException e) {
