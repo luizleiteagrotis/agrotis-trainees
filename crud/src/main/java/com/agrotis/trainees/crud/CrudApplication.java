@@ -155,7 +155,7 @@ public class CrudApplication implements CommandLineRunner {
         LOG.info("Deletando o produto {}", nfPorId.getId());
 
         // Inicio ItemNotaFiscal
-
+        LOG.info("Inicio ItemNotaFiscal: {}", notaFiscal.getId());
         ItemNotaFiscal itemnf = new ItemNotaFiscal();
         itemnf.setNotaFiscal(notaFiscalAtualiza);
         itemnf.setProduto(produtoAtualizado);
@@ -163,6 +163,5 @@ public class CrudApplication implements CommandLineRunner {
         itemnf.setQuantidade(3);
         itemnf.setValorTotal(itemnf.getPreco_unitario() * itemnf.getQuantidade());
         itemNotaFiscalService.salvar(itemnf);
-
     }
 }

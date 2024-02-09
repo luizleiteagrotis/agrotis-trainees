@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,29 @@ public class ItemNotaFiscalService {
             LOG.error("Item não encontrado{}.", produto);
             return null;
         });
+    }
+
+    public ItemNotaFiscal buscarPorId(Integer id) {
+        return repository.findById(id).orElseGet(() -> {
+            LOG.error("Item da nota fiscal não encontrado para o id {}.", id);
+            return null;
+        });
+    }
+
+    public ItemNotaFiscal buscarPorNotaFiscalId(NotaFiscal notaFiscal) {
+        return repository.findByNotaFiscalId(notaFiscal).orElseGet(() -> {
+            LOG.error("Item não identificado{}.", notaFiscal);
+            return null;
+        });
+    }
+
+    public List<ItemNotaFiscal> listarTodos() {
+        return repository.findAll();
+    }
+
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+        LOG.info("Deletado");
     }
 
     public ItemNotaFiscal salvar(ItemNotaFiscal entidade) {
