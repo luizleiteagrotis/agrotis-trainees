@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /crud/api
-  port: 8082
+  port: 8081
 
 management:
   endpoint:

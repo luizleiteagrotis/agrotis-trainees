@@ -12,9 +12,8 @@ public class ParceiroNegocioDto {
     public ParceiroNegocioDto() {
     }
 
-    public ParceiroNegocioDto(int id, String nome, String inscricaoFiscal, String endereco, String telefone) {
+    public ParceiroNegocioDto(String nome, String inscricaoFiscal, String endereco, String telefone) {
         super();
-        this.id = id;
         this.nome = nome;
         this.inscricaoFiscal = inscricaoFiscal;
         this.endereco = endereco;
