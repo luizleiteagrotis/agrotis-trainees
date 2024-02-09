@@ -1,11 +1,14 @@
 package com.agrotis.trainees.crud.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
@@ -13,17 +16,25 @@ import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 @RestController
 @RequestMapping("/parceiros-negocio")
 public class ParceiroNegocioController {
-    
+
     private final ParceiroNegocioService service;
-    
+
     @Autowired
     public ParceiroNegocioController(ParceiroNegocioService service) {
-        this.service = service;        
+        this.service = service;
     }
-    
+
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody ParceiroNegocioDto parceiroNegocio) {
-        return ResponseEntity.ok(service.salvar(parceiroNegocio));
+        ParceiroNegocioDto parceiroNegocioSalvo = service.salvar(parceiroNegocio);
+
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(parceiroNegocioSalvo.getId())
+                        .toUri();
+
+        return ResponseEntity.created(location).body(parceiroNegocioSalvo);
     }
 
 }

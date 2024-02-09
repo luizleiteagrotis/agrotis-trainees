@@ -1,10 +1,12 @@
 package com.agrotis.trainees.crud.service;
 
+import java.net.URI;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -23,10 +25,10 @@ public class ParceiroNegocioService {
         this.repository = repository;
     }
 
-        public ParceiroNegocioDto salvar(ParceiroNegocioDto negocio) {
-            ParceiroNegocio entidade = DtoUtils.converteParaEntidade(negocio);
-            repository.save(entidade);
-            LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());
+    public ParceiroNegocioDto salvar(ParceiroNegocioDto negocio) {
+        ParceiroNegocio entidade = DtoUtils.converteParaEntidade(negocio);
+        repository.save(entidade);
+        LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());
         return DtoUtils.converteParaDto(entidade);
     }
 
