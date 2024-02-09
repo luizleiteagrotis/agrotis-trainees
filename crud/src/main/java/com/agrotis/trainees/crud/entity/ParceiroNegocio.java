@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "parceiro_negocio")
@@ -27,6 +28,7 @@ public class ParceiroNegocio {
     private String endereco;
 
     @NotBlank(message = "Obrigatório preencher o telefone do tipo de parceiro de negócio")
+    @Pattern(regexp = "\\\\(?[1-9]{2}\\\\)? ?(?:9)?(?:[2-9]|6[1-9])[0-9]{3}-?[0-9]{4}$")
     private String telefone;
 
     public Integer getId() {

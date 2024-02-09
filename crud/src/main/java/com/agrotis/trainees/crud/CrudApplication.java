@@ -344,7 +344,7 @@ public class CrudApplication implements CommandLineRunner {
             //
             // NotaFiscal notaFiscal2 = notaFiscalService.salvar(notaFiscal);
 
-            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(276);
+            NotaFiscal notaFiscal2 = notaFiscalService.buscarPorId(177);
 
             // itemNotaFiscal2.setNotaFiscal(notaFiscal2);
             itemNotaFiscal.setNotaFiscal(notaFiscal2);
@@ -366,10 +366,6 @@ public class CrudApplication implements CommandLineRunner {
             // System.out.println("Tratamento de exceção: " + e.getMessage());
             // }
 
-        }
-
-        if (escolha == 7) {
-            notaFiscalService.atualizarValorTotal(notaFiscalService.buscarPorId(276));
         }
     }
 }
