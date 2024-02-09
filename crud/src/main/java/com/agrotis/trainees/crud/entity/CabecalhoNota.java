@@ -62,7 +62,6 @@ public class CabecalhoNota {
     @DecimalMin(value = "00.00", inclusive = true)
     @Digits(integer = 10, fraction = 2)
     @Column(name = "valor_total")
-    @NotNull(message = "Preencha o valor total.")
     private Double valorTotal;
 
     public TipoNota getNotaFiscalTipo() {

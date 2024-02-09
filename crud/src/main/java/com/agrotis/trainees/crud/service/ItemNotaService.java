@@ -11,7 +11,6 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
-import com.agrotis.trainees.crud.service.exceptions.CabecalhoNuloException;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
@@ -94,7 +93,6 @@ public class ItemNotaService {
             produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
         }
 
-        // Salvar as alterações no produto
         produtoService.salvar(produto);
     }
 
