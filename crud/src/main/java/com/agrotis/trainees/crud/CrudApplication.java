@@ -5,7 +5,6 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
-import com.agrotis.trainees.crud.menu.CrudMenu;
 import com.agrotis.trainees.crud.service.CabecalhoNotaService;
 import com.agrotis.trainees.crud.service.CabecalhoNotaServiceException;
 import com.agrotis.trainees.crud.service.ItemNotaService;
@@ -38,8 +37,7 @@ public class CrudApplication implements CommandLineRunner {
 	public CrudApplication(ParceiroNegocioService parceiroNegocioService, 
 			ProdutoService produtoService,
 			CabecalhoNotaService cabecalhoService,
-			ItemNotaService itemService,
-			CrudMenu menu) {
+			ItemNotaService itemService) {
 		this.parceiroNegocioService = parceiroNegocioService;
 		this.produtoService = produtoService;
 		this.cabecalhoService = cabecalhoService;
