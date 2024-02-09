@@ -3,10 +3,13 @@ package com.agrotis.trainees.crud.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.exception.InscricaoExisteException;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 
@@ -22,16 +25,28 @@ public class ParceiroNegocioService {
         this.repository = repository;
     }
 
-    public ParceiroNegocio salvar(ParceiroNegocio entidade) {
+    public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
         try {
-            verificarInscricao(entidade.getInscricaoFiscal());
-            return repository.save(entidade);
+            verificarInscricao(dto.getInscricaoFiscal());
+            ParceiroNegocio entidade = converterParaEntidade(dto);
+            entidade = repository.save(entidade);
+            return converterParaDto(entidade);
         } catch (InscricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
 
+    }
+
+    public ParceiroNegocioDto atualizar(ParceiroNegocio entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id do tipo de nota fiscal.");
+        }
+        if (StringUtils.isEmpty(entidade.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
+        }
+        return converterParaDto(repository.save(entidade));
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
@@ -42,13 +57,17 @@ public class ParceiroNegocioService {
     }
 
     public List<ParceiroNegocio> buscarPorNome(String nome) {
-        return repository.findByNomeOrderById(nome);
+        return repository.findByNomeContainingOrderById(nome);
     }
 
     public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
-        return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
-            LOG.error("Nota não encontrada para a inscrição {}.", inscricaoFiscal);
-            return null;
+        String inscricaoFiscalNormalizada = normalizarInscricaoFiscal(inscricaoFiscal);
+
+        return repository.findByInscricaoFiscal(inscricaoFiscalNormalizada).orElseGet(() -> {
+            return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
+                LOG.error("Nota não encontrada para a inscrição {}.", inscricaoFiscal);
+                return null;
+            });
         });
     }
 
@@ -67,4 +86,29 @@ public class ParceiroNegocioService {
         }
     }
 
+    private ParceiroNegocioDto converterParaDto(ParceiroNegocio entidade) {
+        ParceiroNegocioDto dto = new ParceiroNegocioDto();
+        dto.setId(entidade.getId());
+        dto.setNome(entidade.getNome());
+        dto.setInscricaoFiscal(entidade.getInscricaoFiscal());
+        dto.setEndereco(entidade.getEndereco());
+        dto.setTelefone(entidade.getTelefone());
+
+        return dto;
+    }
+
+    private ParceiroNegocio converterParaEntidade(ParceiroNegocioDto dto) {
+        ParceiroNegocio entidade = new ParceiroNegocio();
+        entidade.setId(dto.getId());
+        entidade.setNome(dto.getNome());
+        entidade.setInscricaoFiscal(dto.getInscricaoFiscal());
+        entidade.setEndereco(dto.getEndereco());
+        entidade.setTelefone(dto.getTelefone());
+
+        return entidade;
+    }
+
+    private String normalizarInscricaoFiscal(String inscricaoFiscal) {
+        return inscricaoFiscal.replaceAll("[^0-9.-]", "");
+    }
 }

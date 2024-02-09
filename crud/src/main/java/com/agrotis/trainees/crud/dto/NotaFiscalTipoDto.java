@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.dto;
 public class NotaFiscalTipoDto {
 
     private Integer id;
+
     private String nome;
 
     public String getNome() {

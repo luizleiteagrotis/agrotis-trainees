@@ -11,7 +11,7 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 @Repository
 public interface ParceiroNegocioRepository extends JpaRepository<ParceiroNegocio, Integer> {
 
-    List<ParceiroNegocio> findByNomeOrderById(String nome);
+    List<ParceiroNegocio> findByNomeContainingOrderById(String nome);
 
     Optional<ParceiroNegocio> findByInscricaoFiscal(String inscricaoFiscal);
 
