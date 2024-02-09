@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
+import com.agrotis.trainees.crud.service.exceptions.CrudException;
 
 public class NotaFiscalTipoServiceTest {
 

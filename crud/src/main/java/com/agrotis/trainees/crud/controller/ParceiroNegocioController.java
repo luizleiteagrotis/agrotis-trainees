@@ -4,6 +4,8 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,13 +30,23 @@ public class ParceiroNegocioController {
     public ResponseEntity<?> criar(@RequestBody ParceiroNegocioDto parceiroNegocio) {
         ParceiroNegocioDto parceiroNegocioSalvo = service.salvar(parceiroNegocio);
 
-        URI location = ServletUriComponentsBuilder
+        URI uri = ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/{id}")
                         .buildAndExpand(parceiroNegocioSalvo.getId())
                         .toUri();
 
-        return ResponseEntity.created(location).body(parceiroNegocioSalvo);
+        return ResponseEntity.created(uri).body(parceiroNegocioSalvo);
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+        return ResponseEntity.ok(service.buscarPorId(id));
+    }
+    
+    @GetMapping
+    public ResponseEntity<?> listarTodos(){
+        return ResponseEntity.ok(service.listarTodos());
     }
 
 }

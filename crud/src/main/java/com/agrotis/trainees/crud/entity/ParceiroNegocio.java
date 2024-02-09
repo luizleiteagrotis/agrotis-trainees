@@ -23,6 +23,7 @@ public class ParceiroNegocio {
     private Integer id;
 
     @NotBlank(message = "O campo nome tem de ser preenchido.")
+    @Column(name = "nome")
     private String nome;
 
     @Column(name = "inscricao_fiscal")
@@ -33,7 +34,7 @@ public class ParceiroNegocio {
     private String endereco;
 
     @Size(min = 8, max = 11, message = "O campo telefone tem de conter entre 8 e 11 caracteres")
-    @NotBlank
+    @NotBlank(message = "Preencha o campo telefone.")
     private String telefone;
 
     @OneToMany(mappedBy = "fabricante")

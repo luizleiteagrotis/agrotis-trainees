@@ -1,12 +1,11 @@
 package com.agrotis.trainees.crud.service;
 
-import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -30,12 +29,21 @@ public class ParceiroNegocioService {
         repository.save(entidade);
         LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());
         return DtoUtils.converteParaDto(entidade);
+
     }
 
-    public ParceiroNegocio buscarPorId(Integer id) {
-        return repository.findById(id)
+    public ParceiroNegocioDto buscarPorId(Integer id) {
+        ParceiroNegocio parceiroPorId = repository.findById(id)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+        return DtoUtils.converteParaDto(parceiroPorId);
     }
+
+    public List<ParceiroNegocioDto> listarTodos() {
+        return repository.findAll().stream()
+                .map(DtoUtils::converteParaDto)
+                .collect(Collectors.toList());
+    }
+
 
     public ParceiroNegocio buscarPorNome(String nome) {
         return repository.findByNome(nome).orElseThrow(() -> {
@@ -50,10 +58,6 @@ public class ParceiroNegocioService {
             LOG.info("Deletado com sucesso");
             return entidade;
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade com o ID " + id + " não encontrada"));
-    }
-
-    public List<ParceiroNegocio> listarTodos() {
-        return repository.findAll();
     }
 
     public ParceiroNegocio atualizar(Integer id, ParceiroNegocio negocio) {

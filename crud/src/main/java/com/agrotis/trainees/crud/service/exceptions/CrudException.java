@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.exception;
+package com.agrotis.trainees.crud.service.exceptions;
 
 public class CrudException extends RuntimeException {
     private static final long serialVersionUID = 1L;
