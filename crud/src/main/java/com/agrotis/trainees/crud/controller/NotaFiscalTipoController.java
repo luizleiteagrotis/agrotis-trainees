@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 
@@ -25,8 +26,8 @@ public class NotaFiscalTipoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscalTipo notaFiscalTipo) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(notaFiscalTipo));
+    public ResponseEntity<?> inserir(@RequestBody NotaFiscalTipoDto notaFiscalTipoDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(notaFiscalTipoDto));
     }
 
     @GetMapping
