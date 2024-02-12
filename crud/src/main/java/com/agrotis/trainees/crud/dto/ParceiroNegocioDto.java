@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.dto;
 
+import org.springframework.beans.BeanUtils;
+
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 public class ParceiroNegocioDto {
@@ -19,12 +21,7 @@ public class ParceiroNegocioDto {
     }
 
     public ParceiroNegocioDto(ParceiroNegocio entidade) {
-        super();
-        this.id = entidade.getId();
-        this.nome = entidade.getNome();
-        this.inscricaoFiscal = entidade.getInscricaoFiscal();
-        this.endereco = entidade.getEndereco();
-        this.telefone = entidade.getTelefone();
+        BeanUtils.copyProperties(entidade, this);
     }
 
     public Integer getId() {

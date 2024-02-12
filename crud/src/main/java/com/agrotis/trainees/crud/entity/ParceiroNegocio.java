@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
+import org.springframework.beans.BeanUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,12 +40,7 @@ public class ParceiroNegocio {
     }
 
     public ParceiroNegocio(ParceiroNegocioDto dto) {
-        super();
-        this.id = dto.getId();
-        this.nome = dto.getNome();
-        this.inscricaoFiscal = dto.getInscricaoFiscal();
-        this.endereco = dto.getEndereco();
-        this.telefone = dto.getTelefone();
+        BeanUtils.copyProperties(dto, this);
     }
 
     public Integer getId() {
