@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
+import org.springframework.beans.BeanUtils;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,6 +17,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import com.agrotis.trainees.crud.dto.ProdutoDto;
+
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -29,7 +33,7 @@ public class Produto {
 
     @NotNull(message = "Obrigatório preencher data de fabricação do produto")
     @Column(name = "data_fabricacao", nullable = false)
-    @PastOrPresent
+    @PastOrPresent(message = "Deve ser uma data no passado ou presente")
     private Date dataFabricacao;
 
     @NotNull(message = "Obrigatório preencher data de validade do produto")
@@ -40,9 +44,18 @@ public class Produto {
     @JoinColumn(name = "id_fabricante")
     private ParceiroNegocio fabricante;
 
+    @NotNull
     @Min(value = 0)
     @Column(name = "quantidade_estoque")
     private int quantidadeEstoque;
+
+    public Produto() {
+        super();
+    }
+
+    public Produto(ProdutoDto dto) {
+        BeanUtils.copyProperties(dto, this);
+    }
 
     public int getQuantidadeEstoque() {
         return quantidadeEstoque;
@@ -54,6 +67,10 @@ public class Produto {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDescricao() {

@@ -40,6 +40,24 @@ public class CrudExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ProdutoDuplicadoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleDuplicateProdutoException(ProdutoDuplicadoException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProdutoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleNotFoundException(ProdutoNaoEncontradoException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataValidadeInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleInvalidDate(DataValidadeInvalidaException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException ex) {
         Throwable cause = ex.getRootCause();

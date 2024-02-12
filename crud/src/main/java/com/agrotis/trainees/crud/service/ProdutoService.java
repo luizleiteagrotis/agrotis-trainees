@@ -5,11 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.DataValidadeInvalidaException;
 import com.agrotis.trainees.crud.exception.ProdutoDuplicadoException;
+import com.agrotis.trainees.crud.exception.ProdutoNaoEncontradoException;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.utils.ProdutoDTOMapper;
 
 @Service
 public class ProdutoService {
@@ -18,12 +22,16 @@ public class ProdutoService {
 
     private final ProdutoRepository repository;
 
-    public ProdutoService(ProdutoRepository repository) {
+    private final ProdutoDTOMapper mapper;
+
+    public ProdutoService(ProdutoRepository repository, ProdutoDTOMapper mapper) {
         super();
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public Produto salvar(Produto entidade) {
+    public ProdutoDto salvar(ProdutoDto dto) {
+        Produto entidade = mapper.converterParaEntidade(dto);
 
         if (!verificarValidade(entidade)) {
             throw new DataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
@@ -33,38 +41,36 @@ public class ProdutoService {
             throw new ProdutoDuplicadoException("Descrição do produto já existe");
         }
 
-        return repository.save(entidade);
+        return mapper.converterParaDto(repository.save(entidade));
     }
 
-    public Produto atualizar(Produto entidade) {
+    public ProdutoDto atualizar(ProdutoDto dto) {
+        Produto entidade = mapper.converterParaEntidade(dto);
+
         if (repository.existsByDescricaoAndIdNot(entidade.getDescricao(), entidade.getId())) {
             throw new ProdutoDuplicadoException("Descrição do produto já existe");
         }
 
-        return repository.save(entidade);
+        return mapper.converterParaDto(repository.save(entidade));
     }
 
-    public Produto buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Produto não encontrado para id {}. ", id);
-            return null;
-        });
+    public ProdutoDto buscarPorId(Integer id) {
+        return repository.findById(id).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrado para o id " + id));
     }
 
-    public Produto buscarPorDescricao(String descricao) {
-        return repository.findByDescricao(descricao).orElseGet(() -> {
-            LOG.error("Produto não encontrado para descricao {}. ", descricao);
-            return null;
-        });
+    public ProdutoDto buscarPorDescricao(String descricao) {
+        return repository.findByDescricao(descricao).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrada para o nome " + descricao));
     }
 
-    public List<Produto> listarTodos() {
-        return repository.findAll();
+    public List<ProdutoDto> listarTodos() {
+        List<Produto> entidades = repository.findAll();
+        return entidades.stream().map(mapper::converterParaDto).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
-        LOG.info("Produto deletado com sucesso");
     }
 
     private boolean verificarValidade(Produto entidade) {
