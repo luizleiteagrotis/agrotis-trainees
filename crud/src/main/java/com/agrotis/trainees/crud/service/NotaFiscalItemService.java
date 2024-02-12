@@ -3,12 +3,14 @@ package com.agrotis.trainees.crud.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
 @Service
@@ -86,6 +88,23 @@ public class NotaFiscalItemService {
         }
         produtoService.salvar(produto);
         atualizarValorTotalNotaFiscal(item);
+    }
+    
+    public NotaFiscalItem inserir(NotaFiscalItem entidade) {
+        if (StringUtils.isEmpty(entidade.getNotaFiscal())) {
+            throw new CrudException("Obrigatório preencher o número da nota fiscal.");
+        }
+        return repository.save(entidade);
+    }
+	
+	public NotaFiscalItem atualizar(NotaFiscalItem entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id do item da nota fiscal.");
+        }
+        if (StringUtils.isEmpty(entidade.getProduto())) {
+            throw new CrudException("Obrigatório preencher o nome do produto.");
+        }
+        return repository.save(entidade);
     }
 
 }

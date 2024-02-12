@@ -12,19 +12,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.service.NotaFiscalService;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
-@RequestMapping("notas-fiscais")
+
+@RequestMapping("/parceiros")
 @RestController
-public class NotaFiscalController {
+public class ParceiroNegocioController {
 
 	@Autowired
-	private NotaFiscalService service;
+	private ParceiroNegocioService service;
 	
 	@PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscal nota) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(nota));
+    public ResponseEntity<?> inserir(@RequestBody ParceiroNegocio parceiro) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(parceiro));
     }
 
     @GetMapping
@@ -33,8 +34,8 @@ public class NotaFiscalController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscal nota) {
-        return ResponseEntity.ok().body(service.atualizar(nota));
+    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocio parceiro) {
+        return ResponseEntity.ok().body(service.atualizar(parceiro));
     }
 
     @DeleteMapping
@@ -43,5 +44,5 @@ public class NotaFiscalController {
         service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
     }
-	
+  
 }

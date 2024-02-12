@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,19 +13,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.service.NotaFiscalService;
+import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
-@RequestMapping("notas-fiscais")
+@RequestMapping("produtos")
 @RestController
-public class NotaFiscalController {
+public class ProdutoController {
 
 	@Autowired
-	private NotaFiscalService service;
+	private ProdutoService service;
 	
 	@PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscal nota) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(nota));
+    public ResponseEntity<?> inserir(@RequestBody Produto produto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produto));
     }
 
     @GetMapping
@@ -33,8 +34,8 @@ public class NotaFiscalController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscal nota) {
-        return ResponseEntity.ok().body(service.atualizar(nota));
+    public ResponseEntity<?> atualizar(@RequestBody Produto produto) {
+        return ResponseEntity.ok().body(service.atualizar(produto));
     }
 
     @DeleteMapping

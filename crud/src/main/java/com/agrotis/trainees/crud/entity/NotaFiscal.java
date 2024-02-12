@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,15 +40,15 @@ public class NotaFiscal {
 
     private LocalDate dataNota;
 
-    @OneToMany(mappedBy = "notaFiscal")
+    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
     private List<NotaFiscalItem> itensNota;
 
     private Double valorTotal;
 
     public NotaFiscal() {
         super();
-        this.dataNota = LocalDate.now();
-        this.itensNota = new ArrayList<>();
+//        this.dataNota = LocalDate.now();
+//        this.itensNota = new ArrayList<>();
         this.valorTotal = 0.0;
     }
 
@@ -62,7 +63,12 @@ public class NotaFiscal {
         this.valorTotal = 0.0;
     }
 
-    public Integer getId() {
+    public NotaFiscal(NotaFiscalTipo tipo, ParceiroNegocio parceiro, Integer numero, LocalDate data,
+			List<NotaFiscalItem> itens, Double valorTotal2) {
+    	super();
+    }
+
+	public Integer getId() {
         return id;
     }
 

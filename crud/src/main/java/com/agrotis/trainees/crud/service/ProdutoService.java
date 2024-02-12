@@ -6,9 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Service
@@ -31,13 +33,6 @@ public class ProdutoService {
 	public Produto buscarPorId(Integer id) {
 		return repository.findById(id).orElseGet(() -> {
 			LOG.error("Produto não encontrado para id {}.", id);
-			return null;
-		});
-	}
-	
-	public Produto buscarPorNome(String nome) {
-		return repository.findByNome(nome).orElseGet(() -> {
-			LOG.error("Produto não encontrado pelo nome {}.", nome);
 			return null;
 		});
 	}
@@ -79,4 +74,20 @@ public class ProdutoService {
 		LOG.info("Deletado com sucesso");
 	}
 	
+	public Produto inserir(Produto entidade) {
+        if (StringUtils.isEmpty(entidade.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do produto.");
+        }
+        return repository.save(entidade);
+    }
+	
+	public Produto atualizar(Produto entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id produto.");
+        }
+        if (StringUtils.isEmpty(entidade.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do produto.");
+        }
+        return repository.save(entidade);
+    }
 }

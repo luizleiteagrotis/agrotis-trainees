@@ -3,14 +3,18 @@ package com.agrotis.trainees.crud.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
 @Service
@@ -25,6 +29,7 @@ public class NotaFiscalService {
         this.repository = repository;
     }
 
+    @Transactional
     public NotaFiscal salvar(NotaFiscal entidade) {
         return repository.save(entidade);
     }
@@ -90,6 +95,23 @@ public class NotaFiscalService {
         double novoValorTotal = item.getValorTotal() - item.getValorTotal();
         nota.setValorTotal(nota.getValorTotal() + novoValorTotal);
         atualizarNotaFiscal(nota);
+    }
+    
+    public NotaFiscal inserir(NotaFiscal entidade) {
+        if (StringUtils.isEmpty(entidade.getNumeroNota())) {
+            throw new CrudException("Obrigatório preencher o número da nota fiscal.");
+        }
+        return repository.save(entidade);
+    }
+	
+	public NotaFiscal atualizar(NotaFiscal entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id da nota fiscal.");
+        }
+        if (StringUtils.isEmpty(entidade.getNumeroNota())) {
+            throw new CrudException("Obrigatório preencher o número da nota fiscal.");
+        }
+        return repository.save(entidade);
     }
 
 }

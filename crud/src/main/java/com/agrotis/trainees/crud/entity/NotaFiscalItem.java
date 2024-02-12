@@ -1,7 +1,10 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.util.Optional;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,10 +38,10 @@ public class NotaFiscalItem {
     private double valorTotal;
 
     public NotaFiscalItem() {
-        super();
-    }
+		super();
+	}
 
-    public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto,
+	public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto,
                     @NotNull(message = "Necessário inserir a quantidade do produto") Integer quantidade,
                     @NotNull(message = "Necessário inserir o preço unitário") double precoUnitario) {
         super();
@@ -47,8 +50,13 @@ public class NotaFiscalItem {
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
     }
+    
+    public NotaFiscalItem(Optional<NotaFiscal> notaFiscal2, Produto produtoSet, Integer quantidade2,
+			Double precoUnitario2, Double valorTotal2) {
+    	super();
+    }
 
-    public Integer getId() {
+	public Integer getId() {
         return id;
     }
 
