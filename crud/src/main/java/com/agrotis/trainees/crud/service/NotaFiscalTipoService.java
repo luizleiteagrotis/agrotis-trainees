@@ -1,50 +1,84 @@
 package com.agrotis.trainees.crud.service;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+
+import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
+import com.agrotis.trainees.crud.exception.CrudException;
+import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
+import com.agrotis.trainees.crud.utils.NotaFiscalTipoDTOMapper;
 
 @Service
 public class NotaFiscalTipoService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalTipoService.class);
+    private final NotaFiscalTipoRepository repository;
 
-	private final NotaFiscalTipoRepository repository;
+    private final NotaFiscalTipoDTOMapper mapper;
 
-	public NotaFiscalTipoService(NotaFiscalTipoRepository repository) {
-		super();
-		this.repository = repository;
-	}
+    public NotaFiscalTipoService(NotaFiscalTipoRepository repository, NotaFiscalTipoDTOMapper mapper) {
+        super();
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
-	public NotaFiscalTipo salvar(NotaFiscalTipo entidade) {
-		return repository.save(entidade);
-	}
+    public NotaFiscalTipoDto inserir(NotaFiscalTipoDto dto) {
+        if (StringUtils.isEmpty(dto.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
+        }
+        NotaFiscalTipo entidade = mapper.converterParaEntidade(dto);
+        entidade = repository.save(entidade);
+        return mapper.converterParaDto(entidade);
+    }
 
-	public NotaFiscalTipo buscarPorId(Integer id) {
-		return repository.findById(id).orElseGet(() -> {
-			LOG.error("Nota não encontrada para id {}.", id);
-			return null;
-		});
-	}
+    public NotaFiscalTipoDto atualizar(NotaFiscalTipo entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id do tipo de nota fiscal.");
+        }
+        if (StringUtils.isEmpty(entidade.getNome())) {
+            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
+        }
+        return mapper.converterParaDto(repository.save(entidade));
+    }
 
-	public NotaFiscalTipo buscarPorNome(String nome) {
-		return repository.findByNome(nome).orElseGet(() -> {
-			LOG.error("Nota não encontrada para o nome {}.", nome);
-			return null;
-		});
-	}
+    public NotaFiscalTipoDto buscarPorId(Integer id) {
+        return null;
+        // return repository.findById(id).orElseGet(() -> {
+        // throw new CrudException(String.format("Nota não encontrada para id
+        // {}.", id));
+        // });
+    }
 
-	public void deletarPorId(Integer id) {
-		repository.deleteById(id);
-		LOG.info("Deletado com sucesso");
-	}
+    public NotaFiscalTipoDto buscarPorNome(String nome) {
+        return null;
+        // return repository.findByNome(nome).orElseGet(() -> {
+        // throw new CrudException(String.format("Nota não encontrada para o
+        // nome {}.", nome));
+        // });
+    }
 
-	public List<NotaFiscalTipo> listarTodos() {
-		return repository.findAll();
-	}
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+    }
+
+    public List<NotaFiscalTipo> listarTodos() {
+        return repository.findAll();
+    }
+
+    // private NotaFiscalTipoDto converterParaDto(NotaFiscalTipo entidade) {
+    // NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+    // dto.setId(entidade.getId());
+    // dto.setNome(entidade.getNome());
+    // return dto;
+    // }
+    //
+    // private NotaFiscalTipo converterParaEntidade(NotaFiscalTipoDto dto) {
+    // NotaFiscalTipo entidade = new NotaFiscalTipo();
+    // entidade.setId(dto.getId());
+    // entidade.setNome(dto.getNome());
+    // return entidade;
+    // }
 
 }

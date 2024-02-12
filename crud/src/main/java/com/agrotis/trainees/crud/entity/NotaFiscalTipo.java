@@ -1,11 +1,14 @@
 package com.agrotis.trainees.crud.entity;
 
+import org.springframework.beans.BeanUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+
+import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
 
 @Entity
 @Table(name = "nota_fiscal_tipo")
@@ -13,12 +16,23 @@ public class NotaFiscalTipo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    
-    @NotBlank(message = "Obrigatório preencher o nome do tipo de nota fiscal")
+
     private String nome;
+
+    public NotaFiscalTipo() {
+        super();
+    }
+
+    public NotaFiscalTipo(NotaFiscalTipoDto dto) {
+        BeanUtils.copyProperties(dto, this);
+    }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -29,10 +43,9 @@ public class NotaFiscalTipo {
         this.nome = nome;
     }
 
-	@Override
-	public String toString() {
-		return "NotaFiscalTipo [nome=" + nome + "]";
-	}
-    
-    
+    @Override
+    public String toString() {
+        return "NotaFiscalTipo [nome=" + nome + "]";
+    }
+
 }
