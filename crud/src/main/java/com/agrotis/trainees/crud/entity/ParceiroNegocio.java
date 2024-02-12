@@ -7,6 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 
 @Entity
 @Table(name = "parceiro_negocio")
@@ -27,10 +30,28 @@ public class ParceiroNegocio {
     private String endereco;
 
     @NotBlank(message = "Obrigatório preencher o telefone do tipo de parceiro de negócio")
+    @Pattern(regexp = "\\(?(\\d{2})\\)?[\\s-]?(\\d{5})[\\s-]?(\\d{4})", message = "Número de telefone inválido")
     private String telefone;
+
+    public ParceiroNegocio() {
+        super();
+    }
+
+    public ParceiroNegocio(ParceiroNegocioDto dto) {
+        super();
+        this.id = dto.getId();
+        this.nome = dto.getNome();
+        this.inscricaoFiscal = dto.getInscricaoFiscal();
+        this.endereco = dto.getEndereco();
+        this.telefone = dto.getTelefone();
+    }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {

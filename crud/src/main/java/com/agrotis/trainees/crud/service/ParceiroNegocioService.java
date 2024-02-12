@@ -5,10 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.FabricanteDuplicadoException;
+import com.agrotis.trainees.crud.exception.FabricanteNaoEncontradoException;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
+import com.agrotis.trainees.crud.utils.ParceiroNegocioDTOMapper;
 
 @Service
 public class ParceiroNegocioService {
@@ -17,19 +21,28 @@ public class ParceiroNegocioService {
 
     private final ParceiroNegocioRepository repository;
 
-    public ParceiroNegocioService(ParceiroNegocioRepository repository) {
+    private final ParceiroNegocioDTOMapper mapper;
+
+    public ParceiroNegocioService(ParceiroNegocioRepository repository, ParceiroNegocioDTOMapper mapper) {
         super();
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public ParceiroNegocio salvar(ParceiroNegocio entidade) {
+    public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
+        ParceiroNegocio entidade = mapper.conveterParaEntidade(dto);
+
         if (repository.findByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal())) {
             throw new FabricanteDuplicadoException("Nome do fabricante ou inscrição fiscal já existem");
         }
-        return repository.save(entidade);
+
+        entidade = repository.save(entidade);
+        return mapper.converterParaDto(entidade);
     }
 
-    public ParceiroNegocio atualizar(ParceiroNegocio entidade) {
+    public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto) {
+        ParceiroNegocio entidade = mapper.conveterParaEntidade(dto);
+
         if (repository.existsByNomeAndIdNot(entidade.getNome(), entidade.getId())) {
             throw new FabricanteDuplicadoException("Já existe um fabricante com o mesmo nome: " + entidade.getNome());
         }
@@ -39,37 +52,31 @@ public class ParceiroNegocioService {
                             "Já existe um fabricante com a mesma inscrição: " + entidade.getInscricaoFiscal());
         }
 
-        return repository.save(entidade);
+        return mapper.converterParaDto(repository.save(entidade));
     }
 
-    public ParceiroNegocio buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Parceiro não encontrado para id {}.", id);
-            return null;
-        });
+    public ParceiroNegocioDto buscarPorId(Integer id) {
+        return repository.findById(id).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new FabricanteNaoEncontradoException("Fabricante não encontrado para id " + id));
     }
 
-    public ParceiroNegocio buscarPorInscricao(String inscricao) {
-        return repository.findByInscricaoFiscal(inscricao).orElseGet(() -> {
-            LOG.error("Parceiro não encontrado para a inscrição fiscal {}.", inscricao);
-            return null;
-        });
+    public ParceiroNegocioDto buscarPorInscricao(String inscricao) {
+        return repository.findByInscricaoFiscal(inscricao).map(mapper::converterParaDto).orElseThrow(
+                        () -> new FabricanteNaoEncontradoException("Fabricante não encontrado para inscrição fiscal " + inscricao));
     }
 
-    public ParceiroNegocio buscarPorNome(String nome) {
-        return repository.findByNome(nome).orElseGet(() -> {
-            LOG.error("Parceiro não encontrado para nome {}.", nome);
-            return null;
-        });
+    public ParceiroNegocioDto buscarPorNome(String nome) {
+        return repository.findByNome(nome).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new FabricanteNaoEncontradoException("Fabricante não encontrado para nome " + nome));
     }
 
-    public List<ParceiroNegocio> listarTodos() {
-        return repository.findAll();
+    public List<ParceiroNegocioDto> listarTodos() {
+        List<ParceiroNegocio> entidades = repository.findAll();
+        return entidades.stream().map(mapper::converterParaDto).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
-        LOG.info("Parceiro deletado com sucesso");
     }
 
 }
