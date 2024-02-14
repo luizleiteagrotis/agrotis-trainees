@@ -50,4 +50,10 @@ public class ProdutoController {
 		Page<ProdutoRetornoDto> pagina = produtoService.listarTodos(pageable);
 		return ResponseEntity.ok(pagina);
 	}
+	
+	@PutMapping
+	public ResponseEntity<ProdutoRetornoDto> atualizar(@RequestBody ProdutoAtualizacaoDto atualizacaoDto) {
+		ProdutoRetornoDto retornoDto = produtoService.atualizar(atualizacaoDto);
+		return ResponseEntity.ok(retornoDto);
+	}
 }
