@@ -50,4 +50,10 @@ public class ItemNotaController {
 		Page<ItemRetornoDto> itens = itemService.buscarTodos(pageable);
 		return ResponseEntity.ok(itens);
 	}
+	
+	@PutMapping
+	public ResponseEntity<ItemRetornoDto> atualizar(@RequestBody ItemAtualizacaoDto atualizacaoDto) {
+		ItemRetornoDto retornoDto = itemService.atualizar(atualizacaoDto);
+		return ResponseEntity.ok(retornoDto);
+	}
 }
