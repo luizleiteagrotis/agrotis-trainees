@@ -6,47 +6,75 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dto.item.ItemAtualizacaoDto;
+import com.agrotis.trainees.crud.dto.item.ItemCadastroDto;
+import com.agrotis.trainees.crud.dto.item.ItemRetornoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
+import com.agrotis.trainees.crud.mapper.item.ItemMapper;
+import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
+import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ItemNotaService {
 	
+	private ItemMapper mapper;
 	private ItemNotaRepository repository;
-	private CabecalhoNotaService cabecalhoService;
-	private ProdutoService produtoService;
+	private CabecalhoNotaRepository cabecalhoRepository;
+	private ProdutoRepository produtoRepository;
 	private final Logger LOGGER;
 	
 	@Autowired
-	public ItemNotaService(ItemNotaRepository itemRepository, 
-			CabecalhoNotaService cabecalhoService,
-			ProdutoService produtoService) {
+	public ItemNotaService(
+			ItemMapper mapper,
+			ItemNotaRepository itemRepository, 
+			CabecalhoNotaRepository cabecalhoRepository,
+			ProdutoRepository produtoRepository) {
+		this.mapper = mapper;
 		this.repository = itemRepository;
-		this.cabecalhoService = cabecalhoService;
-		this.produtoService = produtoService;
+		this.cabecalhoRepository = cabecalhoRepository;
+		this.produtoRepository = produtoRepository;
 		LOGGER = LoggerFactory.getLogger(ItemNotaService.class);
 	}
 	
-	public ItemNota salvar(ItemNota item) {
+	public ItemRetornoDto salvar(ItemCadastroDto cadastroDto) {
+		ItemNota item = mapper.converterParaEntidade(cadastroDto);
 		if (repository.existe(item)) item = atualizar(item);
 		else item = criar(item);
-		return item;
+		return mapper.converterParaDto(item);
 	}
 	 
-	public ItemNota buscar(long id) {
-		return repository.buscarPor(id);
+	public ItemRetornoDto buscar(Long id) {
+		ItemNota item = repository.buscarPor(id);
+		return mapper.converterParaDto(item);
 	}
 		
-	public List<ItemNota> buscarTodos() {
-		return repository.buscarTodos();
+	public Page<ItemRetornoDto> buscarTodos(Pageable pageable) {
+		return repository.buscarTodos(pageable).map((item) -> mapper.converterParaDto(item));
 	}
 	
-	public void deletar(long id) {
+	public ItemRetornoDto atualizar(ItemAtualizacaoDto atualizacaoDto) {
+		Long idItem = atualizacaoDto.getId();
+		ItemNota item = repository.buscarPor(idItem);
+		if (atualizacaoDto.getQuantidade() != null) {
+			item.setQuantidade(atualizacaoDto.getQuantidade());
+		}
+		if (atualizacaoDto.getPrecoUnitario() != null) {
+			item.setPrecoUnitario(atualizacaoDto.getPrecoUnitario());
+		}
+		atualizar(item);
+		return mapper.converterParaDto(item);
+	}
+	
+	public void deletar(Long id) {
 		ItemNota item = repository.buscarPor(id);
 		deletar(item);
 	}
@@ -150,7 +178,7 @@ public class ItemNotaService {
 	
 	private void salvar(CabecalhoNota cabecalho, BigDecimal comNovoTotal) {
 		cabecalho.setValorTotal(comNovoTotal);
-		cabecalhoService.salvar(cabecalho);;
+		cabecalhoRepository.salvar(cabecalho);
 	}
 	
 	private void retirarEstoqueProduto(ItemNota item) {
@@ -244,6 +272,6 @@ public class ItemNotaService {
 	
 	private void salvar(Produto produto, Integer comNovoEstoque) {
 		produto.setEstoque(comNovoEstoque);
-		produtoService.salvar(produto);
+		produtoRepository.salvar(produto);
 	}
 }

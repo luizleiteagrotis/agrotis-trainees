@@ -32,7 +32,7 @@ public class ItemNota {
 	
 	@Min(value = 1, message = "Atributo quantidade deve ser maior do que 0")
 	@Column(name = "quantidade")
-	private int quantidade;
+	private Integer quantidade;
 	
 	@DecimalMin(value = "00.01", inclusive = true, message = "Atributo preco unitario deve ser maior do que 0")
 	@Digits(integer = 10, fraction = 2, message = "Atributo preco unitario deve ter 10 casas inteiras e 2 casas decimais")
@@ -61,11 +61,11 @@ public class ItemNota {
 		this.produto = produto;
 	}
 
-	public int getQuantidade() {
+	public Integer getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(int quantidade) {
+	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
 
