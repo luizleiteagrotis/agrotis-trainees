@@ -50,4 +50,10 @@ public class ParceiroNegocioController {
 		Page<ParceiroRetornoDto> pagina = parceiroService.listarTodos(pageable);
 		return ResponseEntity.ok(pagina);
 	}
+	
+	@PutMapping
+	public ResponseEntity<ParceiroRetornoDto> atualizar(@RequestBody ParceiroAtualizacaoDto atualizacaoDto) {
+		ParceiroRetornoDto retornoDto = parceiroService.atualizar(atualizacaoDto);
+		return ResponseEntity.ok(retornoDto);
+	}
 }
