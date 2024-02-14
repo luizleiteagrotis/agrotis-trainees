@@ -50,4 +50,10 @@ public class CabecalhoController {
 		Page<CabecalhoRetornoDto> retornoDto = cabecalhoService.listarTodos(pageable);
 		return ResponseEntity.ok(retornoDto);
 	}
+	
+	@PutMapping
+	public ResponseEntity<CabecalhoRetornoDto> atualizar(@RequestBody CabecalhoAtualizacaoDto atualizacaoDto) {
+		CabecalhoRetornoDto retornoDto = cabecalhoService.atualizar(atualizacaoDto);
+		return ResponseEntity.ok(retornoDto);
+	}
 }
