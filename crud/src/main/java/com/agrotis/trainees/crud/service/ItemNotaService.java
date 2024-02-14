@@ -12,6 +12,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.utils.DtoUtils;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
@@ -93,7 +94,7 @@ public class ItemNotaService {
             produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
         }
 
-        produtoService.salvar(produto);
+        produtoService.salvar(DtoUtils.converteParaDto(produto));
     }
 
     private void adicionarValorTotalCabecalho(ItemNota item) {

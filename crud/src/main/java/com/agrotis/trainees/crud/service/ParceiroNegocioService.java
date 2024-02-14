@@ -60,13 +60,14 @@ public class ParceiroNegocioService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade com o ID " + id + " não encontrada"));
     }
 
-    public ParceiroNegocio atualizar(Integer id, ParceiroNegocio negocio) {
+    public ParceiroNegocioDto atualizar(Integer id, ParceiroNegocioDto dto) {
         return repository.findById(id).map(parceiroExistente -> {
-            parceiroExistente.setNome(negocio.getNome());
-            parceiroExistente.setInscricaoFiscal(negocio.getInscricaoFiscal());
-            parceiroExistente.setEndereco(negocio.getEndereco());
-            parceiroExistente.setTelefone(negocio.getTelefone());
-            return repository.save(parceiroExistente);
+            parceiroExistente.setNome(dto.getNome());
+            parceiroExistente.setInscricaoFiscal(dto.getInscricaoFiscal());
+            parceiroExistente.setEndereco(dto.getEndereco());
+            parceiroExistente.setTelefone(dto.getTelefone());
+            ParceiroNegocio entidadeSalva = repository.save(parceiroExistente);
+            return DtoUtils.converteParaDto(entidadeSalva);
         }).orElseThrow(() -> {
             LOG.info("Não foi possível encontrar o parceiro de negócio pelo ID {}", id);
             return new EntidadeNaoEncontradaException("Parceiro de negócio com o ID " + id + " não encontrado");
