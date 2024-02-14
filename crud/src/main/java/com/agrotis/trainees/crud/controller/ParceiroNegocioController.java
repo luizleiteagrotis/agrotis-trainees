@@ -38,4 +38,16 @@ public class ParceiroNegocioController {
 		URI uri = uriBuilder.path("/parceiros/{id}").buildAndExpand(listagemDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ParceiroRetornoDto> buscarPorId(@PathVariable(name = "id") Long id) {
+		ParceiroRetornoDto listagemDto = parceiroService.buscarPorId(id);
+		return ResponseEntity.ok(listagemDto);
+	}
+	
+	@GetMapping
+	public ResponseEntity<Page<ParceiroRetornoDto>> listarTodos(Pageable pageable) {
+		Page<ParceiroRetornoDto> pagina = parceiroService.listarTodos(pageable);
+		return ResponseEntity.ok(pagina);
+	}
 }
