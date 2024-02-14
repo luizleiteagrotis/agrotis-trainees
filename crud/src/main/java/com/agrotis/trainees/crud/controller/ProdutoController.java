@@ -38,4 +38,16 @@ public class ProdutoController {
 		URI uri = uriBuilder.path("/produtos/{id}").buildAndExpand(listagemDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ProdutoRetornoDto> buscarPorId(@PathVariable(name = "id") Long id) {
+		ProdutoRetornoDto dto = produtoService.buscarPor(id);
+		return ResponseEntity.ok(dto);
+	}
+	
+	@GetMapping
+	public ResponseEntity<Page<ProdutoRetornoDto>> listarTodos(Pageable pageable) {
+		Page<ProdutoRetornoDto> pagina = produtoService.listarTodos(pageable);
+		return ResponseEntity.ok(pagina);
+	}
 }
