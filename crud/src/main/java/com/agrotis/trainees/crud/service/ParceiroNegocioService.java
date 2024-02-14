@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -48,8 +49,8 @@ public class ParceiroNegocioService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade nao encontrada"));
     }
 
-    public List<ParceiroNegocio> listarTodos() {
-        return repository.findAll();
+    public List<ParceiroNegocioDto> listarTodos() {
+        return repository.findAll().stream().map(ParceiroNegocioService::converteParaDto).collect(Collectors.toList());
     }
 
     public ParceiroNegocio update(Integer id, ParceiroNegocio parceiro) {

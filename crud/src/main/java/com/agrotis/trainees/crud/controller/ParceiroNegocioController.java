@@ -37,6 +37,11 @@ public class ParceiroNegocioController {
         return ResponseEntity.ok(negocioService.buscarPorNome(nome));
     }
 
+    @GetMapping("/listarTodos/{listar}")
+    public ResponseEntity<?> listarTodos() {
+        return ResponseEntity.ok(negocioService.listarTodos());
+    }
+
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
