@@ -56,4 +56,10 @@ public class ParceiroNegocioController {
 		ParceiroRetornoDto retornoDto = parceiroService.atualizar(atualizacaoDto);
 		return ResponseEntity.ok(retornoDto);
 	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletar(@PathVariable(name = "id") Long id) {
+		parceiroService.deletar(id);
+		return ResponseEntity.noContent().build();
+	}
 }
