@@ -38,4 +38,16 @@ public class ItemNotaController {
 		URI uri = uriBuilder.path("/itens/{id}").buildAndExpand(retornoDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ItemRetornoDto> buscarPorId(@PathVariable(name = "id") Long id) {
+		ItemRetornoDto retornoDto = itemService.buscar(id);
+		return ResponseEntity.ok(retornoDto);
+	}
+	
+	@GetMapping
+	public ResponseEntity<Page<ItemRetornoDto>> listarTodos(Pageable pageable) {
+		Page<ItemRetornoDto> itens = itemService.buscarTodos(pageable);
+		return ResponseEntity.ok(itens);
+	}
 }
