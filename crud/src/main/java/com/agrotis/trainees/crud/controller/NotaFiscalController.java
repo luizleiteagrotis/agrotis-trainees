@@ -11,23 +11,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
+import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
 
-@RequestMapping("notas-fiscais/tipos")
+@RequestMapping("notas-fiscais")
 @RestController
-public class NotaFiscalTipoController {
+public class NotaFiscalController {
 
-    private final NotaFiscalTipoService service;
+    private final NotaFiscalService service;
 
-    public NotaFiscalTipoController(NotaFiscalTipoService service) {
+    public NotaFiscalController(NotaFiscalService service) {
         this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscalTipoDto notaFiscalTipoDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(notaFiscalTipoDto));
+    public ResponseEntity<?> salvar(@RequestBody NotaFiscal nota) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(nota));
     }
 
     @GetMapping
@@ -36,8 +35,8 @@ public class NotaFiscalTipoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalTipo notaFiscalTipo) {
-        return ResponseEntity.ok().body(service.atualizar(notaFiscalTipo));
+    public ResponseEntity<?> atualizar(Integer id, NotaFiscal nota) {
+        return ResponseEntity.ok().body(service.update(id, nota));
     }
 
     @DeleteMapping
