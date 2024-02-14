@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.utils;
 
+import com.agrotis.trainees.crud.dtos.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.exceptions.QuantidadeEmEstoqueException;
 
@@ -21,7 +22,7 @@ public class ValidacaoUtils {
         }
     }
     
-    public static boolean isProdutoEmptyOrNull(Produto produto) {
+    public static boolean isProdutoFieldEmptyOrNull(ProdutoDto produto) {
         if (produto == null) {
             return true;
         }

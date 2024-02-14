@@ -6,10 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dtos.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.CampoVazioOuNuloException;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.utils.DtoUtils;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
@@ -18,18 +22,36 @@ public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
 
     private final ProdutoRepository repository;
+    private final ParceiroNegocioRepository parceiroNegocioRepository;
 
-    public ProdutoService(ProdutoRepository repository) {
+    public ProdutoService(ProdutoRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         this.repository = repository;
+        this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
     
-    public Produto salvar(Produto produto){
-        if (ValidacaoUtils.isProdutoEmptyOrNull(produto)) {
+    public ProdutoDto salvar(ProdutoDto produto){
+        if (ValidacaoUtils.isProdutoFieldEmptyOrNull(produto)) {
             throw new CampoVazioOuNuloException("Preencha todos os campos obrigatórios de produto.");
         }
-        LOG.info("Salvando o produto {} ", produto.getDescricao());
-        return repository.save(produto);
+        
+        // Convert ProdutoDto to Produto entity
+        Produto produtoEntidade = DtoUtils.converteParaEntidade(produto);
+        
+        // Save the fabricante (ParceiroNegocio) entity first
+        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(produtoEntidade.getFabricante());
+        
+        // Set the saved fabricante to the Produto entity
+        produtoEntidade.setFabricante(fabricanteSalvo);
+        
+        // Save the Produto entity
+        Produto produtoSalvo = repository.save(produtoEntidade);
+        
+        LOG.info("Salvando o produto {}", produto.getDescricao());
+        
+        // Convert saved Produto entity back to ProdutoDto and return
+        return DtoUtils.converteParaDto(produtoSalvo);
     }
+
 
     public List<Produto> buscarTodos() {
         return repository.findAll();
