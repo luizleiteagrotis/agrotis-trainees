@@ -38,4 +38,16 @@ public class CabecalhoController {
 		URI uri = uriBuilder.path("/cabecalhos/{id}").buildAndExpand(retornoDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@GetMapping("{id}") 
+	public ResponseEntity<CabecalhoRetornoDto> buscarPorId(@PathVariable(name = "id") Long id) {
+		CabecalhoRetornoDto retornoDto = cabecalhoService.buscar(id);
+		return ResponseEntity.ok(retornoDto);
+	}
+	
+	@GetMapping
+	public ResponseEntity<Page<CabecalhoRetornoDto>> listarTodos(Pageable pageable) {
+		Page<CabecalhoRetornoDto> retornoDto = cabecalhoService.listarTodos(pageable);
+		return ResponseEntity.ok(retornoDto);
+	}
 }
