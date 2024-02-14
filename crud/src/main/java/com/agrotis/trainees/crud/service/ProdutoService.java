@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
-import java.util.List;
+import java.util.List;import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,10 +54,11 @@ public class ProdutoService {
                          .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 
-
-
-    public List<Produto> buscarTodos() {
-        return repository.findAll();
+    public List<ProdutoDto> buscarTodos() {
+        return repository.findAll()
+                        .stream()
+                        .map(DtoUtils::converteParaDto)
+                        .collect(Collectors.toList());
     }
 
 

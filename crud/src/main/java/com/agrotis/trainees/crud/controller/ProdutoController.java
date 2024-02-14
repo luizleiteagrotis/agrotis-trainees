@@ -44,5 +44,9 @@ public class ProdutoController {
         return ResponseEntity.ok(service.buscaPeloId(id));         
     }
     
+    @GetMapping
+    public ResponseEntity<?> buscarTodos(){
+        return ResponseEntity.ok(service.buscarTodos());
+    }
 
 }
