@@ -6,9 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
+import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.utils.DtoUtils;
 
 @Service
 public class CabecalhoNotaService {
@@ -16,14 +21,33 @@ public class CabecalhoNotaService {
     private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaService.class);
 
     private final NotaFiscalRepository repository;
+    private final ParceiroNegocioRepository parceiroNegocioRepository;
 
-    public CabecalhoNotaService(NotaFiscalRepository repository) {
+    public CabecalhoNotaService(NotaFiscalRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         this.repository = repository;
+        this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
-    public CabecalhoNota salvar(CabecalhoNota entidade) {
-        return repository.save(entidade);
+    
+    public CabecalhoNotaDto salvar(CabecalhoNotaDto cabecalho) {
+        CabecalhoNota entidade = DtoUtils.converteParaEntidade(cabecalho);
+        
+        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getParceiroNegocio());
+
+        entidade.setParceiroNegocio(fabricanteSalvo);
+        
+        repository.save(entidade);
+        
+        return DtoUtils.converteParaDto(entidade);
+        
     }
+
+
+
+
+    
+
+
 
     public CabecalhoNota buscarPorId(Integer id) {
         return repository.findById(id)
