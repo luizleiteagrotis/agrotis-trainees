@@ -41,8 +41,11 @@ public class ParceiroNegocioService {
     }
 
     public void deletarPorId(Integer id) {
-        repository.findById(id);
-        LOG.info("Parceiro de Negocio Deletado com sucesso");
+        repository.findById(id).map(entidade -> {
+            repository.deleteById(id);
+            LOG.info("Parceiro de Negocio Deletado com sucesso");
+            return entidade;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade nao encontrada"));
     }
 
     public List<ParceiroNegocio> listarTodos() {

@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,13 @@ public class ParceiroNegocioController {
     @GetMapping("/buscarPorNome/{nome}")
     public ResponseEntity<?> buscarPorNome(@PathVariable String nome) {
         return ResponseEntity.ok(negocioService.buscarPorNome(nome));
+    }
+
+    @DeleteMapping
+    @RequestMapping("/{id}")
+    public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
+        negocioService.deletarPorId(id);
+        return ResponseEntity.ok().body(null);
     }
 
 }
