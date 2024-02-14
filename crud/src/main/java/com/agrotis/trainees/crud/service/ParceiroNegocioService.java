@@ -34,11 +34,10 @@ public class ParceiroNegocioService {
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Parceiro de negocio nao encontrado pelo id {}."));
     }
 
-    public ParceiroNegocio buscarPorNome(String nome) {
-        return repository.findByNome(nome).orElseGet(() -> {
-            LOG.error("O Nome do Parceiro de Negocio nao foi encontrado {}.", nome);
-            return null;
-        });
+    public ParceiroNegocioDto buscarPorNome(String nome) {
+        return repository.findByNome(nome).map(ParceiroNegocioService::converteParaDto)
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Nome do parceiro de negocio nao encontrado {}."));
+
     }
 
     public void deletarPorId(Integer id) {
