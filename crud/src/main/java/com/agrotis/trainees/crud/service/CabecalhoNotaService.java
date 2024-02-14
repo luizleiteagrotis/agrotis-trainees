@@ -1,30 +1,38 @@
 package com.agrotis.trainees.crud.service;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dto.cabecalho.CabecalhoAtualizacaoDto;
+import com.agrotis.trainees.crud.dto.cabecalho.CabecalhoCadastroDto;
+import com.agrotis.trainees.crud.dto.cabecalho.CabecalhoRetornoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.mapper.cabecalho.CabecalhoMapper;
 import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
 
 @Service
 public class CabecalhoNotaService {
 	
+	private CabecalhoMapper mapper;
 	private CabecalhoNotaRepository repository;
 	private final Logger LOGGER;
 	
 	@Autowired
-	public CabecalhoNotaService(CabecalhoNotaRepository repository) {
+	public CabecalhoNotaService(CabecalhoMapper mapper, CabecalhoNotaRepository repository) {
+		this.mapper = mapper;
 		this.repository = repository;
 		LOGGER = LoggerFactory.getLogger(CabecalhoNotaService.class);
 	}
 	
-	public CabecalhoNota salvar(CabecalhoNota cabecalho) {
+	public CabecalhoRetornoDto salvar(CabecalhoCadastroDto cadastroDto) {
+		CabecalhoNota cabecalho = mapper.converterParaEntidade(cadastroDto);
 		verificar(cabecalho);
-		return repository.salvar(cabecalho);
+		cabecalho = repository.salvar(cabecalho);
+		return mapper.converterParaDto(cabecalho);
 	}
 	
 	private void verificar(CabecalhoNota cabecalho) {
@@ -43,15 +51,34 @@ public class CabecalhoNotaService {
 		}
 	}
 	
-	public CabecalhoNota buscar(long id) {
-		return repository.buscarPor(id);
+	public CabecalhoRetornoDto buscar(Long id) {
+		CabecalhoNota cabecalho = repository.buscarPor(id);
+		return mapper.converterParaDto(cabecalho);
 	}
 
-	public List<CabecalhoNota> buscarTodos() {
-		return repository.buscarTodos();
+	public Page<CabecalhoRetornoDto> listarTodos(Pageable pageable) {
+		return repository.buscarTodos(pageable).map((cabecalho) -> mapper.converterParaDto(cabecalho));
+	}
+	
+	public CabecalhoRetornoDto atualizar(CabecalhoAtualizacaoDto atualizacaoDto) {
+		Long idCabecalho = atualizacaoDto.getId();
+		CabecalhoNota cabecalho = repository.buscarPor(idCabecalho);
+		atualizarCabecalho(atualizacaoDto, cabecalho);
+		verificar(cabecalho);
+		cabecalho = repository.salvar(cabecalho);
+		return mapper.converterParaDto(cabecalho);
 	}
 
-	public void deletar(long id) {
+	public void deletar(Long id) {
 		repository.deletar(id);
+	}
+	
+	private void atualizarCabecalho(CabecalhoAtualizacaoDto atualizacaoDto, CabecalhoNota cabecalho) {
+		if (atualizacaoDto.getNumero() != null) {
+			cabecalho.setNumero(atualizacaoDto.getNumero());
+		}
+		if (atualizacaoDto.getDataEmissao() != null) {
+			cabecalho.setDataEmissao(atualizacaoDto.getDataEmissao());
+		}
 	}
 }
