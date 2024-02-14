@@ -22,46 +22,42 @@ import com.agrotis.trainees.crud.service.ProdutoService;
 @RestController
 @RequestMapping("/cabecalhos")
 public class CabecalhoNotaController {
-    
+
     private final CabecalhoNotaService service;
-    
+
     @Autowired
     public CabecalhoNotaController(CabecalhoNotaService service) {
         this.service = service;
     }
-    
+
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody CabecalhoNotaDto cabecalho) {
         CabecalhoNotaDto cabecalhoSalvo = service.salvar(cabecalho);
 
-        URI uri = ServletUriComponentsBuilder
-                        .fromCurrentRequest()
-                        .path("/{id}")
-                        .buildAndExpand(cabecalhoSalvo.getId())
-                        .toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cabecalhoSalvo.getId()).toUri();
 
         return ResponseEntity.created(uri).body(cabecalhoSalvo);
     }
-    
+
     @GetMapping("{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
-        return ResponseEntity.ok(service.buscarPorId(id));         
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
+
     @GetMapping
-    public ResponseEntity<?> buscarTodos(){
+    public ResponseEntity<?> buscarTodos() {
         return ResponseEntity.ok(service.listarTodos());
     }
+
+     @PutMapping("{id}")
+     public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody CabecalhoNotaDto dto){
+     return ResponseEntity.ok(service.atualizar(id, dto));
+     }
     
-//    
-//    @PutMapping("{id}")
-//    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody ProdutoDto dto){
-//        return ResponseEntity.ok(service.atualizar(id, dto));
-//    }
-//    
-//    @DeleteMapping("{id}")
-//    public ResponseEntity<?> deletar(@PathVariable Integer id){
-//        service.deletarPorId(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    // @DeleteMapping("{id}")
+    // public ResponseEntity<?> deletar(@PathVariable Integer id){
+    // service.deletarPorId(id);
+    // return ResponseEntity.noContent().build();
+    // }
 
 }
