@@ -34,32 +34,31 @@ public class ProdutoService {
             throw new CampoVazioOuNuloException("Preencha todos os campos obrigatórios de produto.");
         }
         
-        // Convert ProdutoDto to Produto entity
-        Produto produtoEntidade = DtoUtils.converteParaEntidade(produto);
+        Produto entidade = DtoUtils.converteParaEntidade(produto);
         
-        // Save the fabricante (ParceiroNegocio) entity first
-        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(produtoEntidade.getFabricante());
+        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
         
-        // Set the saved fabricante to the Produto entity
-        produtoEntidade.setFabricante(fabricanteSalvo);
+        entidade.setFabricante(fabricanteSalvo);
         
-        // Save the Produto entity
-        Produto produtoSalvo = repository.save(produtoEntidade);
+        Produto produtoSalvo = repository.save(entidade);
         
         LOG.info("Salvando o produto {}", produto.getDescricao());
         
-        // Convert saved Produto entity back to ProdutoDto and return
         return DtoUtils.converteParaDto(produtoSalvo);
     }
+
+    public ProdutoDto buscaPeloId(Integer id) {
+        return repository.findById(id)
+                         .map(DtoUtils::converteParaDto)
+                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+    }
+
 
 
     public List<Produto> buscarTodos() {
         return repository.findAll();
     }
 
-    public Produto buscaPeloId(Integer id) {
-        return repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
-    }
 
     public Produto atualizar(Integer id, Produto produto) {
         return repository.findById(id).map(produtoExistente -> {

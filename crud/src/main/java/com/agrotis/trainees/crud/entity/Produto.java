@@ -36,13 +36,11 @@ public class Produto {
     private ParceiroNegocio fabricante;
 
     @Column(name = "data_fabricacao")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Past(message = "A data de fabricação não pode ser maior que a data atual.")
     @NotNull(message = "O campo data de fabricação não pode ser nulo")
     private LocalDate dataFabricacao;
 
     @Column(name = "data_validade")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Future(message = "A data de validade tem de ser no futuro.")
     @NotNull(message = "O campo data de validade não pode ser nulo.")
     private LocalDate dataValidade;

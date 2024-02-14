@@ -33,9 +33,9 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocioDto buscarPorId(Integer id) {
-        ParceiroNegocio parceiroPorId = repository.findById(id)
+        return repository.findById(id)
+                        .map(DtoUtils::converteParaDto)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
-        return DtoUtils.converteParaDto(parceiroPorId);
     }
 
     public List<ParceiroNegocioDto> listarTodos() {
