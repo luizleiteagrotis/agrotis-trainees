@@ -32,15 +32,6 @@ public class ParceiroNegocio {
 	@NotBlank(message = "Atributo telefone obrigatorio")
 	private String telefone;
 	
-	public ParceiroNegocio() {}
-
-	public ParceiroNegocio(String nome, String inscricaoFiscal, String endereco, String telefone) {
-		this.nome = nome;
-		this.inscricaoFiscal = inscricaoFiscal;
-		this.endereco = endereco;
-		this.telefone = telefone;
-	}
-
 	public Long getId() {
 		return id;
 	}
