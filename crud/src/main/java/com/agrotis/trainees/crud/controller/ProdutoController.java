@@ -32,7 +32,7 @@ public class ProdutoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(produtoDto));
     }
 
-    @RequestMapping
+    @GetMapping
     public ResponseEntity<?> listarTodos() {
         return ResponseEntity.ok().body(service.listarTodos());
     }
