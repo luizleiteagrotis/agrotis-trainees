@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,18 +43,19 @@ public class CabecalhoNotaService {
         
     }
 
-
-
-
-    
-
-
-
-    public CabecalhoNota buscarPorId(Integer id) {
+    public CabecalhoNotaDto buscarPorId(Integer id) {
         return repository.findById(id)
+                        .map(DtoUtils::converteParaDto)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
     }
 
+    public List<CabecalhoNotaDto> listarTodos() {
+        return repository.findAll()
+                        .stream()
+                        .map(DtoUtils::converteParaDto)
+                        .collect(Collectors.toList());
+    }
+    
     public CabecalhoNota atualizar(Integer id, CabecalhoNota cabecalhoNota) {
         return repository.findById(id).map(cabecalhoNotaExistente -> {
             cabecalhoNotaExistente.setData(cabecalhoNota.getData());
@@ -64,9 +66,7 @@ public class CabecalhoNotaService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
     }
 
-    public List<CabecalhoNota> listarTodos() {
-        return repository.findAll();
-    }
+
 
     public void deletarPorId(Integer id) {
         repository.findById(id).map(entidade -> {

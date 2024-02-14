@@ -43,15 +43,15 @@ public class CabecalhoNotaController {
         return ResponseEntity.created(uri).body(cabecalhoSalvo);
     }
     
-//    @GetMapping("{id}")
-//    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
-//        return ResponseEntity.ok(service.buscaPeloId(id));         
-//    }
-//    
-//    @GetMapping
-//    public ResponseEntity<?> buscarTodos(){
-//        return ResponseEntity.ok(service.buscarTodos());
-//    }
+    @GetMapping("{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+        return ResponseEntity.ok(service.buscarPorId(id));         
+    }
+    @GetMapping
+    public ResponseEntity<?> buscarTodos(){
+        return ResponseEntity.ok(service.listarTodos());
+    }
+    
 //    
 //    @PutMapping("{id}")
 //    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody ProdutoDto dto){
