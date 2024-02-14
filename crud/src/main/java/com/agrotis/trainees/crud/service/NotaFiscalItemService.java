@@ -2,13 +2,17 @@ package com.agrotis.trainees.crud.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
@@ -20,74 +24,70 @@ public class NotaFiscalItemService {
 
     private final NotaFiscalItemRepository repository;
     private final ProdutoService produtoService;
+    private final NotaFiscalService notaFiscalService;
 
-    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService) {
-        super();
+    @Autowired
+    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService, NotaFiscalService notaFiscalService) {
         this.repository = repository;
         this.produtoService = produtoService;
+        this.notaFiscalService = notaFiscalService;
     }
 
+    @Transactional
     public NotaFiscalItem salvar(NotaFiscalItem entidade) {
-        adicionarItem(entidade);
+        adicionarOuAtualizarItemNotaFiscal(entidade);
         return repository.save(entidade);
     }
 
     public NotaFiscalItem buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Item da nota fiscal não encontrado para o id {}.", id);
-            return null;
-        });
-    }
-
-    public NotaFiscalItem buscarPorNotaFiscalId(NotaFiscal notaFiscal) {
-        return repository.findByNotaFiscalId(notaFiscal).orElseGet(() -> {
-            LOG.error("Item da nota fiscal não encontrado para a NF {}.", notaFiscal);
-            return null;
-        });
-    }
-
-    public NotaFiscalItem buscarPorProduto(Produto produto) {
-        return repository.findByProduto(produto).orElseGet(() -> {
-            LOG.error("Item da nota fiscal não encontrado para o produto {}.", produto);
-            return null;
-        });
-    }
-
-    public List<NotaFiscalItem> listarTodos() {
-        return repository.findAll();
+        return repository.findById(id)
+                .orElseThrow(() -> new CrudException("Item da nota fiscal não encontrado para o id: " + id));
     }
 
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
-        LOG.info("Deletado com sucesso");
+        LOG.info("Item da nota fiscal deletado com sucesso");
     }
 
-    public void adicionarItem(NotaFiscalItem item) {
-        if (item != null) {
+    public void adicionarOuAtualizarItemNotaFiscal(NotaFiscalItem item) {
+        if (item != null && item.getNotaFiscal() != null && item.getProduto() != null) {
             atualizarValorTotalNotaFiscal(item);
+            controlarEstoque(item);
+        } else {
+            throw new CrudException("O item da nota fiscal, nota fiscal e produto devem ser fornecidos");
         }
     }
 
     private void atualizarValorTotalNotaFiscal(NotaFiscalItem item) {
         NotaFiscal notaFiscal = item.getNotaFiscal();
         double valorTotalItem = calcularValorTotalItem(item);
-        item.setValorTotal(valorTotalItem);
+        double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
+        notaFiscal.setValorTotal(novoValorTotal);
+        notaFiscalService.salvar(notaFiscal);
     }
 
     private double calcularValorTotalItem(NotaFiscalItem item) {
-        double valorTotal = item.getQuantidade() * item.getPrecoUnitario();
-        return valorTotal;
+        return item.getQuantidade() * item.getPrecoUnitario();
     }
 
-    public void controlarEstoque(NotaFiscalItem item) {
+    private void controlarEstoque(NotaFiscalItem item) {
         Produto produto = item.getProduto();
-        if (item.getNotaFiscal().getNotaFiscalTipo() != item.getNotaFiscal().getNotaFiscalTipo().SAIDA) {
-            produto.setEstoque(produto.getEstoque() + item.getQuantidade());
+        int quantidade = item.getQuantidade();
+
+        if (item.getNotaFiscal().getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
+            if (produto.getEstoque() < quantidade) {
+                throw new CrudException("Estoque insuficiente para o produto: " + produto.getNome());
+            }
+            produto.setEstoque(produto.getEstoque() - quantidade);
         } else {
-            produto.setEstoque(produto.getEstoque() - item.getQuantidade());
+            produto.setEstoque(produto.getEstoque() + quantidade);
         }
+
         produtoService.salvar(produto);
-        atualizarValorTotalNotaFiscal(item);
+    }
+    
+    public List<NotaFiscalItem> listarTodos() {
+        return repository.findAll();
     }
     
     public NotaFiscalItem inserir(NotaFiscalItem entidade) {
@@ -96,8 +96,8 @@ public class NotaFiscalItemService {
         }
         return repository.save(entidade);
     }
-	
-	public NotaFiscalItem atualizar(NotaFiscalItem entidade) {
+    
+    public NotaFiscalItem atualizar(NotaFiscalItem entidade) {
         if (entidade.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do item da nota fiscal.");
         }
@@ -106,5 +106,5 @@ public class NotaFiscalItemService {
         }
         return repository.save(entidade);
     }
-
+    
 }

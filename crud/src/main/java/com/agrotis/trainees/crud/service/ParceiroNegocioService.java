@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.CrudException;
@@ -58,24 +60,20 @@ public class ParceiroNegocioService {
                          .collect(Collectors.toList());
     }
     
-    public ParceiroNegocio inserir(ParceiroNegocio entidade) {
-    	ParceiroNegocioDto dto = converterParaDto(entidade); 
-        if (StringUtils.isEmpty(dto.getNome())) {
+    public ParceiroNegocio inserir(@Valid ParceiroNegocio entidade) {
+        if (StringUtils.isEmpty(entidade.getNome())) {
             throw new CrudException("Obrigatório preencher o nome do parceiro de negócio.");
         }
-        entidade = converterParaEntidade(dto);
         return repository.save(entidade);
     }
-	
-	public ParceiroNegocio atualizar(ParceiroNegocio entidade) {
-		ParceiroNegocioDto dto = converterParaDto(entidade); 
-        if (dto.getId() == null) {
+    
+    public ParceiroNegocio atualizar(ParceiroNegocio entidade) {
+        if (entidade.getId() == null) {
             throw new CrudException("Obrigatório preencher o id parceiro de negócio.");
         }
-        if (StringUtils.isEmpty(dto.getNome())) {
+        if (StringUtils.isEmpty(entidade.getNome())) {
             throw new CrudException("Obrigatório preencher o nome do parceiro de negócio.");
         }
-        entidade = converterParaEntidade(dto);
         return repository.save(entidade);
     }
 	

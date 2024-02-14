@@ -14,8 +14,10 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Service
 public class NotaFiscalService {
@@ -23,10 +25,12 @@ public class NotaFiscalService {
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 
     private final NotaFiscalRepository repository;
+    private final ProdutoRepository produtoRepository;
 
-    public NotaFiscalService(NotaFiscalRepository repository) {
+    public NotaFiscalService(NotaFiscalRepository repository, ProdutoRepository produtoRepository) {
         super();
         this.repository = repository;
+        this.produtoRepository = produtoRepository;
     }
 
     @Transactional
@@ -78,23 +82,30 @@ public class NotaFiscalService {
         LOG.info("Deletado com sucesso");
     }
 
-    private void atualizarNotaFiscal(NotaFiscal notaFiscal) {
-        repository.save(notaFiscal);
-    }
+    @Transactional
+    public void atualizarNotaFiscal(NotaFiscalItem item) {
+    	NotaFiscal nota = item.getNotaFiscal();
+        double valorItem = item.getPrecoUnitario();
+        double novoValorTotal = nota.getValorTotal();
+        
+        if (nota.getNotaFiscalTipo() == NotaFiscalTipo.ENTRADA) {
+            novoValorTotal += valorItem;
+            
+            Produto produto = item.getProduto();
+            int novaQuantidade = produto.getEstoque() + item.getQuantidade();
+            produto.setEstoque(novaQuantidade);
+            produtoRepository.save(produto);
+        } else if (nota.getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
+            novoValorTotal -= valorItem;
+            
+            Produto produto = item.getProduto();
+            int novaQuantidade = produto.getEstoque() - item.getQuantidade();
+            produto.setEstoque(novaQuantidade);
+            produtoRepository.save(produto);
+        }
 
-    public void adicionarItem(NotaFiscalItem item) {
-        NotaFiscal nota = item.getNotaFiscal();
-        // BigDecimal
-        double novoValorTotal = nota.getValorTotal() + item.getValorTotal();
         nota.setValorTotal(novoValorTotal);
-        atualizarNotaFiscal(nota);
-    }
-
-    public void atualizarItem(NotaFiscalItem item) {
-        NotaFiscal nota = item.getNotaFiscal();
-        double novoValorTotal = item.getValorTotal() - item.getValorTotal();
-        nota.setValorTotal(nota.getValorTotal() + novoValorTotal);
-        atualizarNotaFiscal(nota);
+        repository.save(nota);
     }
     
     public NotaFiscal inserir(NotaFiscal entidade) {

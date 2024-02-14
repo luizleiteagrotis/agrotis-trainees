@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class ParceiroNegocioController {
 	private ParceiroNegocioService service;
 	
 	@PostMapping
-    public ResponseEntity<?> inserir(@RequestBody ParceiroNegocio parceiro) {
+    public ResponseEntity<?> inserir(@Valid @RequestBody ParceiroNegocio parceiro) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(parceiro));
     }
 

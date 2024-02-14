@@ -13,6 +13,10 @@ public class ParceiroNegocioDto {
 	private String endereco;
 	private String telefone;
 	
+	public ParceiroNegocioDto() {
+		super();
+	}
+
 	public ParceiroNegocioDto(ParceiroNegocio parceiro) {
 		super();
 		this.id = parceiro.getId();
