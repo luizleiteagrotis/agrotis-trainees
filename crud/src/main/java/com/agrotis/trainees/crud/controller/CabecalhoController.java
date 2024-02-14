@@ -56,4 +56,10 @@ public class CabecalhoController {
 		CabecalhoRetornoDto retornoDto = cabecalhoService.atualizar(atualizacaoDto);
 		return ResponseEntity.ok(retornoDto);
 	}
+	
+	@DeleteMapping("{id}")
+	public ResponseEntity<?> deletar(@PathVariable(name = "id") Long id) {
+		cabecalhoService.deletar(id);
+		return ResponseEntity.noContent().build();
+	}
 }
