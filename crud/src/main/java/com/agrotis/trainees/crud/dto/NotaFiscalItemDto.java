@@ -26,30 +26,50 @@ public class NotaFiscalItemDto {
 		this.valorTotal = item.getValorTotal();
 	}
 
-	public Integer getId() {
-		return id;
-	}
-	
 	public NotaFiscal getNotaFiscal() {
 		return notaFiscal;
 	}
-	
+
+	public void setNotaFiscal(NotaFiscal notaFiscal) {
+		this.notaFiscal = notaFiscal;
+	}
+
 	public Produto getProduto() {
 		return produto;
 	}
-	
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
 	public Integer getQuantidade() {
 		return quantidade;
 	}
-	
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
+
 	public double getPrecoUnitario() {
 		return precoUnitario;
 	}
-	
+
+	public void setPrecoUnitario(double precoUnitario) {
+		this.precoUnitario = precoUnitario;
+	}
+
 	public double getValorTotal() {
 		return valorTotal;
 	}
-	
+
+	public void setValorTotal(double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
 	public static List<NotaFiscalItemDto> converter(List<NotaFiscalItem> itens) {
 		return itens.stream().map(NotaFiscalItemDto::new).collect(Collectors.toList());
 	}

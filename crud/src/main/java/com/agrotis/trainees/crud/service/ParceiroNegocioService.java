@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
@@ -23,8 +25,11 @@ public class ParceiroNegocioService {
         this.repository = repository;
     }
 
-    public ParceiroNegocio salvar(ParceiroNegocio entidade) {
-        return repository.save(entidade);
+    public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
+    	ParceiroNegocio entidade = converterParaEntidade(dto);
+        repository.save(entidade);
+        LOG.info("Salvo Parceiro de Negócio {}", entidade.getNome());
+        return converterParaDto(entidade);
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
@@ -43,28 +48,56 @@ public class ParceiroNegocioService {
 
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
-        LOG.info("Deletado com sucesso");
+        LOG.info("Parceiro de negócio deletado com sucesso");
     }
 
-    public List<ParceiroNegocio> listarTodos() {
-        return repository.findAll();
+    public List<ParceiroNegocioDto> listarTodos() {
+    	 List<ParceiroNegocio> entidades = repository.findAll();
+         return entidades.stream()
+                         .map(entidade -> converterParaDto(entidade))
+                         .collect(Collectors.toList());
     }
     
     public ParceiroNegocio inserir(ParceiroNegocio entidade) {
-        if (StringUtils.isEmpty(entidade.getNome())) {
+    	ParceiroNegocioDto dto = converterParaDto(entidade); 
+        if (StringUtils.isEmpty(dto.getNome())) {
             throw new CrudException("Obrigatório preencher o nome do parceiro de negócio.");
         }
+        entidade = converterParaEntidade(dto);
         return repository.save(entidade);
     }
 	
 	public ParceiroNegocio atualizar(ParceiroNegocio entidade) {
-        if (entidade.getId() == null) {
+		ParceiroNegocioDto dto = converterParaDto(entidade); 
+        if (dto.getId() == null) {
             throw new CrudException("Obrigatório preencher o id parceiro de negócio.");
         }
-        if (StringUtils.isEmpty(entidade.getNome())) {
+        if (StringUtils.isEmpty(dto.getNome())) {
             throw new CrudException("Obrigatório preencher o nome do parceiro de negócio.");
         }
+        entidade = converterParaEntidade(dto);
         return repository.save(entidade);
     }
+	
+	public static ParceiroNegocioDto converterParaDto(ParceiroNegocio entidade) {
+        ParceiroNegocioDto dto = new ParceiroNegocioDto(entidade);
+        return dto;
+    }
+
+	public static ParceiroNegocio converterParaEntidade(ParceiroNegocioDto dto) {
+        ParceiroNegocio entidade = new ParceiroNegocio(dto);
+        return entidade;
+    }
+   
+	public ParceiroNegocio atualizar(Integer id, ParceiroNegocio entidade) throws Exception {
+		ParceiroNegocioDto dto = converterParaDto(entidade);
+		if (repository.existsById(dto.getId())) {
+			entidade = converterParaEntidade(dto);
+	        return repository.save(entidade);
+	    } else {
+	    	throw new Exception("Parceiro não encontrado");
+	    	
+	    }
+	}
 
 }

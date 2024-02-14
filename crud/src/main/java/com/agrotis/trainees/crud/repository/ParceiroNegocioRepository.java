@@ -12,7 +12,7 @@ public interface ParceiroNegocioRepository extends JpaRepository<ParceiroNegocio
 	
 	    ParceiroNegocio findByNome(String nome);
 	    Optional<ParceiroNegocio> findByInscricaoFiscal (String inscricaoFiscal);
-
+	    
 }
 	
 	

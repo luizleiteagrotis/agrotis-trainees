@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
+
 @Entity
 @Table(name = "parceiro_negocio")
 public class ParceiroNegocio {
@@ -38,8 +40,17 @@ public class ParceiroNegocio {
         this.endereco = endereco;
         this.telefone = telefone;
     }
+    
+    public ParceiroNegocio(ParceiroNegocioDto dto) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.inscricaoFiscal = inscricaoFiscal;
+		this.endereco = endereco;
+		this.telefone = telefone;
+	}
 
-    public Integer getId() {
+	public Integer getId() {
         return id;
     }
 

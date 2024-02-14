@@ -13,6 +13,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 
+import com.agrotis.trainees.crud.dto.ProdutoDto;
+
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -62,7 +64,20 @@ public class Produto {
         this.estoque = 0;
     }
 
-    public Integer getId() {
+    
+	public Produto(ProdutoDto dto) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.descricao = descricao;
+		this.parceiroNegocio = parceiroNegocio;
+		this.fabricante = fabricante;
+		this.dataFabricacao = dataFabricacao;
+		this.dataValidade = dataValidade;
+		this.estoque = estoque;
+	}
+
+	public Integer getId() {
         return id;
     }
 
