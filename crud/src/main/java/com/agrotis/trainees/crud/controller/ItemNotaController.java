@@ -56,4 +56,10 @@ public class ItemNotaController {
 		ItemRetornoDto retornoDto = itemService.atualizar(atualizacaoDto);
 		return ResponseEntity.ok(retornoDto);
 	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletar(@PathVariable(name = "id") Long id) {
+		itemService.deletar(id);
+		return ResponseEntity.noContent().build();
+	}
 }
