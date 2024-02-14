@@ -29,11 +29,9 @@ public class ParceiroNegocioService {
         return converteParaDto(entidade);
     }
 
-    public ParceiroNegocio buscarPorId(Integer id) {
-        return repository.findById(id).orElseThrow(() -> {
-            throw new EntidadeNaoEncontradaException("Parceiro de negocio nao encontrado pelo id {}.");
-
-        });
+    public ParceiroNegocioDto buscarPorId(Integer id) {
+        return repository.findById(id).map(ParceiroNegocioService::converteParaDto)
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Parceiro de negocio nao encontrado pelo id {}."));
     }
 
     public ParceiroNegocio buscarPorNome(String nome) {
@@ -60,7 +58,7 @@ public class ParceiroNegocioService {
         return repository.save(parceiro);
     }
 
-    public ParceiroNegocio converteParaEntidade(ParceiroNegocioDto dto) {
+    public static ParceiroNegocio converteParaEntidade(ParceiroNegocioDto dto) {
         ParceiroNegocio entidade = new ParceiroNegocio();
         entidade.setEndereco(dto.getEndereco());
         entidade.setInscricaoFiscal(dto.getInscricaoFiscal());
@@ -69,7 +67,7 @@ public class ParceiroNegocioService {
         return entidade;
     }
 
-    public ParceiroNegocioDto converteParaDto(ParceiroNegocio entidade) {
+    public static ParceiroNegocioDto converteParaDto(ParceiroNegocio entidade) {
         ParceiroNegocioDto dto = new ParceiroNegocioDto();
         dto.setId(entidade.getId());
         dto.setEndereco(entidade.getEndereco());
