@@ -1,9 +1,10 @@
 package com.agrotis.trainees.crud.service;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -41,12 +42,16 @@ public class ParceiroNegocioService {
 
     public ParceiroNegocioDto atualizar(ParceiroNegocio entidade) {
         if (entidade.getId() == null) {
-            throw new CrudException("Obrigatório preencher o id do tipo de nota fiscal.");
+            throw new CrudException("Obrigatório preencher o id do parceiro.");
         }
-        if (StringUtils.isEmpty(entidade.getNome())) {
-            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
-        }
-        return converterParaDto(repository.save(entidade));
+
+        ParceiroNegocio parceiro = buscarPorId(entidade.getId());
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+
+        modelMapper.map(entidade, parceiro);
+
+        return converterParaDto(repository.save(parceiro));
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
