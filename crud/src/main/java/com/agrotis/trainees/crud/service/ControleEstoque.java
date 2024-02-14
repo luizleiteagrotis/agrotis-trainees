@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ControleEstoqueException;
@@ -32,13 +33,14 @@ public class ControleEstoque {
         }
 
         String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
-        Produto produto = produtoService.buscarPorId(itemNotaFiscal.getProduto().getId());
+        ProdutoDto produto = produtoService.buscarPorId(itemNotaFiscal.getProduto().getId());
         double quantidadeEstoque = produto.getEstoque();
 
         if (tipoNotaFiscal.equals("entrada")) {
             quantidadeEstoque += itemNotaFiscal.getQuantidade().doubleValue();
             produto.setEstoque(quantidadeEstoque);
-            produtoRepository.save(produto);
+            Produto entidade = produtoService.converter(produto);
+            produtoRepository.save(entidade);
             return 1;
         }
 
@@ -46,7 +48,8 @@ public class ControleEstoque {
                         && tipoNotaFiscal.equals("saida")) {
             quantidadeEstoque -= itemNotaFiscal.getQuantidade().doubleValue();
             produto.setEstoque(quantidadeEstoque);
-            produtoRepository.save(produto);
+            Produto entidade = produtoService.converter(produto);
+            produtoRepository.save(entidade);
             return 1;
         } else {
             LOG.error("A quantidade de saida é maior do que tem em estoque");

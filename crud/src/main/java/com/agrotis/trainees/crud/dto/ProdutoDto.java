@@ -12,6 +12,7 @@ public class ProdutoDto {
     private ParceiroNegocio fabricante;
     private LocalDate dataFabricacao;
     private LocalDate dataValidade;
+    private double estoque;
 
     public ProdutoDto() {
 
@@ -77,6 +78,14 @@ public class ProdutoDto {
 
     public void setDataValidade(LocalDate dataValidade) {
         this.dataValidade = dataValidade;
+    }
+
+    public double getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(double estoque) {
+        this.estoque = estoque;
     }
 
 }

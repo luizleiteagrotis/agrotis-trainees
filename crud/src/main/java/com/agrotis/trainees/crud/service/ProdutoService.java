@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ProdutoExcecao;
 import com.agrotis.trainees.crud.helper.Validador;
@@ -24,15 +25,17 @@ public class ProdutoService {
 
     }
 
-    public Produto salvar(Produto entidade) {
+    public ProdutoDto salvar(ProdutoDto entidadeDto) {
         try {
-            if (Validador.existeParceiroPorId(entidade.getFabricante().getId())) {
-                if (entidade.getFabricante() == null) {
+            Produto produtoConvertido = converter(entidadeDto);
+            if (Validador.existeParceiroPorId(produtoConvertido.getFabricante().getId())) {
+                if (produtoConvertido.getFabricante() == null) {
                     throw new ProdutoExcecao("Falha ao salvar no banco: É obrigatorio informar um parceiro de negocio.");
                 }
 
-                validar(entidade);
-                return repository.save(entidade);
+                validar(produtoConvertido);
+                produtoConvertido = repository.save(produtoConvertido);
+                return converter(produtoConvertido);
             }
             return null;
         } catch (ProdutoExcecao pe) {
@@ -41,47 +44,55 @@ public class ProdutoService {
         }
     }
 
-    public Produto buscarPorId(int id) {
-        return repository.findById(id).orElseGet(() -> {
+    public ProdutoDto buscarPorId(int id) {
+        Produto produto = repository.findById(id).orElseGet(() -> {
             LOG.error("Não foi possível encontrar um  produto com este id {}.", id);
             return null;
         });
+        return converter(produto);
     }
 
-    public List<Produto> buscarPorFornecedor(ParceiroNegocio parceiro) {
-        return repository.findByFabricante(parceiro);
+    // public List<ProdutoDto> buscarPorFornecedor(ParceiroNegocio parceiro) {
+    // List<Produto> produtos = repository.findByFabricante(parceiro);
+    // return converter(produtos);
+    // }
+
+    public List<ProdutoDto> buscarPorDataFabricacao(LocalDate data) {
+        List<Produto> produtos = repository.findByDataFabricacao(data);
+        return converter(produtos);
     }
 
-    public List<Produto> buscarPorDataFabricacao(LocalDate data) {
-        return repository.findByDataFabricacao(data);
+    public List<ProdutoDto> buscarPorDataValidade(LocalDate data) {
+        List<Produto> produtos = repository.findByDataValidade(data);
+        return converter(produtos);
     }
 
-    public List<Produto> buscarPorDataValidade(LocalDate data) {
-        return repository.findByDataValidade(data);
+    public List<ProdutoDto> buscarPorNome(String nome) {
+        List<Produto> produtos = repository.findByNome(nome);
+        return converter(produtos);
     }
 
-    public List<Produto> buscarPorNome(String nome) {
-        return repository.findByNome(nome);
+    public List<ProdutoDto> listarTodos() {
+        List<Produto> produtos = repository.findAll();
+        return converter(produtos);
     }
 
-    public List<Produto> listarTodos() {
-        return repository.findAll();
-    }
-
-    public Produto atualizarPorId(Produto produto, int id) {
+    public ProdutoDto atualizar(ProdutoDto produtoDto) {
         try {
-            Produto produtoAtualizar = buscarPorId(id);
-            produtoAtualizar.setNome(produto.getNome());
-            produtoAtualizar.setDescricao(produto.getDescricao());
-            if (produto.getFabricante() != null) {
-                produtoAtualizar.setFabricante(produto.getFabricante());
+            Produto produtoConvertido = converter(produtoDto);
+            ProdutoDto produtoDtoConvertido = buscarPorId(produtoDto.getId());
+            Produto produtoAtualizar = converter(produtoDtoConvertido);
+            produtoAtualizar.setNome(produtoConvertido.getNome());
+            produtoAtualizar.setDescricao(produtoConvertido.getDescricao());
+            if (produtoConvertido.getFabricante() != null) {
+                produtoAtualizar.setFabricante(produtoConvertido.getFabricante());
             }
-            produtoAtualizar.setDataFabricacao(produto.getDataFabricacao());
-            produtoAtualizar.setDataValidade(produto.getDataValidade());
+            produtoAtualizar.setDataFabricacao(produtoConvertido.getDataFabricacao());
+            produtoAtualizar.setDataValidade(produtoConvertido.getDataValidade());
             validar(produtoAtualizar);
             repository.save(produtoAtualizar);
             LOG.info("Produto atualizado");
-            return produtoAtualizar;
+            return converter(produtoAtualizar);
         } catch (ProdutoExcecao pe) {
             LOG.error(pe.getMessage());
             return null;
@@ -119,6 +130,20 @@ public class ProdutoService {
                         produto.getFabricante(), produto.getDescricao()).isPresent()) {
             throw new ProdutoExcecao("Falha ao salvar no banco: Este produto já está cadastrado");
         }
+
+    }
+
+    private ProdutoDto converter(Produto produto) {
+        return new ProdutoDto(produto);
+    }
+
+    protected Produto converter(ProdutoDto produtoDto) {
+        return new Produto(produtoDto.getNome(), produtoDto.getDescricao(), produtoDto.getFabricante(),
+                        produtoDto.getDataFabricacao(), produtoDto.getDataValidade());
+    }
+
+    private List<ProdutoDto> converter(List<Produto> produtos) {
+        return produtos.stream().map(this::converter).collect(Collectors.toList());
     }
 
 }

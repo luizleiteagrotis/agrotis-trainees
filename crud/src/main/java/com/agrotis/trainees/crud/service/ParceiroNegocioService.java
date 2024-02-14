@@ -71,7 +71,7 @@ public class ParceiroNegocioService {
         try {
             // entidade da requisição
             ParceiroNegocio parceiroConvertido = converter(parceiro);
-            // entidade da busca para atualizar
+            // entidade da busca para atualizar;
             ParceiroNegocioDto parceiroDto = buscarPorId(parceiro.getId());
             ParceiroNegocio parceiroAtualizar = converter(parceiroDto);
 
@@ -134,9 +134,9 @@ public class ParceiroNegocioService {
         return new ParceiroNegocioDto(parceiro);
     }
 
-    private ParceiroNegocio converter(ParceiroNegocioDto parceiro) {
-        return new ParceiroNegocio(parceiro.getNome(), parceiro.getInscricaoFiscal(), parceiro.getEndereco(),
-                        parceiro.getTelefone());
+    private ParceiroNegocio converter(ParceiroNegocioDto parceiroDto) {
+        return new ParceiroNegocio(parceiroDto.getNome(), parceiroDto.getInscricaoFiscal(), parceiroDto.getEndereco(),
+                        parceiroDto.getTelefone());
     }
 
     private List<ParceiroNegocioDto> converter(List<ParceiroNegocio> parceiros) {

@@ -46,6 +46,16 @@ public class Produto {
     public Produto() {
     }
 
+    public Produto(@NotBlank(message = "Nome é um campo obrigatorio") String nome, String descricao,
+                    @NotNull ParceiroNegocio fabricante, @NotNull LocalDate dataFabricacao, @NotNull LocalDate dataValidade) {
+        super();
+        this.nome = nome;
+        this.descricao = descricao;
+        this.fabricante = fabricante;
+        this.dataFabricacao = dataFabricacao;
+        this.dataValidade = dataValidade;
+    }
+
     public Produto(String nome, LocalDate dataFabricacao, LocalDate dataValidade, ParceiroNegocio fabricante) {
         super();
         this.nome = nome;
