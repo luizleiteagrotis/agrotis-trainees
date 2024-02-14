@@ -38,8 +38,7 @@ public class ParceiroNegocioController {
         return ResponseEntity.ok().body(service.atualizar(parceiro));
     }
 
-    @DeleteMapping
-    @RequestMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
         service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
