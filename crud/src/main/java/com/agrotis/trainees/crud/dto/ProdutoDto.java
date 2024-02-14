@@ -1,6 +1,6 @@
 package com.agrotis.trainees.crud.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
@@ -10,11 +10,11 @@ public class ProdutoDto {
 
     private String descricao;
 
-    private ParceiroNegocio id_parceiro;
+    private ParceiroNegocio idParceiro;
 
-    private Date dataFabricacao;
+    private LocalDate dataFabricacao;
 
-    private Date dataValidade;
+    private LocalDate dataValidade;
 
     private Integer estoque;
 
@@ -26,15 +26,15 @@ public class ProdutoDto {
         return descricao;
     }
 
-    public ParceiroNegocio getId_parceiro() {
-        return id_parceiro;
+    public ParceiroNegocio getIdParceiro() {
+        return idParceiro;
     }
 
-    public Date getDataFabricacao() {
+    public LocalDate getDataFabricacao() {
         return dataFabricacao;
     }
 
-    public Date getDataValidade() {
+    public LocalDate getDataValidade() {
         return dataValidade;
     }
 
@@ -50,15 +50,15 @@ public class ProdutoDto {
         this.descricao = descricao;
     }
 
-    public void setId_parceiro(ParceiroNegocio id_parceiro) {
-        this.id_parceiro = id_parceiro;
+    public void setIdParceiro(ParceiroNegocio idParceiro) {
+        this.idParceiro = idParceiro;
     }
 
-    public void setDataFabricacao(Date dataFabricacao) {
+    public void setDataFabricacao(LocalDate dataFabricacao) {
         this.dataFabricacao = dataFabricacao;
     }
 
-    public void setDataValidade(Date dataValidade) {
+    public void setDataValidade(LocalDate dataValidade) {
         this.dataValidade = dataValidade;
     }
 

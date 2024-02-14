@@ -1,9 +1,10 @@
 package com.agrotis.trainees.crud.service;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -27,31 +28,35 @@ public class ProdutoService {
 
     public ProdutoDto salvar(ProdutoDto dto) {
         try {
-            verificarDescricao(dto);
             Produto entidade = converterParaEntidade(dto);
+            verificarDescricao(entidade);
             entidade = repository.save(entidade);
             return converterParaDto(entidade);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
             return null;
         }
-
     }
 
     public ProdutoDto atualizar(Produto entidade) {
         if (entidade.getId() == null) {
-            throw new CrudException("Obrigatório preencher o id do tipo de nota fiscal.");
+            throw new CrudException("Obrigatório preencher o id do produto.");
         }
-        if (StringUtils.isEmpty(entidade.getDescricao())) {
-            throw new CrudException("Obrigatório preencher o nome do tipo de nota fiscal.");
-        }
+
+        Produto produto = buscarPorId(entidade.getId());
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+
+        modelMapper.map(entidade, produto);
+
         try {
-            verificarDescricao(converterParaDto(entidade));
+            verificarDescricaoEId(produto);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
             return null;
         }
-        return converterParaDto(repository.save(entidade));
+        return converterParaDto(repository.save(produto));
     }
 
     public Produto buscarPorId(Integer id) {
@@ -77,18 +82,24 @@ public class ProdutoService {
         return repository.findAll();
     }
 
-    public void verificarDescricao(ProdutoDto entidade) throws DescricaoExisteException {
+    public void verificarDescricaoEId(Produto entidade) throws DescricaoExisteException {
         if (repository.existsByDescricaoAndIdNot(entidade.getDescricao(), entidade.getId()) == true) {
             throw new DescricaoExisteException("A descrição já existe");
         }
 
     }
 
-    private ProdutoDto converterParaDto(Produto entidade) {
+    public void verificarDescricao(Produto entidade) throws DescricaoExisteException {
+        if (repository.existsByDescricao(entidade.getDescricao()) == true) {
+            throw new DescricaoExisteException("A descrição ja existe");
+        }
+    }
+
+    public ProdutoDto converterParaDto(Produto entidade) {
         ProdutoDto dto = new ProdutoDto();
         dto.setId(entidade.getId());
         dto.setDescricao(entidade.getDescricao());
-        dto.setId_parceiro(entidade.getIdParceiro());
+        dto.setIdParceiro(entidade.getIdParceiro());
         dto.setDataFabricacao(entidade.getDataFabricacao());
         dto.setDataValidade(entidade.getDataValidade());
         dto.setEstoque(entidade.getEstoque());
@@ -100,7 +111,7 @@ public class ProdutoService {
         Produto entidade = new Produto();
         entidade.setId(dto.getId());
         entidade.setDescricao(dto.getDescricao());
-        entidade.setIdParceiro(dto.getId_parceiro());
+        entidade.setIdParceiro(dto.getIdParceiro());
         entidade.setDataFabricacao(dto.getDataFabricacao());
         entidade.setDataValidade(dto.getDataValidade());
         entidade.setEstoque(dto.getEstoque());

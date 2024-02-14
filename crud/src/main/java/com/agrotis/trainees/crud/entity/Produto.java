@@ -1,6 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,11 +24,11 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "id_parceiro")
     @NotNull(message = "O valor deve ser preenchido")
-    private ParceiroNegocio id_parceiro;
+    private ParceiroNegocio idParceiro;
 
-    private Date dataFabricacao;
+    private LocalDate dataFabricacao;
 
-    private Date dataValidade;
+    private LocalDate dataValidade;
 
     @Min(value = 0)
     private Integer estoque;
@@ -50,26 +50,26 @@ public class Produto {
     }
 
     public ParceiroNegocio getIdParceiro() {
-        return id_parceiro;
+        return idParceiro;
     }
 
-    public void setIdParceiro(ParceiroNegocio id_parceiro) {
-        this.id_parceiro = id_parceiro;
+    public void setIdParceiro(ParceiroNegocio idParceiro) {
+        this.idParceiro = idParceiro;
     }
 
-    public Date getDataFabricacao() {
+    public LocalDate getDataFabricacao() {
         return dataFabricacao;
     }
 
-    public void setDataFabricacao(Date dataFabricacao) {
+    public void setDataFabricacao(LocalDate dataFabricacao) {
         this.dataFabricacao = dataFabricacao;
     }
 
-    public Date getDataValidade() {
+    public LocalDate getDataValidade() {
         return dataValidade;
     }
 
-    public void setDataValidade(Date dataValidade) {
+    public void setDataValidade(LocalDate dataValidade) {
         this.dataValidade = dataValidade;
     }
 

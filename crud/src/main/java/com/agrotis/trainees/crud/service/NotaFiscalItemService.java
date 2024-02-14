@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -87,14 +88,15 @@ public class NotaFiscalItemService {
         if (nota.getTipo().getId() == 1) {
             produto.setEstoque(produto.getEstoque() + item.getQuantidade());
             validarNotaEItem(item);
-            Produto produto2 = produtoService.salvar(produto);
+
+            ProdutoDto produto2 = produtoService.salvar(produtoService.converterParaDto(produto));
         } else {
             if (produto.getEstoque() - item.getQuantidade() < 0) {
                 throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
             }
             produto.setEstoque(produto.getEstoque() - item.getQuantidade());
             validarNotaEItem(item);
-            Produto produto2 = produtoService.salvar(produto);
+            ProdutoDto produto2 = produtoService.salvar(produtoService.converterParaDto(produto));
         }
         return item;
     }
