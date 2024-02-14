@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -45,12 +47,12 @@ public class JpaRepositoryWrapper<Entity, ID> {
 		return entity.get();
 	}
 	
-	public List<Entity> buscarTodos() {
+	public Page<Entity> buscarTodos(Pageable pageable) {
 		LOG.info("Tentando buscar todas as entidades {}", NOME_ENTITY);
-		List<Entity> entidades = REPOSITORY.findAll();
+		Page<Entity> entidades = REPOSITORY.findAll(pageable);
 		LOG.info("Entidades do tipo {} encontradas com sucesso. Quantidade: {}",
 				NOME_ENTITY, 
-				entidades.size());
+				entidades.getNumberOfElements());
 		return entidades;
 	}
 	
