@@ -1,8 +1,12 @@
 package com.agrotis.trainees.crud.dto.parceiro;
 
+import javax.validation.constraints.NotNull;
+
 public class ParceiroAtualizacaoDto {
 
+	@NotNull(message =  "Atributo id obrigatorio")
 	private Long id;
+	
 	private String nome;
 	private String inscricaoFiscal;
 	private String endereco;
