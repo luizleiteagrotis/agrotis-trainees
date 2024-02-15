@@ -1,5 +1,10 @@
 package com.agrotis.trainees.crud.exception;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,17 +14,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class CrudExceptionHandler {
-
-    @ExceptionHandler(CrudException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleCrudException(CrudException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handle(ConstraintViolationException exception) {
+    	String mensagemErro = getViolations(exception);
+    	return ResponseEntity.badRequest().body(mensagemErro);
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex) {
-        return new ResponseEntity<>("Registro não encontrado.", HttpStatus.BAD_REQUEST);
-    }
-
+	private String getViolations(ConstraintViolationException exception) {
+		StringBuilder stringBuilder = new StringBuilder();
+		Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
+    	for (ConstraintViolation<?> violation : violations) {
+    		stringBuilder.append(violation.getPropertyPath());
+    		stringBuilder.append(": ");
+    		stringBuilder.append(violation.getMessage());
+    		stringBuilder.append("\n");
+    	}
+    	return stringBuilder.toString();
+	}
 }
