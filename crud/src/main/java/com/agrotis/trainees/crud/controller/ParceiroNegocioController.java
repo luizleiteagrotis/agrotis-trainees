@@ -32,13 +32,13 @@ public class ParceiroNegocioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(parceiroNegocioDto));
     }
 
-    @GetMapping("/buscar-nome")
+    @GetMapping("/por-nome")
     public ResponseEntity<?> buscarPorNome(@RequestBody Map<String, String> requestBody) {
         String nome = requestBody.get("nome");
         return ResponseEntity.ok().body(service.buscarPorNome(nome));
     }
 
-    @GetMapping("/buscar-inscricao")
+    @GetMapping("/por-inscricao")
     public ResponseEntity<?> buscarPorInscricao(@RequestBody Map<String, String> requestBody) {
         String inscricao = requestBody.get("inscricao");
         return ResponseEntity.ok().body(service.buscarPorInscricaoFiscal(inscricao));

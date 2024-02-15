@@ -39,12 +39,12 @@ public class NotaFiscalController {
     }
 
     @GetMapping
-    @RequestMapping("/listar-tipo/{idTipo}")
+    @RequestMapping("/por-tipo/{idTipo}")
     public ResponseEntity<List<NotaFiscal>> listarPorIdTipo(@PathVariable Integer idTipo) {
         return ResponseEntity.ok().body(service.listarPorTipo(idTipo));
     }
 
-    @GetMapping("/listar-numero/{numero}")
+    @GetMapping("/por-numero/{numero}")
     public ResponseEntity<List<NotaFiscal>> listarPorNumero(@PathVariable Integer numero) {
         return ResponseEntity.ok().body(service.listarPorNumero(numero));
     }
