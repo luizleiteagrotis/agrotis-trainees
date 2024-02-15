@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,19 +38,14 @@ public class NotaFiscalController {
         return ResponseEntity.ok().body(service.listarTodos());
     }
 
-    @PostMapping("/listarTipo")
-    public ResponseEntity<List<NotaFiscal>> listarPorTipo(@RequestParam Integer idTipo) {
-        return ResponseEntity.ok().body(service.listarPorTipo(idTipo));
-    }
-
-    @PostMapping
-    @RequestMapping("/listarIdTipo/{idTipo}")
+    @GetMapping
+    @RequestMapping("/listar-tipo/{idTipo}")
     public ResponseEntity<List<NotaFiscal>> listarPorIdTipo(@PathVariable Integer idTipo) {
         return ResponseEntity.ok().body(service.listarPorTipo(idTipo));
     }
 
-    @PostMapping("/listarNumero")
-    public ResponseEntity<List<NotaFiscal>> listarPorNumero(@RequestParam Integer numero) {
+    @GetMapping("/listar-numero/{numero}")
+    public ResponseEntity<List<NotaFiscal>> listarPorNumero(@PathVariable Integer numero) {
         return ResponseEntity.ok().body(service.listarPorNumero(numero));
     }
 
