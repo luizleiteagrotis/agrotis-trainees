@@ -9,7 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
@@ -36,8 +38,16 @@ public class NotaFiscal {
     @PastOrPresent(message = "Não é possível informar uma data de emissão futura.")
     private LocalDate dataEmissao;
 
+    @Min(value = 0)
     @Column(name = "valor_total_nota")
     private Double valorTotal;
+
+    @PrePersist
+    private void prePersist() {
+        if (this.valorTotal == null) {
+            this.valorTotal = 0.0;
+        }
+    }
 
     public void setId(Integer id) {
         this.id = id;
