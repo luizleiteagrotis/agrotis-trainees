@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -59,10 +60,9 @@ public class ItemNotaFiscalService {
     private void addValorTotal(ItemNotaFiscal item) {
         NotaFiscal notaFiscal = item.getNotaFiscal();
         Double valorTotalItem = item.getValorTotal();
-        Double valorTotal = notaFiscal.getValorTotal();
-        notaFiscal.setValorTotal(valorTotal);
-        notaFiscalService.salvar(notaFiscal);
+        notaFiscal.setValorTotal(valorTotalItem);
 
+        notaFiscalService.salvar(notaFiscalService.converteParaDto(notaFiscal));
     }
 
     public void calcularValorTotal(ItemNotaFiscal itemNotaFiscal) {
@@ -93,6 +93,31 @@ public class ItemNotaFiscalService {
         }
         produtoService.salvar(produtoService.converteParaDto(produto));
 
+    }
+
+    public static ItemNotaFiscal converteParaEntidade(NotaFiscalItemDto dto) {
+        ItemNotaFiscal entidade = new ItemNotaFiscal();
+
+        entidade.setPrecoUnitario(dto.getPrecoUnitario());
+        entidade.setQuantidade(dto.getQuantidade());
+        entidade.setValorTotal(dto.getValorTotal());
+        entidade.setNotaFiscal(dto.getNotaFiscal());
+        entidade.setProduto(dto.getProduto());
+
+        return entidade;
+    }
+
+    public static NotaFiscalItemDto converteParaDto(ItemNotaFiscal entidade) {
+        NotaFiscalItemDto dto = new NotaFiscalItemDto();
+
+        dto.setId(entidade.getId());
+        dto.setPrecoUnitario(entidade.getPrecoUnitario());
+        dto.setQuantidade(dto.getQuantidade());
+        dto.setValorTotal(entidade.getValorTotal());
+        dto.setNotaFiscal(entidade.getNotaFiscal());
+        dto.setProduto(entidade.getProduto());
+
+        return dto;
     }
 
 }

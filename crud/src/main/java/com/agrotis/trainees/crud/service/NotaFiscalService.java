@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 
 @Service
@@ -18,13 +20,20 @@ public class NotaFiscalService {
 
     private final NotaFiscalRepository repository;
 
-    public NotaFiscalService(NotaFiscalRepository repository) {
+    private final ParceiroNegocioRepository parceiroNegocioRepository;
+
+    public NotaFiscalService(NotaFiscalRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         super();
         this.repository = repository;
+        this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
-    public NotaFiscal salvar(NotaFiscal entidade) {
-        return repository.save(entidade);
+    public NotaFiscalDto salvar(NotaFiscalDto cabecalhoNota) {
+        NotaFiscal nota = converteParaEntidade(cabecalhoNota);
+        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(nota.getParceiroNegocio());
+        nota.setParceiroNegocio(fabricanteSalvo);
+        repository.save(nota);
+        return converteParaDto(nota);
     }
 
     public NotaFiscal buscarPorId(Integer id) {
