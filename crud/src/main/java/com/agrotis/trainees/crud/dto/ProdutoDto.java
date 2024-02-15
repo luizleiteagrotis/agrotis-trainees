@@ -3,7 +3,6 @@ package com.agrotis.trainees.crud.dto;
 import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
 
 public class ProdutoDto {
     private int id;
@@ -14,30 +13,12 @@ public class ProdutoDto {
     private LocalDate dataValidade;
     private double estoque;
 
-    public ProdutoDto() {
-
-    }
-
-    public ProdutoDto(String nome, String descricao, ParceiroNegocio fabricante, LocalDate dataFabricacao, LocalDate dataValidade) {
-        super();
-        this.nome = nome;
-        this.descricao = descricao;
-        this.fabricante = fabricante;
-        this.dataFabricacao = dataFabricacao;
-        this.dataValidade = dataValidade;
-    }
-
-    public ProdutoDto(Produto entidade) {
-        id = entidade.getId();
-        nome = entidade.getNome();
-        descricao = entidade.getDescricao();
-        fabricante = entidade.getFabricante();
-        dataFabricacao = entidade.getDataFabricacao();
-        dataValidade = entidade.getDataValidade();
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

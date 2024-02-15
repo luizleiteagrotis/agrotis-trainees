@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.convert.ProdutoConversor;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ProdutoExcecao;
@@ -18,16 +18,18 @@ import com.agrotis.trainees.crud.repository.ProdutoRepository;
 public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
     private final ProdutoRepository repository;
+    private final ProdutoConversor produtoConversor;
 
-    public ProdutoService(ProdutoRepository repository) {
+    public ProdutoService(ProdutoRepository repository, ProdutoConversor produtoConversor) {
         super();
         this.repository = repository;
+        this.produtoConversor = produtoConversor;
 
     }
 
     public ProdutoDto salvar(ProdutoDto entidadeDto) {
         try {
-            Produto produtoConvertido = converter(entidadeDto);
+            Produto produtoConvertido = produtoConversor.converter(entidadeDto);
             if (Validador.existeParceiroPorId(produtoConvertido.getFabricante().getId())) {
                 if (produtoConvertido.getFabricante() == null) {
                     throw new ProdutoExcecao("Falha ao salvar no banco: É obrigatorio informar um parceiro de negocio.");
@@ -35,7 +37,7 @@ public class ProdutoService {
 
                 validar(produtoConvertido);
                 produtoConvertido = repository.save(produtoConvertido);
-                return converter(produtoConvertido);
+                return produtoConversor.converter(produtoConvertido);
             }
             return null;
         } catch (ProdutoExcecao pe) {
@@ -49,7 +51,7 @@ public class ProdutoService {
             LOG.error("Não foi possível encontrar um  produto com este id {}.", id);
             return null;
         });
-        return converter(produto);
+        return produtoConversor.converter(produto);
     }
 
     // public List<ProdutoDto> buscarPorFornecedor(ParceiroNegocio parceiro) {
@@ -59,40 +61,47 @@ public class ProdutoService {
 
     public List<ProdutoDto> buscarPorDataFabricacao(LocalDate data) {
         List<Produto> produtos = repository.findByDataFabricacao(data);
-        return converter(produtos);
+        return produtoConversor.converter(produtos);
     }
 
     public List<ProdutoDto> buscarPorDataValidade(LocalDate data) {
         List<Produto> produtos = repository.findByDataValidade(data);
-        return converter(produtos);
+        return produtoConversor.converter(produtos);
     }
 
     public List<ProdutoDto> buscarPorNome(String nome) {
         List<Produto> produtos = repository.findByNome(nome);
-        return converter(produtos);
+        return produtoConversor.converter(produtos);
     }
 
     public List<ProdutoDto> listarTodos() {
         List<Produto> produtos = repository.findAll();
-        return converter(produtos);
+        return produtoConversor.converter(produtos);
     }
 
-    public ProdutoDto atualizar(ProdutoDto produtoDto) {
+    public ProdutoDto atualizar(ProdutoDto produtoDto, int id) {
         try {
-            Produto produtoConvertido = converter(produtoDto);
-            ProdutoDto produtoDtoConvertido = buscarPorId(produtoDto.getId());
-            Produto produtoAtualizar = converter(produtoDtoConvertido);
-            produtoAtualizar.setNome(produtoConvertido.getNome());
-            produtoAtualizar.setDescricao(produtoConvertido.getDescricao());
+            Produto produtoConvertido = produtoConversor.converter(produtoDto);
+            Produto produtoAtualizar = verificarPorId(id);
+            if (produtoAtualizar.getNome() != null) {
+                produtoAtualizar.setNome(produtoConvertido.getNome());
+            }
+            if (produtoAtualizar.getDescricao() != null) {
+                produtoAtualizar.setDescricao(produtoConvertido.getDescricao());
+            }
             if (produtoConvertido.getFabricante() != null) {
                 produtoAtualizar.setFabricante(produtoConvertido.getFabricante());
             }
-            produtoAtualizar.setDataFabricacao(produtoConvertido.getDataFabricacao());
-            produtoAtualizar.setDataValidade(produtoConvertido.getDataValidade());
+            if (produtoConvertido.getDataFabricacao() != null) {
+                produtoAtualizar.setDataFabricacao(produtoConvertido.getDataFabricacao());
+            }
+            if (produtoConvertido.getDataValidade() != null) {
+                produtoAtualizar.setDataValidade(produtoConvertido.getDataValidade());
+            }
             validar(produtoAtualizar);
             repository.save(produtoAtualizar);
             LOG.info("Produto atualizado");
-            return converter(produtoAtualizar);
+            return produtoConversor.converter(produtoAtualizar);
         } catch (ProdutoExcecao pe) {
             LOG.error(pe.getMessage());
             return null;
@@ -139,19 +148,6 @@ public class ProdutoService {
             return null;
         });
 
-    }
-
-    protected ProdutoDto converter(Produto produto) {
-        return new ProdutoDto(produto);
-    }
-
-    protected Produto converter(ProdutoDto produtoDto) {
-        return new Produto(produtoDto.getNome(), produtoDto.getDescricao(), produtoDto.getFabricante(),
-                        produtoDto.getDataFabricacao(), produtoDto.getDataValidade());
-    }
-
-    protected List<ProdutoDto> converter(List<Produto> produtos) {
-        return produtos.stream().map(this::converter).collect(Collectors.toList());
     }
 
 }

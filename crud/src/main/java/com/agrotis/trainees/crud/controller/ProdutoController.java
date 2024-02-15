@@ -65,9 +65,9 @@ public class ProdutoController {
         return ResponseEntity.ok().body(service.buscarPorNome(nome));
     }
 
-    @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody ProdutoDto produtoDto) {
-        return ResponseEntity.ok().body(service.atualizar(produtoDto));
+    @PutMapping("{id}")
+    public ResponseEntity<?> atualizar(@RequestBody ProdutoDto produtoDto, int id) {
+        return ResponseEntity.ok().body(service.atualizar(produtoDto, id));
     }
 
     @DeleteMapping("{id}")
