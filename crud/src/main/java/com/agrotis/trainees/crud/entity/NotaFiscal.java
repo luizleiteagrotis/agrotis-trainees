@@ -37,18 +37,22 @@ public class NotaFiscal {
     private LocalDate dataEmissao;
 
     @Column(name = "valor_total_nota")
-    private Double valorTotalNota;
+    private Double valorTotal;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getId() {
         return id;
     }
 
-    public Double getValorTotalNota() {
-        return valorTotalNota;
+    public Double getValorTotal() {
+        return valorTotal;
     }
 
-    public void setValorTotalNota(Double valorTotalNota) {
-        this.valorTotalNota = valorTotalNota;
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public ParceiroNegocio getParceiro() {

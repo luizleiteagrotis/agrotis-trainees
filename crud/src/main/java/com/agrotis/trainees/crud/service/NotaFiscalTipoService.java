@@ -39,12 +39,11 @@ public class NotaFiscalTipoService {
         return converterParaDto(repository.save(entidade));
     }
 
-    public NotaFiscalTipoDto buscarPorId(Integer id) {
-        return null;
-        // return repository.findById(id).orElseGet(() -> {
-        // throw new CrudException(String.format("Nota não encontrada para id
-        // {}.", id));
-        // });
+    public NotaFiscalTipo buscarPorId(Integer id) {
+
+        return repository.findById(id).orElseGet(() -> {
+            throw new CrudException(String.format("Nota não encontrada para id{}.", id));
+        });
     }
 
     public NotaFiscalTipoDto buscarPorNome(String nome) {

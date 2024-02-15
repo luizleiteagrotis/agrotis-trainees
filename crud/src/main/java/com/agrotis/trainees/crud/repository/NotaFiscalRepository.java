@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -18,15 +19,8 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
     @Query("SELECT MAX(nf.numero) FROM NotaFiscal nf WHERE nf.tipo = :id_tipo")
     Optional<Integer> findMaxNumeroByTipo(@Param("id_tipo") NotaFiscalTipo tipo);
 
-    Optional<NotaFiscal> existsByTipoAndNumero(Integer tipo, Integer numero); // Implementar
-                                                                              // depois
-                                                                              // para
-                                                                              // verificar
-                                                                              // se
-                                                                              // o
-                                                                              // numero
-                                                                              // da
-                                                                              // nota
-                                                                              // já
-                                                                              // existe.
+    @Query("SELECT nf FROM NotaFiscal nf WHERE nf.tipo = :id_tipo")
+    List<NotaFiscal> findByTipo(@Param("id_tipo") NotaFiscalTipo tipo);
+
+    List<NotaFiscal> findByNumero(Integer numero);
 }
