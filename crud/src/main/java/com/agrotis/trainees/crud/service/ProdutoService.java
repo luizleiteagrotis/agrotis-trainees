@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
@@ -57,9 +58,31 @@ public class ProdutoService {
     public Produto update(Integer id, Produto produto) {
         repository.findById(id).orElseThrow(() -> {
             LOG.info(" não foi possivel encontrar pelo Id {}.", produto.getNome());
-            return new EntidadeNaoEncontradaException("Parceiro de Negocio com o ID: "+ id + "Nao foi encontrado");
+            return new EntidadeNaoEncontradaException("Parceiro de Negocio com o ID: " + id + "Nao foi encontrado");
         });
         return repository.save(produto);
     }
 
+    public static ProdutoDto converteParaDto(Produto entidade) {
+        ProdutoDto dto = new ProdutoDto();
+        dto.setId(entidade.getId());
+        dto.setDescricao(entidade.getDescricao());
+        dto.setNome(entidade.getNome());
+        dto.setFabricante(entidade.getFabricante());
+        dto.setDataFabricacao(entidade.getDataFabricacao());
+        dto.setDataValidade(entidade.getDataValidade());
+        dto.setEstoque(entidade.getEstoque());
+        return dto;
+    }
+
+    public static Produto converteParaEntidade(ProdutoDto dto) {
+        Produto entidade = new Produto();
+        entidade.setDescricao(dto.getDescricao());
+        entidade.setNome(dto.getNome());
+        entidade.setFabricante(dto.getFabricante());
+        entidade.setDataFabricacao(dto.getDataFabricacao());
+        entidade.setDataValidade(dto.getDataValidade());
+        entidade.setEstoque(dto.getEstoque());
+        return entidade;
+    }
 }
