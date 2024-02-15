@@ -2,6 +2,8 @@ package com.agrotis.trainees.crud.controller;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,7 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> cadastrar(@RequestBody ProdutoCadastroDto dto, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> cadastrar(@Valid @RequestBody ProdutoCadastroDto dto, UriComponentsBuilder uriBuilder) {
 		ProdutoRetornoDto listagemDto = produtoService.salvar(dto);
 		URI uri = uriBuilder.path("/produtos/{id}").buildAndExpand(listagemDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
@@ -52,7 +54,7 @@ public class ProdutoController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<ProdutoRetornoDto> atualizar(@RequestBody ProdutoAtualizacaoDto atualizacaoDto) {
+	public ResponseEntity<ProdutoRetornoDto> atualizar(@Valid @RequestBody ProdutoAtualizacaoDto atualizacaoDto) {
 		ProdutoRetornoDto retornoDto = produtoService.atualizar(atualizacaoDto);
 		return ResponseEntity.ok(retornoDto);
 	}

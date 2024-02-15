@@ -2,11 +2,15 @@ package com.agrotis.trainees.crud.dto.produto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 import com.agrotis.trainees.crud.dto.parceiro.ParceiroRetornoDto;
 
 public class ProdutoAtualizacaoDto {
 
+	@NotNull(message = "Atributo id obrigatorio")
 	private Long id;
+	
 	private String nome;
 	private String descricao;
 	private LocalDate dataFabricacao;

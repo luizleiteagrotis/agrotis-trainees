@@ -2,12 +2,23 @@ package com.agrotis.trainees.crud.dto.produto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 public class ProdutoCadastroDto {
 	
+	@NotNull(message = "Atributo nome obrigatorio")
 	private String nome;
+	
+	@NotNull(message = "Atributo descricao obrigatorio")
 	private String descricao;
+	
+	@NotNull(message = "Atributo idFabricante obrigatorio")
 	private Long idFabricante;
+	
+	@NotNull(message = "Atributo dataFabricacao obrigatorio")
 	private LocalDate dataFabricacao;
+	
+	@NotNull(message = "Atributo dataValidade obrigatorio")
 	private LocalDate dataValidade;
 	
 	public String getNome() {
