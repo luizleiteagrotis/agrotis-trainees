@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -8,10 +10,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
 import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
@@ -34,8 +38,8 @@ public class NotaFiscalItemService {
 
     }
 
-    public NotaFiscalItem salvar(NotaFiscalItem entidade) {
-
+    public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
+        NotaFiscalItem entidade = converterParaEntidade(dto);
         try {
             alterarEstoque(entidade);
 
@@ -46,7 +50,23 @@ public class NotaFiscalItemService {
             System.out.println("Erro: " + e.getMessage());
             return null;
         }
-        return entidade;
+        entidade = repository.save(entidade);
+        return converterParaDto(entidade);
+    }
+
+    public NotaFiscalItemDto atualizar(NotaFiscalItem entidade) {
+        if (entidade.getId() == null) {
+            throw new CrudException("Obrigatório preencher o id do produto.");
+        }
+
+        NotaFiscalItem item = buscarPorId(entidade.getId());
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+
+        modelMapper.map(entidade, item);
+
+        return converterParaDto(repository.save(item));
     }
 
     public NotaFiscalItem buscarPorId(Integer id) {
@@ -118,4 +138,27 @@ public class NotaFiscalItemService {
 
     }
 
+    private NotaFiscalItemDto converterParaDto(NotaFiscalItem entidade) {
+        NotaFiscalItemDto dto = new NotaFiscalItemDto();
+        dto.setId(entidade.getId());
+        dto.setProduto(entidade.getProduto());
+        dto.setQuantidade(entidade.getQuantidade());
+        dto.setPrecoUnitario(entidade.getPrecoUnitario());
+        dto.setValorTotal(entidade.getValorTotal());
+        dto.setIdNota(entidade.getIdNota());
+
+        return dto;
+    }
+
+    private NotaFiscalItem converterParaEntidade(NotaFiscalItemDto dto) {
+        NotaFiscalItem entidade = new NotaFiscalItem();
+        entidade.setId(dto.getId());
+        entidade.setProduto(dto.getProduto());
+        entidade.setQuantidade(dto.getQuantidade());
+        entidade.setPrecoUnitario(dto.getPrecoUnitario());
+        entidade.setValorTotal(dto.getValorTotal());
+        entidade.setIdNota(dto.getIdNota());
+
+        return entidade;
+    }
 }

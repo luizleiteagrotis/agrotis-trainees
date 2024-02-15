@@ -51,6 +51,10 @@ public class NotaFiscalItem {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Produto getProduto() {
         return produto;
     }
