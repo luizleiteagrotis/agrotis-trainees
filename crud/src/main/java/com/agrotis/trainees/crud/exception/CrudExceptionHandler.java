@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,20 +25,32 @@ public class CrudExceptionHandler {
     }
 
 	private String getViolations(ConstraintViolationException exception) {
-		StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder mensagemErro = new StringBuilder();
 		Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
     	for (ConstraintViolation<?> violation : violations) {
-    		stringBuilder.append(violation.getPropertyPath());
-    		stringBuilder.append(": ");
-    		stringBuilder.append(violation.getMessage());
-    		stringBuilder.append("\n");
+    		mensagemErro.append(violation.getPropertyPath());
+    		mensagemErro.append(": ");
+    		mensagemErro.append(violation.getMessage());
+    		mensagemErro.append("\n");
     	}
-    	return stringBuilder.toString();
+    	return mensagemErro.toString();
 	}
 	
 	@ExceptionHandler(CabecalhoNotaServiceException.class)
 	public ResponseEntity<String> handle(CabecalhoNotaServiceException exception) {
 		String mensagemErro = exception.getMessage();
 		return ResponseEntity.badRequest().body(mensagemErro);
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<String> handle(MethodArgumentNotValidException exception) {
+		StringBuilder mensagemErro = new StringBuilder();
+		exception.getBindingResult().getFieldErrors().forEach((error) -> {
+			mensagemErro.append(error.getField());
+			mensagemErro.append(": ");
+			mensagemErro.append(error.getDefaultMessage());
+			mensagemErro.append("\n");
+		});
+		return ResponseEntity.badRequest().body(mensagemErro.toString());
 	}
 }
