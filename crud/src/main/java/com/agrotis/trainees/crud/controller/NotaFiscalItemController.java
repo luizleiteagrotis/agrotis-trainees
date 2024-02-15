@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 
 @RequestMapping("notas-fiscais/itens")
@@ -23,8 +25,9 @@ public class NotaFiscalItemController {
 	private NotaFiscalItemService service;
 	
 	@PostMapping
-	public ResponseEntity<?> inserir(@RequestBody NotaFiscalItem item) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(item));
+	public ResponseEntity<?> inserir(@Valid @RequestBody NotaFiscalItemDto dto) {
+		NotaFiscalItemDto itemSalvo = service.salvar(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(itemSalvo));
 	}
 	
 	@GetMapping
@@ -33,8 +36,8 @@ public class NotaFiscalItemController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItem item) {
-		return ResponseEntity.ok().body(service.atualizar(item));
+	public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItemDto dto) {
+		return ResponseEntity.ok().body(service.atualizar(dto));
 	}
 	
 	@DeleteMapping
