@@ -67,12 +67,29 @@ public class ProdutoService {
         return repository.findAll().stream().map(ProdutoService::converteParaDto).collect(Collectors.toList());
     }
 
-    public Produto update(Integer id, Produto produto) {
-        repository.findById(id).orElseThrow(() -> {
-            LOG.info(" não foi possivel encontrar pelo Id {}.", produto.getNome());
-            return new EntidadeNaoEncontradaException("Parceiro de Negocio com o ID: " + id + "Nao foi encontrado");
+    public ProdutoDto update(Integer id, ProdutoDto dto) {
+        return repository.findById(id).map(produtoUpdate -> {
+            produtoUpdate.setDescricao(dto.getDescricao());
+            produtoUpdate.setNome(dto.getNome());
+            ParceiroNegocio fabricanteUpdate = dto.getFabricante().getId() != null
+                            ? parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(null)
+                            : null;
+            if (fabricanteUpdate == null) {
+                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(dto.getFabricante());
+                produtoUpdate.setFabricante(fabricanteSalvo);
+            } else {
+                produtoUpdate.setFabricante(fabricanteUpdate);
+            }
+            produtoUpdate.setEstoque(dto.getEstoque());
+            produtoUpdate.setDataValidade(dto.getDataValidade());
+            produtoUpdate.setDataFabricacao(dto.getDataFabricacao());
+            LOG.info("Atualizando o produto: {} ", produtoUpdate.getDescricao());
+            Produto produtoAtualizado = repository.save(produtoUpdate);
+            return ProdutoService.converteParaDto(produtoUpdate);
+        }).orElseThrow(() -> {
+            LOG.info("Não foi possível encontrar o produto pelo ID {}", id);
+            return new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado");
         });
-        return repository.save(produto);
     }
 
     public static ProdutoDto converteParaDto(Produto entidade) {
