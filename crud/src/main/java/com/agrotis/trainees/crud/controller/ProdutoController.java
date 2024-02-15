@@ -37,7 +37,7 @@ public class ProdutoController {
         return ResponseEntity.ok().body(service.listarTodos());
     }
 
-    @PostMapping("/buscarPorDescricao")
+    @GetMapping("/buscar-descricao")
     public ResponseEntity<?> buscarPorDescricao(@RequestBody Map<String, String> requestBody) {
         String descricao = requestBody.get("descricao");
         return ResponseEntity.ok().body(service.buscarPorDescricao(descricao));
