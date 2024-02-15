@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,23 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
+import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.ProdutoTipoService;
 
-@RequestMapping("notas-fiscais/tipos")
+@RequestMapping("produtos")
 @RestController
-public class NotaFiscalTipoController {
+public class ProdutoController {
 
-    private final NotaFiscalTipoService service;
-
-    public NotaFiscalTipoController(NotaFiscalTipoService service) {
-        this.service = service;
-    }
+    @Autowired
+    private ProdutoTipoService service;
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscalTipoDto notaFiscalTipoDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(notaFiscalTipoDto));
+    public ResponseEntity<?> inserir(@RequestBody Produto produto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produto));
     }
 
     @GetMapping
@@ -36,14 +33,15 @@ public class NotaFiscalTipoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalTipo notaFiscalTipo) {
-        return ResponseEntity.ok().body(service.atualizar(notaFiscalTipo));
+    public ResponseEntity<?> atualizar(@RequestBody Produto produto) {
+        return ResponseEntity.ok().body(service.atualizar(produto));
     }
 
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
-        service.deletarPorId(id);
+        service.deletarProdutoPorId(id);
         return ResponseEntity.ok().body(null);
     }
+
 }
