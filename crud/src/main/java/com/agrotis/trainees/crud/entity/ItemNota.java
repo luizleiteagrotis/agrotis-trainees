@@ -30,15 +30,18 @@ public class ItemNota {
 	@NotNull(message = "Atributo produto obrigatorio")
 	private Produto produto;
 	
+	@NotNull(message = "Atributo quantidade obrigatorio")
 	@Min(value = 1, message = "Atributo quantidade deve ser maior do que 0")
 	@Column(name = "quantidade")
 	private Integer quantidade;
 	
+	@NotNull(message = "Atributo preco unitario obrigatorio")
 	@DecimalMin(value = "00.01", inclusive = true, message = "Atributo preco unitario deve ser maior do que 0")
 	@Digits(integer = 10, fraction = 2, message = "Atributo preco unitario deve ter 10 casas inteiras e 2 casas decimais")
 	@Column(name = "preco_unitario")
 	private BigDecimal precoUnitario;
 	
+	@NotNull(message = "Atributo valorTotal obrigatorio")
 	@DecimalMin(value = "00.01", inclusive = true, message = "Atributo valor total deve ser maior do que 0")
 	@Digits(integer = 10, fraction = 2, message = "Atributo valor total deve ter 10 casas inteiras e 2 casas decimais")
 	@Column(name = "valor_total")
