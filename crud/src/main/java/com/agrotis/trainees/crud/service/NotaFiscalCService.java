@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.agrotis.trainees.crud.entity.NotaFiscalC;
 import com.agrotis.trainees.crud.repository.NotaFiscalCRepository;
 
+import dto.CabecalhoDto;
+
 @Service
 public class NotaFiscalCService {
 
@@ -51,5 +53,18 @@ public class NotaFiscalCService {
 		((org.slf4j.Logger) LOG).info("Deletado com sucesso");
 
 	}
+
+    public Object atualizar(Integer id, CabecalhoDto dto) {
+        NotaFiscalC byId = repository.findById(id).orElseGet(() -> {
+            ((org.slf4j.Logger) LOG).info("Não foi possivel encontrar a nota fiscal pelo ID {}", id);
+        return null;
+    });
+        return repository.save(byId);
+
+    }
+
+    public CabecalhoDto salvar(CabecalhoDto cabecalho) {
+        return repository.save(cabecalho);
+    }
 
 }
