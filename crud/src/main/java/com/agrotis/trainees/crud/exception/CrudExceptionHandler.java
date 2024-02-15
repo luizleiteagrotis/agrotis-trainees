@@ -6,6 +6,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapperException;
 import com.agrotis.trainees.crud.service.CabecalhoNotaServiceException;
 
 @ControllerAdvice
@@ -55,5 +57,11 @@ public class CrudExceptionHandler {
 			mensagemErro.append("\n");
 		});
 		return ResponseEntity.badRequest().body(mensagemErro.toString());
+	}
+	
+	@ExceptionHandler(JpaRepositoryWrapperException.class)
+	public ResponseEntity<String> handle(JpaRepositoryWrapperException exception) {
+		String mensagemErro = exception.getMessage();
+		return ResponseEntity.badRequest().body(mensagemErro);
 	}
 }
