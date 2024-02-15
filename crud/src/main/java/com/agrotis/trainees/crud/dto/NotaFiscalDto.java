@@ -19,6 +19,10 @@ public class NotaFiscalDto {
     private List<NotaFiscalItem> itensNota;
     private Double valorTotal;
     
+	public NotaFiscalDto() {
+		super();
+	}
+
 	public NotaFiscalDto(NotaFiscal nota) {
 		super();
 		this.id = nota.getId();
@@ -80,6 +84,10 @@ public class NotaFiscalDto {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public static List<NotaFiscalDto> converter(List<NotaFiscal> notas) {

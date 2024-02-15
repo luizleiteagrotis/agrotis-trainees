@@ -14,3 +14,12 @@ ALTER TABLE nota_fiscal
 ADD CONSTRAINT fk_parceiro_negocio_nota_id
 FOREIGN KEY (parceiro_negocio)
 REFERENCES parceiro_negocio;
+
+ALTER TABLE nota_fiscal
+ADD nota_fiscal_item INT;
+
+ALTER TABLE nota_fiscal
+ADD CONSTRAINT fk_nota_fiscal_item
+FOREIGN KEY (nota_fiscal_item)
+REFERENCES nota_fiscal_item(id);
+

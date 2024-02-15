@@ -18,7 +18,7 @@ import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 public class ParceiroNegocioService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
-
+    
     private final ParceiroNegocioRepository repository;
 
     public ParceiroNegocioService(ParceiroNegocioRepository repository) {

@@ -72,7 +72,11 @@ public class NotaFiscal {
         return id;
     }
 
-    public NotaFiscalTipo getNotaFiscalTipo() {
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public NotaFiscalTipo getNotaFiscalTipo() {
         return notaFiscalTipo;
     }
 
