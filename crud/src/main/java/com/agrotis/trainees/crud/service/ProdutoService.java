@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -27,11 +28,15 @@ public class ProdutoService {
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
-    public Produto buscarPeloNome(String nome) {
-        return repository.findByNome(nome).orElseThrow(() -> {
-            throw new EntidadeNaoEncontradaException("O produto nao foi encontrado pelo nome{}");
-        });
-    }
+    /*
+     * public ProdutoDto buscarPeloNome(String nome) { return
+     * repository.findByNome(nome).map(ProdutoService::converteParaDto)
+     * .orElseThrow(() -> new
+     * EntidadeNaoEncontradaException("O Produto nao foi encontrado pelo nome. "
+     * ));
+     * 
+     * }
+     */
 
     public Produto buscarPeloFabricante(String parceiroFabricante) {
         return repository.findByFabricante(parceiroFabricante).orElseGet(() -> {
@@ -54,10 +59,10 @@ public class ProdutoService {
         return converteParaDto(produtoSalvo);
     }
 
-    public Produto buscarPorId(Integer id) {
-        return repository.findById(id).orElseThrow(() -> {
-            throw new EntidadeNaoEncontradaException("Nao foi possivel encontrar pelo id o Produto{}.");
-        });
+    public ProdutoDto buscarPorId(Integer id) {
+        return repository.findById(id).map(ProdutoService::converteParaDto)
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("O produto nao foi encontrado pelo id {}."));
+
     }
 
     public void deletarPorId(Integer id) {
@@ -65,8 +70,8 @@ public class ProdutoService {
         LOG.info("Deletado com sucesso");
     }
 
-    public List<Produto> listarTodos() {
-        return repository.findAll();
+    public List<ProdutoDto> listarTodos() {
+        return repository.findAll().stream().map(ProdutoService::converteParaDto).collect(Collectors.toList());
     }
 
     public Produto update(Integer id, Produto produto) {
