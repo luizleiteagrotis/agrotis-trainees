@@ -28,7 +28,10 @@ public class CrudExceptionHandler {
 		StringBuilder mensagemErro = new StringBuilder();
 		Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
     	for (ConstraintViolation<?> violation : violations) {
-    		mensagemErro.append(violation.getPropertyPath());
+    		String[] nomePropriedadeSeparado = violation.getPropertyPath().toString().split("\\.");
+    		int posicaoNomeAtributo = nomePropriedadeSeparado.length - 1;
+    		String nomeAtributo = nomePropriedadeSeparado[posicaoNomeAtributo];
+    		mensagemErro.append(nomeAtributo);
     		mensagemErro.append(": ");
     		mensagemErro.append(violation.getMessage());
     		mensagemErro.append("\n");

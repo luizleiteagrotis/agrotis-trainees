@@ -6,11 +6,14 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Classe wrapper para JpaRepository. Ela chama os métodos do repository e também
@@ -20,6 +23,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @param <Entity> Entidade manipulado no banco
  * @param <ID> Id da Entidade no banco.
  */
+@Validated
 public class JpaRepositoryWrapper<Entity, ID> {
 
 	protected final JpaRepository<Entity, ID> REPOSITORY;
@@ -32,7 +36,7 @@ public class JpaRepositoryWrapper<Entity, ID> {
 		this.LOG = LoggerFactory.getLogger(nomeLogger);
 	}
 	
-	public Entity salvar(Entity entity) {
+	public Entity salvar(@Valid Entity entity) {
 		LOG.info("Tentanto salvar entidade {}", NOME_ENTITY);
 		entity = REPOSITORY.save(entity);
 		LOG.info("Entidade {} salva com sucesso", NOME_ENTITY);
