@@ -1,7 +1,5 @@
 package com.agrotis.trainees.crud.dto;
 
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-
 public class ParceiroNegocioDto {
     private int id;
     private String nome;
@@ -9,24 +7,12 @@ public class ParceiroNegocioDto {
     private String endereco;
     private String telefone;
 
-    public ParceiroNegocioDto() {
+    public int getId() {
+        return id;
     }
 
-    public ParceiroNegocioDto(String nome, String inscricaoFiscal, String endereco, String telefone) {
-        super();
-        this.nome = nome;
-        this.inscricaoFiscal = inscricaoFiscal;
-        this.endereco = endereco;
-        this.telefone = telefone;
-    }
-
-    public ParceiroNegocioDto(ParceiroNegocio parceiroNegocio) {
-        super();
-        id = parceiroNegocio.getId();
-        nome = parceiroNegocio.getNome();
-        inscricaoFiscal = parceiroNegocio.getInscricaoFiscal();
-        endereco = parceiroNegocio.getEndereco();
-        telefone = parceiroNegocio.getTelefone();
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -59,10 +45,6 @@ public class ParceiroNegocioDto {
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
-    }
-
-    public int getId() {
-        return id;
     }
 
 }
