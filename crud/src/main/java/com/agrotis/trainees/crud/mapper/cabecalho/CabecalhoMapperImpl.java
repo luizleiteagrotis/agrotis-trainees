@@ -28,8 +28,10 @@ public class CabecalhoMapperImpl implements CabecalhoMapper {
 	public CabecalhoNota converterParaEntidade(CabecalhoCadastroDto cadastroDto) {
 		CabecalhoNota cabecalho = mapper.convertValue(cadastroDto, CabecalhoNota.class);
 		Long idParceiro = cadastroDto.getIdParceiro();
-		ParceiroNegocio parceiro = parceiroRepository.buscarPor(idParceiro);
-		cabecalho.setParceiro(parceiro);
+		if (idParceiro != null) {
+			ParceiroNegocio parceiro = parceiroRepository.buscarPor(idParceiro);
+			cabecalho.setParceiro(parceiro);
+		}
 		cabecalho.setValorTotal(BigDecimal.ZERO);
 		return cabecalho;
 	}
