@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.convert.ParceiroNegocioConversor;
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.ParceiroNegocioExcecao;
@@ -18,20 +18,23 @@ public class ParceiroNegocioService {
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 
     private final PaceiroNegocioRepository repository;
+    private final ParceiroNegocioConversor parceiroNegocioConversor;
 
-    public ParceiroNegocioService(PaceiroNegocioRepository repository) {
+    public ParceiroNegocioService(PaceiroNegocioRepository repository, ParceiroNegocioConversor parceiroNegocioConversor) {
         super();
         this.repository = repository;
+        this.parceiroNegocioConversor = parceiroNegocioConversor;
+
     }
 
     public ParceiroNegocioDto salvar(ParceiroNegocioDto entidade) {
         try {
-            ParceiroNegocio parceiro = converter(entidade);
+            ParceiroNegocio parceiro = parceiroNegocioConversor.converter(entidade);
             validarInscricaoFiscal(parceiro);
             validarParceiro(parceiro);
             LOG.info("Salvo com sucesso.");
             parceiro = repository.save(parceiro);
-            return converter(parceiro);
+            return parceiroNegocioConversor.converter(parceiro);
 
         } catch (ParceiroNegocioExcecao e) {
             LOG.error(e.getMessage());
@@ -48,7 +51,7 @@ public class ParceiroNegocioService {
         if (parceiro == null) {
             return null;
         }
-        return converter(parceiro);
+        return parceiroNegocioConversor.converter(parceiro);
     }
 
     public ParceiroNegocioDto buscarPorInscricaoFiscal(String inscricaoFiscal) {
@@ -59,28 +62,34 @@ public class ParceiroNegocioService {
         if (parceiro == null) {
             return null;
         }
-        return converter(parceiro);
+        return parceiroNegocioConversor.converter(parceiro);
     }
 
     public List<ParceiroNegocioDto> listarTodos() {
         List<ParceiroNegocio> parceiros = repository.findAll();
-        return converter(parceiros);
+        return parceiroNegocioConversor.converter(parceiros);
     }
 
     public ParceiroNegocioDto atualizar(ParceiroNegocioDto parceiro, int id) {
         try {
-            ParceiroNegocio parceiroConvertido = converter(parceiro);
+            ParceiroNegocio parceiroConvertido = parceiroNegocioConversor.converter(parceiro);
             ParceiroNegocio parceiroNegocio = validarPorId(id);
 
-            validarParceiro(parceiroConvertido);
             if (parceiroConvertido.getInscricaoFiscal() != null) {
                 parceiroNegocio.setInscricaoFiscal(parceiroConvertido.getInscricaoFiscal());
             }
-            parceiroNegocio.setNome(parceiroConvertido.getNome());
-            parceiroNegocio.setEndereco(parceiroConvertido.getEndereco());
-            parceiroNegocio.setTelefone(parceiroConvertido.getTelefone());
-            parceiroNegocio = repository.save(parceiroNegocio);
-            return converter(parceiroNegocio);
+            if (parceiroConvertido.getNome() != null) {
+                parceiroNegocio.setNome(parceiroConvertido.getNome());
+            }
+            if (parceiroConvertido.getEndereco() != null) {
+                parceiroNegocio.setEndereco(parceiroConvertido.getEndereco());
+            }
+            if (parceiroConvertido.getTelefone() != null) {
+                parceiroNegocio.setTelefone(parceiroConvertido.getTelefone());
+            }
+            validarParceiro(parceiroNegocio);
+            repository.save(parceiroNegocio);
+            return parceiroNegocioConversor.converter(parceiroNegocio);
         } catch (ParceiroNegocioExcecao e) {
             LOG.error(e.getMessage());
             return null;
@@ -125,20 +134,6 @@ public class ParceiroNegocioService {
         if (parceiro.getInscricaoFiscal() == null) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: É obrigatorio inserir uma inscrição fiscal.");
         }
-    }
-
-    private ParceiroNegocioDto converter(ParceiroNegocio parceiro) {
-        return new ParceiroNegocioDto(parceiro);
-    }
-
-    private ParceiroNegocio converter(ParceiroNegocioDto parceiroDto) {
-        return new ParceiroNegocio(parceiroDto.getNome(), parceiroDto.getInscricaoFiscal(), parceiroDto.getEndereco(),
-                        parceiroDto.getTelefone());
-    }
-
-    private List<ParceiroNegocioDto> converter(List<ParceiroNegocio> parceiros) {
-        return parceiros.stream().map(this::converter).collect(Collectors.toList());
-
     }
 
     public ParceiroNegocio validarPorId(int id) {
