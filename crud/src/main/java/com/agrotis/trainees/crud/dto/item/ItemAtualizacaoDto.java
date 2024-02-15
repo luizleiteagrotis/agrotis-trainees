@@ -2,9 +2,13 @@ package com.agrotis.trainees.crud.dto.item;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 public class ItemAtualizacaoDto {
 
+	@NotNull(message = "Atributo id obrigatorio")
 	private Long id;
+	
 	private Integer quantidade;
 	private BigDecimal precoUnitario;
 	

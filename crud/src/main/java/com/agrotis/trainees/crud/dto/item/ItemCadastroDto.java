@@ -2,11 +2,20 @@ package com.agrotis.trainees.crud.dto.item;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 public class ItemCadastroDto {
 	
+	@NotNull(message = "Atributo idProduto obrigatorio")
 	private Long idProduto;
+	
+	@NotNull(message = "Atributo quantidade obrigatorio")
 	private Integer quantidade;
+	
+	@NotNull(message = "Atributo precoUnitario obrigatorio")
 	private BigDecimal precoUnitario;
+	
+	@NotNull(message = "Atributo idCabecalho obrigatorio")
 	private Long idCabecalho;
 	
 	public Long getIdProduto() {
