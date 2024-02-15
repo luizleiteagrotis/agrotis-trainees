@@ -26,8 +26,10 @@ public class ProdutoMapperImpl implements ProdutoMapper {
 	public Produto converterParaEntidade(ProdutoCadastroDto cadastroDto) {
 		Produto produto = mapper.convertValue(cadastroDto, Produto.class);
 		Long idFabricante = cadastroDto.getIdFabricante();
-		ParceiroNegocio fabricante = parceiroRepository.buscarPor(idFabricante);
-		produto.setFabricante(fabricante);
+		if (idFabricante != null) {
+			ParceiroNegocio fabricante = parceiroRepository.buscarPor(idFabricante);
+			produto.setFabricante(fabricante);
+		}
 		produto.setEstoque(0);
 		return produto;
 	}
