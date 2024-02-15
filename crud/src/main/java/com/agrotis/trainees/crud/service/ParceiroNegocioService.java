@@ -53,12 +53,24 @@ public class ParceiroNegocioService {
         return repository.findAll().stream().map(ParceiroNegocioService::converteParaDto).collect(Collectors.toList());
     }
 
-    public ParceiroNegocio update(Integer id, ParceiroNegocio parceiro) {
-        repository.findById(id).orElseThrow(() -> {
-            LOG.info("Parceiro de Negócio não foi encontrado para o Id {}.", parceiro.getNome());
-            return new EntidadeNaoEncontradaException("Parceiro de negocio com o ID: " + id + "Nao foi encontrado");
+    public ParceiroNegocioDto update(Integer id, ParceiroNegocioDto dto) {
+
+        return repository.findById(id).map(atualizacaoParceiro -> {
+
+            atualizacaoParceiro.setNome(dto.getNome());
+            atualizacaoParceiro.setEndereco(dto.getEndereco());
+            atualizacaoParceiro.setTelefone(dto.getTelefone());
+            atualizacaoParceiro.setInscricaoFiscal(dto.getInscricaoFiscal());
+
+            ParceiroNegocio entity = repository.save(atualizacaoParceiro);
+
+            return ParceiroNegocioService.converteParaDto(entity);
+
+        }).orElseThrow(() -> {
+            LOG.info("O PARCEIRO DE NEGOCIOS nao foi encontrado com o  ID{}", id);
+
+            return new EntidadeNaoEncontradaException("O parceiro de negocio " + id + "nao foi localizado com este ID.");
         });
-        return repository.save(parceiro);
     }
 
     public static ParceiroNegocio converteParaEntidade(ParceiroNegocioDto dto) {
