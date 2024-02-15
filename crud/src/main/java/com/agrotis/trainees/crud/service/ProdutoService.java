@@ -29,22 +29,12 @@ public class ProdutoService {
     }
 
     /*
-     * public ProdutoDto buscarPeloNome(String nome) { return
-     * repository.findByNome(nome).map(ProdutoService::converteParaDto)
-     * .orElseThrow(() -> new
-     * EntidadeNaoEncontradaException("O Produto nao foi encontrado pelo nome. "
-     * ));
-     * 
-     * }
+     * public ProdutoDto buscarPeloFabricante(ParceiroNegocio fabricante) {
+     * return repository.findByFabricante(fabricante).map(ProdutoService::
+     * converteParaDto) .orElseThrow(() -> new
+     * EntidadeNaoEncontradaException("O Produto Nao foi Encontrado pelo fabricante. "
+     * )); }
      */
-
-    public Produto buscarPeloFabricante(String parceiroFabricante) {
-        return repository.findByFabricante(parceiroFabricante).orElseGet(() -> {
-            LOG.error("O produto nao foi encontrado pelo fabricante {}", parceiroFabricante);
-            return null;
-        });
-    }
-
     public ProdutoDto salvar(ProdutoDto produto) {
         Produto entidade = converteParaEntidade(produto);
 
@@ -61,13 +51,16 @@ public class ProdutoService {
 
     public ProdutoDto buscarPorId(Integer id) {
         return repository.findById(id).map(ProdutoService::converteParaDto)
-                        .orElseThrow(() -> new EntidadeNaoEncontradaException("O produto nao foi encontrado pelo id {}."));
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("O produto nao foi encontrado pelo id {}. "));
 
     }
 
     public void deletarPorId(Integer id) {
-        repository.findById(id);
-        LOG.info("Deletado com sucesso");
+        repository.findById(id).map(produto -> {
+            repository.deleteById(id);
+            LOG.info("Produto Deletado com sucesso");
+            return produto;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado pelo id"));
     }
 
     public List<ProdutoDto> listarTodos() {
