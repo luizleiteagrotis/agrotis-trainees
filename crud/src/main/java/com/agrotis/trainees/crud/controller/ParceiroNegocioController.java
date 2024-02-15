@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 
@@ -26,8 +26,9 @@ public class ParceiroNegocioController {
 	private ParceiroNegocioService service;
 	
 	@PostMapping
-    public ResponseEntity<?> inserir(@Valid @RequestBody ParceiroNegocio parceiro) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(parceiro));
+    public ResponseEntity<?> inserir(@Valid @RequestBody ParceiroNegocioDto dto) {
+        ParceiroNegocioDto parceiroSalvo = service.salvar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(parceiroSalvo);
     }
 
     @GetMapping
@@ -36,10 +37,10 @@ public class ParceiroNegocioController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocio parceiro) {
-        return ResponseEntity.ok().body(service.atualizar(parceiro));
+    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocioDto parceiroNegocioDto) {
+        return ResponseEntity.ok().body(service.atualizar(parceiroNegocioDto));
     }
-
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
         service.deletarPorId(id);

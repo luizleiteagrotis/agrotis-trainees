@@ -8,8 +8,8 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 public class ParceiroNegocioDto {
 
 	private Integer id;
-	private String nome;
-	private String inscricaoFiscal;
+    private String nome;
+    private String inscricaoFiscal;
 	private String endereco;
 	private String telefone;
 	
