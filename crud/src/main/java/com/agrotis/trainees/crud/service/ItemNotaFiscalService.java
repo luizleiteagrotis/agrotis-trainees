@@ -91,7 +91,7 @@ public class ItemNotaFiscalService {
                 throw new IllegalArgumentException("Nao e possivel remover mais itens que o disponivel em estoque.");
             }
         }
-        produtoService.salvar(produto);
+        produtoService.salvar(produtoService.converteParaDto(produto));
 
     }
 

@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 
@@ -17,10 +19,12 @@ public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
 
     private final ProdutoRepository repository;
+    private final ParceiroNegocioRepository parceiroNegocioRepository;
 
-    public ProdutoService(ProdutoRepository repository) {
+    public ProdutoService(ProdutoRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         super();
         this.repository = repository;
+        this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
     public Produto buscarPeloNome(String nome) {
@@ -36,8 +40,18 @@ public class ProdutoService {
         });
     }
 
-    public Produto salvar(Produto entidade) {
-        return repository.save(entidade);
+    public ProdutoDto salvar(ProdutoDto produto) {
+        Produto entidade = converteParaEntidade(produto);
+
+        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
+
+        entidade.setFabricante(fabricanteSalvo);
+
+        Produto produtoSalvo = repository.save(entidade);
+
+        LOG.info("Salvando o produto {}", produto.getDescricao());
+
+        return converteParaDto(produtoSalvo);
     }
 
     public Produto buscarPorId(Integer id) {
