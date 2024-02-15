@@ -2,6 +2,8 @@ package com.agrotis.trainees.crud.controller;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,7 @@ public class CabecalhoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> cadastrar(@RequestBody CabecalhoCadastroDto cadastroDto, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> cadastrar(@Valid @RequestBody CabecalhoCadastroDto cadastroDto, UriComponentsBuilder uriBuilder) {
 		CabecalhoRetornoDto retornoDto = cabecalhoService.salvar(cadastroDto);
 		URI uri = uriBuilder.path("/cabecalhos/{id}").buildAndExpand(retornoDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
@@ -52,7 +54,7 @@ public class CabecalhoController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<CabecalhoRetornoDto> atualizar(@RequestBody CabecalhoAtualizacaoDto atualizacaoDto) {
+	public ResponseEntity<CabecalhoRetornoDto> atualizar(@Valid @RequestBody CabecalhoAtualizacaoDto atualizacaoDto) {
 		CabecalhoRetornoDto retornoDto = cabecalhoService.atualizar(atualizacaoDto);
 		return ResponseEntity.ok(retornoDto);
 	}

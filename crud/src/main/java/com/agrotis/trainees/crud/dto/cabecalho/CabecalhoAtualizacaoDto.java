@@ -2,9 +2,13 @@ package com.agrotis.trainees.crud.dto.cabecalho;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 public class CabecalhoAtualizacaoDto {
 
+	@NotNull(message = "Atributo id obrigatorio")
 	private Long id;
+	
 	private Long numero;
 	private LocalDate dataEmissao;
 	
