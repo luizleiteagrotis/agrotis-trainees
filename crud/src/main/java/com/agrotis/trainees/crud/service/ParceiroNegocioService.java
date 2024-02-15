@@ -63,10 +63,7 @@ public class ParceiroNegocioService {
     }
     
     public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto) {
-    	System.out.println(dto.getInscricaoFiscal());
     	ParceiroNegocio entidade = converterParaEntidade(dto);
-    	System.out.println(entidade.getInscricaoFiscal());
-    	
         return converterParaDto(repository.save(entidade));
     }
 	

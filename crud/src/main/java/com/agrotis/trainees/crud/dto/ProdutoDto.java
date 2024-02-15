@@ -18,6 +18,10 @@ public class ProdutoDto {
 	private LocalDate dataValidade;
 	private Integer estoque;
 	
+	public ProdutoDto() {
+		super();
+	}
+
 	public ProdutoDto(Produto produto) {
 		super();
 		this.id = produto.getId();
@@ -88,6 +92,10 @@ public class ProdutoDto {
 
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public static List<ProdutoDto> converter(List<Produto> produtos) {

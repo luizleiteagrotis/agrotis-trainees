@@ -13,8 +13,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 
-import com.agrotis.trainees.crud.dto.ProdutoDto;
-
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -48,12 +46,7 @@ public class Produto {
         this.estoque = 0;
     }
 
-    public Produto(@NotBlank(message = "Obrigatório inserir o nome do produto") String nome,
-                    @NotBlank(message = "Obrigatório preencher a descrição do produto") String descricao,
-                    ParceiroNegocio parceiroNegocio,
-                    @NotBlank(message = "Obrigatório preencher o fabricante do produto") String fabricante,
-                    @PastOrPresent(message = "A data de fabricação deve ser de datas passadas") LocalDate dataFabricacao,
-                    LocalDate dataValidade) {
+    public Produto(String nome, String descricao, ParceiroNegocio parceiroNegocio, String fabricante, LocalDate dataFabricacao, LocalDate dataValidade) {
         super();
         this.nome = nome;
         this.descricao = descricao;
@@ -64,24 +57,15 @@ public class Produto {
         this.estoque = 0;
     }
 
-    
-	public Produto(ProdutoDto dto) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.descricao = descricao;
-		this.parceiroNegocio = parceiroNegocio;
-		this.fabricante = fabricante;
-		this.dataFabricacao = dataFabricacao;
-		this.dataValidade = dataValidade;
-		this.estoque = estoque;
-	}
-
 	public Integer getId() {
         return id;
     }
 
-    public String getNome() {
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getNome() {
         return nome;
     }
 
