@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.agrotis.trainees.crud.service.CabecalhoNotaServiceException;
+
 @ControllerAdvice
 public class CrudExceptionHandler {
     
@@ -31,5 +33,11 @@ public class CrudExceptionHandler {
     		stringBuilder.append("\n");
     	}
     	return stringBuilder.toString();
+	}
+	
+	@ExceptionHandler(CabecalhoNotaServiceException.class)
+	public ResponseEntity<String> handle(CabecalhoNotaServiceException exception) {
+		String mensagemErro = exception.getMessage();
+		return ResponseEntity.badRequest().body(mensagemErro);
 	}
 }
