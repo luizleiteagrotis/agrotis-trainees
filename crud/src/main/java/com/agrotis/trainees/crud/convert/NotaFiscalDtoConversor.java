@@ -1,6 +1,5 @@
 package com.agrotis.trainees.crud.convert;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,24 +7,25 @@ import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class NotaFiscalDtoConversor {
-    private ModelMapper modelMapper;
+    private ObjectMapper modelMapper;
 
-    public NotaFiscalDtoConversor(ModelMapper modelMapper) {
+    public NotaFiscalDtoConversor(ObjectMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
-    public NotaFiscalDto converterNotaFiscalParaNotaFiscalDto(NotaFiscal notaFiscal) {
-        return modelMapper.map(notaFiscal, NotaFiscalDto.class);
+    public NotaFiscalDto converter(NotaFiscal notaFiscal) {
+        return modelMapper.convertValue(notaFiscal, NotaFiscalDto.class);
     }
 
-    public NotaFiscal converterNotaFiscalDtoParaNotaFiscal(NotaFiscalDto notaFiscalDto) {
-        return modelMapper.map(notaFiscalDto, NotaFiscal.class);
+    public NotaFiscal converter(NotaFiscalDto notaFiscalDto) {
+        return modelMapper.convertValue(notaFiscalDto, NotaFiscal.class);
     }
 
-    public List<NotaFiscalDto> converterNotasFiscaisParaNotasFiscaisDto(List<NotaFiscal> notasFiscais) {
-        return notasFiscais.stream().map(this::converterNotaFiscalParaNotaFiscalDto).collect(Collectors.toList());
+    public List<NotaFiscalDto> converter(List<NotaFiscal> notasFiscais) {
+        return notasFiscais.stream().map(this::converter).collect(Collectors.toList());
     }
 }

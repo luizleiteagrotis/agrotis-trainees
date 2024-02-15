@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 public class NotaFiscalDto {
@@ -12,6 +13,27 @@ public class NotaFiscalDto {
     private int numero;
     private LocalDate data;
     private BigDecimal valorTotal;
+
+    public NotaFiscalDto() {
+    }
+
+    public NotaFiscalDto(NotaFiscal notaFiscal) {
+        super();
+        id = notaFiscal.getId();
+        tipo = notaFiscal.getTipo();
+        parceiroNegocio = notaFiscal.getParceiroNegocio();
+        numero = notaFiscal.getNumero();
+        data = notaFiscal.getData();
+        valorTotal = notaFiscal.getValorTotal();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTipo() {
         return tipo;
@@ -52,9 +74,4 @@ public class NotaFiscalDto {
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
-
-    public int getId() {
-        return id;
-    }
-
 }

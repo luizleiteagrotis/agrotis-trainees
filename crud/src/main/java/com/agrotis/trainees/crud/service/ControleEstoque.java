@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ControleEstoqueException;
@@ -25,6 +24,7 @@ public class ControleEstoque {
 
     public int controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
         try {
+
             if (itemNotaFiscal == null || itemNotaFiscal.getNotaFiscal() == null || itemNotaFiscal.getProduto() == null) {
                 throw new ControleEstoqueException("Informe um produto ou nota fiscal válida");
             }
@@ -33,14 +33,15 @@ public class ControleEstoque {
         }
 
         String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
-        ProdutoDto produto = produtoService.buscarPorId(itemNotaFiscal.getProduto().getId());
+        Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
         double quantidadeEstoque = produto.getEstoque();
 
         if (tipoNotaFiscal.equals("entrada")) {
+
             quantidadeEstoque += itemNotaFiscal.getQuantidade().doubleValue();
             produto.setEstoque(quantidadeEstoque);
-            Produto entidade = produtoService.converter(produto);
-            produtoRepository.save(entidade);
+            produtoRepository.save(produto);
+
             return 1;
         }
 
@@ -48,8 +49,7 @@ public class ControleEstoque {
                         && tipoNotaFiscal.equals("saida")) {
             quantidadeEstoque -= itemNotaFiscal.getQuantidade().doubleValue();
             produto.setEstoque(quantidadeEstoque);
-            Produto entidade = produtoService.converter(produto);
-            produtoRepository.save(entidade);
+            produtoRepository.save(produto);
             return 1;
         } else {
             LOG.error("A quantidade de saida é maior do que tem em estoque");
@@ -57,8 +57,8 @@ public class ControleEstoque {
         }
     }
 
-    private boolean verificarQuantidade(double quantidadeEstoque, double quantidadeNota) {
-        return quantidadeEstoque > quantidadeNota;
+    protected boolean verificarQuantidade(double quantidadeEstoque, double quantidadeNota) {
+        return quantidadeEstoque - quantidadeNota > 0;
     }
 
 }

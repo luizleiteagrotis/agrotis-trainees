@@ -133,7 +133,15 @@ public class ProdutoService {
 
     }
 
-    private ProdutoDto converter(Produto produto) {
+    protected Produto verificarPorId(int id) {
+        return repository.findById(id).orElseGet(() -> {
+            LOG.error("Não foi possível encontrar um  produto com este id {}.", id);
+            return null;
+        });
+
+    }
+
+    protected ProdutoDto converter(Produto produto) {
         return new ProdutoDto(produto);
     }
 
@@ -142,7 +150,7 @@ public class ProdutoService {
                         produtoDto.getDataFabricacao(), produtoDto.getDataValidade());
     }
 
-    private List<ProdutoDto> converter(List<Produto> produtos) {
+    protected List<ProdutoDto> converter(List<Produto> produtos) {
         return produtos.stream().map(this::converter).collect(Collectors.toList());
     }
 

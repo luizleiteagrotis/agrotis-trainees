@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "item_nota_fiscal")
 public class ItemNotaFiscal {
@@ -24,10 +26,9 @@ public class ItemNotaFiscal {
     @JoinColumn(name = "id_produto")
     @NotNull
     private Produto produto;
-
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "id_nota_fiscal")
-    @NotNull
     private NotaFiscal notaFiscal;
     @NotNull
     private BigDecimal quantidade;
@@ -66,6 +67,7 @@ public class ItemNotaFiscal {
         return notaFiscal;
     }
 
+    @JsonIgnore
     public void setNotaFiscal(NotaFiscal notaFiscal) {
         this.notaFiscal = notaFiscal;
     }

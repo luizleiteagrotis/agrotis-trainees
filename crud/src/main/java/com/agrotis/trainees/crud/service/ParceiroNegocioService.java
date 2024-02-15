@@ -67,23 +67,20 @@ public class ParceiroNegocioService {
         return converter(parceiros);
     }
 
-    public ParceiroNegocioDto atualizar(ParceiroNegocioDto parceiro) {
+    public ParceiroNegocioDto atualizar(ParceiroNegocioDto parceiro, int id) {
         try {
-            // entidade da requisição
             ParceiroNegocio parceiroConvertido = converter(parceiro);
-            // entidade da busca para atualizar;
-            ParceiroNegocioDto parceiroDto = buscarPorId(parceiro.getId());
-            ParceiroNegocio parceiroAtualizar = converter(parceiroDto);
+            ParceiroNegocio parceiroNegocio = validarPorId(id);
 
             validarParceiro(parceiroConvertido);
             if (parceiroConvertido.getInscricaoFiscal() != null) {
-                parceiroAtualizar.setInscricaoFiscal(parceiroConvertido.getInscricaoFiscal());
+                parceiroNegocio.setInscricaoFiscal(parceiroConvertido.getInscricaoFiscal());
             }
-            parceiroAtualizar.setNome(parceiroConvertido.getNome());
-            parceiroAtualizar.setEndereco(parceiroConvertido.getEndereco());
-            parceiroAtualizar.setTelefone(parceiroConvertido.getTelefone());
-            parceiroAtualizar = repository.save(parceiroAtualizar);
-            return converter(parceiroAtualizar);
+            parceiroNegocio.setNome(parceiroConvertido.getNome());
+            parceiroNegocio.setEndereco(parceiroConvertido.getEndereco());
+            parceiroNegocio.setTelefone(parceiroConvertido.getTelefone());
+            parceiroNegocio = repository.save(parceiroNegocio);
+            return converter(parceiroNegocio);
         } catch (ParceiroNegocioExcecao e) {
             LOG.error(e.getMessage());
             return null;
@@ -142,6 +139,13 @@ public class ParceiroNegocioService {
     private List<ParceiroNegocioDto> converter(List<ParceiroNegocio> parceiros) {
         return parceiros.stream().map(this::converter).collect(Collectors.toList());
 
+    }
+
+    public ParceiroNegocio validarPorId(int id) {
+        return repository.findById(id).orElseGet(() -> {
+            LOG.error("Não foi possível encontrar um parceiro com este id {}.", id);
+            return null;
+        });
     }
 
 }

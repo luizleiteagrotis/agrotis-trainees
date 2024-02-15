@@ -43,9 +43,9 @@ public class ParceiroNegocioController {
         return ResponseEntity.ok().body(service.buscarPorInscricaoFiscal(inscricaoFiscal));
     }
 
-    @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocioDto parceiroNegocioDto) {
-        return ResponseEntity.ok().body(service.atualizar(parceiroNegocioDto));
+    @PutMapping("{id}")
+    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocioDto parceiroNegocioDto, @PathVariable int id) {
+        return ResponseEntity.ok().body(service.atualizar(parceiroNegocioDto, id));
     }
 
     @DeleteMapping("{id}")

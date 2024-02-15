@@ -34,11 +34,11 @@ public class NotaFiscalService {
     public NotaFiscalDto salvar(NotaFiscalDto notaFiscal) {
         try {
 
-            NotaFiscal entidade = notaFiscalDtoConversor.converterNotaFiscalDtoParaNotaFiscal(notaFiscal);
+            NotaFiscal entidade = notaFiscalDtoConversor.converter(notaFiscal);
             validar(entidade);
             LOG.info("Salvo com sucesso");
             repository.save(entidade);
-            return notaFiscalDtoConversor.converterNotaFiscalParaNotaFiscalDto(entidade);
+            return notaFiscalDtoConversor.converter(entidade);
         } catch (NotaFiscalExcecao nfe) {
             LOG.error(nfe.getMessage());
             return null;
@@ -50,7 +50,7 @@ public class NotaFiscalService {
             LOG.error("Não foi possível encontrar uma nota fiscal com este id {}", id);
             return null;
         });
-        return notaFiscalDtoConversor.converterNotaFiscalParaNotaFiscalDto(entidade);
+        return notaFiscalDtoConversor.converter(entidade);
     }
 
     // TO-DO
@@ -60,29 +60,29 @@ public class NotaFiscalService {
 
     public List<NotaFiscalDto> buscarPorTipoNotaFiscal(String tipo) {
         List<NotaFiscal> entidade = repository.findByTipo(tipo);
-        return notaFiscalDtoConversor.converterNotasFiscaisParaNotasFiscaisDto(entidade);
+        return notaFiscalDtoConversor.converter(entidade);
 
     }
 
     public List<NotaFiscalDto> buscarPorNumero(int numero) {
         List<NotaFiscal> entidade = repository.findByNumero(numero);
-        return notaFiscalDtoConversor.converterNotasFiscaisParaNotasFiscaisDto(entidade);
+        return notaFiscalDtoConversor.converter(entidade);
     }
 
     public List<NotaFiscalDto> buscarPorData(LocalDate data) {
         List<NotaFiscal> entidade = repository.findByData(data);
-        return notaFiscalDtoConversor.converterNotasFiscaisParaNotasFiscaisDto(entidade);
+        return notaFiscalDtoConversor.converter(entidade);
     }
 
     public List<NotaFiscalDto> listarTodos() {
         List<NotaFiscal> entidades = repository.findAll();
-        return notaFiscalDtoConversor.converterNotasFiscaisParaNotasFiscaisDto(entidades);
+        return notaFiscalDtoConversor.converter(entidades);
     }
 
     // TO-DO
     public NotaFiscalDto atualizar(NotaFiscalDto entidade, int id) {
         try {
-            NotaFiscal notaFiscal = notaFiscalDtoConversor.converterNotaFiscalDtoParaNotaFiscal(entidade);
+            NotaFiscal notaFiscal = notaFiscalDtoConversor.converter(entidade);
             NotaFiscal notaAtualizar = verificarPorId(id);
 
             if (notaFiscal.getTipo() != null) {
@@ -99,7 +99,7 @@ public class NotaFiscalService {
             }
             validar(notaAtualizar);
             repository.save(notaAtualizar);
-            return notaFiscalDtoConversor.converterNotaFiscalParaNotaFiscalDto(notaFiscal);
+            return notaFiscalDtoConversor.converter(notaFiscal);
 
         } catch (NotaFiscalExcecao nfe) {
             LOG.error(nfe.getMessage());
@@ -128,7 +128,7 @@ public class NotaFiscalService {
 
     }
 
-    private NotaFiscal verificarPorId(int id) {
+    protected NotaFiscal verificarPorId(int id) {
         return repository.findById(id).orElseGet(() -> {
             LOG.error("Não foi possível encontrar uma nota fiscal com este id {}", id);
             return null;
@@ -158,8 +158,7 @@ public class NotaFiscalService {
      * calculo do valor total daquela nota e salvando caso tenha alteração
      */
     public void persistirValorTotal(int idNotaFiscal) {
-        NotaFiscalDto notaDtoPorId = buscarPorId(idNotaFiscal);
-        NotaFiscal entidade = notaFiscalDtoConversor.converterNotaFiscalDtoParaNotaFiscal(notaDtoPorId);
+        NotaFiscal entidade = verificarPorId(idNotaFiscal);
         List<ItemNotaFiscal> itens = entidade.getItemNotaFiscal();
         BigDecimal valorTotalNota = BigDecimal.valueOf(0);
         for (ItemNotaFiscal item : itens) {
