@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapperException;
+import com.agrotis.trainees.crud.service.ProdutoServiceException;
 import com.agrotis.trainees.crud.service.cabecalho.CabecalhoNotaServiceException;
 
 @ControllerAdvice
@@ -61,6 +62,12 @@ public class CrudExceptionHandler {
 	
 	@ExceptionHandler(JpaRepositoryWrapperException.class)
 	public ResponseEntity<String> handle(JpaRepositoryWrapperException exception) {
+		String mensagemErro = exception.getMessage();
+		return ResponseEntity.badRequest().body(mensagemErro);
+	}
+	
+	@ExceptionHandler(ProdutoServiceException.class)
+	public ResponseEntity<String> handler(ProdutoServiceException exception) {
 		String mensagemErro = exception.getMessage();
 		return ResponseEntity.badRequest().body(mensagemErro);
 	}
