@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
+import org.springframework.beans.BeanUtils;
+
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -15,6 +17,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import com.agrotis.trainees.crud.dto.ItemNotaFiscalDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "item_nota_fiscal")
@@ -45,10 +50,23 @@ public class ItemNotaFiscal {
 
     @ManyToOne
     @JoinColumn(name = "id_nota_fiscal")
+    @JsonIgnore
     private NotaFiscal notaFiscal;
+
+    public ItemNotaFiscal() {
+        super();
+    }
+
+    public ItemNotaFiscal(ItemNotaFiscalDto dto) {
+        BeanUtils.copyProperties(dto, this);
+    }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getQuantidade() {
@@ -89,6 +107,12 @@ public class ItemNotaFiscal {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemNotaFiscal [id=" + id + ", quantidade=" + quantidade + ", valorUnitario=" + valorUnitario + ", valorTotal="
+                        + valorTotal + ", produto=" + produto + "]";
     }
 
 }

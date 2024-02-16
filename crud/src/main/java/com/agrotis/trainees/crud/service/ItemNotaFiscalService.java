@@ -5,13 +5,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.dto.ItemNotaFiscalDto;
+import com.agrotis.trainees.crud.dto.NotaFiscalDto;
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ItemDuplicadoException;
+import com.agrotis.trainees.crud.exception.ItemNaoEncontrado;
 import com.agrotis.trainees.crud.exception.ProdutoDuplicadoException;
 import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
+import com.agrotis.trainees.crud.utils.ItemNotaFiscalDTOMapper;
+import com.agrotis.trainees.crud.utils.NotaFiscalDTOMapper;
+import com.agrotis.trainees.crud.utils.ProdutoDTOMapper;
 
 @Service
 public class ItemNotaFiscalService {
@@ -22,47 +30,96 @@ public class ItemNotaFiscalService {
 
     private final ProdutoService produtoService;
 
-    public ItemNotaFiscalService(ItemNotaFiscalRepository repository, ProdutoService produtoService) {
+    private final NotaFiscalService notaService;
+
+    private final ItemNotaFiscalDTOMapper mapper;
+
+    private final NotaFiscalDTOMapper mapperNotaFiscal;
+
+    private final ProdutoDTOMapper mapperProduto;
+
+    public ItemNotaFiscalService(ItemNotaFiscalRepository repository, ProdutoService produtoService, NotaFiscalService notaService,
+                    ItemNotaFiscalDTOMapper mapper, NotaFiscalDTOMapper mapperNotaFiscal, ProdutoDTOMapper mapperProduto) {
         super();
         this.repository = repository;
         this.produtoService = produtoService;
+        this.notaService = notaService;
+        this.mapper = mapper;
+        this.mapperNotaFiscal = mapperNotaFiscal;
+        this.mapperProduto = mapperProduto;
     }
 
-    public ItemNotaFiscal salvar(ItemNotaFiscal entidade) throws QuantidadeInsuficienteException, ItemDuplicadoException {
+    public ItemNotaFiscalDto salvar(ItemNotaFiscalDto dto) throws QuantidadeInsuficienteException, ItemDuplicadoException {
+
+        ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
+
+        NotaFiscalDto notaFiscalDto = notaService.buscarPorId(entidade.getNotaFiscal().getId());
+        entidade.setNotaFiscal(mapperNotaFiscal.converterParaEntidade(notaFiscalDto));
+
+        ProdutoDto produtoDto = produtoService.buscarPorId(entidade.getProduto().getId());
+        entidade.setProduto(mapperProduto.converterParaEntidade(produtoDto));
+
         entidade.setValorTotal();
+
         itemDuplicado(entidade);
         atualizarEstoque(entidade);
-        return repository.save(entidade);
+        ItemNotaFiscal entidadeSalva = repository.save(entidade);
+        notaService.adicionarItem(entidade);
+        return mapper.converterParaDto(entidadeSalva);
     }
 
-    public ItemNotaFiscal atualizar(ItemNotaFiscal entidade) {
+    public ItemNotaFiscalDto atualizar(ItemNotaFiscalDto dto) {
+
+        ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
+
+        NotaFiscalDto notaFiscalDto = notaService.buscarPorId(entidade.getNotaFiscal().getId());
+        entidade.setNotaFiscal(mapperNotaFiscal.converterParaEntidade(notaFiscalDto));
+
+        ProdutoDto produtoDto = produtoService.buscarPorId(entidade.getProduto().getId());
+        entidade.setProduto(mapperProduto.converterParaEntidade(produtoDto));
+
         if (repository.existsByProdutoAndNotaFiscalAndIdNot(entidade.getProduto(), entidade.getNotaFiscal(), entidade.getId())) {
             throw new ProdutoDuplicadoException("Já existe um item de nota fiscal com o mesmo produto e nota fiscal");
         }
 
         entidade.setValorTotal();
         atualizarEstoque(entidade);
-        return repository.save(entidade);
+        ItemNotaFiscal entidadeSalva = repository.save(entidade);
+        notaService.atualizarValorTotal(entidadeSalva.getNotaFiscal());
+        return mapper.converterParaDto(entidadeSalva);
     }
 
-    public ItemNotaFiscal buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Item não encontrado para id {}", id);
-            return null;
-        });
+    public ItemNotaFiscalDto buscarPorId(Integer id) {
+        return repository.findById(id).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new ItemNaoEncontrado("Item de nota fiscal não encontrado para o id " + id));
     }
 
-    public List<ItemNotaFiscal> buscarPorProduto(Produto produto) {
-        return repository.findAllByProduto(produto);
+    public List<ItemNotaFiscalDto> buscarPorProduto(Integer id) {
+        ProdutoDto produtoDto = produtoService.buscarPorId(id);
+        Produto produto = mapperProduto.converterParaEntidade(produtoDto);
+        List<ItemNotaFiscal> entidades = repository.findAllByProduto(produto);
+        if (entidades.isEmpty()) {
+            throw new ItemNaoEncontrado("Item de nota fiscal não encontrada para o produto de nome: " + produto.getDescricao()
+                            + " e id: " + produto.getId());
+        }
+        return entidades.stream().map(mapper::converterParaDto).collect(Collectors.toList());
     }
 
-    public List<ItemNotaFiscal> listarTodos() {
-        return repository.findAll();
+    public List<ItemNotaFiscalDto> listarTodos() {
+        List<ItemNotaFiscal> entidades = repository.findAll();
+        return entidades.stream().map(mapper::converterParaDto).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
+        ItemNotaFiscalDto dto = buscarPorId(id);
+        ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
+
+        entidade.setQuantidade(0);
+        entidade.setValorTotal();
+
+        atualizarEstoque(entidade);
+        notaService.removerItem(entidade, entidade.getNotaFiscal());
         repository.deleteById(id);
-        LOG.info("Deletado com sucesso");
     }
 
     public void itemDuplicado(ItemNotaFiscal item) throws ItemDuplicadoException {
@@ -79,24 +136,19 @@ public class ItemNotaFiscalService {
 
         ItemNotaFiscal itemExistente = repository.findByProdutoAndNotaFiscal(item.getProduto(), item.getNotaFiscal());
 
-        if (itemExistente != null) {
-            int diferencaQuantidade = quantidade - itemExistente.getProduto().getQuantidadeEstoque();
-            produto.setQuantidadeEstoque(quantidadeProduto + diferencaQuantidade);
-        } else {
+        int diferencaQuantidade = itemExistente != null ? quantidade - itemExistente.getQuantidade() : quantidade;
 
-            if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - quantidade) < 0) {
-                throw new QuantidadeInsuficienteException("Quantidade insuficiente em estoque para a saída do produto: ");
-            }
-
-            if (tipo.equalsIgnoreCase("ENTRADA")) {
-                produto.setQuantidadeEstoque(quantidadeProduto + quantidade);
-            } else {
-                produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
-            }
-
+        if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - diferencaQuantidade) < 0) {
+            throw new QuantidadeInsuficienteException(
+                            "Quantidade insuficiente em estoque para a saída do produto. Quantidade em estoque: "
+                                            + quantidadeProduto + " " + ". Quantidade item saída: " + diferencaQuantidade);
         }
 
-        produtoService.atualizar(produto);
+        int novaQuantidadeEstoque = tipo.equalsIgnoreCase("ENTRADA") ? quantidadeProduto + diferencaQuantidade
+                        : quantidadeProduto - diferencaQuantidade;
+        produto.setQuantidadeEstoque(novaQuantidadeEstoque);
+
+        produtoService.atualizar(mapperProduto.converterParaDto(produto));
     }
 
 }
