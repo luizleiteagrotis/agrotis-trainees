@@ -92,24 +92,20 @@ public class NotaFiscalService {
 
     @Transactional
     public void atualizarNotaFiscal(List<NotaFiscalItem> itens) {
+        NotaFiscal notaFiscal = itens.get(0).getNotaFiscal(); 
         double novoValorTotal = 0;
 
         for (NotaFiscalItem item : itens) {
-            NotaFiscal nota = item.getNotaFiscal();
-            double valorItem = item.getPrecoUnitario();
-
-            if (nota.getNotaFiscalTipo() == NotaFiscalTipo.ENTRADA) {
+            double valorItem = item.getPrecoUnitario() * item.getQuantidade(); 
+            if (notaFiscal.getNotaFiscalTipo() == NotaFiscalTipo.ENTRADA) {
                 novoValorTotal += valorItem;
-            } else if (nota.getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
+            } else if (notaFiscal.getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
                 novoValorTotal -= valorItem;
             }
         }
 
-        for (NotaFiscalItem item : itens) {
-            item.getNotaFiscal().setValorTotal(novoValorTotal);
-        }
-
-        repository.saveAll(itens.stream().map(NotaFiscalItem::getNotaFiscal).collect(Collectors.toList()));
+        notaFiscal.setValorTotal(novoValorTotal);
+        repository.save(notaFiscal);
     }
     
     public NotaFiscal inserir(@Valid NotaFiscalDto dto) {

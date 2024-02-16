@@ -38,10 +38,10 @@ public class NotaFiscalItemService {
     public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
         NotaFiscalItem entidade = converterParaEntidade(dto);
         entidade.setValorTotal(calcularValorTotalItem(entidade));
-        repository.save(entidade);
-        adicionarOuAtualizarItemNotaFiscal(entidade);
-        LOG.info("Salvo item {}", entidade.getId());
-        return converterParaDto(entidade);
+        NotaFiscalItem savedItem = repository.save(entidade);
+        adicionarOuAtualizarItemNotaFiscal(savedItem);
+        LOG.info("Salvo item {}", savedItem.getId());
+        return converterParaDto(savedItem);
     }
 
     public NotaFiscalItemDto buscarPorId(Integer id) throws NotFoundException{
@@ -52,7 +52,7 @@ public class NotaFiscalItemService {
     public void deletarPorId(Integer id) throws NotFoundException {
         NotaFiscalItem item = repository.findById(id).orElseThrow(() -> new NotFoundException());
         repository.deleteById(id);
-        adicionarOuAtualizarItemNotaFiscal(item); 
+        adicionarOuAtualizarItemNotaFiscal(item);
         LOG.info("Item da nota fiscal deletado com sucesso");
     }
     
@@ -70,8 +70,9 @@ public class NotaFiscalItemService {
     
     public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) {
         NotaFiscalItem entidade = converterParaEntidade(dto);
+        entidade.setValorTotal(calcularValorTotalItem(entidade));
         NotaFiscalItem savedItem = repository.save(entidade);
-        adicionarOuAtualizarItemNotaFiscal(savedItem); 
+        adicionarOuAtualizarItemNotaFiscal(savedItem);
         return converterParaDto(savedItem);
     }
     
@@ -103,18 +104,21 @@ public class NotaFiscalItemService {
     public void adicionarOuAtualizarItemNotaFiscal(NotaFiscalItem item) {
         if (item != null && item.getNotaFiscal() != null && item.getProduto() != null) {
             double valorTotalItem = calcularValorTotalItem(item);
-            atualizarValorTotalNotaFiscal(item.getNotaFiscal(), valorTotalItem);
+            NotaFiscal notaFiscal = item.getNotaFiscal();
+            atualizarValorTotalNotaFiscal(notaFiscal, valorTotalItem);
             controlarEstoque(item);
         } else {
             throw new CrudException("O item da nota fiscal, nota fiscal e produto devem ser fornecidos");
         }
     }
 
-    private void atualizarValorTotalNotaFiscal(NotaFiscal notaFiscal, double valorTotalItem) {
-        double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
+    private void atualizarValorTotalNotaFiscal(NotaFiscal notaFiscal, Double valorTotalItem) {
+    	double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
         notaFiscal.setValorTotal(novoValorTotal);
         notaFiscalService.salvar(notaFiscal);
     }
+    
+    
     
     private double calcularValorTotalItem(NotaFiscalItem item) {
     	return item.getQuantidade() * item.getPrecoUnitario();
@@ -137,5 +141,6 @@ public class NotaFiscalItemService {
         
         produtoService.salvar(produtoDto);
     }
+ 
     
 }
