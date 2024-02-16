@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.agrotis.trainees.crud.dto.item.ItemAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.item.ItemCadastroDto;
 import com.agrotis.trainees.crud.dto.item.ItemRetornoDto;
-import com.agrotis.trainees.crud.service.ItemNotaService;
+import com.agrotis.trainees.crud.service.item.ItemNotaService;
 
 @RestController
 @RequestMapping("notas-fiscais/itens")
