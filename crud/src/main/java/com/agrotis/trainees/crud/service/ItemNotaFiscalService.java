@@ -61,8 +61,11 @@ public class ItemNotaFiscalService {
     }
 
     public void deletarPorId(Integer id) {
-        repository.deleteById(id);
-        LOG.info("Deletado com sucesso!");
+        repository.findById(id).map(item -> {
+            repository.deleteById(id);
+            LOG.info("O item da nota fiscal " + id + " Foi Deletado com sucesso");
+            return item;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("O Item da nota fiscal " + id + " nao foi encontrado"));
     }
 
     private void addValorTotal(ItemNotaFiscal item) {

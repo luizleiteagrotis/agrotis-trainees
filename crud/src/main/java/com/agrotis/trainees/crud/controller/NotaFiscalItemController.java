@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,13 @@ public class NotaFiscalItemController {
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(itemService.buscarPorId(id));
+    }
+
+    @DeleteMapping
+    @RequestMapping("/{id}")
+    public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
+        itemService.deletarPorId(id);
+        return ResponseEntity.ok().body(null);
     }
 
 }
