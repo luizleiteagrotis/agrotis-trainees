@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
@@ -34,6 +36,11 @@ public class NotaFiscalItemController {
     @GetMapping
     public ResponseEntity<?> listarTodos() {
         return ResponseEntity.ok().body(service.listarTodos());
+    }
+
+    @GetMapping("/por-nota/{nota}")
+    public ResponseEntity<List<NotaFiscalItem>> listarPorNota(@PathVariable Integer nota) {
+        return ResponseEntity.ok().body(service.listarPorNota(nota));
     }
 
     @PutMapping

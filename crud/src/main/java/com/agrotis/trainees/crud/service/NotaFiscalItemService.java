@@ -69,27 +69,6 @@ public class NotaFiscalItemService {
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
-        // if (!Objects.equals(entidade.getProduto(), item.getProduto())) {
-        // if (!Objects.equals(entidade.getQuantidade(), item.getQuantidade()))
-        // {
-        //
-        // if (nota.getTipo().getId() == 1) {
-        //
-        // produto.setEstoque(produto.getEstoque() + entidade.getQuantidade() -
-        // item.getQuantidade());
-        //
-        // } else if (produto.getEstoque() - (entidade.getQuantidade() -
-        // item.getQuantidade()) < 0) {
-        // LOG.error("Valor em estoque indisponível");
-        //
-        // } else {
-        //
-        // produto.setEstoque(produto.getEstoque() - (entidade.getQuantidade() -
-        // item.getQuantidade()));
-        // }
-        //
-        // }
-        // }
         try {
             atualizarEstoque(entidade, item);
         } catch (EstoqueZeradoException e) {
@@ -121,6 +100,11 @@ public class NotaFiscalItemService {
             LOG.error("Informações não encontradas para o produto {}", produto);
             return null;
         });
+    }
+
+    public List<NotaFiscalItem> listarPorNota(Integer idNota) {
+        NotaFiscal notaFiscal = notaFiscalService.buscarPorId(idNota);
+        return repository.findByNota(notaFiscal);
     }
 
     public void deletarPorId(Integer id) {
