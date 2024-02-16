@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
@@ -45,41 +46,51 @@ public class NotaFiscalTipoServiceTest {
 
     @Test
     public void inserirTipoEntrada() {
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // notaFiscalTipo.setNome(ENTRADA);
-        // when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
-        //
-        // NotaFiscalTipo result = service.inserir(notaFiscalTipo);
-        // assertNotNull(result);
-        // verify(repository, times(1)).save(any(NotaFiscalTipo.class));
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setNome(ENTRADA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+
+        NotaFiscalTipoDto notaFiscalTipoDto = new NotaFiscalTipoDto();
+        notaFiscalTipoDto.setNome(notaFiscalTipo.getNome());
+        NotaFiscalTipoDto result = service.inserir(notaFiscalTipoDto);
+
+        assertNotNull(result);
+        verify(repository, times(1)).save(any(NotaFiscalTipo.class));
     }
 
     @Test
     public void inserirTipoSaida() {
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // notaFiscalTipo.setNome(SAIDA);
-        // when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
-        //
-        // NotaFiscalTipo result = service.inserir(notaFiscalTipo);
-        // assertNotNull(result);
-        // verify(repository, times(1)).save(any(NotaFiscalTipo.class));
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setNome(SAIDA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+
+        NotaFiscalTipoDto notaFiscalTipoDto = new NotaFiscalTipoDto();
+        notaFiscalTipoDto.setNome(notaFiscalTipo.getNome());
+        NotaFiscalTipoDto result = service.inserir(notaFiscalTipoDto);
+
+        assertNotNull(result);
+        verify(repository, times(1)).save(any(NotaFiscalTipo.class));
     }
 
     @Test
     public void inserirDeveObrigarNome() {
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
-        //
-        // Exception excecao = assertThrows(CrudException.class, () -> {
-        // service.inserir(notaFiscalTipo);
-        // });
-        // assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.",
-        // excecao.getMessage());
+        NotaFiscalTipoDto notaFiscalTipoDto = new NotaFiscalTipoDto();
+
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.inserir(notaFiscalTipoDto);
+        });
+        assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.", excecao.getMessage());
     }
 
     @Test
     public void atualizarTipoEntrada() {
-
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setId(ID_ENTRADA);
+        notaFiscalTipo.setNome(ENTRADA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+        NotaFiscalTipoDto retorno = service.atualizar(notaFiscalTipo);
+        assertNotNull(retorno);
+        verify(repository, times(1)).save(any(NotaFiscalTipo.class));
     }
 
     @Test
