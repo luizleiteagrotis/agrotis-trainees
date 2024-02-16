@@ -1,6 +1,8 @@
 package com.agrotis.trainees.crud.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,11 @@ public class NotaFiscalController {
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody NotaFiscalDto nota) {
         return ResponseEntity.ok(notaService.salvar(nota));
+    }
+
+    @GetMapping("/buscarPorId/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(notaService.buscarPorId(id));
     }
 
 }

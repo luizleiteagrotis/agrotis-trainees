@@ -36,10 +36,9 @@ public class NotaFiscalService {
         return converteParaDto(nota);
     }
 
-    public NotaFiscal buscarPorId(Integer id) {
-        return repository.findById(id).orElseThrow(() -> {
-            throw new EntidadeNaoEncontradaException("Nota Fiscal nao encontrada para o ID {} ");
-        });
+    public NotaFiscalDto buscarPorId(Integer id) {
+        return repository.findById(id).map(NotaFiscalService::converteParaDto).orElseThrow(
+                        () -> new EntidadeNaoEncontradaException("A NOTA FISCAL com o ID: " + id + "nao foi encontrada!"));
     }
 
     public NotaFiscal update(Integer id, NotaFiscal fiscal) {
