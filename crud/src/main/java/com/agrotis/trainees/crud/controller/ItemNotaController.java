@@ -39,16 +39,16 @@ public class ItemNotaController {
         return ResponseEntity.created(uri).body(itemNotaSalvo);
     }
 
-//    @GetMapping("{id}")
-//    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-//        return ResponseEntity.ok(service.buscarPorId(id));
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<?> buscarTodos() {
-//        return ResponseEntity.ok(service.listarTodos());
-//    }
-//
+    @GetMapping("{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> buscarTodos() {
+        return ResponseEntity.ok(service.listarTodos());
+    }
+
 //    @PutMapping("{id}")
 //    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody CabecalhoNotaDto dto) {
 //        return ResponseEntity.ok(service.atualizar(id, dto));

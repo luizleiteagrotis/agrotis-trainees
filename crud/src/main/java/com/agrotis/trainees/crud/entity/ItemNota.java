@@ -16,9 +16,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "item_nota")
-public class ItemNota {
+public class ItemNota{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,6 +29,7 @@ public class ItemNota {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nota_fiscal_id")
     @NotNull(message = "Preencha o campo cabeçalho da nota")
+    @JsonBackReference
     private CabecalhoNota cabecalhoNota;
 
     @ManyToOne(cascade = CascadeType.ALL)

@@ -17,11 +17,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 @Entity
 @Table(name = "produto")
-public class Produto {
+public class Produto{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

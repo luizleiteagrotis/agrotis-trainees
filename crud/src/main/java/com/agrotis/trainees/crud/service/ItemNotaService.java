@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -39,45 +40,33 @@ public class ItemNotaService {
         this.cabecalhoNotaService = cabecalhoNotaService;
         this.parceiroNegocioService = parceiroNegocioService;
     }
-
+    
     @Transactional
     public ItemNotaDto salvar(ItemNotaDto dto) {
         ItemNota entidade = DtoUtils.converteParaEntidade(dto);
 
-        // Persist the transient entities and ensure they are properly managed
         CabecalhoNota cabecalhoNota = entidade.getCabecalhoNota();
-        Produto produto = entidade.getProduto();
-        ParceiroNegocio parceiroNegocio = cabecalhoNota.getParceiroNegocio();
-
-        // Save or update the transient entities
         CabecalhoNotaDto cabecalhoNotaDtoSalvo = cabecalhoNotaService.salvar(DtoUtils.converteParaDto(cabecalhoNota));
-        ProdutoDto produtoDtoSalvo  = produtoService.salvar(DtoUtils.converteParaDto(produto));
-        ParceiroNegocioDto parceiroNegocioDtoSalvo = parceiroNegocioService.salvar(DtoUtils.converteParaDto(parceiroNegocio));
-
-        // Ensure the transient entities are properly initialized with IDs after saving
         entidade.setCabecalhoNota(DtoUtils.converteParaEntidade(cabecalhoNotaDtoSalvo));
-        entidade.setProduto(DtoUtils.converteParaEntidade(produtoDtoSalvo));
 
-        // Set the updated ParceiroNegocio back to the CabecalhoNota
-        cabecalhoNota.setParceiroNegocio(DtoUtils.converteParaEntidade(parceiroNegocioDtoSalvo));
-
-        // Perform other operations
         calcularValorTotal(entidade);
-        adicionarValorTotalCabecalho(entidade);
         atualizarEstoque(entidade);
 
-        // Save the ItemNota entity
         entidade = repository.save(entidade);
 
         return DtoUtils.converteParaDto(entidade);
     }
 
-    public List<ItemNota> buscarTodos() {
-        return repository.findAll();
+    public List<ItemNotaDto> listarTodos() {
+        return repository.findAll()
+                        .stream()
+                        .map(DtoUtils::converteParaDto)
+                        .collect(Collectors.toList());
     }
 
-    public ItemNota buscarPorId(Integer id) {
+    public ItemNotaDto buscarPorId(Integer id) {
         return repository.findById(id)
+                        .map(DtoUtils::converteParaDto)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 

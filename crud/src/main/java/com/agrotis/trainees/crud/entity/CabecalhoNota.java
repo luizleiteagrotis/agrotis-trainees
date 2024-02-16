@@ -25,10 +25,11 @@ import javax.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "cabecalho_nota")
-public class CabecalhoNota {
+public class CabecalhoNota{
 
     public CabecalhoNota() {
     }
@@ -44,7 +45,7 @@ public class CabecalhoNota {
 
     @ManyToOne
     @JoinColumn(name = "parceiro_de_negocio_id")
-    //@NotNull(message = "Informe um parceiro de negócio.")
+    @NotNull(message = "Informe um parceiro de negócio.")
     private ParceiroNegocio parceiroNegocio;
 
     @NotNull(message = "Informe o numero da nota.")
@@ -56,6 +57,7 @@ public class CabecalhoNota {
     @NotNull(message = "Preencha o campo data.")
     private LocalDate data;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "cabecalhoNota", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemNota> itens = new ArrayList<>();
 
