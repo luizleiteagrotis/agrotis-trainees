@@ -17,4 +17,6 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
     boolean hasDuplicates(@Param("numero") String numero, @Param("notaFiscalTipo") NotaFiscalTipo tipo);
 
     List<NotaFiscal> findAllByNumero(String numero);
+
+    boolean existsByNumeroAndNotaFiscalTipoAndIdNot(String numero, NotaFiscalTipo notaFiscalTipo, Integer id);
 }

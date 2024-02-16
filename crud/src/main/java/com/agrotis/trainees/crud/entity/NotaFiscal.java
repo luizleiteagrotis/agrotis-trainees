@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
+import org.springframework.beans.BeanUtils;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 
 @Entity
 @Table(name = "nota_fiscal")
@@ -41,15 +45,29 @@ public class NotaFiscal {
     @JoinColumn(name = "id_nota_fiscal_tipo")
     private NotaFiscalTipo notaFiscalTipo;
 
-    @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<ItemNotaFiscal> itens = new ArrayList<>();
 
     @Digits(integer = 19, fraction = 2)
     @Column(name = "valor_total")
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
+    public NotaFiscal() {
+        super();
+        this.data = LocalDate.now();
+    }
+
+    public NotaFiscal(NotaFiscalDto dto) {
+        BeanUtils.copyProperties(dto, this);
+        this.data = LocalDate.now();
+    }
+
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocalDate getData() {
@@ -100,9 +118,10 @@ public class NotaFiscal {
         this.itens = itens;
     }
 
-    public NotaFiscal() {
-        super();
-        this.data = LocalDate.now();
+    @Override
+    public String toString() {
+        return "NotaFiscal [id=" + id + ", data=" + data + ", numero=" + numero + ", parceiroNegocio=" + parceiroNegocio
+                        + ", notaFiscalTipo=" + notaFiscalTipo + ", itens=" + itens + ", valorTotal=" + valorTotal + "]";
     }
 
 }

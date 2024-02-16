@@ -7,11 +7,15 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.exception.NotaFiscalCabecalhoNaoEncontradaException;
 import com.agrotis.trainees.crud.exception.NotaFiscalDuplicadaException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.utils.NotaFiscalDTOMapper;
 
 @Service
 public class NotaFiscalService {
@@ -20,63 +24,88 @@ public class NotaFiscalService {
 
     private final NotaFiscalRepository repository;
 
-    public NotaFiscalService(NotaFiscalRepository repository) {
+    private final NotaFiscalDTOMapper mapper;
+
+    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalDTOMapper mapper) {
         super();
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public NotaFiscal salvar(NotaFiscal entidade) {
+    public NotaFiscalDto salvar(NotaFiscalDto dto) {
+        NotaFiscal entidade = mapper.converterParaEntidade(dto);
 
         if (repository.hasDuplicates(entidade.getNumero(), entidade.getNotaFiscalTipo())) {
             throw new NotaFiscalDuplicadaException("Nota fiscal já existe");
         }
-        return repository.save(entidade);
+        return mapper.converterParaDto(repository.save(entidade));
     }
 
-    public NotaFiscal buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Nota não encontrada para id {}", id);
-            return null;
-        });
+    public NotaFiscalDto atualizar(NotaFiscalDto dto) {
+        NotaFiscal entidade = mapper.converterParaEntidade(dto);
+
+        if (repository.existsByNumeroAndNotaFiscalTipoAndIdNot(entidade.getNumero(), entidade.getNotaFiscalTipo(),
+                        entidade.getId())) {
+            throw new NotaFiscalDuplicadaException("Nota com o numero e o tipo já existe: " + entidade.getNumero() + " "
+                            + entidade.getNotaFiscalTipo().getNome());
+        }
+
+        return mapper.converterParaDto(repository.save(entidade));
+
     }
 
-    public List<NotaFiscal> buscarPorNumero(String numero) {
-        return repository.findAllByNumero(numero);
+    public NotaFiscalDto buscarPorId(Integer id) {
+        return repository.findById(id).map(mapper::converterParaDto).orElseThrow(
+                        () -> new NotaFiscalCabecalhoNaoEncontradaException("Nota Fiscal não encontrada para o id " + id));
     }
 
-    public List<NotaFiscal> listarTodos() {
-        return repository.findAll();
+    public List<NotaFiscalDto> buscarPorNumero(String numero) {
+        List<NotaFiscal> entidades = repository.findAllByNumero(numero);
+        if (entidades.isEmpty()) {
+            throw new NotaFiscalCabecalhoNaoEncontradaException("Nota Fiscal não encontrada para o numero " + numero);
+        }
+
+        return entidades.stream().map(mapper::converterParaDto).collect(Collectors.toList());
+    }
+
+    public List<NotaFiscalDto> listarTodos() {
+        List<NotaFiscal> entidades = repository.findAll();
+        return entidades.stream().map(mapper::converterParaDto).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
-        LOG.info("Deletado com sucesso");
     }
 
-    public void adicionarItem(ItemNotaFiscal item, NotaFiscal notaFiscal) {
-        List<ItemNotaFiscal> itens = notaFiscal.getItens();
+    public void adicionarItem(ItemNotaFiscal item) {
+        List<ItemNotaFiscal> itens = item.getNotaFiscal().getItens();
         if (itens == null) {
             itens = new ArrayList<>();
+            item.getNotaFiscal().setItens(itens);
         }
-        itens.add(item);
-        atualizarValorTotal(notaFiscal);
+
+        if (!itens.contains(item)) {
+            itens.add(item);
+        }
+        atualizarValorTotal(item.getNotaFiscal());
     }
 
     public void removerItem(ItemNotaFiscal item, NotaFiscal notaFiscal) {
         List<ItemNotaFiscal> itens = notaFiscal.getItens();
-        itens.remove(item);
+        List<ItemNotaFiscal> listaFiltrada = itens.stream().filter((i) -> i.getId() != item.getId()).collect(Collectors.toList());
+        notaFiscal.setItens(listaFiltrada);
         atualizarValorTotal(notaFiscal);
     }
 
     public void atualizarValorTotal(NotaFiscal notaFiscal) {
-        BigDecimal valor_total = notaFiscal.getValorTotal();
-        valor_total = BigDecimal.ZERO;
+        BigDecimal valor_total = BigDecimal.ZERO;
+
         for (ItemNotaFiscal item : notaFiscal.getItens()) {
-            if (item.getValorTotal() != null) {
-                valor_total = valor_total.add(item.getValorTotal());
+            BigDecimal valorTotaltem = item.getValorTotal();
+            if (valorTotaltem != null) {
+                valor_total = valor_total.add(valorTotaltem);
             }
         }
-
         notaFiscal.setValorTotal(valor_total);
         repository.save(notaFiscal);
     }
