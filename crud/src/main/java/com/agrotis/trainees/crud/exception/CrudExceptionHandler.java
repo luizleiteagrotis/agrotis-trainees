@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapperException;
-import com.agrotis.trainees.crud.service.CabecalhoNotaServiceException;
+import com.agrotis.trainees.crud.service.cabecalho.CabecalhoNotaServiceException;
 
 @ControllerAdvice
 public class CrudExceptionHandler {

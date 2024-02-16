@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.cabecalho;
 
 public class CabecalhoNotaServiceException extends RuntimeException{
 

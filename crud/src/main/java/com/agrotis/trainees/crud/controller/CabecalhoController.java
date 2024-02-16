@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.agrotis.trainees.crud.dto.cabecalho.CabecalhoAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.cabecalho.CabecalhoCadastroDto;
 import com.agrotis.trainees.crud.dto.cabecalho.CabecalhoRetornoDto;
-import com.agrotis.trainees.crud.service.CabecalhoNotaService;
+import com.agrotis.trainees.crud.service.cabecalho.CabecalhoNotaService;
 
 @RestController
 @RequestMapping("notas-fiscais/cabecalhos")
