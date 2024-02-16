@@ -51,12 +51,6 @@ public class ProdutoService {
 		repository.deletar(idProduto);
 	}
 	
-	public Integer pegarEstoque(Long idProduto) {
-		Integer quantidade = repository.getEstoque(idProduto);;
-		if (quantidade == null) return 0;
-		return quantidade;
-	}
-	
 	private void atualizarProduto(ProdutoAtualizacaoDto atualizacaoDto, Produto produto) {
 		if (atualizacaoDto.getNome() != null) {
 			produto.setNome(atualizacaoDto.getNome());
