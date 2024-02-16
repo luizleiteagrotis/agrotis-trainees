@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.produto;
 
 public class ProdutoServiceException extends RuntimeException {
 

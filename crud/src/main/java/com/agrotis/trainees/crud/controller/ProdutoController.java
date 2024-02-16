@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.agrotis.trainees.crud.dto.produto.ProdutoAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.produto.ProdutoCadastroDto;
 import com.agrotis.trainees.crud.dto.produto.ProdutoRetornoDto;
-import com.agrotis.trainees.crud.service.ProdutoService;
+import com.agrotis.trainees.crud.service.produto.ProdutoService;
 
 @RestController
 @RequestMapping("/produtos")
