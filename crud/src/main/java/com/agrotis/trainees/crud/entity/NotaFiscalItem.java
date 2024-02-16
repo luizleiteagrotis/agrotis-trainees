@@ -8,7 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "nota_fiscal_item")
@@ -28,8 +30,16 @@ public class NotaFiscalItem {
     // @Digits(integer = 19, fraction = 2)
     private double precoUnitario;
 
+    @Min(value = 0)
     @Column(name = "valor_total")
     private Double valorTotal;
+
+    @PrePersist
+    private void prePersist() {
+        if (this.valorTotal == null) {
+            this.valorTotal = 0.0;
+        }
+    }
 
     @ManyToOne
     @JoinColumn(name = "id_nota")

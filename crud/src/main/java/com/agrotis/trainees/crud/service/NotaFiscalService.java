@@ -121,7 +121,7 @@ public class NotaFiscalService {
         salvar(converterParaDto(nota));
     }
 
-    private NotaFiscalDto converterParaDto(NotaFiscal entidade) {
+    NotaFiscalDto converterParaDto(NotaFiscal entidade) {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setId(entidade.getId());
         dto.setTipo(entidade.getTipo());
