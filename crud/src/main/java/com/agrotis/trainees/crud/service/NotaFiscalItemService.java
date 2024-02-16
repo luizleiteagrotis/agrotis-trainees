@@ -55,11 +55,7 @@ public class NotaFiscalItemService {
             System.out.println("Erro: " + e.getMessage());
             return null;
         }
-        if (existe = true) {
-            entidade = converterParaEntidade(atualizar(entidade));
-        } else {
-            entidade = repository.save(entidade);
-        }
+        entidade = repository.save(entidade);
 
         return converterParaDto(entidade);
     }
