@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "parceiro_de_negocio")
@@ -30,6 +31,7 @@ public class ParceiroNegocio {
 	
 	@Column(name = "telefone")
 	@NotBlank(message = "Atributo telefone obrigatorio")
+	@Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve seguir o padrao: (41) 1234-5678 ou (41) 12345-5678")
 	private String telefone;
 	
 	public Long getId() {
