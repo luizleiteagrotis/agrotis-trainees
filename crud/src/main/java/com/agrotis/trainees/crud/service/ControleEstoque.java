@@ -22,43 +22,75 @@ public class ControleEstoque {
 
     }
 
-    public int controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
-        try {
+    public boolean controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
 
-            if (itemNotaFiscal == null || itemNotaFiscal.getNotaFiscal() == null || itemNotaFiscal.getProduto() == null) {
-                throw new ControleEstoqueException("Informe um produto ou nota fiscal válida");
+        try {
+            String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
+            Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
+            double quantidadeEstoque = produto.getEstoque();
+
+            if (tipoNotaFiscal.equals("entrada")) {
+
+                quantidadeEstoque += itemNotaFiscal.getQuantidade().doubleValue();
+                produto.setEstoque(quantidadeEstoque);
+                produtoRepository.save(produto);
+                return true;
+
+            }
+
+            if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue())
+                            && tipoNotaFiscal.equals("saida")) {
+                quantidadeEstoque -= itemNotaFiscal.getQuantidade().doubleValue();
+                produto.setEstoque(quantidadeEstoque);
+                produtoRepository.save(produto);
+                return true;
+
+            } else {
+                throw new ControleEstoqueException(
+                                "Falha ao calcular a quantidade de estoque: A quantidade de saída é maior que o estoque atual.");
+
             }
         } catch (ControleEstoqueException exp) {
-            return -1;
-        }
-
-        String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
-        Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
-        double quantidadeEstoque = produto.getEstoque();
-
-        if (tipoNotaFiscal.equals("entrada")) {
-
-            quantidadeEstoque += itemNotaFiscal.getQuantidade().doubleValue();
-            produto.setEstoque(quantidadeEstoque);
-            produtoRepository.save(produto);
-
-            return 1;
-        }
-
-        if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue())
-                        && tipoNotaFiscal.equals("saida")) {
-            quantidadeEstoque -= itemNotaFiscal.getQuantidade().doubleValue();
-            produto.setEstoque(quantidadeEstoque);
-            produtoRepository.save(produto);
-            return 1;
-        } else {
-            LOG.error("A quantidade de saida é maior do que tem em estoque");
-            return -1;
+            LOG.error(exp.getMessage());
+            return false;
+        } catch (NullPointerException npe) {
+            LOG.error(npe.getMessage());
+            return false;
         }
     }
 
     protected boolean verificarQuantidade(double quantidadeEstoque, double quantidadeNota) {
-        return quantidadeEstoque - quantidadeNota > 0;
+        return quantidadeEstoque - quantidadeNota >= 0;
+    }
+
+    public ItemNotaFiscal atualizarEstoque(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
+
+        try {
+            double estoque = itemNotaAtualizar.getProduto().getEstoque();
+            double qtdAntiga = itemNotaAtualizar.getQuantidade().doubleValue();
+            double qtdNova = itemNotaFiscal.getQuantidade().doubleValue();
+            if (itemNotaAtualizar.getNotaFiscal().getTipo().equalsIgnoreCase("entrada")) {
+                estoque = estoque - qtdAntiga + qtdNova;
+            }
+
+            if (itemNotaAtualizar.getNotaFiscal().getTipo().equalsIgnoreCase("saida")) {
+                estoque = estoque + qtdAntiga - qtdNova;
+                if (estoque < 0) {
+                    throw new ControleEstoqueException(
+                                    "Falha ao calcular a quantidade de estoque: A quantidade de saída é maior que o estoque atual.");
+
+                }
+            }
+            Produto produtoEstoque = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
+            produtoEstoque.setEstoque(estoque);
+            produtoRepository.save(produtoEstoque);
+            itemNotaAtualizar.setProduto(produtoEstoque);
+            return itemNotaAtualizar;
+        } catch (ControleEstoqueException cee) {
+            LOG.error(cee.getMessage());
+            return null;
+        }
+
     }
 
 }

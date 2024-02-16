@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "item_nota_fiscal")
@@ -20,23 +17,22 @@ public class ItemNotaFiscal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
     private int id;
     @ManyToOne
     @JoinColumn(name = "id_produto")
-    @NotNull
+
     private Produto produto;
-    @NotNull
+
     @ManyToOne
     @JoinColumn(name = "id_nota_fiscal")
     private NotaFiscal notaFiscal;
-    @NotNull
+
     private BigDecimal quantidade;
     @Column(name = "preco_unitario")
-    @NotNull
+
     private BigDecimal precoUnitario;
     @Column(name = "valor_total")
-    @NotNull
+
     private BigDecimal valorTotal;
 
     @Deprecated
@@ -67,7 +63,6 @@ public class ItemNotaFiscal {
         return notaFiscal;
     }
 
-    @JsonIgnore
     public void setNotaFiscal(NotaFiscal notaFiscal) {
         this.notaFiscal = notaFiscal;
     }

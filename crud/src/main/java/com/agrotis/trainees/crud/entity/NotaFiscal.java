@@ -17,6 +17,8 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "nota_fiscal")
 public class NotaFiscal {
@@ -35,6 +37,7 @@ public class NotaFiscal {
     @NotNull
     private LocalDate data;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "notaFiscal")
+    @JsonIgnore
     private List<ItemNotaFiscal> itemNotaFiscal;
     @DecimalMin(value = "0.0", message = "O valor total deve ser maior que 0")
     private BigDecimal valorTotal;
