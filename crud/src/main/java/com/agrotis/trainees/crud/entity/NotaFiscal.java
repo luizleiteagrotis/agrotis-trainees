@@ -51,20 +51,6 @@ public class NotaFiscal {
         this.parceiroNegocio = parceiroNegocio;
         this.numero = numero;
         this.data = data;
-
-    }
-
-    public NotaFiscal(@NotBlank(message = "É necessário um tipo de nota fiscal") String tipo, @NotNull int numero,
-                    @NotNull LocalDate data) {
-        super();
-        this.tipo = tipo;
-        this.numero = numero;
-        this.data = data;
-    }
-
-    public NotaFiscal(@NotNull LocalDate data) {
-        super();
-        this.data = data;
     }
 
     public int getId() {
@@ -103,16 +89,20 @@ public class NotaFiscal {
         this.data = data;
     }
 
+    public List<ItemNotaFiscal> getItemNotaFiscal() {
+        return itemNotaFiscal;
+    }
+
+    public void setItemNotaFiscal(List<ItemNotaFiscal> itemNotaFiscal) {
+        this.itemNotaFiscal = itemNotaFiscal;
+    }
+
     public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
-    }
-
-    public List<ItemNotaFiscal> getItemNotaFiscal() {
-        return itemNotaFiscal;
     }
 
 }

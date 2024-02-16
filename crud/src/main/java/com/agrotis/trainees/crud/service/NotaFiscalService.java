@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.agrotis.trainees.crud.convert.NotaFiscalDtoConversor;
+import com.agrotis.trainees.crud.convert.NotaFiscalConversor;
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -23,22 +23,25 @@ public class NotaFiscalService {
 
     private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
     private final NotaFiscalRepository repository;
-    private final NotaFiscalDtoConversor notaFiscalDtoConversor;
+    private final NotaFiscalConversor notaFiscalConversor;
 
-    public NotaFiscalService(NotaFiscalRepository notaFiscalRepository, NotaFiscalDtoConversor notaFiscalDtoConversor) {
+    public NotaFiscalService(NotaFiscalRepository notaFiscalRepository, NotaFiscalConversor notaFiscalConversor) {
         super();
         this.repository = notaFiscalRepository;
-        this.notaFiscalDtoConversor = notaFiscalDtoConversor;
+        this.notaFiscalConversor = notaFiscalConversor;
     }
 
     public NotaFiscalDto salvar(NotaFiscalDto notaFiscal) {
         try {
+            NotaFiscal entidade = notaFiscalConversor.converter(notaFiscal);
+            if (!existe(entidade)) {
+                throw new NotaFiscalExcecao("Falha ao salvar no banco: Já existe uma nota registrada com esses dados.");
+            }
 
-            NotaFiscal entidade = notaFiscalDtoConversor.converter(notaFiscal);
             validar(entidade);
             LOG.info("Salvo com sucesso");
             repository.save(entidade);
-            return notaFiscalDtoConversor.converter(entidade);
+            return notaFiscalConversor.converter(entidade);
         } catch (NotaFiscalExcecao nfe) {
             LOG.error(nfe.getMessage());
             return null;
@@ -50,7 +53,7 @@ public class NotaFiscalService {
             LOG.error("Não foi possível encontrar uma nota fiscal com este id {}", id);
             return null;
         });
-        return notaFiscalDtoConversor.converter(entidade);
+        return notaFiscalConversor.converter(entidade);
     }
 
     // TO-DO
@@ -60,29 +63,29 @@ public class NotaFiscalService {
 
     public List<NotaFiscalDto> buscarPorTipoNotaFiscal(String tipo) {
         List<NotaFiscal> entidade = repository.findByTipo(tipo);
-        return notaFiscalDtoConversor.converter(entidade);
+        return notaFiscalConversor.converter(entidade);
 
     }
 
     public List<NotaFiscalDto> buscarPorNumero(int numero) {
         List<NotaFiscal> entidade = repository.findByNumero(numero);
-        return notaFiscalDtoConversor.converter(entidade);
+        return notaFiscalConversor.converter(entidade);
     }
 
     public List<NotaFiscalDto> buscarPorData(LocalDate data) {
         List<NotaFiscal> entidade = repository.findByData(data);
-        return notaFiscalDtoConversor.converter(entidade);
+        return notaFiscalConversor.converter(entidade);
     }
 
     public List<NotaFiscalDto> listarTodos() {
         List<NotaFiscal> entidades = repository.findAll();
-        return notaFiscalDtoConversor.converter(entidades);
+        return notaFiscalConversor.converter(entidades);
     }
 
     // TO-DO
     public NotaFiscalDto atualizar(NotaFiscalDto entidade, int id) {
         try {
-            NotaFiscal notaFiscal = notaFiscalDtoConversor.converter(entidade);
+            NotaFiscal notaFiscal = notaFiscalConversor.converter(entidade);
             NotaFiscal notaAtualizar = verificarPorId(id);
 
             if (notaFiscal.getTipo() != null) {
@@ -98,8 +101,15 @@ public class NotaFiscalService {
                 notaAtualizar.setNumero(notaFiscal.getNumero());
             }
             validar(notaAtualizar);
-            repository.save(notaAtualizar);
-            return notaFiscalDtoConversor.converter(notaFiscal);
+            if (!repository.findByIdAndNumeroAndTipo(notaAtualizar.getId(), notaAtualizar.getNumero(), notaAtualizar.getTipo())
+                            .isEmpty()) {
+
+                repository.save(notaAtualizar);
+            } else {
+                throw new NotaFiscalExcecao("Falha ao salvar no banco: Já existe uma nota registrada com esses dados.");
+
+            }
+            return notaFiscalConversor.converter(notaAtualizar);
 
         } catch (NotaFiscalExcecao nfe) {
             LOG.error(nfe.getMessage());
@@ -119,6 +129,7 @@ public class NotaFiscalService {
 
     private boolean existe(NotaFiscal notaFiscal) {
         return repository.findByNumeroAndTipo(notaFiscal.getNumero(), notaFiscal.getTipo()).isEmpty();
+
     }
 
     private boolean existe(String tipoNota) {
@@ -138,10 +149,6 @@ public class NotaFiscalService {
     private void validar(NotaFiscal notaFiscal) throws NotaFiscalExcecao {
         if (notaFiscal.getParceiroNegocio() == null || !Validador.existeParceiroPorId(notaFiscal.getParceiroNegocio().getId())) {
             throw new NotaFiscalExcecao("Falha ao salvar no banco: Informe um parceiro válido.");
-        }
-
-        if (!existe(notaFiscal)) {
-            throw new NotaFiscalExcecao("Falha ao salvar no banco: Já existe uma nota registrada com esses dados.");
         }
 
         if (!existe(notaFiscal.getTipo())) {

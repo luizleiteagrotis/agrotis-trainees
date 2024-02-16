@@ -10,10 +10,10 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class NotaFiscalDtoConversor {
+public class NotaFiscalConversor {
     private ObjectMapper modelMapper;
 
-    public NotaFiscalDtoConversor(ObjectMapper modelMapper) {
+    public NotaFiscalConversor(ObjectMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
