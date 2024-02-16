@@ -29,8 +29,8 @@ public class NotaFiscalService {
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
-    public NotaFiscalDto salvar(NotaFiscalDto cabecalhoNota) {
-        NotaFiscal nota = converteParaEntidade(cabecalhoNota);
+    public NotaFiscalDto salvar(NotaFiscalDto notaFiscal) {
+        NotaFiscal nota = converteParaEntidade(notaFiscal);
         ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(nota.getParceiroNegocio());
         nota.setParceiroNegocio(fabricanteSalvo);
         repository.save(nota);
@@ -51,7 +51,7 @@ public class NotaFiscalService {
                             ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
                             : null;
             if (parceiroExistente == null) {
-                ParceiroNegocio fabricante = parceiroNegocioRepository.save(dto.getParceiroNegocio());
+                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(dto.getParceiroNegocio());
                 notaFiscalExistente.setParceiroNegocio(parceiroExistente);
             } else {
                 notaFiscalExistente.setParceiroNegocio(parceiroExistente);

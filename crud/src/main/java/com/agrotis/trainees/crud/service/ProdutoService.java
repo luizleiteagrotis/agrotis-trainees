@@ -37,13 +37,9 @@ public class ProdutoService {
      */
     public ProdutoDto salvar(ProdutoDto produto) {
         Produto entidade = converteParaEntidade(produto);
-
         ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
-
         entidade.setFabricante(fabricanteSalvo);
-
         Produto produtoSalvo = repository.save(entidade);
-
         LOG.info("Salvando o produto {}", produto.getDescricao());
 
         return converteParaDto(produtoSalvo);
