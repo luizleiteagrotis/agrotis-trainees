@@ -83,10 +83,10 @@ public class ProdutoService {
         try {
             Produto produtoConvertido = produtoConversor.converter(produtoDto);
             Produto produtoAtualizar = verificarPorId(id);
-            if (produtoAtualizar.getNome() != null) {
+            if (produtoConvertido.getNome() != null) {
                 produtoAtualizar.setNome(produtoConvertido.getNome());
             }
-            if (produtoAtualizar.getDescricao() != null) {
+            if (produtoConvertido.getDescricao() != null) {
                 produtoAtualizar.setDescricao(produtoConvertido.getDescricao());
             }
             if (produtoConvertido.getFabricante() != null) {
