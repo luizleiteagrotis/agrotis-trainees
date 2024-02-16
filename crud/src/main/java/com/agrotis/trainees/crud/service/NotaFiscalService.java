@@ -35,7 +35,7 @@ public class NotaFiscalService {
     public NotaFiscalDto salvar(NotaFiscalDto dto) {
         NotaFiscal entidade = mapper.converterParaEntidade(dto);
 
-        if (repository.hasDuplicates(entidade.getNumero(), entidade.getNotaFiscalTipo())) {
+        if (repository.existsByNumeroAndNotaFiscalTipo(entidade.getNumero(), entidade.getNotaFiscalTipo())) {
             throw new NotaFiscalDuplicadaException("Nota fiscal já existe");
         }
         return mapper.converterParaDto(repository.save(entidade));

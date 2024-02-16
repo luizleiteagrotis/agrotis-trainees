@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 
-@RequestMapping("notas-fiscais/cabeçalhos")
+@RequestMapping("notas-fiscais")
 @RestController
 public class NotaFiscalController {
 
