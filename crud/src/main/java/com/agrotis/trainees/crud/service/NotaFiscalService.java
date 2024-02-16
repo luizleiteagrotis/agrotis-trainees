@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -48,13 +49,16 @@ public class NotaFiscalService {
         return repository.save(byId);
     }
 
-    public List<NotaFiscal> listarTodos() {
-        return repository.findAll();
+    public List<NotaFiscalDto> listarTodos() {
+        return repository.findAll().stream().map(NotaFiscalService::converteParaDto).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
-        repository.deleteById(id);
-        LOG.info("Deletado com sucesso!");
+        repository.findById(id).map(nota -> {
+            repository.deleteById(id);
+            LOG.info("Nota Fiscal" + id + "Deletada com sucesso");
+            return nota;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("NOTA FISCAL com o ID " + id + " não foi encontrada!"));
     }
 
     public static NotaFiscal converteParaEntidade(NotaFiscalDto dto) {
