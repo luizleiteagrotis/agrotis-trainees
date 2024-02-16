@@ -5,19 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
@@ -37,17 +35,13 @@ public class NotaFiscalItemService {
         this.notaFiscalService = notaFiscalService;
     }
 
-//    @Transactional
-//    public NotaFiscalItem salvar(NotaFiscalItem entidade) {
-//        adicionarOuAtualizarItemNotaFiscal(entidade);
-//        return repository.save(entidade);
-//    }
-    
     public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
-    	NotaFiscalItem entidade = converterParaEntidade(dto);
-    	repository.save(entidade);
-    	LOG.info("Salvo item {}", entidade.getId());
-    	return converterParaDto(entidade);
+        NotaFiscalItem entidade = converterParaEntidade(dto);
+        entidade.setValorTotal(calcularValorTotalItem(entidade));
+        repository.save(entidade);
+        adicionarOuAtualizarItemNotaFiscal(entidade);
+        LOG.info("Salvo item {}", entidade.getId());
+        return converterParaDto(entidade);
     }
 
     public NotaFiscalItemDto buscarPorId(Integer id) throws NotFoundException{
@@ -55,24 +49,30 @@ public class NotaFiscalItemService {
         return converterParaDto(entidade);
     }
 
-    public void deletarPorId(Integer id) {
+    public void deletarPorId(Integer id) throws NotFoundException {
+        NotaFiscalItem item = repository.findById(id).orElseThrow(() -> new NotFoundException());
         repository.deleteById(id);
+        adicionarOuAtualizarItemNotaFiscal(item); 
         LOG.info("Item da nota fiscal deletado com sucesso");
     }
-
+    
     public List<NotaFiscalItemDto> listarTodos() {
     	List<NotaFiscalItem> entidades = repository.findAll();
     	return entidades.stream().map(entidade -> converterParaDto(entidade)).collect(Collectors.toList());
     }
     
     public NotaFiscalItem inserir(@Valid NotaFiscalItemDto dto) {
-    	NotaFiscalItem entidade = converterParaEntidade(dto);
-    	return repository.save(entidade);
+        NotaFiscalItem entidade = converterParaEntidade(dto);
+        NotaFiscalItem savedItem = repository.save(entidade);
+        adicionarOuAtualizarItemNotaFiscal(savedItem); 
+        return savedItem;
     }
     
     public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) {
         NotaFiscalItem entidade = converterParaEntidade(dto);
-        return converterParaDto(repository.save(entidade));
+        NotaFiscalItem savedItem = repository.save(entidade);
+        adicionarOuAtualizarItemNotaFiscal(savedItem); 
+        return converterParaDto(savedItem);
     }
     
     public static NotaFiscalItemDto converterParaDto(NotaFiscalItem entidade) {
@@ -99,52 +99,43 @@ public class NotaFiscalItemService {
 		return entidade;
 	}
     
-//    public NotaFiscalItem atualizar(NotaFiscalItem entidade) {
-//        if (entidade.getId() == null) {
-//            throw new CrudException("Obrigatório preencher o id do item da nota fiscal.");
-//        }
-//        if (StringUtils.isEmpty(entidade.getProduto())) {
-//            throw new CrudException("Obrigatório preencher o nome do produto.");
-//        }
-//        return repository.save(entidade);
-//    }
-//    
-//    public void adicionarOuAtualizarItemNotaFiscal(NotaFiscalItem item) {
-//        if (item != null && item.getNotaFiscal() != null && item.getProduto() != null) {
-//            atualizarValorTotalNotaFiscal(item);
-//            controlarEstoque(item);
-//        } else {
-//            throw new CrudException("O item da nota fiscal, nota fiscal e produto devem ser fornecidos");
-//        }
-//    }
-//
-//    private void atualizarValorTotalNotaFiscal(NotaFiscalItem item) {
-//        NotaFiscal notaFiscal = item.getNotaFiscal();
-//        double valorTotalItem = calcularValorTotalItem(item);
-//        double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
-//        notaFiscal.setValorTotal(novoValorTotal);
-//        notaFiscalService.salvar(notaFiscal);
-//    }
-//
-//    private double calcularValorTotalItem(NotaFiscalItem item) {
-//        return item.getQuantidade() * item.getPrecoUnitario();
-//    }
-//
-//    private void controlarEstoque(NotaFiscalItem item) {
-//        Produto produto = item.getProduto();
-//        int quantidade = item.getQuantidade();
-//
-//        if (item.getNotaFiscal().getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
-//            if (produto.getEstoque() < quantidade) {
-//                throw new CrudException("Estoque insuficiente para o produto: " + produto.getNome());
-//            }
-//            produto.setEstoque(produto.getEstoque() - quantidade);
-//        } else {
-//            produto.setEstoque(produto.getEstoque() + quantidade);
-//        }
-//
-//        produtoService.salvar(produto);
-//    }
     
+    public void adicionarOuAtualizarItemNotaFiscal(NotaFiscalItem item) {
+        if (item != null && item.getNotaFiscal() != null && item.getProduto() != null) {
+            double valorTotalItem = calcularValorTotalItem(item);
+            atualizarValorTotalNotaFiscal(item.getNotaFiscal(), valorTotalItem);
+            controlarEstoque(item);
+        } else {
+            throw new CrudException("O item da nota fiscal, nota fiscal e produto devem ser fornecidos");
+        }
+    }
+
+    private void atualizarValorTotalNotaFiscal(NotaFiscal notaFiscal, double valorTotalItem) {
+        double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
+        notaFiscal.setValorTotal(novoValorTotal);
+        notaFiscalService.salvar(notaFiscal);
+    }
+    
+    private double calcularValorTotalItem(NotaFiscalItem item) {
+    	return item.getQuantidade() * item.getPrecoUnitario();
+    }
+
+    private void controlarEstoque(NotaFiscalItem item) {
+        ProdutoDto produtoDto = ProdutoService.converterParaDto(item.getProduto());
+        produtoDto.setId(item.getProduto().getId());
+        		
+        int quantidade = item.getQuantidade();
+
+        if (item.getNotaFiscal().getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
+            if (produtoDto.getEstoque() < quantidade || (produtoDto.getEstoque() - quantidade) < 0) {
+                throw new CrudException("Estoque insuficiente para o produto: " + produtoDto.getNome());
+            }
+            produtoDto.setEstoque(produtoDto.getEstoque() - quantidade);
+        } else {
+            produtoDto.setEstoque(produtoDto.getEstoque() + quantidade);
+        }
+        
+        produtoService.salvar(produtoDto);
+    }
     
 }
