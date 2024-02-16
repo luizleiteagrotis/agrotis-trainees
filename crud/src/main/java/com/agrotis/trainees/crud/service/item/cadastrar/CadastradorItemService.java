@@ -16,6 +16,7 @@ import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
+import com.agrotis.trainees.crud.service.item.ItemNotaServiceException;
 import com.agrotis.trainees.crud.service.item.util.CalculadoraItem;
 
 @Component
@@ -44,10 +45,29 @@ public class CadastradorItemService {
 	@Transactional(readOnly = false)
 	public ItemRetornoDto cadastrar(ItemCadastroDto cadastroDto) {
 		item = mapper.converterParaEntidade(cadastroDto);
+		verificarItem();
 		atualizarValorTotalItem();
 		atualizarValorTotalCabecalho();
 		atualizarEstoqueProduto();
 		return mapper.converterParaDto(item);
+	}
+
+	private void verificarItem() {
+		Produto produto = item.getProduto();
+		CabecalhoNota cabecalho = item.getCabecalhoNota();
+		if (itemRepository.existeInstanciaCom(produto, cabecalho)) {
+			StringBuilder mensagemErro = new StringBuilder();
+			mensagemErro.append("Ja existe item com produto {id: ")
+						.append(produto.getId())
+						.append(" nome: ")
+						.append(produto.getNome())
+						.append("} e cabecalho {id :")
+						.append(cabecalho.getId())
+						.append(" tipo: ")
+						.append(cabecalho.getTipo())
+						.append("}");
+			throw new ItemNotaServiceException(mensagemErro.toString());
+		}
 	}
 	
 	private void atualizarValorTotalItem() {
