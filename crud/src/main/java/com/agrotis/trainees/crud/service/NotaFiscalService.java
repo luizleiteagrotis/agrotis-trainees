@@ -42,11 +42,26 @@ public class NotaFiscalService {
                         () -> new EntidadeNaoEncontradaException("A NOTA FISCAL com o ID: " + id + "nao foi encontrada!"));
     }
 
-    public NotaFiscal update(Integer id, NotaFiscal fiscal) {
-        NotaFiscal byId = repository.findById(id).orElseThrow(() -> {
-            throw new EntidadeNaoEncontradaException("A Nota Fiscal nao foi encontrada pelo ID: ");
+    public NotaFiscalDto update(Integer id, NotaFiscalDto dto) {
+        return repository.findById(id).map(notaFiscalExistente -> {
+            notaFiscalExistente.setData(dto.getData());
+            notaFiscalExistente.setTipo(dto.getTipo());
+            notaFiscalExistente.setNumero(dto.getNumero());
+            ParceiroNegocio parceiroExistente = dto.getParceiroNegocio().getId() != null
+                            ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
+                            : null;
+            if (parceiroExistente == null) {
+                ParceiroNegocio fabricante = parceiroNegocioRepository.save(dto.getParceiroNegocio());
+                notaFiscalExistente.setParceiroNegocio(parceiroExistente);
+            } else {
+                notaFiscalExistente.setParceiroNegocio(parceiroExistente);
+            }
+            NotaFiscal notaFiscalUpdate = repository.save(notaFiscalExistente);
+            return converteParaDto(notaFiscalUpdate);
+        }).orElseThrow(() -> {
+            LOG.info("Nao foi possivel encontrar a nota fiscal pelo ID {}", id);
+            return new EntidadeNaoEncontradaException("NOTA FISCAL com o ID " + id + "nao foi encontrada");
         });
-        return repository.save(byId);
     }
 
     public List<NotaFiscalDto> listarTodos() {

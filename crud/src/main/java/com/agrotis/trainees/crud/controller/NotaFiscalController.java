@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 
-@RequestMapping("notas-fiscais")
+@RequestMapping("notas-fiscais/nota-fiscal")
 @RestController
 public class NotaFiscalController {
 
@@ -42,6 +43,11 @@ public class NotaFiscalController {
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
         notaService.deletarPorId(id);
         return ResponseEntity.ok().body(null);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody NotaFiscalDto dto) {
+        return ResponseEntity.ok(notaService.update(id, dto));
     }
 
 }
