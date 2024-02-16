@@ -14,4 +14,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
     boolean existsByDescricaoAndIdNot(String descricao, Integer id);
 
+    boolean existsByDescricao(String descricao);
+
 }

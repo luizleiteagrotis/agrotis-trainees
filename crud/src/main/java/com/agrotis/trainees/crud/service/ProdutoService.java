@@ -36,8 +36,7 @@ public class ProdutoService {
         if (!verificarValidade(entidade)) {
             throw new DataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
         }
-
-        if (buscarPorDescricao(entidade.getDescricao()) != null) {
+        if (repository.existsByDescricao(entidade.getDescricao())) {
             throw new ProdutoDuplicadoException("Descrição do produto já existe");
         }
 

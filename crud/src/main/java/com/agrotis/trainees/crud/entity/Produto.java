@@ -45,7 +45,7 @@ public class Produto {
     private ParceiroNegocio fabricante;
 
     @NotNull
-    @Min(value = 0)
+    @Min(value = 0, message = "Quantidade do produto em estoque deve ser maior ou igual a zero (0)")
     @Column(name = "quantidade_estoque")
     private int quantidadeEstoque;
 
