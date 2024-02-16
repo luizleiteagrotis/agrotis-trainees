@@ -49,15 +49,15 @@ public class ItemNotaController {
         return ResponseEntity.ok(service.listarTodos());
     }
 
-//    @PutMapping("{id}")
-//    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody CabecalhoNotaDto dto) {
-//        return ResponseEntity.ok(service.atualizar(id, dto));
-//    }
-//
-//    @DeleteMapping("{id}")
-//    public ResponseEntity<?> deletar(@PathVariable Integer id) {
-//        service.deletarPorId(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @PutMapping("{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody ItemNotaDto dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+        service.deletarPorId(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

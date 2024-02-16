@@ -60,26 +60,43 @@ public class ProdutoService {
     public ProdutoDto atualizar(Integer id, ProdutoDto dto) {
         return repository.findById(id).map(produtoExistente -> {
             produtoExistente.setDescricao(dto.getDescricao());
-            ParceiroNegocio fabricanteExistente = dto.getFabricante().getId() != null
-                            ? parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(null)
-                            : null;
-            if (fabricanteExistente == null) {
-                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(dto.getFabricante());
-                produtoExistente.setFabricante(fabricanteSalvo);
-            } else {
+
+            // Retrieve or save the associated ParceiroNegocio entity
+            ParceiroNegocio fabricante = dto.getFabricante();
+            if (fabricante != null && fabricante.getId() != null) {
+                ParceiroNegocio fabricanteExistente = parceiroNegocioRepository.findById(fabricante.getId())
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Fabricante com o ID " + fabricante.getId() + " não encontrado"));
+
+                // Update the fields of the existing ParceiroNegocio entity
+                fabricanteExistente.setNome(fabricante.getNome());
+                fabricanteExistente.setEndereco(fabricante.getEndereco());
+
+                // Set the updated ParceiroNegocio entity to the Produto
                 produtoExistente.setFabricante(fabricanteExistente);
+            } else {
+                // Create and save a new ParceiroNegocio entity
+                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(fabricante);
+                produtoExistente.setFabricante(fabricanteSalvo);
             }
+
+            // Update other fields of the Produto entity
             produtoExistente.setQuantidadeEstoque(dto.getQuantidadeEstoque());
             produtoExistente.setDataValidade(dto.getDataValidade());
             produtoExistente.setDataFabricacao(dto.getDataFabricacao());
-            LOG.info("Atualizando o produto: {} ", produtoExistente.getDescricao());
+
+            // Log the update operation
+            LOG.info("Atualizando o produto: {}", produtoExistente.getDescricao());
+
+            // Save and return the updated Produto entity
             Produto produtoAtualizado = repository.save(produtoExistente);
             return DtoUtils.converteParaDto(produtoAtualizado);
         }).orElseThrow(() -> {
+            // Handle the case where the Produto entity with the given ID is not found
             LOG.info("Não foi possível encontrar o produto pelo ID {}", id);
             return new EntidadeNaoEncontradaException("Produto com o ID " + id + " não encontrado");
         });
     }
+
 
     public void deletarPorId(Integer id) {
         repository.findById(id).map(produto -> {

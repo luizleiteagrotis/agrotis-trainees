@@ -29,7 +29,6 @@ public class ItemNota{
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nota_fiscal_id")
     @NotNull(message = "Preencha o campo cabeçalho da nota")
-    @JsonBackReference
     private CabecalhoNota cabecalhoNota;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -90,6 +89,7 @@ public class ItemNota{
     public Integer getId() {
         return id;
     }
+    
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;

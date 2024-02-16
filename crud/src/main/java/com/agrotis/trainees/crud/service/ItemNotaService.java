@@ -53,6 +53,8 @@ public class ItemNotaService {
         atualizarEstoque(entidade);
 
         entidade = repository.save(entidade);
+        
+        adicionarValorTotalCabecalho(entidade);
 
         return DtoUtils.converteParaDto(entidade);
     }
@@ -70,16 +72,27 @@ public class ItemNotaService {
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 
-    public ItemNota atualizar(Integer id, ItemNota notaFiscalItem) {
-        return repository.findById(id).map(itemNotaExistente -> {
-            itemNotaExistente.setCabecalhoNota(notaFiscalItem.getCabecalhoNota());
-            itemNotaExistente.setPrecoUnitario(notaFiscalItem.getPrecoUnitario());
-            itemNotaExistente.setProduto(notaFiscalItem.getProduto());
-            itemNotaExistente.setQuantidade(notaFiscalItem.getQuantidade());
-            itemNotaExistente.setValorTotal(notaFiscalItem.getValorTotal());
-            return repository.save(itemNotaExistente);
-        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+    @Transactional
+    public ItemNotaDto atualizar(Integer id, ItemNotaDto notaFiscalItemDto) {
+        ItemNota itemNotaExistente = repository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+
+        atualizarItemNota(itemNotaExistente, notaFiscalItemDto);
+
+        ItemNota itemNotaAtualizada = repository.save(itemNotaExistente);
+        return DtoUtils.converteParaDto(itemNotaAtualizada);
     }
+
+    private void atualizarItemNota(ItemNota itemNota, ItemNotaDto notaFiscalItemDto) {
+        CabecalhoNota cabecalhoNota = notaFiscalItemDto.getCabecalhoNota();
+        itemNota.setCabecalhoNota(cabecalhoNota);
+        itemNota.setPrecoUnitario(notaFiscalItemDto.getPrecoUnitario());
+        itemNota.setProduto(notaFiscalItemDto.getProduto());
+        itemNota.setQuantidade(notaFiscalItemDto.getQuantidade());
+        itemNota.setValorTotal(notaFiscalItemDto.getValorTotal());
+    }
+
+
 
     public void deletarPorId(Integer id) {
         repository.findById(id).map(entidade -> {
@@ -124,8 +137,8 @@ public class ItemNotaService {
         CabecalhoNota cabecalho = item.getCabecalhoNota();
         Double valorTotalItem = item.getValorTotal();
         cabecalho.setValorTotal(valorTotalItem);
-        
     }
+    
 
 
 }
