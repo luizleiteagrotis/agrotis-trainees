@@ -31,7 +31,13 @@ public class Produto {
 	@Column(name = "data_de_validade")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataValidade;
-	
+	public Integer getQuantidadeEstoque() {
+        return QuantidadeEstoque;
+    }
+    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+        QuantidadeEstoque = quantidadeEstoque;
+    }
+    private Integer QuantidadeEstoque;
 	
 	public Integer getId() {
 		return id;
@@ -79,7 +85,7 @@ public class Produto {
     public Integer getQuantidade() {
                 return null;
     }
-
+   
 	
 	
 	

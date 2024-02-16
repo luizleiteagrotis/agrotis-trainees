@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+
+import dto.ProdutoDto;
 
 @Service
 
@@ -59,9 +63,44 @@ public class ProdutoService {
 		
 		
 		
-		public static void atualizar(Integer id, Produto produtoAtualizado) {
-			
-		}
+		
+		
+		public Produto buscarPorDescricao(String descricao) {
+	        return ((Optional<Produto>) repository.findByDescricao(descricao)).orElseGet(() -> {
+	            LOG.error("Informações não encontradas para a descrição {}. ", descricao);
+	            return null;
+	        });
+        }
+		public ProdutoDto atualizar(Integer id, ProdutoDto dto) {
+	        return (ProdutoDto) repository.findById(id).map(produtoExistente -> {
+	            produtoExistente.setDescricao(dto.getDescricao());
+	            Produto fabricanteExistente;
+                if (dto.getFabricante() != null)
+                    fabricanteExistente = ParceiroNegocioRepository.findById(dto.getFabricante().getBytes()).orElse(null);
+                else
+                    fabricanteExistente = null;
+	            if (fabricanteExistente == null) {
+	                ParceiroNegocio fabricanteSalvo = ParceiroNegocioRepository.save(dto.getFabricante());
+	                produtoExistente.setFabricante(fabricanteSalvo);
+	            } 
+	            produtoExistente.setQuantidadeEstoque(dto.getQuantidadeEstoque());
+	            produtoExistente.setDataValidade(dto.getDataValidade());
+	            produtoExistente.setDataFabricacao(dto.getDataFabricacao());
+	            LOG.info("Atualizando o produto: {} ", produtoExistente.getDescricao());
+	            Produto produtoAtualizado = repository.save(produtoExistente);
+	            return null;
+	        }).orElseThrow(() -> {
+	            LOG.info("Não foi possível encontrar o produto pelo ID {}", id);
+	            return null;
+	        });
+        }
+        public List<Produto> listarTodos1() {
+            return repository.findAll();
+            
+        }
+        public void atualizar(Integer id, Produto produtoAtualizado) {
+            
+        }
 		
 	
 	

@@ -123,7 +123,8 @@ public class CrudApplication implements CommandLineRunner {
 
 		produto.setDescricao("Rolo de Algodão");
 
-		ProdutoService.atualizar(produtoPorId.getId(), produtoAtualizado);
+		ProdutoService produtoService2 = new ProdutoService(null);
+        produtoService2.atualizar(produtoPorId.getId(), produtoAtualizado);
 		LOG.info("Atualizando o produto {}", produtoPorId.getId());
 
 		produtoService.deletarPorId(produtoPorId.getId());

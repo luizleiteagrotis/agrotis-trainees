@@ -60,7 +60,7 @@ public class NotaFiscalCService {
         return null;
     });
         return repository.save(byId);
-
+    
     }
 
     public CabecalhoDto salvar(CabecalhoDto cabecalho) {
