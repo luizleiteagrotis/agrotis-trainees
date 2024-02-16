@@ -3,16 +3,16 @@ package com.agrotis.trainees.crud.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
-import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.DtoUtils;
@@ -22,26 +22,28 @@ public class CabecalhoNotaService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaService.class);
 
-    private final NotaFiscalRepository repository;
+    private final CabecalhoNotaRepository repository;
     private final ParceiroNegocioRepository parceiroNegocioRepository;
 
-    public CabecalhoNotaService(NotaFiscalRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
+    public CabecalhoNotaService(CabecalhoNotaRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         this.repository = repository;
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
-    public CabecalhoNotaDto salvar(CabecalhoNotaDto cabecalho) {
-        CabecalhoNota entidade = DtoUtils.converteParaEntidade(cabecalho);
+    public CabecalhoNotaDto salvar(CabecalhoNotaDto cabecalhoDto) {
+        CabecalhoNota cabecalho = DtoUtils.converteParaEntidade(cabecalhoDto);
+        
+        ParceiroNegocio parceiroNegocio = cabecalho.getParceiroNegocio();
+        if (parceiroNegocio != null && parceiroNegocio.getId() == null) {
+            parceiroNegocio = parceiroNegocioRepository.save(parceiroNegocio);
+            cabecalho.setParceiroNegocio(parceiroNegocio);
+        }
 
-        ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getParceiroNegocio());
+        CabecalhoNota entidadeSalva = repository.save(cabecalho);
 
-        entidade.setParceiroNegocio(fabricanteSalvo);
-
-        repository.save(entidade);
-
-        return DtoUtils.converteParaDto(entidade);
-
+        return DtoUtils.converteParaDto(entidadeSalva);
     }
+
 
     public CabecalhoNotaDto buscarPorId(Integer id) {
         return repository.findById(id).map(DtoUtils::converteParaDto)
@@ -81,5 +83,20 @@ public class CabecalhoNotaService {
             return entidade;
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
     }
+
+    public void atualizarValorTotal(CabecalhoNota cabecalho) {
+        repository.save(cabecalho);
+        
+    }
+    
+    public CabecalhoNotaDto findByNumero(Integer numeroDaNota) {
+        CabecalhoNota byNumber = repository.findByNumero(numeroDaNota).orElseThrow(() -> new EntityNotFoundException("Entidade não encontrada pela busca numérica"));
+        return DtoUtils.converteParaDto(byNumber);
+    }
+    
+    
+    
+
+
 
 }

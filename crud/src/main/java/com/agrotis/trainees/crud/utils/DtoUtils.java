@@ -1,9 +1,11 @@
 package com.agrotis.trainees.crud.utils;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
+import com.agrotis.trainees.crud.dtos.ItemNotaDto;
 import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.dtos.ProdutoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 
@@ -65,6 +67,25 @@ public class DtoUtils {
         dto.setData(entidade.getData());
         dto.setNumero(entidade.getNumero());
         dto.setParceiroNegocio(entidade.getParceiroNegocio());
+        return dto;
+    }
+    
+    public static ItemNota converteParaEntidade(ItemNotaDto dto) {
+        ItemNota entidade = new ItemNota();
+        entidade.setCabecalhoNota(dto.getCabecalhoNota());
+        entidade.setPrecoUnitario(dto.getPrecoUnitario());
+        entidade.setProduto(dto.getProduto());
+        entidade.setQuantidade(dto.getQuantidade());
+        return entidade;
+    }
+    
+    public static ItemNotaDto converteParaDto(ItemNota entidade) {
+        ItemNotaDto dto = new ItemNotaDto();
+        dto.setId(entidade.getId());
+        dto.setCabecalhoNota(entidade.getCabecalhoNota());
+        dto.setPrecoUnitario(entidade.getPrecoUnitario());
+        dto.setProduto(entidade.getProduto());
+        dto.setQuantidade(entidade.getQuantidade());
         return dto;
     }
 }

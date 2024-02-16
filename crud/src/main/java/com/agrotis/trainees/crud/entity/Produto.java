@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,9 +31,9 @@ public class Produto {
     @Column(name = "descricao", length = 100)
     private String descricao;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "fabricante_id")
-    @NotNull(message = "Preencha o campo fabricante.")
+    //@NotNull(message = "Preencha o campo fabricante.")
     private ParceiroNegocio fabricante;
 
     @Column(name = "data_fabricacao")

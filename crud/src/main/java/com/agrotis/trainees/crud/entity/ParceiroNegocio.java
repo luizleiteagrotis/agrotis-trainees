@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.entity;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -37,7 +37,7 @@ public class ParceiroNegocio {
     @NotBlank(message = "Preencha o campo telefone.")
     private String telefone;
 
-    @OneToMany(mappedBy = "fabricante")
+    @OneToMany(mappedBy = "fabricante", cascade = CascadeType.ALL)
     private List<Produto> produtos;
 
     // Getters e Setters

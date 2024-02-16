@@ -44,11 +44,11 @@ public class CabecalhoNota {
 
     @ManyToOne
     @JoinColumn(name = "parceiro_de_negocio_id")
-    @NotNull(message = "Informe um parceiro de negócio.")
+    //@NotNull(message = "Informe um parceiro de negócio.")
     private ParceiroNegocio parceiroNegocio;
 
     @NotNull(message = "Informe o numero da nota.")
-    @Column(name = "numero", unique = true)
+    @Column(name = "numero")
     private Integer numero;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")

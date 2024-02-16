@@ -56,11 +56,13 @@ public class ProdutoService {
     public List<ProdutoDto> buscarTodos() {
         return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
-    
+
     public ProdutoDto atualizar(Integer id, ProdutoDto dto) {
         return repository.findById(id).map(produtoExistente -> {
             produtoExistente.setDescricao(dto.getDescricao());
-            ParceiroNegocio fabricanteExistente = dto.getFabricante().getId() != null ? parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(null) : null;
+            ParceiroNegocio fabricanteExistente = dto.getFabricante().getId() != null
+                            ? parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(null)
+                            : null;
             if (fabricanteExistente == null) {
                 ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(dto.getFabricante());
                 produtoExistente.setFabricante(fabricanteSalvo);
@@ -78,7 +80,6 @@ public class ProdutoService {
             return new EntidadeNaoEncontradaException("Produto com o ID " + id + " não encontrado");
         });
     }
-
 
     public void deletarPorId(Integer id) {
         repository.findById(id).map(produto -> {

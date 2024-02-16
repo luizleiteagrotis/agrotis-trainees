@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
-import com.agrotis.trainees.crud.dtos.ProdutoDto;
 import com.agrotis.trainees.crud.service.CabecalhoNotaService;
-import com.agrotis.trainees.crud.service.ProdutoService;
 
 @RestController
 @RequestMapping("/cabecalhos")
@@ -49,15 +47,15 @@ public class CabecalhoNotaController {
         return ResponseEntity.ok(service.listarTodos());
     }
 
-     @PutMapping("{id}")
-     public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody CabecalhoNotaDto dto){
-     return ResponseEntity.ok(service.atualizar(id, dto));
-     }
-    
-    // @DeleteMapping("{id}")
-    // public ResponseEntity<?> deletar(@PathVariable Integer id){
-    // service.deletarPorId(id);
-    // return ResponseEntity.noContent().build();
-    // }
+    @PutMapping("{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody CabecalhoNotaDto dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+        service.deletarPorId(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

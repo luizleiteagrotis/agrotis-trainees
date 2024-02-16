@@ -2,12 +2,19 @@ package com.agrotis.trainees.crud.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
+import com.agrotis.trainees.crud.dtos.ItemNotaDto;
+import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
+import com.agrotis.trainees.crud.dtos.ProdutoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
@@ -23,19 +30,46 @@ public class ItemNotaService {
     private final NotaFiscalItemRepository repository;
     private final ProdutoService produtoService;
     private final CabecalhoNotaService cabecalhoNotaService;
+    private final ParceiroNegocioService parceiroNegocioService;
 
     public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService,
-                    CabecalhoNotaService cabecalhoNotaService) {
+                    CabecalhoNotaService cabecalhoNotaService,ParceiroNegocioService parceiroNegocioService) {
         this.repository = repository;
         this.produtoService = produtoService;
         this.cabecalhoNotaService = cabecalhoNotaService;
+        this.parceiroNegocioService = parceiroNegocioService;
     }
 
-    public ItemNota salvar(ItemNota entidade) {
+    @Transactional
+    public ItemNotaDto salvar(ItemNotaDto dto) {
+        ItemNota entidade = DtoUtils.converteParaEntidade(dto);
+
+        // Persist the transient entities and ensure they are properly managed
+        CabecalhoNota cabecalhoNota = entidade.getCabecalhoNota();
+        Produto produto = entidade.getProduto();
+        ParceiroNegocio parceiroNegocio = cabecalhoNota.getParceiroNegocio();
+
+        // Save or update the transient entities
+        CabecalhoNotaDto cabecalhoNotaDtoSalvo = cabecalhoNotaService.salvar(DtoUtils.converteParaDto(cabecalhoNota));
+        ProdutoDto produtoDtoSalvo  = produtoService.salvar(DtoUtils.converteParaDto(produto));
+        ParceiroNegocioDto parceiroNegocioDtoSalvo = parceiroNegocioService.salvar(DtoUtils.converteParaDto(parceiroNegocio));
+
+        // Ensure the transient entities are properly initialized with IDs after saving
+        entidade.setCabecalhoNota(DtoUtils.converteParaEntidade(cabecalhoNotaDtoSalvo));
+        entidade.setProduto(DtoUtils.converteParaEntidade(produtoDtoSalvo));
+
+        // Set the updated ParceiroNegocio back to the CabecalhoNota
+        cabecalhoNota.setParceiroNegocio(DtoUtils.converteParaEntidade(parceiroNegocioDtoSalvo));
+
+        // Perform other operations
         calcularValorTotal(entidade);
         adicionarValorTotalCabecalho(entidade);
         atualizarEstoque(entidade);
-        return repository.save(entidade);
+
+        // Save the ItemNota entity
+        entidade = repository.save(entidade);
+
+        return DtoUtils.converteParaDto(entidade);
     }
 
     public List<ItemNota> buscarTodos() {
@@ -101,8 +135,8 @@ public class ItemNotaService {
         CabecalhoNota cabecalho = item.getCabecalhoNota();
         Double valorTotalItem = item.getValorTotal();
         cabecalho.setValorTotal(valorTotalItem);
-        cabecalhoNotaService.salvar(cabecalho);
-
+        
     }
+
 
 }

@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,12 +24,12 @@ public class ItemNota {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nota_fiscal_id")
     @NotNull(message = "Preencha o campo cabeçalho da nota")
     private CabecalhoNota cabecalhoNota;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "produto_id")
     @NotNull(message = "Preencha o campo produto.")
     private Produto produto;
@@ -45,7 +46,6 @@ public class ItemNota {
     private Double precoUnitario;
 
     @Column(name = "valor_total")
-    @NotNull(message = "Preencha o valor total.")
     private Double valorTotal;
 
     public CabecalhoNota getCabecalhoNota() {
