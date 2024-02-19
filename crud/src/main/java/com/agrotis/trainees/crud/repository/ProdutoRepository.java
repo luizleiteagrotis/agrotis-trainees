@@ -10,10 +10,10 @@ import com.agrotis.trainees.crud.entity.Produto;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
-    Optional<Produto> findByDescricao(String descricao);
+    boolean existsByDescricao(String descricao);
 
     boolean existsByDescricaoAndIdNot(String descricao, Integer id);
 
-    boolean existsByDescricao(String descricao);
+    Optional<Produto> findByDescricao(String descricao);
 
 }
