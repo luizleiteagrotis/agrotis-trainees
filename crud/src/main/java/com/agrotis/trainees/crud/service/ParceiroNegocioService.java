@@ -32,7 +32,7 @@ public class ParceiroNegocioService {
     public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
         ParceiroNegocio entidade = mapper.conveterParaEntidade(dto);
 
-        if (repository.findByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal())) {
+        if (repository.existsByNomeOrInscricaoFiscal(entidade.getNome(), entidade.getInscricaoFiscal())) {
             throw new FabricanteDuplicadoException("Nome do fabricante ou inscrição fiscal já existem");
         }
 
