@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.service.ItemNotaService;
 
 import dto.ItemDto;
@@ -32,7 +33,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody ItemDto itemNota) {
-        ItemDto itemSalvo = service.salvar(itemNota);
+        ItemNota itemSalvo = service.salvar(itemNota);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(itemSalvo.getId()).toUri();
         
@@ -51,8 +52,8 @@ public class ItemController {
         
     }
     @PutMapping("{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody ItemDto dto) {
-        return ResponseEntity.ok(service.atualizar(id, dto));
+    public ResponseEntity<?> atualizar1(@PathVariable Integer id, @RequestBody ItemDto dto) {
+        return ResponseEntity.ok(service.atualizar1(id, dto));
     }
     @DeleteMapping("{id}")
     public ResponseEntity<?> deletar(@PathVariable Integer id) {

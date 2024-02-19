@@ -11,6 +11,9 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 
+import dto.ParceiroNegocioDto;
+import utilidades.DtoUtilidades;
+
 
 @Service
 public class ParceiroNegocioService {
@@ -58,6 +61,23 @@ public class ParceiroNegocioService {
 		
 		
 	}
+	  public ParceiroNegocioDto atualizar(Integer id, ParceiroNegocioDto dto) {
+	        return repository.findById(id).map(parceiroExistente -> {
+	            parceiroExistente.setNome(dto.getNome());
+	            parceiroExistente.setInscricaoFiscal(dto.getInscricao());
+	            parceiroExistente.setEndereco(dto.getEndereco());
+	            parceiroExistente.setTelefone(dto.getTelefone());
+	            ParceiroNegocio entidadeSalva = repository.save(parceiroExistente);
+	            return DtoUtilidades.converteParaDto(entidadeSalva);
+	        }).orElseThrow();
+	    }
+	  public ParceiroNegocioDto salvar(ParceiroNegocioDto negocio) {
+	        ParceiroNegocio entidade = DtoUtilidades.converteParaEntidade(negocio);
+	        repository.save(entidade);
+	        LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());
+	        return DtoUtilidades.converteParaDto(entidade);
+
+	    }
 	
 	
 }

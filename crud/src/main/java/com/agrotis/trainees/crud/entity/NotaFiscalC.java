@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -13,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import dto.CabecalhoDto;
 
 @Entity
 @Table(name = "nota_fiscalC")
@@ -94,6 +97,20 @@ public class NotaFiscalC {
 		return id;
 		
 	}
+
+    public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo2) {
+        this.notaFiscalTipo = notaFiscalTipo;
+        
+    }
+
+    public void setData(Date data2) {
+        this.data = data;
+
+    }
+
+    public static CabecalhoDto salvar(CabecalhoDto converteParaDto) {
+                return null;
+    }
 	
 	
 }

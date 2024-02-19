@@ -1,5 +1,8 @@
 package dto;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
@@ -14,6 +17,16 @@ public class CabecalhoDto {
     private Integer numero;
     
     private Double valorTotal;
+    
+    private Date data;
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
 
     public Integer getId() {
         return id;
@@ -54,6 +67,16 @@ public class CabecalhoDto {
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
     }
-    
+
+    public void setDate(Date data) {
+        this.data = data;
+
+    }
+
+    public void setNotaFiscalTipo(String notaFiscalTipo2) {
+        
+    }
+   
+   
     
 }

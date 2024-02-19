@@ -15,6 +15,7 @@ import com.agrotis.trainees.crud.repository.ItemNotaRepository;
 
 import dto.CabecalhoDto;
 import dto.ItemDto;
+import utilidades.DtoUtilidades;
 
 
 
@@ -31,7 +32,7 @@ public class ItemNotaService {
     private final ParceiroNegocioService parceiroNegocioService;
     
     
-    public  ItemNotaService(ItemNotaRepository repository, ProdutoService produtoService) {
+    public  ItemNotaService(ItemNotaRepository repository, ProdutoService produtoService, NotaFiscalC notaFiscalCService, ParceiroNegocioService parceiroNegocioService) {
         this.repository = repository;
         this.produtoService = produtoService;
         this.notaFiscalCService = notaFiscalCService;
@@ -41,11 +42,11 @@ public class ItemNotaService {
         }
     
     public ItemNota salvar(ItemDto dto) {
-        ItemNota entidade = DtoUtil.converteParaEntidade(dto);
+        ItemNota entidade = DtoUtilidades.converteParaEntidade(dto);
         
         NotaFiscalC notaFiscalC = entidade.getNotaFiscalC();
-        CabecalhoDto cabecalhoDtoSalvo = NotaFiscalCService.salvar(DtoUtils.converteParaDto(notaFiscalC));
-        entidade.setNotaFiscalC(DtoUtils.converteParaEntidade(cabecalhoDtoSalvo));
+        CabecalhoDto cabecalhoDtoSalvo = NotaFiscalC.salvar(DtoUtilidades.converteParaDto(notaFiscalC));
+        entidade.setNotaFiscalC(DtoUtilidades.converteParaEntidade(cabecalhoDtoSalvo));
         
         calcularValorTotal(entidade);
         atualizarEstoque(entidade);
@@ -68,12 +69,12 @@ public class ItemNotaService {
     @Transactional
     public ItemDto atualizar1(Integer id, ItemDto notaFiscalItemDto) {
         ItemNota itemNotaExistente = repository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+                .orElseThrow();
 
         atualizarItemNota(itemNotaExistente, notaFiscalItemDto);
 
         ItemNota itemNotaAtualizada = repository.save(itemNotaExistente);
-        return DtoUtils.converteParaDto(itemNotaAtualizada);
+        return DtoUtilidades.converteParaDto(itemNotaAtualizada);
         
         
     }
@@ -123,6 +124,8 @@ public class ItemNotaService {
      Double valorTotalItem = item.getValorTotal();
      cabecalho.setValorTotal(valorTotalItem);
     }
+
+    
 }
  
   
