@@ -49,6 +49,11 @@ public class ParceiroNegocioService {
         return repository.findAll();
     }
 
+    public ParceiroNegocio atualizar(Integer id) {
+        ParceiroNegocio parceiro = buscarPorId(id);
+        return repository.save(parceiro);
+    }
+
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
     }

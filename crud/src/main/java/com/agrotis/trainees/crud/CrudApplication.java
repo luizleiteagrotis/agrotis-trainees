@@ -85,6 +85,9 @@ public class CrudApplication implements CommandLineRunner {
             ParceiroNegocio parceiroBuscaNome = parceiroNegocioService.buscarPorNome(parceirosSalvos.get(2).getNome());
             LOG.info("Parceiro {} encontrado por nome.", parceiroBuscaNome);
 
+            // parceiroBuscaIF.setEndereco("Rua São João 93, Curitiba");
+            // parceiroNegocioService.atualizar(parceiroBuscaIF.getId());
+            // LOG.info("Registro do parceiro {} atualizado.", parceiroBuscaIF);
         }
 
     }
