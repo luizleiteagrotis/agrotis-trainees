@@ -37,7 +37,7 @@ public class ItemNotaController {
 	@PostMapping
 	public ResponseEntity<?> cadastrar(@Valid @RequestBody ItemCadastroDto cadastroDto, UriComponentsBuilder uriBuilder) {
 		ItemRetornoDto retornoDto = itemService.salvar(cadastroDto);
-		URI uri = uriBuilder.path("/itens/{id}").buildAndExpand(retornoDto.getId()).toUri();
+		URI uri = uriBuilder.path("/notas-fiscais/itens/{id}").buildAndExpand(retornoDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
