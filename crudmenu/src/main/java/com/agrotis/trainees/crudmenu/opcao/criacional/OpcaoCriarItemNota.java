@@ -13,70 +13,48 @@ import com.agrotis.trainees.crudmenu.dto.item.ItemRetornoDto;
 import com.agrotis.trainees.crudmenu.dto.produto.ProdutoRetornoDto;
 import com.agrotis.trainees.crudmenu.informante.InformanteCabecalho;
 import com.agrotis.trainees.crudmenu.informante.InformanteProduto;
-import com.agrotis.trainees.crudmenu.opcao.OpcaoMenu;
 
 @Component
-public class OpcaoCriarItemNota implements OpcaoMenu {
+public class OpcaoCriarItemNota extends OpcaoCriacionalTemplate<ItemCadastroDto, ItemRetornoDto> {
 
 	private final Scanner SCANNER;
-	private final ItemApi ITEM_API;
 	private final InformanteProduto INFORMANTE_PRODUTO;
 	private final InformanteCabecalho INFORMANTE_CABECALHO;
-	private ItemRetornoDto ultimoItemCriado;
 	
 	@Autowired
-	public OpcaoCriarItemNota(Scanner scanner, 
-			ItemApi itemApi,
-			InformanteProduto informanteProduto, 
+	public OpcaoCriarItemNota(Scanner scanner, ItemApi itemApi, InformanteProduto informanteProduto, 
 			InformanteCabecalho informanteCabecalho) {
+		super(itemApi, descricao("Criar item nota"));
 		SCANNER = scanner;
-		ITEM_API = itemApi;
 		INFORMANTE_PRODUTO = informanteProduto;
 		INFORMANTE_CABECALHO = informanteCabecalho;
 	}
 	
 	@Override
-	public String getDescricao() {
-		return "Criar item nota";
-	}
-
-	@Override
-	public void executar() {
-		System.out.println("--------------------------");
-		System.out.println(getDescricao());
-		System.out.println("--------------------------");
-		boolean naoPersistiu = true;
-		while (naoPersistiu) {
-			ItemCadastroDto cadastroDto = new ItemCadastroDto();
-			
-			System.out.println("Informe o produto!");
-			informarSaidaTemporaria();
-			ProdutoRetornoDto produto = INFORMANTE_PRODUTO.informar();
-			informarVolta();
-			cadastroDto.setIdProduto(produto.getId());
-			
-			System.out.print("Informe a quantidade: ");
-			int quantidade = SCANNER.nextInt();
-			cadastroDto.setQuantidade(quantidade);
-			
-			System.out.print("Informe o preco unitario: ");
-			BigDecimal precoUnitario = SCANNER.nextBigDecimal();
-			cadastroDto.setPrecoUnitario(precoUnitario);
-			
-			System.out.print("Informe o cabecalho!");
-			informarSaidaTemporaria();
-			CabecalhoRetornoDto cebecalho = INFORMANTE_CABECALHO.informar();
-			informarVolta();
-			cadastroDto.setIdCabecalho(cebecalho.getId());
-			
-			try {
-				ultimoItemCriado = ITEM_API.cadastrar(cadastroDto);
-				naoPersistiu = false;
-			} catch(Exception e) {
-				System.out.println("Nao foi possivel cadastar");
-			}
-		}
-		System.out.println("Item nota criado com id: " + ultimoItemCriado.getId());
+	public ItemCadastroDto criarDto() {
+		ItemCadastroDto cadastroDto = new ItemCadastroDto();
+		
+		System.out.println("Informe o produto!");
+		informarSaidaTemporaria();
+		ProdutoRetornoDto produto = INFORMANTE_PRODUTO.informar();
+		informarVolta();
+		cadastroDto.setIdProduto(produto.getId());
+		
+		System.out.print("Informe a quantidade: ");
+		int quantidade = SCANNER.nextInt();
+		cadastroDto.setQuantidade(quantidade);
+		
+		System.out.print("Informe o preco unitario: ");
+		BigDecimal precoUnitario = SCANNER.nextBigDecimal();
+		cadastroDto.setPrecoUnitario(precoUnitario);
+		
+		System.out.print("Informe o cabecalho!");
+		informarSaidaTemporaria();
+		CabecalhoRetornoDto cebecalho = INFORMANTE_CABECALHO.informar();
+		informarVolta();
+		cadastroDto.setIdCabecalho(cebecalho.getId());
+		
+		return cadastroDto;
 	}
 	
 	private void informarSaidaTemporaria() {
@@ -88,5 +66,4 @@ public class OpcaoCriarItemNota implements OpcaoMenu {
 		System.out.println("Voltando para item nota");
 		System.out.println();
 	}
-
 }

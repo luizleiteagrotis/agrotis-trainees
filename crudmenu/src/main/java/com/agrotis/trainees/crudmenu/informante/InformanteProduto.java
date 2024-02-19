@@ -28,7 +28,7 @@ public class InformanteProduto {
 			System.out.println();
 			if (opcao == 1) {
 				OPCAO_CRIAR_PRODUTO.executar();
-				produto = OPCAO_CRIAR_PRODUTO.getUltimoProdutoCriado();
+				produto = OPCAO_CRIAR_PRODUTO.getUltimaEntidadeCriada();
 			}
 		}
 		return produto;

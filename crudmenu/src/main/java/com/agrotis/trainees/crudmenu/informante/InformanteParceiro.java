@@ -29,7 +29,7 @@ public class InformanteParceiro {
 			System.out.println();
 			if (opcao == 1) {
 				OPCAO_CRIAR_PARCEIRO.executar();
-				parceiro = OPCAO_CRIAR_PARCEIRO.getUltimoParceiroCriado();
+				parceiro = OPCAO_CRIAR_PARCEIRO.getUltimaEntidadeCriada();
 			}
 		}
 		return parceiro;
