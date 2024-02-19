@@ -37,7 +37,7 @@ public class CrudApplication implements CommandLineRunner {
 
         Scanner scan = new Scanner(System.in);
         System.out.println(
-                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 2 3 4 5");
+                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2");
         int opcao = scan.nextInt();
 
         if (opcao == 1) {
@@ -59,14 +59,26 @@ public class CrudApplication implements CommandLineRunner {
         }
         if (opcao == 2) {
 
-            ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+            // ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+            //
+            // parceiroNegocio.setNome("Empresa do Fulano");
+            // parceiroNegocio.setInscricaoFiscal("123456789");
+            // parceiroNegocio.setTelefone("43 9 9576 7695");
+            //
+            // ParceiroNegocio parceiroNegocio2 =
+            // parceiroNegocioService.salvar(parceiroNegocio);
+            // LOG.info("id inserido: {}", parceiroNegocio2.getId());
 
-            parceiroNegocio.setNome("Empresa do Fulano");
-            parceiroNegocio.setInscricaoFiscal("123456789");
-            parceiroNegocio.setTelefone("43 9 9576 7695");
-
-            ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
-            LOG.info("id inserido: {}", parceiroNegocio2.getId());
+            List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
+            for (ParceiroNegocio parceiro : parceirosSalvos) {
+                System.out.println(parceiro);
+            }
+            LOG.info("Salvos no total de {} tipos de parceiro", parceirosSalvos.size());
+            ParceiroNegocio parceiroBuscaID = parceiroNegocioService.buscarPorId(parceirosSalvos.get(0).getId());
+            LOG.info("Parceiro {} encontrado por id.", parceiroBuscaID);
+            ParceiroNegocio parceiroBuscaIF = parceiroNegocioService
+                            .buscarPorInscricaoFiscal(parceirosSalvos.get(1).getInscricaoFiscal());
+            LOG.info("Parceiro {} encontrado por inscrição fiscal", parceiroBuscaIF);
 
         }
 

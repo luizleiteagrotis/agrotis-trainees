@@ -67,8 +67,8 @@ public class ParceiroNegocio {
 
     @Override
     public String toString() {
-        return "ParceiroDeNegocio [id=" + id + ", nome=" + nome + ", inscricaoFiscal=" + inscricaoFiscal + ", endereco=" + endereco
-                        + ", telefone=" + telefone + "]";
+        return "[id: " + id + "; nome: " + nome + "; inscricaoFiscal: " + inscricaoFiscal + "; endereco: " + endereco
+                        + "; telefone: " + telefone + "]";
     }
 
 }
