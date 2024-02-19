@@ -118,8 +118,6 @@ public class NotaFiscalItemService {
         notaFiscalService.salvar(notaFiscal);
     }
     
-    
-    
     private double calcularValorTotalItem(NotaFiscalItem item) {
     	return item.getQuantidade() * item.getPrecoUnitario();
     }
