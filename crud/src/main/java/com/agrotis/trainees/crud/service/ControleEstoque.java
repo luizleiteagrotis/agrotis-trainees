@@ -30,26 +30,21 @@ public class ControleEstoque {
             double quantidadeEstoque = produto.getEstoque();
 
             if (tipoNotaFiscal.equals("entrada")) {
-
-                quantidadeEstoque += itemNotaFiscal.getQuantidade().doubleValue();
-                produto.setEstoque(quantidadeEstoque);
-                produtoRepository.save(produto);
-                return true;
-
+                quantidadeEstoque = somarEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue());
             }
 
-            if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue())
-                            && tipoNotaFiscal.equals("saida")) {
-                quantidadeEstoque -= itemNotaFiscal.getQuantidade().doubleValue();
-                produto.setEstoque(quantidadeEstoque);
-                produtoRepository.save(produto);
-                return true;
-
-            } else {
-                throw new ControleEstoqueException(
-                                "Falha ao calcular a quantidade de estoque: A quantidade de saída é maior que o estoque atual.");
+            if (tipoNotaFiscal.equals("saida")) {
+                if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue())) {
+                    quantidadeEstoque = diminuirEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue());
+                } else {
+                    throw new ControleEstoqueException(
+                                    "Falha ao calcular a quantidade de estoque: A quantidade de saída é maior que o estoque atual.");
+                }
 
             }
+            produto.setEstoque(quantidadeEstoque);
+            produtoRepository.save(produto);
+            return true;
         } catch (ControleEstoqueException exp) {
             LOG.error(exp.getMessage());
             return false;
@@ -57,10 +52,6 @@ public class ControleEstoque {
             LOG.error(npe.getMessage());
             return false;
         }
-    }
-
-    protected boolean verificarQuantidade(double quantidadeEstoque, double quantidadeNota) {
-        return quantidadeEstoque - quantidadeNota >= 0;
     }
 
     public ItemNotaFiscal atualizarEstoque(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
@@ -90,7 +81,20 @@ public class ControleEstoque {
             LOG.error(cee.getMessage());
             return null;
         }
+    }
 
+    protected boolean verificarQuantidade(double quantidadeEstoque, double quantidadeNota) {
+        return quantidadeEstoque - quantidadeNota >= 0;
+    }
+
+    protected double somarEstoque(double quantidadeEstoque, double quantidade) {
+        quantidadeEstoque += quantidade;
+        return quantidadeEstoque;
+    }
+
+    protected double diminuirEstoque(double quantidadeEstoque, double quantidade) {
+        quantidadeEstoque -= quantidade;
+        return quantidadeEstoque;
     }
 
 }
