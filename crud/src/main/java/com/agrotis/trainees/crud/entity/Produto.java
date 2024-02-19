@@ -1,3 +1,4 @@
+// Produto.java
 package com.agrotis.trainees.crud.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,7 +24,6 @@ public class Produto {
 
     private String descricao;
 
-    // @Min(value = 0)
     @Column(name = "estoque_produto")
     private Integer estoque;
 
@@ -38,6 +38,11 @@ public class Produto {
     @Column(name = "data_validade")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataValidade;
+
+    public Produto() {
+        super();
+        this.estoque = 0;
+    }
 
     public String getDescricao() {
         return descricao;
@@ -83,4 +88,7 @@ public class Produto {
         this.estoque = estoque;
     }
 
+    public void setId(Integer id2, ParceiroNegocio fabricante) {
+        this.fabricante = fabricante;
+    }
 }

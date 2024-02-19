@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 public class NotaFiscal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @NotNull(message = "Obrigatório preencher a data de emissão")
     private LocalDate dataEmissao;
@@ -40,7 +40,10 @@ public class NotaFiscal {
     @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER)
     private List<NotaFiscalItem> itensNota;
 
-    public Long getId() {
+    @Column(name = "valor_total")
+    private Double valorTotal;
+
+    public Integer getId() {
         return id;
     }
 
@@ -48,8 +51,8 @@ public class NotaFiscal {
         return dataEmissao;
     }
 
-    public void setDataEmissao(LocalDate localDateTime) {
-        this.dataEmissao = localDateTime;
+    public void setDataEmissao(LocalDate dataEmissao) {
+        this.dataEmissao = dataEmissao;
     }
 
     public Integer getNumero() {
@@ -76,19 +79,28 @@ public class NotaFiscal {
         this.parceiroNegocio = parceiroNegocio;
     }
 
-    public Double atualizarValorTotal() {
-        return null;
-        // TODO Auto-generated method stub
-
+    public List<NotaFiscalItem> getItensNota() {
+        return itensNota;
     }
 
-    public void setValorTotal(Double valorTotalNota) {
-        // TODO Auto-generated method stub
+    public void setItensNota(List<NotaFiscalItem> itensNota) {
+        this.itensNota = itensNota;
+    }
 
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public NotaFiscalItem[] getItens() {
-        // TODO Auto-generated method stub
-        return null;
+        return itensNota.toArray(new NotaFiscalItem[0]);
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+
     }
 }

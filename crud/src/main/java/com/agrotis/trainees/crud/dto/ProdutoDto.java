@@ -1,32 +1,27 @@
+// ProdutoDto.java
 package com.agrotis.trainees.crud.dto;
 
-import org.springframework.beans.BeanUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
 
 public class ProdutoDto {
 
     private Integer id;
-
     private String descricao;
-
-    private Date dataFabricacao;
-
-    private Date dataValidade;
-
+    private int estoque;
     private ParceiroNegocio fabricante;
 
-    private int quantidadeEstoque;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataFabricacao;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataValidade;
 
     public ProdutoDto() {
         super();
-    }
-
-    public ProdutoDto(Produto entidade) {
-        BeanUtils.copyProperties(entidade, this);
     }
 
     public Integer getId() {
@@ -45,20 +40,12 @@ public class ProdutoDto {
         this.descricao = descricao;
     }
 
-    public Date getDataFabricacao() {
-        return dataFabricacao;
+    public int getEstoque() {
+        return estoque;
     }
 
-    public void setDataFabricacao(Date dataFabricacao) {
-        this.dataFabricacao = dataFabricacao;
-    }
-
-    public Date getDataValidade() {
-        return dataValidade;
-    }
-
-    public void setDataValidade(Date dataValidade) {
-        this.dataValidade = dataValidade;
+    public void setEstoque(int estoque) {
+        this.estoque = estoque;
     }
 
     public ParceiroNegocio getFabricante() {
@@ -69,12 +56,19 @@ public class ProdutoDto {
         this.fabricante = fabricante;
     }
 
-    public int getQuantidadeEstoque() {
-        return quantidadeEstoque;
+    public LocalDate getDataFabricacao() {
+        return dataFabricacao;
     }
 
-    public void setQuantidadeEstoque(int quantidadeEstoque) {
-        this.quantidadeEstoque = quantidadeEstoque;
+    public void setDataFabricacao(LocalDate dataFabricacao) {
+        this.dataFabricacao = dataFabricacao;
     }
 
+    public LocalDate getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(LocalDate dataValidade) {
+        this.dataValidade = dataValidade;
+    }
 }

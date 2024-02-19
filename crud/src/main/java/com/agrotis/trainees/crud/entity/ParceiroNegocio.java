@@ -60,4 +60,8 @@ public class ParceiroNegocio {
         this.telefone = telefone;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

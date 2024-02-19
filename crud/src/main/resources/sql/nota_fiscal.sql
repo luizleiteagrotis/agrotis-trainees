@@ -6,3 +6,5 @@ CREATE TABLE nota_fiscal (
     parceiro_negocio_id INTEGER,
     FOREIGN KEY (parceiro_negocio_id) REFERENCES parceiro_negocio(id)
 );
+ALTER TABLE nota_fiscal
+ADD valor_total DECIMAL(10, 2);

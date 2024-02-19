@@ -1,6 +1,8 @@
 package com.agrotis.trainees.crud.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,54 +12,41 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
-import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 
-@RestController
 @RequestMapping("notas-fiscais")
+@RestController
 public class NotaFiscalController {
 
-    private NotaFiscalService notaFiscalService;
-
     @Autowired
-    public NotaFiscalController(NotaFiscalService notaFiscalService) {
-        this.notaFiscalService = notaFiscalService;
-    }
+    private NotaFiscalService service;
 
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody NotaFiscalDto cadastroDto, UriComponentsBuilder uriBuilder) {
-        NotaFiscal notaFiscal = notaFiscalService.salvar(cadastroDto);
-        URI uri = uriBuilder.path("/notas-fiscais/{id}").buildAndExpand(notaFiscal.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<NotaFiscal> buscarPorId(@PathVariable(name = "id") Integer id) {
-        NotaFiscal notaFiscal = notaFiscalService.buscarPorId(id);
-        return ResponseEntity.ok(notaFiscal);
+    public ResponseEntity<NotaFiscalDto> inserir(@Valid @RequestBody NotaFiscalDto dto) throws NotFoundException {
+        NotaFiscalDto notaSalva = service.salvar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(notaSalva);
     }
 
     @GetMapping
-    public ResponseEntity<List<NotaFiscal>> listarTodos() {
-        List<NotaFiscal> notasFiscais = notaFiscalService.listarTodos();
-        return ResponseEntity.ok(notasFiscais);
+    public ResponseEntity<List<NotaFiscalDto>> listarTodos() {
+        return ResponseEntity.ok().body(service.listarTodos());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NotaFiscal> atualizar(@PathVariable(name = "id") Integer id, @RequestBody NotaFiscal cadastroDto) {
-        NotaFiscal notaFiscalAtualizada = notaFiscalService.atualizar(id, cadastroDto);
-        return ResponseEntity.ok(notaFiscalAtualizada);
+    public ResponseEntity<NotaFiscalDto> atualizar(@PathVariable Integer id, @RequestBody NotaFiscalDto dto)
+                    throws NotFoundException {
+        return ResponseEntity.ok().body(service.atualizar(dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable(name = "id") Integer id) {
-        notaFiscalService.deletarPorId(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deletarPorId(@PathVariable Integer id) {
+        service.deletarPorId(id);
+        return ResponseEntity.ok().build();
     }
 }

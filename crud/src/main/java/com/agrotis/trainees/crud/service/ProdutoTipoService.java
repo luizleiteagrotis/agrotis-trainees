@@ -1,60 +1,66 @@
+// ProdutoService.java
 package com.agrotis.trainees.crud.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ProdutoTipoRepository;
 
 @Service
 public class ProdutoTipoService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProdutoTipoService.class);
+    private final ProdutoTipoRepository produtoTipoRepository;
 
-    private ProdutoTipoRepository repository;
-
-    public ProdutoTipoService(ProdutoTipoRepository repository) {
-        super();
-        this.repository = repository;
+    public ProdutoTipoService(ProdutoTipoRepository produtoTipoRepository) {
+        this.produtoTipoRepository = produtoTipoRepository;
     }
 
-    public Produto salvar(Produto produto) {
-        return repository.save(produto);
+    @Transactional
+    public ProdutoDto salvar(ProdutoDto dto) {
+        Produto entidade = converterParaEntidade(dto);
+        Produto savedProduto = produtoTipoRepository.save(entidade);
+        return converterParaDto(savedProduto);
     }
 
-    public Produto buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.error("Produto não encontrado para id {}.", id);
-            return null;
-        });
+    public ProdutoDto buscarPorId(Integer id) {
+        Produto entidade = produtoTipoRepository.findById(id).orElse(null);
+        return converterParaDto(entidade);
     }
 
-    public Produto buscarPorDescricao(String descricao) {
-        return repository.findBydescricao(descricao).orElseGet(() -> {
-            LOG.error("Parceiro não encontrado para a descrição {}.", descricao);
-            return null;
-        });
+    public List<ProdutoDto> listarTodos() {
+        List<Produto> entidades = produtoTipoRepository.findAll();
+        return entidades.stream().map(this::converterParaDto).collect(Collectors.toList());
     }
 
-    public List<Produto> listarTodos() {
-        return repository.findAll();
+    public void deletarPorId(Integer id) {
+        produtoTipoRepository.deleteById(id);
     }
 
-    public void deletarProdutoPorId(Integer id) {
-        repository.deleteById(id);
-        LOG.info("Deletado com sucesso");
+    public ProdutoDto converterParaDto(Produto entidade) {
+        ProdutoDto dto = new ProdutoDto();
+        dto.setId(entidade.getId());
+        dto.setDescricao(entidade.getDescricao());
+        dto.setEstoque(entidade.getEstoque());
+        dto.setFabricante(entidade.getFabricante());
+        dto.setDataFabricacao(entidade.getDataFabricacao());
+        dto.setDataValidade(entidade.getDataValidade());
+        return dto;
     }
 
-    public Object inserir(Produto produto) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Object atualizar(Produto produto) {
-        // TODO Auto-generated method stub
-        return null;
+    public Produto converterParaEntidade(ProdutoDto dto) {
+        Produto entidade = new Produto();
+        entidade.setId(dto.getId(), null);
+        entidade.setDescricao(dto.getDescricao());
+        entidade.setEstoque(dto.getEstoque());
+        entidade.setFabricante(dto.getFabricante());
+        entidade.setDataFabricacao(dto.getDataFabricacao());
+        entidade.setDataValidade(dto.getDataValidade());
+        return entidade;
     }
 }

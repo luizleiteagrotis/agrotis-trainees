@@ -33,7 +33,12 @@ public class NotaFiscalItem {
     @NotNull(message = "Necessário inserir o preço unitário")
     private Double preco_unitario;
 
-    private Double valorTotal = 0.0;
+    private Double valorTotal;
+
+    public NotaFiscalItem() {
+        super();
+        this.valorTotal = 0.0;
+    }
 
     public Integer getId() {
         return id;
