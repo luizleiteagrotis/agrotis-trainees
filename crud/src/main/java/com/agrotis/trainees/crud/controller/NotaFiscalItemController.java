@@ -51,7 +51,7 @@ public class NotaFiscalItemController {
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Integer id) {
-        service.deletarPorId(id);
+        service.deletarEstoque(id);
         return ResponseEntity.ok().body(null);
     }
 }

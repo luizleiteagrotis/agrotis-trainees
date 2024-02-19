@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -250,6 +251,35 @@ public class NotaFiscalItemService {
             }
         }
         return entidade;
+    }
+
+    public void deletarEstoque(Integer id) {
+        NotaFiscalItem item = buscarPorId(id);
+        NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
+        Produto produto = produtoService.buscarPorId(item.getProduto().getId());
+
+        try {
+            if (nota.getTipo().getId() == 1) {
+
+                if (produto.getEstoque() - item.getQuantidade() < 0) {
+                    throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
+                }
+                produto.setEstoque(produto.getEstoque() - item.getQuantidade());
+                ProdutoDto produto2 = produtoService.atualizar(produto);
+                nota.setValorTotal(nota.getValorTotal() - item.getValorTotal());
+                NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
+                deletarPorId(id);
+            } else {
+                produto.setEstoque(produto.getEstoque() + item.getQuantidade());
+                ProdutoDto produto2 = produtoService.atualizar(produto);
+                nota.setValorTotal(nota.getValorTotal() - item.getValorTotal());
+                NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
+                deletarPorId(id);
+            }
+        } catch (EstoqueZeradoException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+
     }
 
 }
