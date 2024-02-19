@@ -22,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "nota_fiscal")
@@ -45,6 +46,7 @@ public class NotaFiscal {
     @JoinColumn(name = "id_nota_fiscal_tipo")
     private NotaFiscalTipo notaFiscalTipo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<ItemNotaFiscal> itens = new ArrayList<>();
 
@@ -59,7 +61,9 @@ public class NotaFiscal {
 
     public NotaFiscal(NotaFiscalDto dto) {
         BeanUtils.copyProperties(dto, this);
-        this.data = LocalDate.now();
+        if (this.data == null) {
+            this.data = LocalDate.now();
+        }
     }
 
     public Integer getId() {
