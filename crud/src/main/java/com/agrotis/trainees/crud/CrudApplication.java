@@ -59,26 +59,31 @@ public class CrudApplication implements CommandLineRunner {
         }
         if (opcao == 2) {
 
-            // ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-            //
-            // parceiroNegocio.setNome("Empresa do Fulano");
-            // parceiroNegocio.setInscricaoFiscal("123456789");
-            // parceiroNegocio.setTelefone("43 9 9576 7695");
-            //
-            // ParceiroNegocio parceiroNegocio2 =
-            // parceiroNegocioService.salvar(parceiroNegocio);
-            // LOG.info("id inserido: {}", parceiroNegocio2.getId());
+            /*
+             * ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+             * 
+             * parceiroNegocio.setNome("Empresa do Ciclano");
+             * parceiroNegocio.setInscricaoFiscal("555777111");
+             * parceiroNegocio.setTelefone("41 9 8888 2222");
+             * 
+             * ParceiroNegocio parceiroNegocio2 =
+             * parceiroNegocioService.salvar(parceiroNegocio);
+             * LOG.info("id inserido: {}", parceiroNegocio2.getId());
+             */
 
             List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
             for (ParceiroNegocio parceiro : parceirosSalvos) {
                 System.out.println(parceiro);
             }
-            LOG.info("Salvos no total de {} tipos de parceiro", parceirosSalvos.size());
+
             ParceiroNegocio parceiroBuscaID = parceiroNegocioService.buscarPorId(parceirosSalvos.get(0).getId());
+            // parceiroNegocioService.deletarPorId(parceiroBuscaID.getId());
             LOG.info("Parceiro {} encontrado por id.", parceiroBuscaID);
             ParceiroNegocio parceiroBuscaIF = parceiroNegocioService
                             .buscarPorInscricaoFiscal(parceirosSalvos.get(1).getInscricaoFiscal());
-            LOG.info("Parceiro {} encontrado por inscrição fiscal", parceiroBuscaIF);
+            LOG.info("Parceiro {} encontrado por inscrição fiscal.", parceiroBuscaIF);
+            ParceiroNegocio parceiroBuscaNome = parceiroNegocioService.buscarPorNome(parceirosSalvos.get(2).getNome());
+            LOG.info("Parceiro {} encontrado por nome.", parceiroBuscaNome);
 
         }
 

@@ -31,6 +31,13 @@ public class ParceiroNegocioService {
         });
     }
 
+    public ParceiroNegocio buscarPorNome(String nome) {
+        return repository.findByNome(nome).orElseGet(() -> {
+            LOG.error("Parceiro não encontrado para o nome {}.", nome);
+            return null;
+        });
+    }
+
     public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
         return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
             LOG.error("Parceiro não encontrado para a inscricaoFiscal {}.", inscricaoFiscal);
@@ -40,6 +47,10 @@ public class ParceiroNegocioService {
 
     public List<ParceiroNegocio> listarTodos() {
         return repository.findAll();
+    }
+
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
     }
 
 }
