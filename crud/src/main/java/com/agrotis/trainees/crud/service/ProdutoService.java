@@ -35,6 +35,7 @@ public class ProdutoService {
      * EntidadeNaoEncontradaException("O Produto Nao foi Encontrado pelo fabricante. "
      * )); }
      */
+
     public ProdutoDto salvar(ProdutoDto produto) {
         Produto entidade = converteParaEntidade(produto);
         ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
@@ -63,28 +64,60 @@ public class ProdutoService {
         return repository.findAll().stream().map(ProdutoService::converteParaDto).collect(Collectors.toList());
     }
 
+    /*
+     * public ProdutoDto update(Integer id, ProdutoDto dto) { return
+     * repository.findById(id).map(produtoUpdate -> {
+     * produtoUpdate.setDescricao(dto.getDescricao());
+     * produtoUpdate.setNome(dto.getNome()); ParceiroNegocio fabricanteUpdate =
+     * dto.getFabricante().getId() != null ?
+     * parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(
+     * null) : null; if (fabricanteUpdate == null) { ParceiroNegocio
+     * fabricanteSalvo = parceiroNegocioRepository.save(dto.getFabricante());
+     * produtoUpdate.setFabricante(fabricanteSalvo); } else {
+     * produtoUpdate.setFabricante(fabricanteUpdate); }
+     * produtoUpdate.setEstoque(dto.getEstoque());
+     * produtoUpdate.setDataValidade(dto.getDataValidade());
+     * produtoUpdate.setDataFabricacao(dto.getDataFabricacao());
+     * LOG.info("Atualizando o produto: {} ", produtoUpdate.getDescricao());
+     * Produto produtoAtualizado = repository.save(produtoUpdate); return
+     * ProdutoService.converteParaDto(produtoUpdate); }).orElseThrow(() -> {
+     * LOG.info("Não foi possível encontrar o produto pelo ID {}", id); return
+     * new EntidadeNaoEncontradaException("Produto com o ID " + id +
+     * " não foi encontrado"); }); }
+     */
+
     public ProdutoDto update(Integer id, ProdutoDto dto) {
-        return repository.findById(id).map(produtoUpdate -> {
-            produtoUpdate.setDescricao(dto.getDescricao());
-            produtoUpdate.setNome(dto.getNome());
-            ParceiroNegocio fabricanteUpdate = dto.getFabricante().getId() != null
-                            ? parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(null)
-                            : null;
-            if (fabricanteUpdate == null) {
-                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(dto.getFabricante());
-                produtoUpdate.setFabricante(fabricanteSalvo);
+        return repository.findById(id).map(produtoExistente -> {
+            produtoExistente.setDescricao(dto.getDescricao());
+
+            ParceiroNegocio fabricante = dto.getFabricante();
+            if (fabricante != null && fabricante.getId() != null) {
+                ParceiroNegocio fabricanteExistente = parceiroNegocioRepository.findById(fabricante.getId())
+                                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                                                "Fabricante com o ID " + fabricante.getId() + " não encontrado"));
+
+                fabricanteExistente.setNome(fabricante.getNome());
+                fabricanteExistente.setEndereco(fabricante.getEndereco());
+
+                produtoExistente.setFabricante(fabricanteExistente);
             } else {
-                produtoUpdate.setFabricante(fabricanteUpdate);
+
+                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(fabricante);
+                produtoExistente.setFabricante(fabricanteSalvo);
             }
-            produtoUpdate.setEstoque(dto.getEstoque());
-            produtoUpdate.setDataValidade(dto.getDataValidade());
-            produtoUpdate.setDataFabricacao(dto.getDataFabricacao());
-            LOG.info("Atualizando o produto: {} ", produtoUpdate.getDescricao());
-            Produto produtoAtualizado = repository.save(produtoUpdate);
-            return ProdutoService.converteParaDto(produtoUpdate);
+
+            produtoExistente.setEstoque(dto.getEstoque());
+            produtoExistente.setDataValidade(dto.getDataValidade());
+            produtoExistente.setDataFabricacao(dto.getDataFabricacao());
+
+            LOG.info("Atualizando o produto: {}", produtoExistente.getDescricao());
+
+            Produto produtoAtualizado = repository.save(produtoExistente);
+            return converteParaDto(produtoAtualizado);
         }).orElseThrow(() -> {
+
             LOG.info("Não foi possível encontrar o produto pelo ID {}", id);
-            return new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado");
+            return new EntidadeNaoEncontradaException("Produto com o ID " + id + " não encontrado");
         });
     }
 
@@ -102,6 +135,7 @@ public class ProdutoService {
 
     public static Produto converteParaEntidade(ProdutoDto dto) {
         Produto entidade = new Produto();
+        entidade.setId(dto.getId());
         entidade.setDescricao(dto.getDescricao());
         entidade.setNome(dto.getNome());
         entidade.setFabricante(dto.getFabricante());

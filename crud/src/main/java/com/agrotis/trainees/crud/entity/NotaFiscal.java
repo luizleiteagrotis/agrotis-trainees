@@ -3,19 +3,24 @@ package com.agrotis.trainees.crud.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.agrotis.trainees.crud.entity.enums.NotaFiscalTipo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "nota_fiscal")
@@ -28,6 +33,10 @@ public class NotaFiscal {
     @Column(name = "data_nota")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<ItemNotaFiscal> itens = new ArrayList<>();
 
     @Column(name = "tipo")
     @Enumerated(EnumType.STRING)
@@ -45,6 +54,10 @@ public class NotaFiscal {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocalDate getData() {
@@ -85,6 +98,10 @@ public class NotaFiscal {
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public List<ItemNotaFiscal> getItens() {
+        return itens;
     }
 
 }

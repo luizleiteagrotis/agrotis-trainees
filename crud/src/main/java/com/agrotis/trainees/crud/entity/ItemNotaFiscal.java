@@ -31,11 +31,11 @@ public class ItemNotaFiscal {
     @Column(name = "valor_total")
     private Double valorTotal;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "nota_fiscal_id")
     private NotaFiscal notaFiscal;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "produto_id")
     private Produto produto;
 
