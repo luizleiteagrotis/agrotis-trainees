@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,28 +29,28 @@ public class ItemNotaFiscalService {
 
     private final ItemNotaFiscalRepository repository;
 
+    private final ItemNotaFiscalDTOMapper mapper;
+
     private final ProdutoService produtoService;
+
+    private final ProdutoDTOMapper mapperProduto;
 
     private final NotaFiscalService notaService;
 
-    private final ItemNotaFiscalDTOMapper mapper;
-
     private final NotaFiscalDTOMapper mapperNotaFiscal;
-
-    private final ProdutoDTOMapper mapperProduto;
 
     public ItemNotaFiscalService(ItemNotaFiscalRepository repository, ProdutoService produtoService, NotaFiscalService notaService,
                     ItemNotaFiscalDTOMapper mapper, NotaFiscalDTOMapper mapperNotaFiscal, ProdutoDTOMapper mapperProduto) {
         super();
         this.repository = repository;
-        this.produtoService = produtoService;
-        this.notaService = notaService;
         this.mapper = mapper;
-        this.mapperNotaFiscal = mapperNotaFiscal;
+        this.produtoService = produtoService;
         this.mapperProduto = mapperProduto;
+        this.notaService = notaService;
+        this.mapperNotaFiscal = mapperNotaFiscal;
     }
 
-    public ItemNotaFiscalDto salvar(ItemNotaFiscalDto dto) throws QuantidadeInsuficienteException, ItemDuplicadoException {
+    public ItemNotaFiscalDto salvar(ItemNotaFiscalDto dto) {
 
         ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
 
@@ -59,9 +60,12 @@ public class ItemNotaFiscalService {
         ProdutoDto produtoDto = produtoService.buscarPorId(entidade.getProduto().getId());
         entidade.setProduto(mapperProduto.converterParaEntidade(produtoDto));
 
-        entidade.setValorTotal();
+        entidade.setValorTotal(entidade.getValorUnitario().multiply(BigDecimal.valueOf(entidade.getQuantidade())));
 
-        itemDuplicado(entidade);
+        if (repository.existsByProdutoAndNotaFiscal(entidade.getProduto(), entidade.getNotaFiscal())) {
+            throw new ItemDuplicadoException("O item já existe na nota");
+        }
+
         atualizarEstoque(entidade);
         ItemNotaFiscal entidadeSalva = repository.save(entidade);
         notaService.adicionarItem(entidade);
@@ -78,11 +82,12 @@ public class ItemNotaFiscalService {
         ProdutoDto produtoDto = produtoService.buscarPorId(entidade.getProduto().getId());
         entidade.setProduto(mapperProduto.converterParaEntidade(produtoDto));
 
+        entidade.setValorTotal(entidade.getValorUnitario().multiply(BigDecimal.valueOf(entidade.getQuantidade())));
+
         if (repository.existsByProdutoAndNotaFiscalAndIdNot(entidade.getProduto(), entidade.getNotaFiscal(), entidade.getId())) {
             throw new ProdutoDuplicadoException("Já existe um item de nota fiscal com o mesmo produto e nota fiscal");
         }
 
-        entidade.setValorTotal();
         atualizarEstoque(entidade);
         ItemNotaFiscal entidadeSalva = repository.save(entidade);
         notaService.atualizarValorTotal(entidadeSalva.getNotaFiscal());
@@ -115,17 +120,11 @@ public class ItemNotaFiscalService {
         ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
 
         entidade.setQuantidade(0);
-        entidade.setValorTotal();
+        entidade.setValorTotal(entidade.getValorUnitario().multiply(BigDecimal.valueOf(entidade.getQuantidade())));
 
         atualizarEstoque(entidade);
         notaService.removerItem(entidade, entidade.getNotaFiscal());
         repository.deleteById(id);
-    }
-
-    public void itemDuplicado(ItemNotaFiscal item) throws ItemDuplicadoException {
-        if (repository.existsByProdutoAndNotaFiscal(item.getProduto(), item.getNotaFiscal())) {
-            throw new ItemDuplicadoException("O item já existe na nota");
-        }
     }
 
     public void atualizarEstoque(ItemNotaFiscal item) throws QuantidadeInsuficienteException {

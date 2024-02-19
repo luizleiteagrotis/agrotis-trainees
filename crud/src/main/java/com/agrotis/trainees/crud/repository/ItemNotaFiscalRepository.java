@@ -12,12 +12,12 @@ import com.agrotis.trainees.crud.entity.Produto;
 @Repository
 public interface ItemNotaFiscalRepository extends JpaRepository<ItemNotaFiscal, Integer> {
 
-    List<ItemNotaFiscal> findAllByProduto(Produto produto);
-
     boolean existsByProdutoAndNotaFiscal(Produto produto, NotaFiscal notaFiscal);
+
+    boolean existsByProdutoAndNotaFiscalAndIdNot(Produto produto, NotaFiscal notaFiscal, Integer id);
 
     ItemNotaFiscal findByProdutoAndNotaFiscal(Produto produto, NotaFiscal notaFiscal);
 
-    boolean existsByProdutoAndNotaFiscalAndIdNot(Produto produto, NotaFiscal notaFiscal, Integer id);
+    List<ItemNotaFiscal> findAllByProduto(Produto produto);
 
 }

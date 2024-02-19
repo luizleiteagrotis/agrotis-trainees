@@ -58,8 +58,8 @@ public class ItemNotaFiscalDto {
         return valorTotal;
     }
 
-    public void setValorTotal() {
-        this.valorTotal = this.valorUnitario.multiply(BigDecimal.valueOf(this.quantidade));
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public Produto getProduto() {
