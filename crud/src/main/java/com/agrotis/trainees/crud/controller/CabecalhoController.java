@@ -37,7 +37,7 @@ public class CabecalhoController {
 	@PostMapping
 	public ResponseEntity<?> cadastrar(@Valid @RequestBody CabecalhoCadastroDto cadastroDto, UriComponentsBuilder uriBuilder) {
 		CabecalhoRetornoDto retornoDto = cabecalhoService.salvar(cadastroDto);
-		URI uri = uriBuilder.path("/cabecalhos/{id}").buildAndExpand(retornoDto.getId()).toUri();
+		URI uri = uriBuilder.path("/notas-fiscais/cabecalhos/{id}").buildAndExpand(retornoDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
