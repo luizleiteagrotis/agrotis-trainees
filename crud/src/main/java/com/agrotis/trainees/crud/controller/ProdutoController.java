@@ -1,8 +1,5 @@
 package com.agrotis.trainees.crud.controller;
 
-
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -22,13 +21,13 @@ import com.agrotis.trainees.crud.service.ProdutoService;
 @RestController
 public class ProdutoController {
 
-	@Autowired
-	private ProdutoService service;
-	
-	@PostMapping
+    @Autowired
+    private ProdutoService service;
+
+    @PostMapping
     public ResponseEntity<?> inserir(@Valid @RequestBody ProdutoDto dto) {
         ProdutoDto produtoSalvo = service.salvar(dto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produtoSalvo));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produtoSalvo));
     }
 
     @GetMapping
@@ -47,5 +46,5 @@ public class ProdutoController {
         service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
     }
-	
+
 }

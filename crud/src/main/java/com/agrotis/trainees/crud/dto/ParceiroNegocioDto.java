@@ -7,67 +7,67 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 public class ParceiroNegocioDto {
 
-	private Integer id;
+    private Integer id;
     private String nome;
     private String inscricaoFiscal;
-	private String endereco;
-	private String telefone;
-	
-	public ParceiroNegocioDto() {
-		super();
-	}
+    private String endereco;
+    private String telefone;
 
-	public ParceiroNegocioDto(ParceiroNegocio parceiro) {
-		super();
-		this.id = parceiro.getId();
-		this.nome = parceiro.getNome();
-		this.inscricaoFiscal = parceiro.getInscricaoFiscal();
-		this.endereco = parceiro.getEndereco();
-		this.telefone = parceiro.getTelefone();
-	}
-	
-	public String getNome() {
-		return nome;
-	}
+    public ParceiroNegocioDto() {
+        super();
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public ParceiroNegocioDto(ParceiroNegocio parceiro) {
+        super();
+        this.id = parceiro.getId();
+        this.nome = parceiro.getNome();
+        this.inscricaoFiscal = parceiro.getInscricaoFiscal();
+        this.endereco = parceiro.getEndereco();
+        this.telefone = parceiro.getTelefone();
+    }
 
-	public String getInscricaoFiscal() {
-		return inscricaoFiscal;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setInscricaoFiscal(String inscricaoFiscal) {
-		this.inscricaoFiscal = inscricaoFiscal;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public String getEndereco() {
-		return endereco;
-	}
+    public String getInscricaoFiscal() {
+        return inscricaoFiscal;
+    }
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+    public void setInscricaoFiscal(String inscricaoFiscal) {
+        this.inscricaoFiscal = inscricaoFiscal;
+    }
 
-	public String getTelefone() {
-		return telefone;
-	}
+    public String getEndereco() {
+        return endereco;
+    }
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
 
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public String getTelefone() {
+        return telefone;
+    }
 
-	public static List<ParceiroNegocioDto> converter(List<ParceiroNegocio> parceiros) {
-		return parceiros.stream().map(ParceiroNegocioDto::new).collect(Collectors.toList());
-	}
-	
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static List<ParceiroNegocioDto> converter(List<ParceiroNegocio> parceiros) {
+        return parceiros.stream().map(ParceiroNegocioDto::new).collect(Collectors.toList());
+    }
+
 }

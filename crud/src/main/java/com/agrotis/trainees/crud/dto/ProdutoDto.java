@@ -9,97 +9,97 @@ import com.agrotis.trainees.crud.entity.Produto;
 
 public class ProdutoDto {
 
-	private Integer id;
-	private String nome;
-	private String descricao;
-	private ParceiroNegocio parceiroNegocio;
-	private String fabricante;
-	private LocalDate dataFabricacao;
-	private LocalDate dataValidade;
-	private Integer estoque;
-	
-	public ProdutoDto() {
-		super();
-	}
+    private Integer id;
+    private String nome;
+    private String descricao;
+    private ParceiroNegocio parceiroNegocio;
+    private String fabricante;
+    private LocalDate dataFabricacao;
+    private LocalDate dataValidade;
+    private Integer estoque;
 
-	public ProdutoDto(Produto produto) {
-		super();
-		this.id = produto.getId();
-		this.nome = produto.getNome();
-		this.descricao = produto.getDescricao();
-		this.parceiroNegocio = produto.getParceiroNegocio();
-		this.fabricante = produto.getFabricante();
-		this.dataFabricacao = produto.getDataFabricacao();
-		this.dataValidade = produto.getDataValidade();
-		this.estoque = produto.getEstoque();
-	}
-	
-	public String getNome() {
-		return nome;
-	}
+    public ProdutoDto() {
+        super();
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public ProdutoDto(Produto produto) {
+        super();
+        this.id = produto.getId();
+        this.nome = produto.getNome();
+        this.descricao = produto.getDescricao();
+        this.parceiroNegocio = produto.getParceiroNegocio();
+        this.fabricante = produto.getFabricante();
+        this.dataFabricacao = produto.getDataFabricacao();
+        this.dataValidade = produto.getDataValidade();
+        this.estoque = produto.getEstoque();
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public ParceiroNegocio getParceiroNegocio() {
-		return parceiroNegocio;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-		this.parceiroNegocio = parceiroNegocio;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public String getFabricante() {
-		return fabricante;
-	}
+    public ParceiroNegocio getParceiroNegocio() {
+        return parceiroNegocio;
+    }
 
-	public void setFabricante(String fabricante) {
-		this.fabricante = fabricante;
-	}
+    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+        this.parceiroNegocio = parceiroNegocio;
+    }
 
-	public LocalDate getDataFabricacao() {
-		return dataFabricacao;
-	}
+    public String getFabricante() {
+        return fabricante;
+    }
 
-	public void setDataFabricacao(LocalDate dataFabricacao) {
-		this.dataFabricacao = dataFabricacao;
-	}
+    public void setFabricante(String fabricante) {
+        this.fabricante = fabricante;
+    }
 
-	public LocalDate getDataValidade() {
-		return dataValidade;
-	}
+    public LocalDate getDataFabricacao() {
+        return dataFabricacao;
+    }
 
-	public void setDataValidade(LocalDate dataValidade) {
-		this.dataValidade = dataValidade;
-	}
+    public void setDataFabricacao(LocalDate dataFabricacao) {
+        this.dataFabricacao = dataFabricacao;
+    }
 
-	public Integer getEstoque() {
-		return estoque;
-	}
+    public LocalDate getDataValidade() {
+        return dataValidade;
+    }
 
-	public void setEstoque(Integer estoque) {
-		this.estoque = estoque;
-	}
+    public void setDataValidade(LocalDate dataValidade) {
+        this.dataValidade = dataValidade;
+    }
 
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getEstoque() {
+        return estoque;
+    }
 
-	public static List<ProdutoDto> converter(List<Produto> produtos) {
-		return produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());
-	}
-	
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static List<ProdutoDto> converter(List<Produto> produtos) {
+        return produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());
+    }
+
 }

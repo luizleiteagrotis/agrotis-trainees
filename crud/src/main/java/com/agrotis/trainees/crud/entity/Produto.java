@@ -46,7 +46,8 @@ public class Produto {
         this.estoque = 0;
     }
 
-    public Produto(String nome, String descricao, ParceiroNegocio parceiroNegocio, String fabricante, LocalDate dataFabricacao, LocalDate dataValidade) {
+    public Produto(String nome, String descricao, ParceiroNegocio parceiroNegocio, String fabricante, LocalDate dataFabricacao,
+                    LocalDate dataValidade) {
         super();
         this.nome = nome;
         this.descricao = descricao;
@@ -57,15 +58,15 @@ public class Produto {
         this.estoque = 0;
     }
 
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
-		this.id = id;
-	}
+        this.id = id;
+    }
 
-	public String getNome() {
+    public String getNome() {
         return nome;
     }
 

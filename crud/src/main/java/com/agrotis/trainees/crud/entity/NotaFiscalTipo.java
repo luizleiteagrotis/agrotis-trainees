@@ -5,4 +5,3 @@ public enum NotaFiscalTipo {
     ENTRADA, SAIDA
 
 }
-

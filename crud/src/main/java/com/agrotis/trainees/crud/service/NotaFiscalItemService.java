@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 
@@ -29,7 +29,8 @@ public class NotaFiscalItemService {
     private final NotaFiscalService notaFiscalService;
 
     @Autowired
-    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService, NotaFiscalService notaFiscalService) {
+    public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService,
+                    NotaFiscalService notaFiscalService) {
         this.repository = repository;
         this.produtoService = produtoService;
         this.notaFiscalService = notaFiscalService;
@@ -44,8 +45,8 @@ public class NotaFiscalItemService {
         return converterParaDto(savedItem);
     }
 
-    public NotaFiscalItemDto buscarPorId(Integer id) throws NotFoundException{
-    	NotaFiscalItem entidade = repository.findById(id).orElseThrow(() -> new NotFoundException());
+    public NotaFiscalItemDto buscarPorId(Integer id) throws NotFoundException {
+        NotaFiscalItem entidade = repository.findById(id).orElseThrow(() -> new NotFoundException());
         return converterParaDto(entidade);
     }
 
@@ -55,19 +56,19 @@ public class NotaFiscalItemService {
         adicionarOuAtualizarItemNotaFiscal(item);
         LOG.info("Item da nota fiscal deletado com sucesso");
     }
-    
+
     public List<NotaFiscalItemDto> listarTodos() {
-    	List<NotaFiscalItem> entidades = repository.findAll();
-    	return entidades.stream().map(entidade -> converterParaDto(entidade)).collect(Collectors.toList());
+        List<NotaFiscalItem> entidades = repository.findAll();
+        return entidades.stream().map(entidade -> converterParaDto(entidade)).collect(Collectors.toList());
     }
-    
+
     public NotaFiscalItem inserir(@Valid NotaFiscalItemDto dto) {
         NotaFiscalItem entidade = converterParaEntidade(dto);
         NotaFiscalItem savedItem = repository.save(entidade);
-        adicionarOuAtualizarItemNotaFiscal(savedItem); 
+        adicionarOuAtualizarItemNotaFiscal(savedItem);
         return savedItem;
     }
-    
+
     public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) {
         NotaFiscalItem entidade = converterParaEntidade(dto);
         entidade.setValorTotal(calcularValorTotalItem(entidade));
@@ -75,32 +76,31 @@ public class NotaFiscalItemService {
         adicionarOuAtualizarItemNotaFiscal(savedItem);
         return converterParaDto(savedItem);
     }
-    
+
     public static NotaFiscalItemDto converterParaDto(NotaFiscalItem entidade) {
-		NotaFiscalItemDto dto = new NotaFiscalItemDto();
-		dto.setId(entidade.getId());
-		dto.setNotaFiscal(entidade.getNotaFiscal());
-		dto.setProduto(entidade.getProduto());
-		dto.setQuantidade(entidade.getQuantidade());
-		dto.setPrecoUnitario(entidade.getPrecoUnitario());
-		dto.setValorTotal(entidade.getValorTotal()); 
-		
-		return dto;
-	}
-    
+        NotaFiscalItemDto dto = new NotaFiscalItemDto();
+        dto.setId(entidade.getId());
+        dto.setNotaFiscal(entidade.getNotaFiscal());
+        dto.setProduto(entidade.getProduto());
+        dto.setQuantidade(entidade.getQuantidade());
+        dto.setPrecoUnitario(entidade.getPrecoUnitario());
+        dto.setValorTotal(entidade.getValorTotal());
+
+        return dto;
+    }
+
     public static NotaFiscalItem converterParaEntidade(NotaFiscalItemDto dto) {
-		NotaFiscalItem entidade = new NotaFiscalItem();
-		entidade.setId(dto.getId());
-		entidade.setNotaFiscal(dto.getNotaFiscal());
-		entidade.setProduto(dto.getProduto());
-		entidade.setQuantidade(dto.getQuantidade());
-		entidade.setPrecoUnitario(dto.getPrecoUnitario());
-		entidade.setValorTotal(dto.getValorTotal()); 
-		
-		return entidade;
-	}
-    
-    
+        NotaFiscalItem entidade = new NotaFiscalItem();
+        entidade.setId(dto.getId());
+        entidade.setNotaFiscal(dto.getNotaFiscal());
+        entidade.setProduto(dto.getProduto());
+        entidade.setQuantidade(dto.getQuantidade());
+        entidade.setPrecoUnitario(dto.getPrecoUnitario());
+        entidade.setValorTotal(dto.getValorTotal());
+
+        return entidade;
+    }
+
     public void adicionarOuAtualizarItemNotaFiscal(NotaFiscalItem item) {
         if (item != null && item.getNotaFiscal() != null && item.getProduto() != null) {
             double valorTotalItem = calcularValorTotalItem(item);
@@ -113,19 +113,19 @@ public class NotaFiscalItemService {
     }
 
     private void atualizarValorTotalNotaFiscal(NotaFiscal notaFiscal, Double valorTotalItem) {
-    	double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
+        double novoValorTotal = notaFiscal.getValorTotal() + valorTotalItem;
         notaFiscal.setValorTotal(novoValorTotal);
         notaFiscalService.salvar(notaFiscal);
     }
-    
+
     private double calcularValorTotalItem(NotaFiscalItem item) {
-    	return item.getQuantidade() * item.getPrecoUnitario();
+        return item.getQuantidade() * item.getPrecoUnitario();
     }
 
     private void controlarEstoque(NotaFiscalItem item) {
         ProdutoDto produtoDto = ProdutoService.converterParaDto(item.getProduto());
         produtoDto.setId(item.getProduto().getId());
-        		
+
         int quantidade = item.getQuantidade();
 
         if (item.getNotaFiscal().getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
@@ -136,9 +136,8 @@ public class NotaFiscalItemService {
         } else {
             produtoDto.setEstoque(produtoDto.getEstoque() + quantidade);
         }
-        
+
         produtoService.salvar(produtoDto);
     }
- 
-    
+
 }

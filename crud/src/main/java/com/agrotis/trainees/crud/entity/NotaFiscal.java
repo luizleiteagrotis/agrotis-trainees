@@ -47,8 +47,8 @@ public class NotaFiscal {
 
     public NotaFiscal() {
         super();
-//        this.dataNota = LocalDate.now();
-//        this.itensNota = new ArrayList<>();
+        // this.dataNota = LocalDate.now();
+        // this.itensNota = new ArrayList<>();
         this.valorTotal = 0.0;
     }
 
@@ -63,20 +63,20 @@ public class NotaFiscal {
         this.valorTotal = 0.0;
     }
 
-    public NotaFiscal(NotaFiscalTipo tipo, ParceiroNegocio parceiro, Integer numero, LocalDate data,
-			List<NotaFiscalItem> itens, Double valorTotal2) {
-    	super();
+    public NotaFiscal(NotaFiscalTipo tipo, ParceiroNegocio parceiro, Integer numero, LocalDate data, List<NotaFiscalItem> itens,
+                    Double valorTotal2) {
+        super();
     }
 
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
-		this.id = id;
-	}
+        this.id = id;
+    }
 
-	public NotaFiscalTipo getNotaFiscalTipo() {
+    public NotaFiscalTipo getNotaFiscalTipo() {
         return notaFiscalTipo;
     }
 

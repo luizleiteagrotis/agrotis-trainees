@@ -1,7 +1,5 @@
 package com.agrotis.trainees.crud.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 
@@ -21,13 +21,13 @@ import com.agrotis.trainees.crud.service.NotaFiscalService;
 @RestController
 public class NotaFiscalController {
 
-	@Autowired
-	private NotaFiscalService service;
-	
-	@PostMapping
+    @Autowired
+    private NotaFiscalService service;
+
+    @PostMapping
     public ResponseEntity<?> inserir(@Valid @RequestBody NotaFiscalDto dto) {
         NotaFiscalDto notaSalva = service.salvar(dto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(notaSalva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(notaSalva);
     }
 
     @GetMapping
@@ -46,5 +46,5 @@ public class NotaFiscalController {
         service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
     }
-	
+
 }

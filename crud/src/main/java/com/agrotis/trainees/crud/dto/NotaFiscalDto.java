@@ -11,87 +11,87 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 public class NotaFiscalDto {
 
-	private Integer id;
-	private NotaFiscalTipo notaFiscalTipo;
-	private ParceiroNegocio parceiroNegocio;
-	private Integer numeroNota;
+    private Integer id;
+    private NotaFiscalTipo notaFiscalTipo;
+    private ParceiroNegocio parceiroNegocio;
+    private Integer numeroNota;
     private LocalDate dataNota;
     private List<NotaFiscalItem> itensNota;
     private Double valorTotal;
-    
-	public NotaFiscalDto() {
-		super();
-	}
 
-	public NotaFiscalDto(NotaFiscal nota) {
-		super();
-		this.id = nota.getId();
-		this.notaFiscalTipo = nota.getNotaFiscalTipo();
-		this.parceiroNegocio = nota.getParceiroNegocio();
-		this.numeroNota = nota.getNumeroNota();
-		this.dataNota = nota.getDataNota();
-		this.itensNota = nota.getItensNota();
-		this.valorTotal = nota.getValorTotal();
-	}
+    public NotaFiscalDto() {
+        super();
+    }
 
-		public NotaFiscalTipo getNotaFiscalTipo() {
-		return notaFiscalTipo;
-	}
+    public NotaFiscalDto(NotaFiscal nota) {
+        super();
+        this.id = nota.getId();
+        this.notaFiscalTipo = nota.getNotaFiscalTipo();
+        this.parceiroNegocio = nota.getParceiroNegocio();
+        this.numeroNota = nota.getNumeroNota();
+        this.dataNota = nota.getDataNota();
+        this.itensNota = nota.getItensNota();
+        this.valorTotal = nota.getValorTotal();
+    }
 
-	public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo) {
-		this.notaFiscalTipo = notaFiscalTipo;
-	}
+    public NotaFiscalTipo getNotaFiscalTipo() {
+        return notaFiscalTipo;
+    }
 
-	public ParceiroNegocio getParceiroNegocio() {
-		return parceiroNegocio;
-	}
+    public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo) {
+        this.notaFiscalTipo = notaFiscalTipo;
+    }
 
-	public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-		this.parceiroNegocio = parceiroNegocio;
-	}
+    public ParceiroNegocio getParceiroNegocio() {
+        return parceiroNegocio;
+    }
 
-	public Integer getNumeroNota() {
-		return numeroNota;
-	}
+    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+        this.parceiroNegocio = parceiroNegocio;
+    }
 
-	public void setNumeroNota(Integer numeroNota) {
-		this.numeroNota = numeroNota;
-	}
+    public Integer getNumeroNota() {
+        return numeroNota;
+    }
 
-	public LocalDate getDataNota() {
-		return dataNota;
-	}
+    public void setNumeroNota(Integer numeroNota) {
+        this.numeroNota = numeroNota;
+    }
 
-	public void setDataNota(LocalDate dataNota) {
-		this.dataNota = dataNota;
-	}
+    public LocalDate getDataNota() {
+        return dataNota;
+    }
 
-	public List<NotaFiscalItem> getItensNota() {
-		return itensNota;
-	}
+    public void setDataNota(LocalDate dataNota) {
+        this.dataNota = dataNota;
+    }
 
-	public void setItensNota(List<NotaFiscalItem> itensNota) {
-		this.itensNota = itensNota;
-	}
+    public List<NotaFiscalItem> getItensNota() {
+        return itensNota;
+    }
 
-	public Double getValorTotal() {
-		return valorTotal;
-	}
+    public void setItensNota(List<NotaFiscalItem> itensNota) {
+        this.itensNota = itensNota;
+    }
 
-	public void setValorTotal(Double valorTotal) {
-		this.valorTotal = valorTotal;
-	}
+    public Double getValorTotal() {
+        return valorTotal;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public static List<NotaFiscalDto> converter(List<NotaFiscal> notas) {
-		return notas.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
-	}
-       
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public static List<NotaFiscalDto> converter(List<NotaFiscal> notas) {
+        return notas.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
+    }
+
 }

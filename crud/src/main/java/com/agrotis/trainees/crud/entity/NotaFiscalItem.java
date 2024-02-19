@@ -37,10 +37,10 @@ public class NotaFiscalItem {
     private double valorTotal;
 
     public NotaFiscalItem() {
-		super();
-	}
+        super();
+    }
 
-	public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto,
+    public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto,
                     @NotNull(message = "Necessário inserir a quantidade do produto") Integer quantidade,
                     @NotNull(message = "Necessário inserir o preço unitário") double precoUnitario) {
         super();
@@ -49,21 +49,21 @@ public class NotaFiscalItem {
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
     }
-    
-    public NotaFiscalItem(Optional<NotaFiscal> notaFiscal2, Produto produtoSet, Integer quantidade2,
-			Double precoUnitario2, Double valorTotal2) {
-    	super();
+
+    public NotaFiscalItem(Optional<NotaFiscal> notaFiscal2, Produto produtoSet, Integer quantidade2, Double precoUnitario2,
+                    Double valorTotal2) {
+        super();
     }
 
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
-		this.id = id;
-	}
+        this.id = id;
+    }
 
-	public NotaFiscal getNotaFiscal() {
+    public NotaFiscal getNotaFiscal() {
         return notaFiscal;
     }
 
