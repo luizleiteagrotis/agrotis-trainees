@@ -155,7 +155,18 @@ public class ItemNotaFiscalService {
 
         if (verificarPorId(id) != null) {
             ItemNotaFiscal itemNotaFiscal = verificarPorId(id);
+            Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
+            double quantidadeEstoque = itemNotaFiscal.getProduto().getEstoque();
+            double quantidadeItem = itemNotaFiscal.getQuantidade().doubleValue();
             repository.deleteById(id);
+            if (itemNotaFiscal.getNotaFiscal().getTipo().equalsIgnoreCase("entrada")) {
+                quantidadeEstoque = controleEstoque.diminuirEstoque(quantidadeEstoque, quantidadeItem);
+
+            } else if (itemNotaFiscal.getNotaFiscal().getTipo().equalsIgnoreCase("saida")) {
+                quantidadeEstoque = controleEstoque.somarEstoque(quantidadeEstoque, quantidadeItem);
+            }
+            produto.setEstoque(quantidadeEstoque);
+            produtoRepository.save(produto);
             notaFiscalService.persistirValorTotal(itemNotaFiscal.getNotaFiscal().getId());
             LOG.info("Deletado com sucesso");
         } else {
