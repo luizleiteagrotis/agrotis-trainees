@@ -35,6 +35,16 @@ public class ItemNota {
     
     @Column(name = "valor_total")
     private Double valorTotal;
+    
+    @Column(name = "nota_fiscalC")
+    private NotaFiscalC notaFiscalC;
+
+    public NotaFiscalC getNotaFiscalC() {
+        return notaFiscalC;
+    }
+    public void setNotaFiscalC(NotaFiscalC notaFiscal) {
+        this.notaFiscal = notaFiscal;
+    }
 
     public Integer getId() {
         return id;
@@ -95,6 +105,8 @@ public class ItemNota {
         return Objects.equals(id,  other.id);
         
     }
+
+    
    
 
 }

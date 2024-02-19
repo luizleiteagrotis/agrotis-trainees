@@ -6,10 +6,15 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.NotaFiscalC;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ItemNotaRepository;
+
+import dto.CabecalhoDto;
+import dto.ItemDto;
 
 
 
@@ -22,17 +27,31 @@ public class ItemNotaService {
     
     private final ItemNotaRepository repository;
     private final ProdutoService produtoService;
+    private final NotaFiscalC notaFiscalCService;
+    private final ParceiroNegocioService parceiroNegocioService;
+    
     
     public  ItemNotaService(ItemNotaRepository repository, ProdutoService produtoService) {
         this.repository = repository;
         this.produtoService = produtoService;
+        this.notaFiscalCService = notaFiscalCService;
+        this.parceiroNegocioService = parceiroNegocioService;
                         
        
         }
     
-    public ItemNota salvar(ItemNota entidade) {
+    public ItemNota salvar(ItemDto dto) {
+        ItemNota entidade = DtoUtil.converteParaEntidade(dto);
+        
+        NotaFiscalC notaFiscalC = entidade.getNotaFiscalC();
+        CabecalhoDto cabecalhoDtoSalvo = NotaFiscalCService.salvar(DtoUtils.converteParaDto(notaFiscalC));
+        entidade.setNotaFiscalC(DtoUtils.converteParaEntidade(cabecalhoDtoSalvo));
+        
         calcularValorTotal(entidade);
         atualizarEstoque(entidade);
+        
+        entidade = repository.save(entidade);
+        
         return repository.save(entidade);
     }
     
@@ -46,17 +65,30 @@ public class ItemNotaService {
         return (ItemNota) repository.findAll();
         
     }
-    
-    public Optional<Object> atualizar(Integer id, ItemNota ItemNota) {
-        return repository.findById(id).map(itemNotaExistente -> {
-            itemNotaExistente.setNotaFiscal(ItemNota.getNotaFiscal());
-            itemNotaExistente.setPrecoUnitario(ItemNota.getPrecoUnitario());
-            itemNotaExistente.setProduto(ItemNota.getProduto());
-            itemNotaExistente.setQuantidade(ItemNota.getQuantidade());
-            itemNotaExistente.setValorTotal(ItemNota.getValorTotal());
-            return repository.save(itemNotaExistente);
-        });
+    @Transactional
+    public ItemDto atualizar1(Integer id, ItemDto notaFiscalItemDto) {
+        ItemNota itemNotaExistente = repository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+
+        atualizarItemNota(itemNotaExistente, notaFiscalItemDto);
+
+        ItemNota itemNotaAtualizada = repository.save(itemNotaExistente);
+        return DtoUtils.converteParaDto(itemNotaAtualizada);
+        
+        
     }
+    
+    private void atualizarItemNota(ItemNota itemNota, ItemDto notaFiscalItemDto) {
+        NotaFiscalC notaFiscalC = notaFiscalItemDto.getNotaFiscalC();
+        itemNota.setNotaFiscalC(notaFiscalC);
+        itemNota.setPrecoUnitario(notaFiscalItemDto.getPrecoUnitario());
+        itemNota.setProduto(notaFiscalItemDto.getProduto());
+        itemNota.setQuantidade(notaFiscalItemDto.getQuantidade());
+        itemNota.setValorTotal(notaFiscalItemDto.getValorTotal());
+    
+        
+    }
+    
 
     public void calcularValorTotal(ItemNota ItemNota1) {
         Integer quantidade = ItemNota1.getQuantidade();
@@ -84,6 +116,12 @@ public class ItemNotaService {
 
       
         produtoService.salvar(produto);
+    }
+
+    private void adicionarValorTotalCabecalho(ItemNota item) {
+     NotaFiscalC cabecalho = item.getNotaFiscalC();
+     Double valorTotalItem = item.getValorTotal();
+     cabecalho.setValorTotal(valorTotalItem);
     }
 }
  

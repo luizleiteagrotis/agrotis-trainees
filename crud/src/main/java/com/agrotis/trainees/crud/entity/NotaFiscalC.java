@@ -40,7 +40,18 @@ public class NotaFiscalC {
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDateTime data;
 
-	public Integer getId() {
+	@Column(name = "valor_total")
+    public Double ValorTotal;
+
+	public Double getValorTotal() {
+        return ValorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        ValorTotal = valorTotal;
+    }
+
+    public Integer getId() {
 		return id;
 	}
 
