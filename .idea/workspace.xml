@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7bbf1b9b-6787-4c7e-aa23-64a3bc56ffc6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula24/exercicio4/LivroDeBiblioteca.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula24/exercicio4/LivroDeBiblioteca.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula24/exercicio4/TestClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula24/exercicio4/LivrariaTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula24/exercicio5/ContaCorrente.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula24/exercicio5/ContaCorrente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula25a27/exercicio1/TestClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula25a27/exercicio1/LampadaTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula25a27/exercicio2/ContaCorrente.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula25a27/exercicio2/ContaCorrente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula25a27/exercicio2/TestClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula25a27/exercicio2/ContaCorrenteTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula44a46/exercicio1/figuras2D/Quadrado.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula44a46/exercicio1/figuras2D/Quadrado.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula47a52/exercicio1/AgendaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula47a52/exercicio1/AgendaTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios/aula47a52/exercicio1/ContatoFactory.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2bP3YSy8FDNElprasEYHpdKTK83" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "anderson.souza",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/andersongustavodesouza/Desenvolvimento/backend/crud-test",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/curso-loiane-basico/src/main/java/exercicios" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <module name="agrotis-trainees" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-11.0.22-corretto-11.0.22-f644763e9732-cf124b14" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7bbf1b9b-6787-4c7e-aa23-64a3bc56ffc6" name="Changes" comment="" />
+      <created>1706102935541</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1706102935541</updated>
+      <workItem from="1706102937022" duration="2806000" />
+      <workItem from="1706298648018" duration="1357000" />
+      <workItem from="1706548216396" duration="16000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

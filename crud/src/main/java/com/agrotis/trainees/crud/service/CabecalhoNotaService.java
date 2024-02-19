@@ -50,7 +50,6 @@ public class CabecalhoNotaService {
         return DtoUtils.converteParaDto(entidadeSalva);
     }
 
-
     public CabecalhoNotaDto buscarPorId(Integer id) {
         CabecalhoNota cabecalho = repository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
@@ -145,10 +144,5 @@ public class CabecalhoNotaService {
                 .mapToDouble(item -> item.getQuantidade() * item.getPrecoUnitario())
                 .sum();
     }
-    
-    
-    
-
-
 
 }
