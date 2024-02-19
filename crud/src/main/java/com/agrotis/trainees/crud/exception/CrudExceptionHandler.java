@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.agrotis.trainees.crud.repository.wrapper.EntityNotFoundException;
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapperException;
 import com.agrotis.trainees.crud.service.cabecalho.CabecalhoNotaServiceException;
 import com.agrotis.trainees.crud.service.item.ItemNotaServiceException;
@@ -77,5 +78,10 @@ public class CrudExceptionHandler {
 	public ResponseEntity<String> handler(ItemNotaServiceException exception) {
 		String mensagemErro = exception.getMessage();
 		return ResponseEntity.badRequest().body(mensagemErro);
+	}
+	
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<?> handler(EntityNotFoundException exception) {
+		return ResponseEntity.notFound().build();
 	}
 }
