@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
-import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
@@ -31,24 +30,22 @@ public class CabecalhoNotaService {
 
     public CabecalhoNotaDto salvar(CabecalhoNotaDto cabecalhoDto) {
         CabecalhoNota cabecalho = DtoUtils.converteParaEntidade(cabecalhoDto);
-        
-        for (ItemNota item : cabecalho.getItens()) {
-            item.setValorTotal(item.getQuantidade() * item.getPrecoUnitario());
-        }
-        
-        ParceiroNegocio parceiroNegocio = cabecalho.getParceiroNegocio();
-        if (parceiroNegocio != null && parceiroNegocio.getId() == null) {
-            parceiroNegocio = parceiroNegocioRepository.save(parceiroNegocio);
-            cabecalho.setParceiroNegocio(parceiroNegocio);
-        }
 
+        ParceiroNegocio parceiroNegocio = cabecalho.getParceiroNegocio();
+        ParceiroNegocio fabricanteSalvo = salvarOuBuscarFabricante(parceiroNegocio);
+        cabecalho.setParceiroNegocio(fabricanteSalvo);        
+
+        // Calcula o valor total do cabeçalho da nota
         Double valorTotal = calcularValorTotal(cabecalho);
         cabecalho.setValorTotal(valorTotal);
 
+        // Salva o cabeçalho da nota no banco de dados
         CabecalhoNota entidadeSalva = repository.save(cabecalho);
 
+        // Converte e retorna o cabeçalho da nota salvo como DTO
         return DtoUtils.converteParaDto(entidadeSalva);
     }
+
 
     public CabecalhoNotaDto buscarPorId(Integer id) {
         CabecalhoNota cabecalho = repository.findById(id)
@@ -64,27 +61,6 @@ public class CabecalhoNotaService {
         return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
 
-//    public CabecalhoNotaDto atualizar(Integer id, CabecalhoNotaDto dto) {
-//        return repository.findById(id).map(cabecalhoExistente -> {
-//            cabecalhoExistente.setData(dto.getData());
-//            cabecalhoExistente.setNotaFiscalTipo(dto.getNotaFiscalTipo());
-//            cabecalhoExistente.setNumero(dto.getNumero());
-//            ParceiroNegocio parceiroNegocioExistente = dto.getParceiroNegocio().getId() != null
-//                            ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
-//                            : null;
-//            if (parceiroNegocioExistente == null) {
-//                ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(dto.getParceiroNegocio());
-//                cabecalhoExistente.setParceiroNegocio(parceiroNegocioExistente);
-//            } else {
-//                cabecalhoExistente.setParceiroNegocio(parceiroNegocioExistente);
-//            }
-//            CabecalhoNota cabecalhoAtualizado = repository.save(cabecalhoExistente);
-//            return DtoUtils.converteParaDto(cabecalhoAtualizado);
-//        }).orElseThrow(() -> {
-//            LOG.info("Não foi possível encontrar o cabecalho pelo ID {}", id);
-//            return new EntidadeNaoEncontradaException("Cabechalho com o ID " + id + " não encontrado");
-//        });
-//    }
     
     public CabecalhoNotaDto atualizar(Integer id, CabecalhoNotaDto dto) {
         return repository.findById(id).map(cabecalhoExistente -> {
@@ -143,6 +119,15 @@ public class CabecalhoNotaService {
         return cabecalho.getItens().stream()
                 .mapToDouble(item -> item.getQuantidade() * item.getPrecoUnitario())
                 .sum();
+    }
+    
+    private ParceiroNegocio salvarOuBuscarFabricante(ParceiroNegocio fabricante) {
+        if (fabricante.getId() != null) {
+            return parceiroNegocioRepository.findById(fabricante.getId())
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Fabricante com o ID " + fabricante.getId() + " não encontrado"));
+        } else {
+            return parceiroNegocioRepository.save(fabricante);
+        }
     }
 
 }

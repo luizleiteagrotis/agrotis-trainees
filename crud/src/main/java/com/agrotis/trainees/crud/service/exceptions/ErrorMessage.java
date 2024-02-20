@@ -47,6 +47,28 @@ public class ErrorMessage {
             this.errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
         
+        
+        
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getPath() {

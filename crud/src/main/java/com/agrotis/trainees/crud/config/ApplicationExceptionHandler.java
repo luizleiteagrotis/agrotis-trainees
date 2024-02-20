@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.config;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -47,11 +47,23 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorMessage> constraintViolationException(ConstraintViolationException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
-        ErrorMessage errorMessage = new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campo(s) inválido(s)");
-        errorMessage.setErrors(ex.getConstraintViolations().stream().collect(
-                        Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage)));
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).contentType(MediaType.APPLICATION_JSON).body(errorMessage);
+        ErrorMessage errorMessage = new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Um ou mais campos são inválidos.");
+
+        // Mapear os campos inválidos e as mensagens de erro associadas
+        Map<String, String> errors = ex.getConstraintViolations().stream()
+                .collect(Collectors.toMap(
+                        violation -> violation.getPropertyPath().toString(),
+                        ConstraintViolation::getMessage));
+
+        // Adicionar os detalhes dos campos inválidos ao objeto ErrorMessage
+        errorMessage.setErrors(errors);
+
+        // Retornar uma resposta com status UNPROCESSABLE_ENTITY e o objeto ErrorMessage
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(errorMessage);
     }
+
 
 
 }

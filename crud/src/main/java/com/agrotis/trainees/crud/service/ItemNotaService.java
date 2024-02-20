@@ -11,14 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
 import com.agrotis.trainees.crud.dtos.ItemNotaDto;
-import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
-import com.agrotis.trainees.crud.dtos.ProdutoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
+import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.DtoUtils;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
@@ -29,16 +27,18 @@ public class ItemNotaService {
     private static final Logger LOG = LoggerFactory.getLogger(ItemNotaService.class);
 
     private final NotaFiscalItemRepository repository;
+    private final ProdutoRepository produtoRepository;
     private final ProdutoService produtoService;
     private final CabecalhoNotaService cabecalhoNotaService;
     private final ParceiroNegocioService parceiroNegocioService;
 
     public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService,
-                    CabecalhoNotaService cabecalhoNotaService,ParceiroNegocioService parceiroNegocioService) {
+                    CabecalhoNotaService cabecalhoNotaService,ParceiroNegocioService parceiroNegocioService, ProdutoRepository produtoRepository) {
         this.repository = repository;
         this.produtoService = produtoService;
         this.cabecalhoNotaService = cabecalhoNotaService;
         this.parceiroNegocioService = parceiroNegocioService;
+        this.produtoRepository = produtoRepository;
     }
     
     @Transactional
@@ -48,13 +48,18 @@ public class ItemNotaService {
         CabecalhoNota cabecalhoNota = entidade.getCabecalhoNota();
         CabecalhoNotaDto cabecalhoNotaDtoSalvo = cabecalhoNotaService.salvar(DtoUtils.converteParaDto(cabecalhoNota));
         entidade.setCabecalhoNota(DtoUtils.converteParaEntidade(cabecalhoNotaDtoSalvo));
+        
+        Produto produtoDoItemNota = entidade.getProduto();
+        Produto salvarOuBuscarProduto = salvarOuBuscarProduto(produtoDoItemNota);
+        produtoRepository.save(salvarOuBuscarProduto);
+        entidade.setProduto(salvarOuBuscarProduto);
 
         calcularValorTotal(entidade);
         atualizarEstoque(entidade);
 
         entidade = repository.save(entidade);
         
-        adicionarValorTotalCabecalho(entidade);
+        //adicionarValorTotalCabecalho(entidade);
 
         return DtoUtils.converteParaDto(entidade);
     }
@@ -133,11 +138,24 @@ public class ItemNotaService {
         produtoService.salvar(DtoUtils.converteParaDto(produto));
     }
 
-    private void adicionarValorTotalCabecalho(ItemNota item) {
-        CabecalhoNota cabecalho = item.getCabecalhoNota();
-        Double valorTotalItem = item.getValorTotal();
-        cabecalho.setValorTotal(valorTotalItem);
+    private void adicionarValorTotalCabecalho(ItemNota itemNota) {
+        CabecalhoNota cabecalhoNota = itemNota.getCabecalhoNota();
+        Double valorTotalCabecalho = cabecalhoNota.getValorTotal();
+        Double valorTotalItem = itemNota.getValorTotal();
+        valorTotalCabecalho += valorTotalItem;
+        cabecalhoNota.setValorTotal(valorTotalCabecalho);
     }
+    
+    private Produto salvarOuBuscarProduto(Produto produto) {
+        if (produto.getId() != null) {
+            return produtoRepository.findById(produto.getId())
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+        } else {
+            return produtoRepository.findById(produto.getId())
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+        }
+    }
+
     
 
 

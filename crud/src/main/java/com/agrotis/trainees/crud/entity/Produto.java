@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -31,7 +32,7 @@ public class Produto{
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "fabricante_id")
-    //@NotNull(message = "Preencha o campo fabricante.")
+    @NotNull(message = "Preencha o campo fabricante.")
     private ParceiroNegocio fabricante;
 
     @Column(name = "data_fabricacao")
@@ -47,6 +48,12 @@ public class Produto{
     @NotNull(message = "Preencha o campo quantidade de estoque")
     @Column(name = "quantidade_estoque")
     private Integer quantidadeEstoque;
+    
+    private BigDecimal custoTotal;
+    
+    private BigDecimal custoMedio;
+    
+    
 
     public String getDescricao() {
         return descricao;
@@ -90,6 +97,22 @@ public class Produto{
 
     public void setQuantidadeEstoque(Integer quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
+    }
+    
+    public BigDecimal getCustoTotal() {
+        return custoTotal;
+    }
+
+    public void setCustoTotal(BigDecimal custoTotal) {
+        this.custoTotal = custoTotal;
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
     }
 
     @Override

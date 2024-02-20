@@ -37,12 +37,10 @@ public class ProdutoService {
         ParceiroNegocio fabricante = produto.getFabricante();
         ParceiroNegocio fabricanteSalvo = salvarOuBuscarFabricante(fabricante);
         produto.setFabricante(fabricanteSalvo);
-
         Produto produtoSalvo = produtoRepository.save(produto);
         LOG.info("Salvando o produto {}", produtoDto.getDescricao());
         return DtoUtils.converteParaDto(produtoSalvo);
     }
-
 
 
     public ProdutoDto buscaPeloId(Integer id) {
