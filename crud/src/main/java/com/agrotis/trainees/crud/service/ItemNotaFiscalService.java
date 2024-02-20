@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
@@ -44,22 +42,6 @@ public class ItemNotaFiscalService {
         this.produtoRepository = produtoRepository;
     }
 
-    /*
-     * @Transactional public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
-     * ItemNotaFiscal entidade = converteParaEntidade(dto);
-     * 
-     * NotaFiscalDto notaFiscalDto =
-     * notaFiscalService.buscarPorId(entidade.getNotaFiscal().getId());
-     * NotaFiscal notaFiscal =
-     * notaFiscalService.converteParaEntidade(notaFiscalDto);
-     * entidade.setNotaFiscal(notaFiscal); calcularValorTotal(entidade);
-     * atualizarEstoque(entidade);
-     * 
-     * entidade = repository.save(entidade);
-     * 
-     * return converteParaDto(entidade); }
-     */
-
     public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
         ItemNotaFiscal entidade = converteParaEntidade(dto);
 
@@ -90,7 +72,6 @@ public class ItemNotaFiscalService {
                         () -> new EntidadeNaoEncontradaException("A NOTA FISCAL com o ID: " + id + "nao foi encontrada!"));
     }
 
-    @Transactional
     public NotaFiscalItemDto update(Integer id, NotaFiscalItemDto notaFiscalItemDto) {
         ItemNotaFiscal itemNotaExistente = repository.findById(id)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));

@@ -39,12 +39,6 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.listarTodos());
     }
 
-    /*
-     * @GetMapping("/buscarPeloFabricante/{idfab}") public ResponseEntity<?>
-     * buscarPeloFabricante(@PathVariable String fabricante) { return
-     * ResponseEntity.ok(produtoService.buscarPeloFabricante(fabricante)); }
-     */
-
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {

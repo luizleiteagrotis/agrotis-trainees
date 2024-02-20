@@ -34,14 +34,6 @@ public class NotaFiscalService {
         this.notaFiscal = notaFiscal;
     }
 
-    /*
-     * public NotaFiscalDto salvar(NotaFiscalDto notaFiscal) { NotaFiscal nota =
-     * converteParaEntidade(notaFiscal); ParceiroNegocio fabricanteSalvo =
-     * parceiroNegocioRepository.save(nota.getParceiroNegocio());
-     * nota.setParceiroNegocio(fabricanteSalvo); repository.save(nota); return
-     * converteParaDto(nota); }
-     */
-
     public NotaFiscalDto salvar(NotaFiscalDto cabecalhoDto) {
         NotaFiscal cabecalho = converteParaEntidade(cabecalhoDto);
 
@@ -72,26 +64,6 @@ public class NotaFiscalService {
 
         return converteParaDto(cabecalho);
     }
-
-    /*
-     * public NotaFiscalDto update(Integer id, NotaFiscalDto dto) { return
-     * repository.findById(id).map(notaFiscalExistente -> {
-     * notaFiscalExistente.setData(dto.getData());
-     * notaFiscalExistente.setTipo(dto.getTipo());
-     * notaFiscalExistente.setNumero(dto.getNumero()); ParceiroNegocio
-     * parceiroExistente = dto.getParceiroNegocio().getId() != null ?
-     * parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).
-     * orElse(null) : null; if (parceiroExistente == null) { ParceiroNegocio
-     * fabricanteSalvo =
-     * parceiroNegocioRepository.save(dto.getParceiroNegocio());
-     * notaFiscalExistente.setParceiroNegocio(parceiroExistente); } else {
-     * notaFiscalExistente.setParceiroNegocio(parceiroExistente); } NotaFiscal
-     * notaFiscalUpdate = repository.save(notaFiscalExistente); return
-     * converteParaDto(notaFiscalUpdate); }).orElseThrow(() -> {
-     * LOG.info("Nao foi possivel encontrar a nota fiscal pelo ID {}", id);
-     * return new EntidadeNaoEncontradaException("NOTA FISCAL com o ID " + id +
-     * "nao foi encontrada"); }); }
-     */
 
     public NotaFiscalDto update(Integer id, NotaFiscalDto dto) {
         return repository.findById(id).map(cabecalhoExistente -> {

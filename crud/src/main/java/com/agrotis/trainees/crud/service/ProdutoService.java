@@ -28,14 +28,6 @@ public class ProdutoService {
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
-    /*
-     * public ProdutoDto buscarPeloFabricante(ParceiroNegocio fabricante) {
-     * return repository.findByFabricante(fabricante).map(ProdutoService::
-     * converteParaDto) .orElseThrow(() -> new
-     * EntidadeNaoEncontradaException("O Produto Nao foi Encontrado pelo fabricante. "
-     * )); }
-     */
-
     public ProdutoDto salvar(ProdutoDto produto) {
         Produto entidade = converteParaEntidade(produto);
         ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
@@ -63,28 +55,6 @@ public class ProdutoService {
     public List<ProdutoDto> listarTodos() {
         return repository.findAll().stream().map(ProdutoService::converteParaDto).collect(Collectors.toList());
     }
-
-    /*
-     * public ProdutoDto update(Integer id, ProdutoDto dto) { return
-     * repository.findById(id).map(produtoUpdate -> {
-     * produtoUpdate.setDescricao(dto.getDescricao());
-     * produtoUpdate.setNome(dto.getNome()); ParceiroNegocio fabricanteUpdate =
-     * dto.getFabricante().getId() != null ?
-     * parceiroNegocioRepository.findById(dto.getFabricante().getId()).orElse(
-     * null) : null; if (fabricanteUpdate == null) { ParceiroNegocio
-     * fabricanteSalvo = parceiroNegocioRepository.save(dto.getFabricante());
-     * produtoUpdate.setFabricante(fabricanteSalvo); } else {
-     * produtoUpdate.setFabricante(fabricanteUpdate); }
-     * produtoUpdate.setEstoque(dto.getEstoque());
-     * produtoUpdate.setDataValidade(dto.getDataValidade());
-     * produtoUpdate.setDataFabricacao(dto.getDataFabricacao());
-     * LOG.info("Atualizando o produto: {} ", produtoUpdate.getDescricao());
-     * Produto produtoAtualizado = repository.save(produtoUpdate); return
-     * ProdutoService.converteParaDto(produtoUpdate); }).orElseThrow(() -> {
-     * LOG.info("Não foi possível encontrar o produto pelo ID {}", id); return
-     * new EntidadeNaoEncontradaException("Produto com o ID " + id +
-     * " não foi encontrado"); }); }
-     */
 
     public ProdutoDto update(Integer id, ProdutoDto dto) {
         return repository.findById(id).map(produtoExistente -> {
