@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -102,14 +103,14 @@ public class CrudApplication implements CommandLineRunner {
             LocalDate ontem = LocalDate.of(agora.getYear(), agora.getMonth(), agora.getDayOfMonth() - 1);
             LocalDate dataValidade = LocalDate.of(ontem.getYear() + 1, ontem.getMonth().getValue() + 2, ontem.getDayOfMonth() + 3);
             Produto produto = new Produto();
-            //
-            // produto.setDescricao("Grão - Soja");
-            // produto.setFabricante(parceirosSalvos.get(3));
-            // produto.setDataFabricacao(Date.valueOf(agora));
-            // produto.setDataValidade(Date.valueOf(dataValidade));
-            //
-            // Produto produto2 = produtoService.salvar(produto);
-            // LOG.info("id inserido: {}", produto2.getId());
+
+            produto.setDescricao("Grão - Soja");
+            produto.setFabricante(parceirosSalvos.get(3));
+            produto.setDataFabricacao(Date.valueOf(agora));
+            produto.setDataValidade(Date.valueOf(dataValidade));
+
+            Produto produto2 = produtoService.salvar(produto);
+            LOG.info("id inserido: {}", produto2.getId());
 
             List<Produto> produtosSalvos = produtoService.listarTodos();
             for (Produto produtoItem : produtosSalvos) {
@@ -126,12 +127,13 @@ public class CrudApplication implements CommandLineRunner {
             // Produto produtoBuscaDescricaoInexistente =
             // produtoService.buscarPorDescricao("aaaaa");
             //
-            produtoBuscaID.setDescricao("Outros Insumos - BIG BAG");
+            // produtoBuscaID.setDescricao("Outros Insumos - BIG BAG");
             // produtoBuscaID.setFabricante(parceirosSalvos.get(3));
-            produtoService.atualizar(produtoBuscaID.getId());
+            // produtoService.atualizar(produtoBuscaID.getId());
+            // LOG.info("Registro do parceiro {} atualizado.", produtoBuscaID);
 
-            LOG.info("Registro do parceiro {} atualizado.", produtoBuscaID);
-
+            // produtoService.deletarPorId(produtoBuscaID.getId());
+            // LOG.info("Registro do parceiro {} deletado.", produtoBuscaID);
         }
 
     }
