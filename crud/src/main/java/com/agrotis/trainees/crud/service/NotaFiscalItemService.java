@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -76,14 +77,14 @@ public class NotaFiscalItemService {
             System.out.println("Erro: " + e.getMessage());
             return null;
         }
-        nota.setValorTotal(nota.getValorTotal() - item.getValorTotal());
+        nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
         modelMapper.map(entidade, item);
         item = obterValorTotal(item);
-        nota.setValorTotal(nota.getValorTotal() + item.getValorTotal());
+        nota.setValorTotal(nota.getValorTotal().add(item.getValorTotal()));
 
         notaFiscalService.salvar(notaFiscalService.converterParaDto(nota));
         return converterParaDto(repository.save(item));
@@ -119,7 +120,7 @@ public class NotaFiscalItemService {
 
     @Transactional
     public NotaFiscalItem obterValorTotal(NotaFiscalItem entidade) {
-        entidade.setValorTotal(entidade.getPrecoUnitario() * entidade.getQuantidade());
+        entidade.setValorTotal(entidade.getPrecoUnitario().multiply(new BigDecimal(entidade.getQuantidade())));
         return entidade;
     }
 
@@ -266,13 +267,13 @@ public class NotaFiscalItemService {
                 }
                 produto.setEstoque(produto.getEstoque() - item.getQuantidade());
                 ProdutoDto produto2 = produtoService.atualizar(produto);
-                nota.setValorTotal(nota.getValorTotal() - item.getValorTotal());
+                nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
                 NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
                 deletarPorId(id);
             } else {
                 produto.setEstoque(produto.getEstoque() + item.getQuantidade());
                 ProdutoDto produto2 = produtoService.atualizar(produto);
-                nota.setValorTotal(nota.getValorTotal() - item.getValorTotal());
+                nota.setValorTotal(nota.getValorTotal().add(item.getValorTotal()));
                 NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
                 deletarPorId(id);
             }

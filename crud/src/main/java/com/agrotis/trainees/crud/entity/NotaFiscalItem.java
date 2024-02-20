@@ -30,7 +30,7 @@ public class NotaFiscalItem {
 
     @Column(name = "preco_unitario")
     // @Digits(integer = 19, fraction = 2)
-    private double precoUnitario;
+    private BigDecimal precoUnitario;
 
     @Min(value = 0)
     @Column(name = "valor_total")
@@ -47,7 +47,7 @@ public class NotaFiscalItem {
     @JoinColumn(name = "id_nota")
     private NotaFiscal idNota;
 
-    public void setPrecoUnitario(double precoUnitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
@@ -75,7 +75,7 @@ public class NotaFiscalItem {
         return quantidade;
     }
 
-    public double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 

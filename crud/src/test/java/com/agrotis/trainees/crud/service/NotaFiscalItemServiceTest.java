@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -70,13 +71,13 @@ public class NotaFiscalItemServiceTest {
         nota.setParceiro(parceiro);
         nota.setNumero(15000);
         nota.setDataEmissao(LocalDate.now());
-        nota.setValorTotal(0.0);
+        nota.setValorTotal(new BigDecimal(0));
 
         item.setId(4);
         item.setProduto(produto);
         item.setQuantidade(15);
-        item.setPrecoUnitario(25.0);
-        item.setValorTotal(item.getQuantidade() * item.getPrecoUnitario());
+        item.setPrecoUnitario(new BigDecimal(25));
+        item.setValorTotal(item.getPrecoUnitario().multiply(new BigDecimal(item.getQuantidade())));
         item.setIdNota(nota);
     }
     // Testes para o salvar
