@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -42,6 +43,10 @@ public class CrudApplication implements CommandLineRunner {
         Scanner scan = new Scanner(System.in);
         List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
 
+        for (ParceiroNegocio parceiro : parceirosSalvos) {
+            System.out.println(parceiro);
+        }
+
         System.out.println(
                         "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2 - 3");
 
@@ -66,17 +71,15 @@ public class CrudApplication implements CommandLineRunner {
         }
         if (opcao == 2) {
 
-            /*
-             * ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-             * 
-             * parceiroNegocio.setNome("Empresa do Ciclano");
-             * parceiroNegocio.setInscricaoFiscal("555777111");
-             * parceiroNegocio.setTelefone("41 9 8888 2222");
-             * 
-             * ParceiroNegocio parceiroNegocio2 =
-             * parceiroNegocioService.salvar(parceiroNegocio);
-             * LOG.info("id inserido: {}", parceiroNegocio2.getId());
-             */
+            ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+
+            parceiroNegocio.setNome("AGROTIS");
+            parceiroNegocio.setInscricaoFiscal("111222333");
+            parceiroNegocio.setTelefone("41 9 7777 9999");
+            parceiroNegocio.setEndereco("Rua Teste 1, Curitiba");
+
+            ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
+            LOG.info("id inserido: {}", parceiroNegocio2.getId());
 
             for (ParceiroNegocio parceiro : parceirosSalvos) {
                 System.out.println(parceiro);
@@ -98,22 +101,34 @@ public class CrudApplication implements CommandLineRunner {
         if (opcao == 3) {
 
             // LocalDate agora = LocalDate.now();
-            // LocalDate proximoAno = LocalDate.of(agora.getYear() + 1,
-            // agora.getMonth(), agora.getDayOfMonth());
+            // LocalDate ontem = LocalDate.of(agora.getYear(), agora.getMonth(),
+            // agora.getDayOfMonth() - 1);
+            // LocalDate dataValidade = LocalDate.of(ontem.getYear() + 3,
+            // ontem.getMonth().getValue() + 4, ontem.getDayOfMonth() + 5);
             // Produto produto = new Produto();
             //
-            // produto.setDescricao("ANFC 9 - AGRONORTE");
-            // produto.setFabricante(parceirosSalvos.get(0));
-            // produto.setDataFabricacao(Date.valueOf(agora));
-            // produto.setDataValidade(Date.valueOf(proximoAno));
+            // produto.setDescricao("Sem. - Algodão - TMG30B3RF - C1 - A
+            // Beneficiar");
+            // produto.setFabricante(parceirosSalvos.get(1));
+            // produto.setDataFabricacao(Date.valueOf(ontem));
+            // produto.setDataValidade(Date.valueOf(dataValidade));
             //
             // Produto produto2 = produtoService.salvar(produto);
             // LOG.info("id inserido: {}", produto2.getId());
 
-            // List<Produto> produtosSalvos = produtoService.listarTodos();
-            // for (Produto produto : produtosSalvos) {
-            // System.out.println(produto);
-            // }
+            List<Produto> produtosSalvos = produtoService.listarTodos();
+            for (Produto produtoItem : produtosSalvos) {
+                System.out.println(produtoItem);
+            }
+
+            Produto produtoBuscaID = produtoService.buscarPorId(produtosSalvos.get(0).getId());
+            LOG.info("Produto {} encontrado por id.", produtoBuscaID);
+            Produto produtoBuscaIdInexistente = produtoService.buscarPorId(10000025);
+
+            Produto produtoBuscaDescricao = produtoService.buscarPorDescricao(produtosSalvos.get(1).getDescricao());
+            LOG.info("Produto {} encontrado por descrição.", produtoBuscaDescricao);
+            Produto produtoBuscaDescricaoInexistente = produtoService.buscarPorDescricao("aaaaa");
+
         }
 
     }

@@ -10,8 +10,6 @@ import com.agrotis.trainees.crud.entity.Produto;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
-    Optional<Produto> findByFabricanteId(Integer idFabricante);
-
     Optional<Produto> findByDescricao(String descricao);
 
 }

@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "produto")
@@ -21,9 +21,9 @@ public class Produto {
 
     private String descricao;
 
-    @ManyToOne()
-    @JoinColumn(name = "fabricante_id")
-    @NotBlank(message = "Obrigatório preencher o fabricante do produto")
+    @ManyToOne
+    @JoinColumn(name = "id_fabricante", referencedColumnName = "id")
+    @NotNull(message = "Obrigatório preencher o fabricante do produto")
     private ParceiroNegocio fabricante;
 
     private Date dataFabricacao;
