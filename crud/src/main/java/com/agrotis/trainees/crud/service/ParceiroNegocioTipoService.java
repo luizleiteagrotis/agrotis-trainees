@@ -1,7 +1,10 @@
 package com.agrotis.trainees.crud.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +19,7 @@ import com.agrotis.trainees.crud.repository.ParceiroNegocioTipoRepository;
 public class ParceiroNegocioTipoService {
 
     private ParceiroNegocioTipoRepository parceiroNegocioRepository;
+    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioTipoService.class);
 
     @Autowired
     public ParceiroNegocioTipoService(ParceiroNegocioTipoRepository parceiroNegocioRepository) {
@@ -26,7 +30,7 @@ public class ParceiroNegocioTipoService {
         return parceiroNegocioRepository.save(parceiroNegocio);
     }
 
-    public ParceiroNegocio buscarPorId(Long id) {
+    public ParceiroNegocio buscarPorId(Integer id) {
         Optional<ParceiroNegocio> parceiroOptional = parceiroNegocioRepository.findById(id);
         return parceiroOptional.orElse(null);
     }
@@ -35,11 +39,13 @@ public class ParceiroNegocioTipoService {
         return parceiroNegocioRepository.findAll();
     }
 
-    public void deletarPorId(Long id) {
+    @Transactional
+    public void deletarPorId(Integer id) {
         parceiroNegocioRepository.deleteById(id);
+        LOG.info("Parceiro de negócio deletado com sucesso");
     }
 
-    public ParceiroNegocio atualizar(Long id, ParceiroNegocio novoParceiro) {
+    public ParceiroNegocio atualizar(Integer id, ParceiroNegocio novoParceiro) {
         Optional<ParceiroNegocio> optionalParceiro = parceiroNegocioRepository.findById(id);
 
         if (optionalParceiro.isPresent()) {
@@ -66,13 +72,13 @@ public class ParceiroNegocioTipoService {
         return dto;
     }
 
-    public static ParceiroNegocio converterParaEntidade(ParceiroNegocioDto dto) {
+    public static ParceiroNegocio converterParaEntidade(ParceiroNegocio parceiroNegocio) {
         ParceiroNegocio entidade = new ParceiroNegocio();
-        entidade.setId(dto.getId());
-        entidade.setNome(dto.getNome());
-        entidade.setInscricaoFiscal(dto.getInscricaoFiscal());
-        entidade.setEndereco(dto.getEndereco());
-        entidade.setTelefone(dto.getTelefone());
+        entidade.setId(parceiroNegocio.getId());
+        entidade.setNome(parceiroNegocio.getNome());
+        entidade.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
+        entidade.setEndereco(parceiroNegocio.getEndereco());
+        entidade.setTelefone(parceiroNegocio.getTelefone());
 
         return entidade;
     }

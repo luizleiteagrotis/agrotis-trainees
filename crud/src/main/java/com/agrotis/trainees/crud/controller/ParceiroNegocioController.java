@@ -35,12 +35,13 @@ public class ParceiroNegocioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody ParceiroNegocio parceiro) {
-        return ResponseEntity.ok().body(service.atualizar(id, parceiro));
+    public ResponseEntity<ParceiroNegocio> atualizar(@PathVariable Integer id, @RequestBody ParceiroNegocio parceiroNegocio) {
+        ParceiroNegocio parceiroAtualizado = service.atualizar(id, parceiroNegocio);
+        return new ResponseEntity<>(parceiroAtualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletarPorId(@PathVariable Long id) {
+    public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
         service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
     }

@@ -20,7 +20,7 @@ public class NotaFiscalItem {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "notaFiscal_id")
+    @JoinColumn(name = "nota_fiscal_id")
     private NotaFiscal notaFiscal;
 
     @ManyToOne
@@ -77,8 +77,8 @@ public class NotaFiscalItem {
         return preco_unitario;
     }
 
-    public void setPreco_unitario(Double preco) {
-        this.preco_unitario = preco;
+    public void setPreco_unitario(Double preco_unitario) {
+        this.preco_unitario = preco_unitario;
     }
 
     public Double getValorTotal() {
@@ -88,5 +88,4 @@ public class NotaFiscalItem {
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
     }
-
 }

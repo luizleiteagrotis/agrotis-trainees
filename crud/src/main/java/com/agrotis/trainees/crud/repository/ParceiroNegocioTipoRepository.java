@@ -11,4 +11,8 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 public interface ParceiroNegocioTipoRepository extends JpaRepository<ParceiroNegocio, Long> {
     Optional<ParceiroNegocio> findByNome(String nome);
 
+    Optional<ParceiroNegocio> findById(Integer id);
+
+    void deleteById(Integer id);
+
 }

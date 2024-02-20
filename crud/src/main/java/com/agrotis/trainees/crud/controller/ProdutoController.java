@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.service.ProdutoTipoService;
 
 @RequestMapping("produtos")
@@ -23,8 +23,8 @@ public class ProdutoController {
     private ProdutoTipoService service;
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody Produto produto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produto));
+    public ResponseEntity<?> inserir(@RequestBody ProdutoDto produtoDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produtoDto));
     }
 
     @GetMapping
@@ -32,16 +32,15 @@ public class ProdutoController {
         return ResponseEntity.ok().body(service.listarTodos());
     }
 
-    @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody Produto produto) {
-        return ResponseEntity.ok().body(service.atualizar(produto));
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody ProdutoDto produtoDto) {
+        produtoDto.setId(id);
+        return ResponseEntity.ok().body(service.atualizar(produtoDto));
     }
 
-    @DeleteMapping
-    @RequestMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarPorId(@PathVariable Integer id) {
-        service.deletarProdutoPorId(id);
+        service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
     }
-
 }

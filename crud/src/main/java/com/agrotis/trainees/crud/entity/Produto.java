@@ -44,6 +44,14 @@ public class Produto {
         this.estoque = 0;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getDescricao() {
         return descricao;
     }
@@ -56,8 +64,8 @@ public class Produto {
         return fabricante;
     }
 
-    public void setFabricante(ParceiroNegocio fabricante) {
-        this.fabricante = fabricante;
+    public void setFabricante(ParceiroNegocio parceiroNegocioDto) {
+        this.fabricante = parceiroNegocioDto;
     }
 
     public LocalDate getDataFabricacao() {
@@ -76,10 +84,6 @@ public class Produto {
         this.dataValidade = dataValidade;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public int getEstoque() {
         return estoque;
     }
@@ -88,7 +92,8 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    public void setId(Integer id2, ParceiroNegocio fabricante) {
+    public void setId(Integer id, ParceiroNegocio fabricante) {
+        this.id = id;
         this.fabricante = fabricante;
     }
 }

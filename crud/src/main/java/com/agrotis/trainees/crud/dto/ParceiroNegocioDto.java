@@ -7,7 +7,7 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 public class ParceiroNegocioDto {
 
-    private Long id;
+    private Integer id;
     private String nome;
     private String inscricaoFiscal;
     private String endereco;
@@ -58,16 +58,15 @@ public class ParceiroNegocioDto {
         this.telefone = telefone;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     public static List<ParceiroNegocioDto> converter(List<ParceiroNegocio> parceiros) {
         return parceiros.stream().map(ParceiroNegocioDto::new).collect(Collectors.toList());
     }
-
 }

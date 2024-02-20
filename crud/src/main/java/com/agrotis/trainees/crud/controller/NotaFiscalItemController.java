@@ -1,7 +1,6 @@
 package com.agrotis.trainees.crud.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +29,10 @@ public class NotaFiscalItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody NotaFiscalItemDto itemDto) {
-        try {
-            NotaFiscalItem notaFiscalItem = notaFiscalItemService.salvar(itemDto);
-            URI location = new URI("/notas-fiscais/itens/" + notaFiscalItem.getId());
+    public ResponseEntity<NotaFiscalItemDto> cadastrar(@RequestBody @Valid NotaFiscalItemDto notaFiscalItemDto) {        try {
+            NotaFiscalItem notaFiscalItem = NotaFiscalItemService.converterParaEntidade(itemDto);
+            NotaFiscalItemDto notaFiscalItemDto = notaFiscalItemService.salvar(notaFiscalItem);
+            URI location = new URI("/notas-fiscais/itens/" + notaFiscalItemDto.getId());
             return ResponseEntity.created(location).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao cadastrar o item da nota fiscal: " + e.getMessage());
@@ -42,12 +41,8 @@ public class NotaFiscalItemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
-        try {
-            NotaFiscalItemDto notaFiscalItemDto = notaFiscalItemService.buscarPorId(id);
-            return ResponseEntity.ok(notaFiscalItemDto);
-        } catch (NotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        NotaFiscalItemDto notaFiscalItemDto = notaFiscalItemService.buscarPorId(id);
+        return ResponseEntity.ok(notaFiscalItemDto);
     }
 
     @GetMapping

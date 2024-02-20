@@ -5,14 +5,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-
 public class ProdutoDto {
 
     private Integer id;
     private String descricao;
     private int estoque;
-    private ParceiroNegocio fabricante;
+    private ParceiroNegocioDto fabricante;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataFabricacao;
@@ -48,12 +46,12 @@ public class ProdutoDto {
         this.estoque = estoque;
     }
 
-    public ParceiroNegocio getFabricante() {
+    public ParceiroNegocioDto getFabricante() {
         return fabricante;
     }
 
-    public void setFabricante(ParceiroNegocio fabricante) {
-        this.fabricante = fabricante;
+    public void setFabricante(ParceiroNegocioDto parceiroNegocioDto) {
+        this.fabricante = parceiroNegocioDto;
     }
 
     public LocalDate getDataFabricacao() {

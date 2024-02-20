@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -38,7 +39,7 @@ public class NotaFiscal {
     private ParceiroNegocio parceiroNegocio;
 
     @OneToMany(mappedBy = "notaFiscal", fetch = FetchType.EAGER)
-    private List<NotaFiscalItem> itensNota;
+    private List<NotaFiscalItem> itensNota = new ArrayList<>();
 
     @Column(name = "valor_total")
     private Double valorTotal;
@@ -83,10 +84,6 @@ public class NotaFiscal {
         return itensNota;
     }
 
-    public void setItensNota(List<NotaFiscalItem> itensNota) {
-        this.itensNota = itensNota;
-    }
-
     public Double getValorTotal() {
         return valorTotal;
     }
@@ -95,8 +92,8 @@ public class NotaFiscal {
         this.valorTotal = valorTotal;
     }
 
-    public NotaFiscalItem[] getItens() {
-        return itensNota.toArray(new NotaFiscalItem[0]);
+    public void setItensNota(List<NotaFiscalItem> itensNota) {
+        this.itensNota = itensNota;
     }
 
     public void setId(Integer id) {

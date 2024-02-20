@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 public class ParceiroNegocio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @NotBlank(message = "O campo nome é obrigatório")
     private String nome;
@@ -24,7 +24,7 @@ public class ParceiroNegocio {
 
     private String telefone;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -60,7 +60,7 @@ public class ParceiroNegocio {
         this.telefone = telefone;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

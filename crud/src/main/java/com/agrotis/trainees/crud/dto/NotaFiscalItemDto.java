@@ -12,19 +12,16 @@ public class NotaFiscalItemDto {
     private Integer quantidade;
     private Double precoUnitario;
     private Produto produto;
-    private Double valorTotal;
 
     public NotaFiscalItemDto(NotaFiscalItem item) {
         this.id = item.getId();
         this.quantidade = item.getQuantidade();
         this.precoUnitario = item.getPreco_unitario();
         this.produto = item.getProduto();
-        this.valorTotal = calcularValorTotal();
     }
 
     public NotaFiscalItemDto() {
         super();
-        this.valorTotal = 0.0;
     }
 
     public Integer getId() {
@@ -59,15 +56,7 @@ public class NotaFiscalItemDto {
         this.produto = produto;
     }
 
-    public Double getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    private Double calcularValorTotal() {
+    public Double calcularValorTotal() {
         return quantidade * precoUnitario;
     }
 

@@ -1,6 +1,6 @@
-// ProdutoService.java
 package com.agrotis.trainees.crud.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ProdutoTipoRepository;
 
@@ -17,12 +19,16 @@ public class ProdutoTipoService {
 
     private final ProdutoTipoRepository produtoTipoRepository;
 
-    public ProdutoTipoService(ProdutoTipoRepository produtoTipoRepository) {
+    @Autowired
+    private ParceiroNegocioTipoService parceiroNegocioService;
+
+    public ProdutoTipoService(ProdutoTipoRepository produtoTipoRepository, ParceiroNegocioTipoService parceiroNegocioService) {
         this.produtoTipoRepository = produtoTipoRepository;
+        this.parceiroNegocioService = parceiroNegocioService;
     }
 
     @Transactional
-    public ProdutoDto salvar(ProdutoDto dto) {
+    public ProdutoDto inserir(ProdutoDto dto) {
         Produto entidade = converterParaEntidade(dto);
         Produto savedProduto = produtoTipoRepository.save(entidade);
         return converterParaDto(savedProduto);
@@ -42,12 +48,31 @@ public class ProdutoTipoService {
         produtoTipoRepository.deleteById(id);
     }
 
+    public ProdutoDto atualizar(ProdutoDto dto) {
+        Produto entidade = produtoTipoRepository.findById(dto.getId()).orElse(null);
+        if (entidade != null) {
+            entidade.setDescricao(dto.getDescricao());
+            entidade.setEstoque(dto.getEstoque());
+            entidade.setFabricante(dto.getFabricante());
+            entidade.setDataFabricacao(dto.getDataFabricacao());
+            entidade.setDataValidade(dto.getDataValidade());
+            entidade = produtoTipoRepository.save(entidade);
+            return converterParaDto(entidade);
+        } else {
+            return null;
+        }
+
+    }
+
     public ProdutoDto converterParaDto(Produto entidade) {
         ProdutoDto dto = new ProdutoDto();
         dto.setId(entidade.getId());
         dto.setDescricao(entidade.getDescricao());
         dto.setEstoque(entidade.getEstoque());
-        dto.setFabricante(entidade.getFabricante());
+
+        ParceiroNegocioDto fabricanteDto = parceiroNegocioService.converterParaDto(entidade.getFabricante());
+        dto.setFabricante(fabricanteDto);
+
         dto.setDataFabricacao(entidade.getDataFabricacao());
         dto.setDataValidade(entidade.getDataValidade());
         return dto;
@@ -55,12 +80,21 @@ public class ProdutoTipoService {
 
     public Produto converterParaEntidade(ProdutoDto dto) {
         Produto entidade = new Produto();
-        entidade.setId(dto.getId(), null);
+        entidade.setId(dto.getId());
+        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+        parceiroNegocio.setId(dto.getFabricante().getId());
+        parceiroNegocio.setNome(dto.getFabricante().getNome());
+        parceiroNegocio.setInscricaoFiscal(dto.getFabricante().getInscricaoFiscal());
+        parceiroNegocio.setEndereco(dto.getFabricante().getEndereco());
+        parceiroNegocio.setTelefone(dto.getFabricante().getTelefone());
+
+        entidade.setFabricante(parceiroNegocio);
+
         entidade.setDescricao(dto.getDescricao());
         entidade.setEstoque(dto.getEstoque());
-        entidade.setFabricante(dto.getFabricante());
         entidade.setDataFabricacao(dto.getDataFabricacao());
         entidade.setDataValidade(dto.getDataValidade());
+
         return entidade;
     }
 }
