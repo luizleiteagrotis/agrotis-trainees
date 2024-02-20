@@ -11,7 +11,7 @@ public class NotaFiscalItemDto {
 
     private Produto produto;
 
-    private Integer quantidade;
+    private BigDecimal quantidade;
 
     private BigDecimal precoUnitario;
 
@@ -27,7 +27,7 @@ public class NotaFiscalItemDto {
         return produto;
     }
 
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
@@ -51,7 +51,7 @@ public class NotaFiscalItemDto {
         this.produto = produto;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 

@@ -26,7 +26,7 @@ public class NotaFiscalItem {
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
-    private Integer quantidade;
+    private BigDecimal quantidade;
 
     @Column(name = "preco_unitario")
     // @Digits(integer = 19, fraction = 2)
@@ -71,7 +71,7 @@ public class NotaFiscalItem {
         return produto;
     }
 
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
@@ -83,7 +83,7 @@ public class NotaFiscalItem {
         this.produto = produto;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 

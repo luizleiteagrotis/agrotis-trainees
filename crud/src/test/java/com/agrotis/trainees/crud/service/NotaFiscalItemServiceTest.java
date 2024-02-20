@@ -61,7 +61,7 @@ public class NotaFiscalItemServiceTest {
         produto.setIdParceiro(parceiro);
         produto.setDataFabricacao(LocalDate.of(2023, 12, 25));
         produto.setDataValidade(LocalDate.of(2024, 1, 15));
-        produto.setEstoque(250);
+        produto.setEstoque(new BigDecimal(250));
 
         tipo.setId(1);
         tipo.setNome("Entrada");
@@ -75,9 +75,9 @@ public class NotaFiscalItemServiceTest {
 
         item.setId(4);
         item.setProduto(produto);
-        item.setQuantidade(15);
+        item.setQuantidade(new BigDecimal(15));
         item.setPrecoUnitario(new BigDecimal(25));
-        item.setValorTotal(item.getPrecoUnitario().multiply(new BigDecimal(item.getQuantidade())));
+        item.setValorTotal(item.getPrecoUnitario().multiply(item.getQuantidade()));
         item.setIdNota(nota);
     }
     // Testes para o salvar

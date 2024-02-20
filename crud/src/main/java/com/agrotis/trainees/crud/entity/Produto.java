@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -31,13 +32,13 @@ public class Produto {
     private LocalDate dataValidade;
 
     @Min(value = 0)
-    private Integer estoque;
+    private BigDecimal estoque;
 
-    public Integer getEstoque() {
+    public BigDecimal getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(Integer estoque) {
+    public void setEstoque(BigDecimal estoque) {
         this.estoque = estoque;
     }
 
