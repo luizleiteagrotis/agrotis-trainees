@@ -37,6 +37,7 @@ public abstract class OpcaoBuscarPorIdTemplate<RetornoDto> implements OpcaoMenu 
 		System.out.println("--------------------------");
 		long id = INFORMANTE_ENTIDADE_ID.informar();
 		RetornoDto retornoDto = null;
+		ultimaEntidadeBuscada = null;
 		try {
 			retornoDto = ENTIDADE_API.buscarPor(id);
 		} catch (EntidadeNaoEncontradaException e) {

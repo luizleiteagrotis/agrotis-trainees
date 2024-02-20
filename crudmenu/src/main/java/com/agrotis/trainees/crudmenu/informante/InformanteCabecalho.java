@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 import com.agrotis.trainees.crudmenu.dto.cabecalho.CabecalhoCadastroDto;
 import com.agrotis.trainees.crudmenu.dto.cabecalho.CabecalhoRetornoDto;
 import com.agrotis.trainees.crudmenu.opcao.criacional.OpcaoCriarCabecalho;
+import com.agrotis.trainees.crudmenu.opcao.leitura.OpcaoBuscarPorIdCabecalho;
 
 @Component
 public class InformanteCabecalho extends InformanteEntidadeTemplate<CabecalhoCadastroDto, CabecalhoRetornoDto>{
 	
 	@Autowired
 	public InformanteCabecalho(InformantePosicaoOpcao informantePosicao, 
-			OpcaoCriarCabecalho opcaoCriarCabecalho) {
-		super(informantePosicao, opcaoCriarCabecalho, descricao("Informe o cabecalho"));
+			OpcaoCriarCabecalho opcaoCriarCabecalho, OpcaoBuscarPorIdCabecalho opcaoBuscarPorIdCabecalho) {
+		super(informantePosicao, opcaoCriarCabecalho, opcaoBuscarPorIdCabecalho, descricao("Informe o cabecalho"));
 	}
 }

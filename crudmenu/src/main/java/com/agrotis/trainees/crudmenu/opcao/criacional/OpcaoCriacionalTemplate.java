@@ -24,6 +24,7 @@ public abstract class OpcaoCriacionalTemplate<CadastroDto, RetornoDto> implement
 		System.out.println(descricao);
 		System.out.println("--------------------------");
 		CadastroDto dto = criarDto();
+		ultimaEntidadeCriada = null;
 		try {
 			ultimaEntidadeCriada = CADASTRO_API.cadastrar(dto);
 			System.out.println("Entidade criada com sucesso");
