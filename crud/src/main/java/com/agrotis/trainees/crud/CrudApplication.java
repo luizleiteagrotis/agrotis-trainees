@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -71,19 +72,16 @@ public class CrudApplication implements CommandLineRunner {
         }
         if (opcao == 2) {
 
-            ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-            parceiroNegocio.setNome("AGROTIS");
-            parceiroNegocio.setInscricaoFiscal("111222333");
-            parceiroNegocio.setTelefone("41 9 7777 9999");
-            parceiroNegocio.setEndereco("Rua Teste 1, Curitiba");
-
-            ParceiroNegocio parceiroNegocio2 = parceiroNegocioService.salvar(parceiroNegocio);
-            LOG.info("id inserido: {}", parceiroNegocio2.getId());
-
-            for (ParceiroNegocio parceiro : parceirosSalvos) {
-                System.out.println(parceiro);
-            }
+            // ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+            //
+            // parceiroNegocio.setNome("AGROTIS");
+            // parceiroNegocio.setInscricaoFiscal("111222333");
+            // parceiroNegocio.setTelefone("41 9 7777 9999");
+            // parceiroNegocio.setEndereco("Rua Teste 1, Curitiba");
+            //
+            // ParceiroNegocio parceiroNegocio2 =
+            // parceiroNegocioService.salvar(parceiroNegocio);
+            // LOG.info("id inserido: {}", parceiroNegocio2.getId());
 
             ParceiroNegocio parceiroBuscaID = parceiroNegocioService.buscarPorId(parceirosSalvos.get(0).getId());
             // parceiroNegocioService.deletarPorId(parceiroBuscaID.getId());
@@ -100,17 +98,14 @@ public class CrudApplication implements CommandLineRunner {
         }
         if (opcao == 3) {
 
-            // LocalDate agora = LocalDate.now();
-            // LocalDate ontem = LocalDate.of(agora.getYear(), agora.getMonth(),
-            // agora.getDayOfMonth() - 1);
-            // LocalDate dataValidade = LocalDate.of(ontem.getYear() + 3,
-            // ontem.getMonth().getValue() + 4, ontem.getDayOfMonth() + 5);
-            // Produto produto = new Produto();
+            LocalDate agora = LocalDate.now();
+            LocalDate ontem = LocalDate.of(agora.getYear(), agora.getMonth(), agora.getDayOfMonth() - 1);
+            LocalDate dataValidade = LocalDate.of(ontem.getYear() + 1, ontem.getMonth().getValue() + 2, ontem.getDayOfMonth() + 3);
+            Produto produto = new Produto();
             //
-            // produto.setDescricao("Sem. - Algodão - TMG30B3RF - C1 - A
-            // Beneficiar");
-            // produto.setFabricante(parceirosSalvos.get(1));
-            // produto.setDataFabricacao(Date.valueOf(ontem));
+            // produto.setDescricao("Grão - Soja");
+            // produto.setFabricante(parceirosSalvos.get(3));
+            // produto.setDataFabricacao(Date.valueOf(agora));
             // produto.setDataValidade(Date.valueOf(dataValidade));
             //
             // Produto produto2 = produtoService.salvar(produto);
@@ -121,13 +116,21 @@ public class CrudApplication implements CommandLineRunner {
                 System.out.println(produtoItem);
             }
 
-            Produto produtoBuscaID = produtoService.buscarPorId(produtosSalvos.get(0).getId());
-            LOG.info("Produto {} encontrado por id.", produtoBuscaID);
-            Produto produtoBuscaIdInexistente = produtoService.buscarPorId(10000025);
+            Produto produtoBuscaID = produtoService.buscarPorId(produtosSalvos.get(1).getId());
+            // LOG.info("Produto {} encontrado por id.",
+            // produtoBuscaID.getId());
+            // Produto produtoBuscaDescricao =
+            // produtoService.buscarPorDescricao(produtosSalvos.get(1).getDescricao());
+            // LOG.info("Produto {} encontrado por descrição.",
+            // produtoBuscaDescricao);
+            // Produto produtoBuscaDescricaoInexistente =
+            // produtoService.buscarPorDescricao("aaaaa");
+            //
+            produtoBuscaID.setDescricao("Outros Insumos - BIG BAG");
+            // produtoBuscaID.setFabricante(parceirosSalvos.get(3));
+            produtoService.atualizar(produtoBuscaID.getId());
 
-            Produto produtoBuscaDescricao = produtoService.buscarPorDescricao(produtosSalvos.get(1).getDescricao());
-            LOG.info("Produto {} encontrado por descrição.", produtoBuscaDescricao);
-            Produto produtoBuscaDescricaoInexistente = produtoService.buscarPorDescricao("aaaaa");
+            LOG.info("Registro do parceiro {} atualizado.", produtoBuscaID);
 
         }
 

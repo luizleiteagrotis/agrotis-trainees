@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class ParceiroNegocio {
     @NotBlank(message = "Obrigatório preencher o nome do parceiro")
     private String nome;
 
+    @Column(unique = true)
     @NotBlank(message = "Obrigatório preencher a inscrição fiscal do parceiro")
     private String inscricaoFiscal;
 

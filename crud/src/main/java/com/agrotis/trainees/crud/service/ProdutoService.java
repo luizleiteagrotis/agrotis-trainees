@@ -42,4 +42,13 @@ public class ProdutoService {
         });
     }
 
+    public Produto atualizar(Integer id) {
+        Produto produto = buscarPorId(id);
+        return repository.save(produto);
+    }
+
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+    }
+
 }

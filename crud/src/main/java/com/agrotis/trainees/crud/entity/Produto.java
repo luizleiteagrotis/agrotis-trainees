@@ -22,7 +22,7 @@ public class Produto {
     private String descricao;
 
     @ManyToOne
-    @JoinColumn(name = "id_fabricante", referencedColumnName = "id")
+    @JoinColumn(name = "id_fabricante")
     @NotNull(message = "Obrigatório preencher o fabricante do produto")
     private ParceiroNegocio fabricante;
 
