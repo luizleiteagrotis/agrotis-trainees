@@ -13,6 +13,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 @SpringBootApplication
 public class CrudApplication implements CommandLineRunner {
@@ -21,10 +22,13 @@ public class CrudApplication implements CommandLineRunner {
 
     private final NotaFiscalTipoService notaFiscalTipoService;
     private final ParceiroNegocioService parceiroNegocioService;
+    private final ProdutoService produtoService;
 
-    public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService) {
+    public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
+                    ProdutoService produtoService) {
         this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegocioService = parceiroNegocioService;
+        this.produtoService = produtoService;
     }
 
     public static void main(String[] args) {
@@ -36,8 +40,11 @@ public class CrudApplication implements CommandLineRunner {
     public void run(String... args) {
 
         Scanner scan = new Scanner(System.in);
+        List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
+
         System.out.println(
-                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2");
+                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2 - 3");
+
         int opcao = scan.nextInt();
 
         if (opcao == 1) {
@@ -71,7 +78,6 @@ public class CrudApplication implements CommandLineRunner {
              * LOG.info("id inserido: {}", parceiroNegocio2.getId());
              */
 
-            List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
             for (ParceiroNegocio parceiro : parceirosSalvos) {
                 System.out.println(parceiro);
             }
@@ -88,6 +94,26 @@ public class CrudApplication implements CommandLineRunner {
             // parceiroBuscaIF.setEndereco("Rua São João 93, Curitiba");
             // parceiroNegocioService.atualizar(parceiroBuscaIF.getId());
             // LOG.info("Registro do parceiro {} atualizado.", parceiroBuscaIF);
+        }
+        if (opcao == 3) {
+
+            // LocalDate agora = LocalDate.now();
+            // LocalDate proximoAno = LocalDate.of(agora.getYear() + 1,
+            // agora.getMonth(), agora.getDayOfMonth());
+            // Produto produto = new Produto();
+            //
+            // produto.setDescricao("ANFC 9 - AGRONORTE");
+            // produto.setFabricante(parceirosSalvos.get(0));
+            // produto.setDataFabricacao(Date.valueOf(agora));
+            // produto.setDataValidade(Date.valueOf(proximoAno));
+            //
+            // Produto produto2 = produtoService.salvar(produto);
+            // LOG.info("id inserido: {}", produto2.getId());
+
+            // List<Produto> produtosSalvos = produtoService.listarTodos();
+            // for (Produto produto : produtosSalvos) {
+            // System.out.println(produto);
+            // }
         }
 
     }

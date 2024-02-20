@@ -5,5 +5,5 @@ CREATE TABLE parceiro_negocio
     inscricao_fiscal varchar(30) NOT NULL,
     telefone varchar(20),
     endereco varchar(255),
-    CONSTRAINT pk_nota_fiscal_tipo PRIMARY KEY (id)
+    PRIMARY KEY(id)
 )
