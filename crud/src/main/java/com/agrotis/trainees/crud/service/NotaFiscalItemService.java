@@ -87,7 +87,7 @@ public class NotaFiscalItemService {
     }
 
     private double calcularValorTotal(NotaFiscalItem item) {
-        return item.getQuantidade() * item.getPreco_unitario();
+        return item.getQuantidade() * item.getPrecoUnitario();
     }
 
     private void controlarEstoque(NotaFiscalItem item) {
@@ -118,9 +118,14 @@ public class NotaFiscalItemService {
         entidade.setNotaFiscal(dto.getNotaFiscal());
         entidade.setProduto(dto.getProduto());
         entidade.setQuantidade(dto.getQuantidade());
-        entidade.setPreco_unitario(dto.getPrecoUnitario());
+        entidade.setPrecoUnitario(dto.getPrecoUnitario());
         entidade.setValorTotal(dto.getValorTotal());
 
         return entidade;
+    }
+
+    public Object atualizar(@Valid NotaFiscalItemDto item) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

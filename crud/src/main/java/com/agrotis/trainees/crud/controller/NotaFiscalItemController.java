@@ -6,12 +6,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
@@ -29,10 +32,11 @@ public class NotaFiscalItemController {
     }
 
     @PostMapping
-    public ResponseEntity<NotaFiscalItemDto> cadastrar(@RequestBody @Valid NotaFiscalItemDto notaFiscalItemDto) {        try {
-            NotaFiscalItem notaFiscalItem = NotaFiscalItemService.converterParaEntidade(itemDto);
-            NotaFiscalItemDto notaFiscalItemDto = notaFiscalItemService.salvar(notaFiscalItem);
-            URI location = new URI("/notas-fiscais/itens/" + notaFiscalItemDto.getId());
+    public ResponseEntity<NotaFiscalItemDto> cadastrar(@RequestBody @Valid NotaFiscalItemDto notaFiscalItemDto) {
+        try {
+            NotaFiscalItem notaFiscalItem = NotaFiscalItemService.converterParaEntidade(notaFiscalItemDto);
+            NotaFiscalItemDto savedItemDto = notaFiscalItemService.salvar(notaFiscalItem);
+            URI location = new URI("/notas-fiscais/itens/" + savedItemDto.getId());
             return ResponseEntity.created(location).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao cadastrar o item da nota fiscal: " + e.getMessage());
@@ -55,5 +59,10 @@ public class NotaFiscalItemController {
     public ResponseEntity<?> deletar(@PathVariable Integer id) {
         notaFiscalItemService.deletarPorId(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<?> atualizar(@RequestBody @Valid NotaFiscalItemDto item) {
+        return ResponseEntity.ok().body(notaFiscalItemService.atualizar(item));
     }
 }

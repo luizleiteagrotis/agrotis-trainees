@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -38,6 +39,16 @@ public class Produto {
     @Column(name = "data_validade")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataValidade;
+
+    private BigDecimal custoMedio;
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
+    }
 
     public Produto() {
         super();
@@ -96,4 +107,5 @@ public class Produto {
         this.id = id;
         this.fabricante = fabricante;
     }
+
 }

@@ -69,4 +69,5 @@ public class ProdutoDto {
     public void setDataValidade(LocalDate dataValidade) {
         this.dataValidade = dataValidade;
     }
+
 }

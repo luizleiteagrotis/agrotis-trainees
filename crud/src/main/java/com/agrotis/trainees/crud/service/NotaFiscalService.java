@@ -79,7 +79,7 @@ public class NotaFiscalService {
             double novoValorTotal = 0;
 
             for (NotaFiscalItem item : itens) {
-                double valorItem = item.getPreco_unitario();
+                double valorItem = item.getPrecoUnitario();
 
                 if (notaFiscal.getNotaFiscalTipo() == NotaFiscalTipo.ENTRADA) {
                     novoValorTotal += valorItem;
@@ -119,7 +119,7 @@ public class NotaFiscalService {
             return 0.0;
         }
 
-        return itens.stream().filter(item -> item.getPreco_unitario() != null).mapToDouble(NotaFiscalItem::getPreco_unitario).sum();
+        return itens.stream().filter(item -> item.getPrecoUnitario() != null).mapToDouble(NotaFiscalItem::getPreco_unitario).sum();
     }
 
     public NotaFiscalDto converterParaDto(NotaFiscal entidade) {
