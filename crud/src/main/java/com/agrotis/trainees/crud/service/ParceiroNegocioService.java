@@ -33,9 +33,26 @@ public class ParceiroNegocioService {
         if (dto.getId() != null && repository.existsById(dto.getId())) {
             throw new IdExistenteException("O ID ja existe: " + dto.getId());
         }
+
+        if (dto.getEndereco() == null || dto.getEndereco().isEmpty()) {
+            throw new EntidadeNaoEncontradaException("O endereço do parceiro de negócios é obrigatório. ");
+        }
+
+        if (dto.getTelefone() == null || dto.getTelefone().isEmpty()) {
+            throw new EntidadeNaoEncontradaException("O telefone do parceiro de negócios é obrigatório.");
+        }
+
+        if (!seTelefoneForValido(dto.getTelefone())) {
+            throw new EntidadeNaoEncontradaException("O telefone do parceiro de negócios é inválido.");
+        }
+
         ParceiroNegocio entidade = converteParaEntidade(dto);
         repository.save(entidade);
         return converteParaDto(entidade);
+    }
+
+    private boolean seTelefoneForValido(String telefone) {
+        return telefone != null && telefone.length() == 11;
     }
 
     private void atualizarDadosDoParceiro(ParceiroNegocio parceiroNegocio, ParceiroNegocioDto dto) {

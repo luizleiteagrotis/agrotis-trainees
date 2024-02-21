@@ -1,8 +1,11 @@
 package com.agrotis.trainees.crud.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Optional;
 
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -70,7 +75,7 @@ public class ParceiroNegocioServiceTest {
     }
 
     @Test
-    public void inserirParceiroNegocioComErro() {
+    public void inserirParceiroNegocioComNomeVazio() {
         // Criando um DTO com informações inválidas (por exemplo, nome vazio)
         ParceiroNegocioDto dto = new ParceiroNegocioDto();
         dto.setNome("");
@@ -96,6 +101,112 @@ public class ParceiroNegocioServiceTest {
                                 // ID
 
         assertThrows(IdExistenteException.class, () -> service.salvar(dto));
+    }
+
+    @Test
+    public void inserirParceiroNegocioComEnderecoEmBranco() {
+        // Criando um DTO com endereço em branco
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setEndereco("");
+
+        // Chamando o método salvar do serviço e esperando uma exceção
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.salvar(dto));
+    }
+
+    @Test
+    public void inserirParceiroNegocioComTelefoneInvalido() {
+        // Criando um DTO com telefone inválido
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setTelefone("41996"); // Telefone inválido, deve conter 11
+        // dígitos
+
+        // Chamando o método salvar do serviço e esperando uma exceção
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.salvar(dto));
+    }
+
+    @Test
+    public void inserirParceiroNegocioComTelefoneNulo() {
+        // Criando um DTO com telefone nulo
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setNome(NOME);
+        dto.setInscricaoFiscal(INSCRICAO_FISCAL);
+        dto.setEndereco(ENDERECO);
+        dto.setTelefone(null);
+
+        // Chamando o método salvar do serviço e esperando uma exceção
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.salvar(dto));
+    }
+
+    @Test
+    public void inserirParceiroNegocioComSucesso() {
+        // Criando um DTO com informações válidas
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setId(ID_INSERIDO);
+        dto.setNome(NOME);
+        dto.setEndereco(ENDERECO);
+        dto.setTelefone(TELEFONE);
+        dto.setInscricaoFiscal(INSCRICAO_FISCAL);
+
+        // Mockando o comportamento do repositório para retornar um objeto
+        // ParceiroNegocio válido
+        ParceiroNegocio parceiroNegocioSalvo = criarParceiroNegocio();
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocioSalvo);
+
+        // Chamando o método salvar do serviço
+        ParceiroNegocioDto result = service.salvar(dto);
+
+        // Verificando se o método save do repositório foi chamado uma vez
+        verify(repository, times(1)).save(any(ParceiroNegocio.class));
+
+        // Verificando se o objeto retornado pelo serviço não é nulo
+        assertNotNull(result);
+    }
+
+    @Test
+    public void buscarPorIdExistente() {
+        ParceiroNegocio entidade = new ParceiroNegocio();
+        entidade.setId(1);
+        entidade.setNome("Nome do Parceiro");
+
+        when(repository.findById(1)).thenReturn(Optional.of(entidade));
+
+        ParceiroNegocioDto result = service.buscarPorId(1);
+
+        assertNotNull(result);
+        assertEquals(entidade.getId(), result.getId());
+        assertEquals(entidade.getNome(), result.getNome());
+    }
+
+    @Test
+    public void buscarPorIdNaoExistente() {
+        when(repository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.buscarPorId(1));
+    }
+
+    @Test
+    public void buscarPorNomeExistente() {
+        String nomeParceiro = "Nome do Parceiro";
+        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+        parceiroNegocio.setId(1);
+        parceiroNegocio.setNome(nomeParceiro);
+
+        when(repository.findByNome(nomeParceiro)).thenReturn(Optional.of(parceiroNegocio));
+
+        ParceiroNegocioDto result = service.buscarPorNome(nomeParceiro);
+
+        assertNotNull(result);
+        assertEquals(parceiroNegocio.getId(), result.getId());
+        assertEquals(parceiroNegocio.getNome(), result.getNome());
+    }
+
+    @Test
+    public void buscarPorNomeNaoExistente() {
+        String nomeParceiro = "Nome do Parceiro Inexistente";
+
+        when(repository.findByNome(nomeParceiro)).thenReturn(Optional.empty());
+
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.buscarPorNome(nomeParceiro));
     }
 
 }
