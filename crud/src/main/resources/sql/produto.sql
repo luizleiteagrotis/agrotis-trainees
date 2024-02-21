@@ -5,5 +5,6 @@ CREATE TABLE produto
     id_fabricante int,
     data_fabricacao date,
     data_validade date,
+    quantidade_estoque int,
     CONSTRAINT fk_produto_fabricante FOREIGN KEY (id_fabricante) REFERENCES parceiro_negocio(id)
 )

@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,8 +31,19 @@ public class Produto {
 
     private Date dataValidade;
 
+    @Column(name = "quantidade_estoque")
+    private Integer quantidadeEstoque;
+
     public String getDescricao() {
         return descricao;
+    }
+
+    public Integer getQuantidadeEstoque() {
+        return quantidadeEstoque;
+    }
+
+    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+        this.quantidadeEstoque = quantidadeEstoque;
     }
 
     public void setDescricao(String descricao) {
