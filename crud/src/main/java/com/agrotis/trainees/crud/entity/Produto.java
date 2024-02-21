@@ -18,6 +18,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "produto")
 public class Produto{
@@ -45,15 +47,12 @@ public class Produto{
     @NotNull(message = "O campo data de validade não pode ser nulo.")
     private LocalDate dataValidade;
 
-    @NotNull(message = "Preencha o campo quantidade de estoque")
-    @Column(name = "quantidade_estoque")
+    @Column(name = "quantidade_estoque", columnDefinition = "INT DEFAULT 0")   
     private Integer quantidadeEstoque;
     
     private BigDecimal custoTotal;
     
     private BigDecimal custoMedio;
-    
-    
 
     public String getDescricao() {
         return descricao;

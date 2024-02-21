@@ -9,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
 import com.agrotis.trainees.crud.dtos.ItemNotaDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
+import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
@@ -29,26 +29,24 @@ public class ItemNotaService {
     private final NotaFiscalItemRepository repository;
     private final ProdutoRepository produtoRepository;
     private final ProdutoService produtoService;
-    private final CabecalhoNotaService cabecalhoNotaService;
-    private final ParceiroNegocioService parceiroNegocioService;
+    private final CabecalhoNotaRepository cabecalhoNotaRepository;
 
-    public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService,
-                    CabecalhoNotaService cabecalhoNotaService,ParceiroNegocioService parceiroNegocioService, ProdutoRepository produtoRepository) {
+    public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService, ProdutoRepository produtoRepository,
+                    CabecalhoNotaRepository cabecalhoNotaRepository) {
         this.repository = repository;
         this.produtoService = produtoService;
-        this.cabecalhoNotaService = cabecalhoNotaService;
-        this.parceiroNegocioService = parceiroNegocioService;
         this.produtoRepository = produtoRepository;
+        this.cabecalhoNotaRepository = cabecalhoNotaRepository;
     }
-    
+
     @Transactional
     public ItemNotaDto salvar(ItemNotaDto dto) {
         ItemNota entidade = DtoUtils.converteParaEntidade(dto);
 
         CabecalhoNota cabecalhoNota = entidade.getCabecalhoNota();
-        CabecalhoNotaDto cabecalhoNotaDtoSalvo = cabecalhoNotaService.salvar(DtoUtils.converteParaDto(cabecalhoNota));
-        entidade.setCabecalhoNota(DtoUtils.converteParaEntidade(cabecalhoNotaDtoSalvo));
-        
+        CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(cabecalhoNota);
+        entidade.setCabecalhoNota(cabecalhoSalvo);
+
         Produto produtoDoItemNota = entidade.getProduto();
         Produto salvarOuBuscarProduto = salvarOuBuscarProduto(produtoDoItemNota);
         produtoRepository.save(salvarOuBuscarProduto);
@@ -58,29 +56,25 @@ public class ItemNotaService {
         atualizarEstoque(entidade);
 
         entidade = repository.save(entidade);
-        
-        //adicionarValorTotalCabecalho(entidade);
+
+        adicionarValorTotalCabecalho(entidade);
 
         return DtoUtils.converteParaDto(entidade);
     }
 
     public List<ItemNotaDto> listarTodos() {
-        return repository.findAll()
-                        .stream()
-                        .map(DtoUtils::converteParaDto)
-                        .collect(Collectors.toList());
+        return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
 
     public ItemNotaDto buscarPorId(Integer id) {
-        return repository.findById(id)
-                        .map(DtoUtils::converteParaDto)
+        return repository.findById(id).map(DtoUtils::converteParaDto)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 
     @Transactional
     public ItemNotaDto atualizar(Integer id, ItemNotaDto notaFiscalItemDto) {
         ItemNota itemNotaExistente = repository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
 
         atualizarItemNota(itemNotaExistente, notaFiscalItemDto);
 
@@ -96,8 +90,6 @@ public class ItemNotaService {
         itemNota.setQuantidade(notaFiscalItemDto.getQuantidade());
         itemNota.setValorTotal(notaFiscalItemDto.getValorTotal());
     }
-
-
 
     public void deletarPorId(Integer id) {
         repository.findById(id).map(entidade -> {
@@ -145,18 +137,24 @@ public class ItemNotaService {
         valorTotalCabecalho += valorTotalItem;
         cabecalhoNota.setValorTotal(valorTotalCabecalho);
     }
-    
+
     private Produto salvarOuBuscarProduto(Produto produto) {
         if (produto.getId() != null) {
-            return produtoRepository.findById(produto.getId())
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+            return produtoRepository.findById(produto.getId()).orElseThrow(
+                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
         } else {
-            return produtoRepository.findById(produto.getId())
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+            return produtoRepository.findById(produto.getId()).orElseThrow(
+                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
         }
     }
 
-    
-
+    private CabecalhoNota salvarOuBuscarCabecalho(CabecalhoNota cabecalhoNota) {
+        if (cabecalhoNota.getId() != null) {
+            return cabecalhoNotaRepository.findById(cabecalhoNota.getId()).orElseThrow(() -> new EntidadeNaoEncontradaException(
+                            "Fabricante com o ID " + cabecalhoNota.getId() + " não encontrado"));
+        } else {
+            return cabecalhoNotaRepository.save(cabecalhoNota);
+        }
+    }
 
 }

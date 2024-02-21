@@ -1,7 +1,8 @@
 package com.agrotis.trainees.crud.config;
 
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -13,6 +14,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -44,26 +46,25 @@ public class ApplicationExceptionHandler {
                         .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorMessage> constraintViolationException(ConstraintViolationException ex, HttpServletRequest request) {
-        log.error("Api Error - ", ex);
+    @ExceptionHandler({ ConstraintViolationException.class, TransactionSystemException.class })
+    public ResponseEntity<ErrorMessage> handleValidationExceptions(Exception ex, HttpServletRequest request) {
         ErrorMessage errorMessage = new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Um ou mais campos são inválidos.");
 
-        // Mapear os campos inválidos e as mensagens de erro associadas
-        Map<String, String> errors = ex.getConstraintViolations().stream()
-                .collect(Collectors.toMap(
-                        violation -> violation.getPropertyPath().toString(),
-                        ConstraintViolation::getMessage));
+        List<String> errors = new ArrayList<>();
+        
+        Throwable rootCause = ex.getCause();
+        if (rootCause instanceof ConstraintViolationException) {
+            ConstraintViolationException constraintViolationException = (ConstraintViolationException) rootCause;
+            Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
+            for (ConstraintViolation<?> violation : violations ) {
+                String message = violation.getMessage();
+                errors.add(message);
+            }
+        }
 
-        // Adicionar os detalhes dos campos inválidos ao objeto ErrorMessage
         errorMessage.setErrors(errors);
 
-        // Retornar uma resposta com status UNPROCESSABLE_ENTITY e o objeto ErrorMessage
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(errorMessage);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).contentType(MediaType.APPLICATION_JSON).body(errorMessage);
     }
-
-
 
 }

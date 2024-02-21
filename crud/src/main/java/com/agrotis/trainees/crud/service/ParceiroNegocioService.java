@@ -3,6 +3,8 @@ package com.agrotis.trainees.crud.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class ParceiroNegocioService {
         this.repository = repository;
     }
 
-    public ParceiroNegocioDto salvar(ParceiroNegocioDto negocio) {
+    public ParceiroNegocioDto salvar(@Valid ParceiroNegocioDto negocio) {
         ParceiroNegocio entidade = DtoUtils.converteParaEntidade(negocio);
         repository.save(entidade);
         LOG.info("Salvando Parceiro de Negocio {}", negocio.getNome());

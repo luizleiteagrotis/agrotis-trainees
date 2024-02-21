@@ -1,7 +1,7 @@
 package com.agrotis.trainees.crud.service.exceptions;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +19,7 @@ public class ErrorMessage {
     private String statusText;
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<String, String> errors;
+    private List<String> errors;
     
     
     public ErrorMessage() {
@@ -42,13 +42,14 @@ public class ErrorMessage {
     }
     
     private void addErrors(BindingResult result) {
-        this.errors = new HashMap<>();
+        this.errors = new ArrayList<>();
         for(FieldError fieldError: result.getFieldErrors()) {
-            this.errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            this.errors.add(fieldError.getDefaultMessage());
         }
-        
-        
-        
+    }
+    
+    public void addError(String error) {
+        this.errors.add(error);
     }
 
     public void setPath(String path) {
@@ -91,12 +92,11 @@ public class ErrorMessage {
         return message;
     }
 
-    public Map<String, String> getErrors() {
+    public List<String> getErrors() {
         return errors;
     }
-    
 
-    public void setErrors(Map<String, String> errors) {
+    public void setErrors(List<String> errors) {
         this.errors = errors;
     }
 
@@ -105,9 +105,4 @@ public class ErrorMessage {
         return "ErrorMessage [path=" + path + ", method=" + method + ", status=" + status + ", statusText=" + statusText
                         + ", message=" + message + ", errors=" + errors + "]";
     }
-    
-    
-
-    
-
 }

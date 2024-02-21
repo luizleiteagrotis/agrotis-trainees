@@ -1,7 +1,6 @@
 package com.agrotis.trainees.crud.utils;
 
 import com.agrotis.trainees.crud.dtos.ProdutoDto;
-import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.exceptions.QuantidadeEmEstoqueException;
 
 public class ValidacaoUtils {
@@ -27,8 +26,7 @@ public class ValidacaoUtils {
             return true;
         }
         if (produto.getDescricao() == null || produto.getFabricante() == null ||
-            produto.getDataFabricacao() == null || produto.getDataValidade() == null ||
-            produto.getQuantidadeEstoque() == null) {
+            produto.getDataFabricacao() == null || produto.getDataValidade() == null) {
             return true;
         }
         return false;

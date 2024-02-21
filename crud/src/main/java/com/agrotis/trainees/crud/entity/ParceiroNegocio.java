@@ -16,8 +16,8 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "parceiro_negocio")
-public class ParceiroNegocio{
-    
+public class ParceiroNegocio {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

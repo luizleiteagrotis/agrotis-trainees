@@ -2,6 +2,8 @@ package com.agrotis.trainees.crud.controller;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +31,7 @@ public class ParceiroNegocioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criar(@RequestBody ParceiroNegocioDto parceiroNegocio) {
+    public ResponseEntity<?> criar(@RequestBody @Valid ParceiroNegocioDto parceiroNegocio) {
         ParceiroNegocioDto parceiroNegocioSalvo = service.salvar(parceiroNegocio);
 
         URI uri = ServletUriComponentsBuilder
