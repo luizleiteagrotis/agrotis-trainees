@@ -20,6 +20,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.wrapper.NotaFiscalWrapper;
 
 @Service
 public class NotaFiscalService {
@@ -31,18 +32,21 @@ public class NotaFiscalService {
 
     private final NotaFiscalRepository repository;
     private final NotaFiscalTipoService tipoService;
+    private final NotaFiscalWrapper notaFiscalWrapper;
 
-    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalTipoService tipoService) {
+    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalTipoService tipoService,
+                    NotaFiscalWrapper notaFiscalWrapper) {
         super();
         this.repository = repository;
         this.tipoService = tipoService;
+        this.notaFiscalWrapper = notaFiscalWrapper;
     }
 
     public NotaFiscalDto salvar(NotaFiscalDto dto) {
-        NotaFiscal entidade = converterParaEntidade(dto);
+        NotaFiscal entidade = notaFiscalWrapper.converterParaEntidade(dto);
         gerarNumero(entidade);
         entidade = repository.save(entidade);
-        return converterParaDto(entidade);
+        return notaFiscalWrapper.converterParaDto(entidade);
     }
 
     public NotaFiscalDto atualizar(NotaFiscal entidade) {
@@ -57,7 +61,7 @@ public class NotaFiscalService {
 
         modelMapper.map(entidade, nota);
 
-        return converterParaDto(repository.save(nota));
+        return notaFiscalWrapper.converterParaDto(repository.save(nota));
     }
 
     public NotaFiscal buscarPorId(Integer id) {
@@ -120,31 +124,7 @@ public class NotaFiscalService {
         NotaFiscal nota = buscarPorId(item.getIdNota().getId());
         nota.setValorTotal(nota.getValorTotal().add(item.getPrecoUnitario().multiply(new BigDecimal(item.getQuantidade()))));
 
-        salvar(converterParaDto(nota));
-    }
-
-    NotaFiscalDto converterParaDto(NotaFiscal entidade) {
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setId(entidade.getId());
-        dto.setTipo(entidade.getTipo());
-        dto.setParceiro(entidade.getParceiro());
-        dto.setNumero(entidade.getNumero());
-        dto.setDataEmissao(entidade.getDataEmissao());
-        dto.setValorTotal(entidade.getValorTotal());
-
-        return dto;
-    }
-
-    private NotaFiscal converterParaEntidade(NotaFiscalDto dto) {
-        NotaFiscal entidade = new NotaFiscal();
-        entidade.setId(dto.getId());
-        entidade.setTipo(dto.getTipo());
-        entidade.setParceiro(dto.getParceiro());
-        entidade.setNumero(dto.getNumero());
-        entidade.setDataEmissao(dto.getDataEmissao());
-        entidade.setValorTotal(dto.getValorTotal());
-
-        return entidade;
+        salvar(notaFiscalWrapper.converterParaDto(nota));
     }
 
 }

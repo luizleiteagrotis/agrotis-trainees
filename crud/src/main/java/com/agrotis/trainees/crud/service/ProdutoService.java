@@ -13,6 +13,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.wrapper.ProdutoWrapper;
 
 @Service
 public class ProdutoService {
@@ -20,18 +21,20 @@ public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(Produto.class);
 
     private final ProdutoRepository repository;
+    private final ProdutoWrapper produtoWrapper;
 
-    public ProdutoService(ProdutoRepository repository) {
+    public ProdutoService(ProdutoRepository repository, ProdutoWrapper produtoWrapper) {
         super();
         this.repository = repository;
+        this.produtoWrapper = produtoWrapper;
     }
 
     public ProdutoDto salvar(ProdutoDto dto) {
         try {
-            Produto entidade = converterParaEntidade(dto);
+            Produto entidade = produtoWrapper.converterParaEntidade(dto);
             verificarDescricao(entidade);
             entidade = repository.save(entidade);
-            return converterParaDto(entidade);
+            return produtoWrapper.converterParaDto(entidade);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
             return null;
@@ -56,7 +59,7 @@ public class ProdutoService {
             System.out.println("Erro: " + e.getMessage());
             return null;
         }
-        return converterParaDto(repository.save(produto));
+        return produtoWrapper.converterParaDto(repository.save(produto));
     }
 
     public Produto buscarPorId(Integer id) {
@@ -93,30 +96,6 @@ public class ProdutoService {
         if (repository.existsByDescricao(entidade.getDescricao()) == true) {
             throw new DescricaoExisteException("A descrição ja existe");
         }
-    }
-
-    public ProdutoDto converterParaDto(Produto entidade) {
-        ProdutoDto dto = new ProdutoDto();
-        dto.setId(entidade.getId());
-        dto.setDescricao(entidade.getDescricao());
-        dto.setIdParceiro(entidade.getIdParceiro());
-        dto.setDataFabricacao(entidade.getDataFabricacao());
-        dto.setDataValidade(entidade.getDataValidade());
-        dto.setEstoque(entidade.getEstoque());
-
-        return dto;
-    }
-
-    private Produto converterParaEntidade(ProdutoDto dto) {
-        Produto entidade = new Produto();
-        entidade.setId(dto.getId());
-        entidade.setDescricao(dto.getDescricao());
-        entidade.setIdParceiro(dto.getIdParceiro());
-        entidade.setDataFabricacao(dto.getDataFabricacao());
-        entidade.setDataValidade(dto.getDataValidade());
-        entidade.setEstoque(dto.getEstoque());
-
-        return entidade;
     }
 
 }

@@ -13,6 +13,7 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.exception.InscricaoExisteException;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
+import com.agrotis.trainees.crud.wrapper.ParceiroNegocioWrapper;
 
 @Service
 public class ParceiroNegocioService {
@@ -20,18 +21,20 @@ public class ParceiroNegocioService {
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 
     private final ParceiroNegocioRepository repository;
+    private final ParceiroNegocioWrapper parceiroNegocioWrapper;
 
-    public ParceiroNegocioService(ParceiroNegocioRepository repository) {
+    public ParceiroNegocioService(ParceiroNegocioRepository repository, ParceiroNegocioWrapper parceiroNegocioWrapper) {
         super();
         this.repository = repository;
+        this.parceiroNegocioWrapper = parceiroNegocioWrapper;
     }
 
     public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
         try {
             verificarInscricao(dto.getInscricaoFiscal());
-            ParceiroNegocio entidade = converterParaEntidade(dto);
+            ParceiroNegocio entidade = parceiroNegocioWrapper.converterParaEntidade(dto);
             entidade = repository.save(entidade);
-            return converterParaDto(entidade);
+            return parceiroNegocioWrapper.converterParaDto(entidade);
         } catch (InscricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
             e.printStackTrace();
@@ -51,7 +54,7 @@ public class ParceiroNegocioService {
 
         modelMapper.map(entidade, parceiro);
 
-        return converterParaDto(repository.save(parceiro));
+        return parceiroNegocioWrapper.converterParaDto(repository.save(parceiro));
     }
 
     public ParceiroNegocio buscarPorId(Integer id) {
@@ -89,28 +92,6 @@ public class ParceiroNegocioService {
         if (repository.existsByInscricaoFiscal(inscricaoFiscal) == true) {
             throw new InscricaoExisteException("A inscrição fiscal já existe");
         }
-    }
-
-    private ParceiroNegocioDto converterParaDto(ParceiroNegocio entidade) {
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setId(entidade.getId());
-        dto.setNome(entidade.getNome());
-        dto.setInscricaoFiscal(entidade.getInscricaoFiscal());
-        dto.setEndereco(entidade.getEndereco());
-        dto.setTelefone(entidade.getTelefone());
-
-        return dto;
-    }
-
-    private ParceiroNegocio converterParaEntidade(ParceiroNegocioDto dto) {
-        ParceiroNegocio entidade = new ParceiroNegocio();
-        entidade.setId(dto.getId());
-        entidade.setNome(dto.getNome());
-        entidade.setInscricaoFiscal(dto.getInscricaoFiscal());
-        entidade.setEndereco(dto.getEndereco());
-        entidade.setTelefone(dto.getTelefone());
-
-        return entidade;
     }
 
     private String normalizarInscricaoFiscal(String inscricaoFiscal) {
