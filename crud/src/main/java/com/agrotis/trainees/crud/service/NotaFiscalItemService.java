@@ -45,7 +45,6 @@ public class NotaFiscalItemService {
         NotaFiscalItem entidade = converterParaEntidade(dto);
         Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
-        boolean existe = repository.existsByProdutoAndIdNota(produto, nota);
 
         try {
             entidade = alterarEstoque(entidade);
@@ -58,11 +57,12 @@ public class NotaFiscalItemService {
             return null;
         }
         entidade = repository.save(entidade);
-
         return converterParaDto(entidade);
     }
 
-    public NotaFiscalItemDto atualizar(NotaFiscalItem entidade) {
+    public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) {
+        NotaFiscalItem entidade = converterParaEntidade(dto);
+
         if (entidade.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do produto.");
         }
@@ -120,7 +120,7 @@ public class NotaFiscalItemService {
 
     @Transactional
     public NotaFiscalItem obterValorTotal(NotaFiscalItem entidade) {
-        entidade.setValorTotal(entidade.getPrecoUnitario().multiply(entidade.getQuantidade()));
+        entidade.setValorTotal(entidade.getPrecoUnitario().multiply(new BigDecimal(entidade.getQuantidade())));
         return entidade;
     }
 
@@ -129,15 +129,15 @@ public class NotaFiscalItemService {
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
         if (nota.getTipo().getId() == 1) {
-            produto.setEstoque(produto.getEstoque().add(item.getQuantidade()));
+            produto.setEstoque(produto.getEstoque() + item.getQuantidade());
             item = validarNotaEItem(item);
 
             ProdutoDto produto2 = produtoService.atualizar(produto);
         } else {
-            if (produto.getEstoque().subtract(item.getQuantidade()).compareTo(BigDecimal.ZERO) < 0) {
+            if (produto.getEstoque() - item.getQuantidade() < 0) {
                 throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
             }
-            produto.setEstoque(produto.getEstoque().subtract(item.getQuantidade()));
+            produto.setEstoque(produto.getEstoque() - item.getQuantidade());
             item = validarNotaEItem(item);
             ProdutoDto produto2 = produtoService.atualizar(produto);
         }
@@ -150,8 +150,8 @@ public class NotaFiscalItemService {
         NotaFiscalItem buscarPorProdutoAndId = repository.findByProdutoAndIdNota(produto, nota);
 
         if (buscarPorProdutoAndId != null) {
-            if (buscarPorProdutoAndId.getPrecoUnitario() == entidade.getPrecoUnitario()) {
-                buscarPorProdutoAndId.setQuantidade(buscarPorProdutoAndId.getQuantidade().add(entidade.getQuantidade()));
+            if (buscarPorProdutoAndId.getPrecoUnitario().equals(entidade.getPrecoUnitario())) {
+                buscarPorProdutoAndId.setQuantidade(buscarPorProdutoAndId.getQuantidade() + entidade.getQuantidade());
                 obterValorTotal(buscarPorProdutoAndId);
                 notaFiscalService.atualizarValorTotalNota(entidade);
                 return buscarPorProdutoAndId;
@@ -217,19 +217,18 @@ public class NotaFiscalItemService {
 
         if (nota.getTipo().getId() == 1) {
             if (produto.getId() != produto2.getId()) {
-                if (produto2.getEstoque().subtract(item.getQuantidade()).compareTo(BigDecimal.ZERO) >= 0) {
-                    produto.setEstoque(produto.getEstoque().add(entidade.getQuantidade()));
-                    produto2.setEstoque(produto2.getEstoque().subtract(item.getQuantidade()));
+                if (produto2.getEstoque() - item.getQuantidade() >= 0) {
+                    produto.setEstoque(produto.getEstoque() - entidade.getQuantidade());
+                    produto2.setEstoque(produto2.getEstoque() - item.getQuantidade());
                     produtoService.atualizar(produto);
                     produtoService.atualizar(produto2);
                 } else {
                     throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
                 }
 
-            } else if (produto2.getEstoque().add(entidade.getQuantidade().subtract(item.getQuantidade()))
-                            .compareTo(BigDecimal.ZERO) >= 0) {
+            } else if (produto2.getEstoque() + entidade.getQuantidade() - (item.getQuantidade()) >= 0) {
 
-                produto.setEstoque(produto.getEstoque().add(entidade.getQuantidade().subtract(item.getQuantidade())));
+                produto.setEstoque(produto.getEstoque() + entidade.getQuantidade() - item.getQuantidade());
                 produtoService.atualizar(produto);
             } else {
                 throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
@@ -237,18 +236,17 @@ public class NotaFiscalItemService {
 
         } else {
             if (produto.getId() != produto2.getId()) {
-                if (produto.getEstoque().subtract(entidade.getQuantidade()).compareTo(BigDecimal.ZERO) >= 0) {
-                    produto2.setEstoque(produto2.getEstoque().add(item.getQuantidade()));
-                    produto.setEstoque(produto.getEstoque().add(entidade.getQuantidade()));
+                if (produto.getEstoque() - entidade.getQuantidade() >= 0) {
+                    produto2.setEstoque(produto2.getEstoque() - item.getQuantidade());
+                    produto.setEstoque(produto.getEstoque() + entidade.getQuantidade());
                     produtoService.atualizar(produto);
                     produtoService.atualizar(produto2);
                 } else {
                     throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
                 }
 
-            } else if (produto.getEstoque().add(item.getQuantidade().subtract(entidade.getQuantidade()))
-                            .compareTo(BigDecimal.ZERO) >= 0) {
-                produto.setEstoque(produto.getEstoque().add(item.getQuantidade().subtract(entidade.getQuantidade())));
+            } else if (produto.getEstoque() + item.getQuantidade() - entidade.getQuantidade() >= 0) {
+                produto.setEstoque(produto.getEstoque() + item.getQuantidade() - entidade.getQuantidade());
                 produtoService.atualizar(produto);
             } else {
                 throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
@@ -265,16 +263,16 @@ public class NotaFiscalItemService {
         try {
             if (nota.getTipo().getId() == 1) {
 
-                if (produto.getEstoque().subtract(item.getQuantidade()).compareTo(BigDecimal.ZERO) < 0) {
+                if (produto.getEstoque() - item.getQuantidade() < 0) {
                     throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
                 }
-                produto.setEstoque(produto.getEstoque().subtract(item.getQuantidade()));
+                produto.setEstoque(produto.getEstoque() - item.getQuantidade());
                 ProdutoDto produto2 = produtoService.atualizar(produto);
                 nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
                 NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
                 deletarPorId(id);
             } else {
-                produto.setEstoque(produto.getEstoque().add(item.getQuantidade()));
+                produto.setEstoque(produto.getEstoque() + item.getQuantidade());
                 ProdutoDto produto2 = produtoService.atualizar(produto);
                 nota.setValorTotal(nota.getValorTotal().add(item.getValorTotal()));
                 NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -117,7 +118,7 @@ public class NotaFiscalService {
 
     public void atualizarValorTotalNota(NotaFiscalItem item) {
         NotaFiscal nota = buscarPorId(item.getIdNota().getId());
-        nota.setValorTotal(nota.getValorTotal().add(item.getPrecoUnitario().multiply((item.getQuantidade()))));
+        nota.setValorTotal(nota.getValorTotal().add(item.getPrecoUnitario().multiply(new BigDecimal(item.getQuantidade()))));
 
         salvar(converterParaDto(nota));
     }

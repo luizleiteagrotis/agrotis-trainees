@@ -44,7 +44,7 @@ public class NotaFiscalItemController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItem item) {
+    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItemDto item) {
         return ResponseEntity.ok().body(service.atualizar(item));
     }
 
