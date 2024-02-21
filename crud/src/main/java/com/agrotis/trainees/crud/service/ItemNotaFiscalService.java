@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,7 +93,7 @@ public class ItemNotaFiscalService {
 
     private void addValorTotal(ItemNotaFiscal item) {
         NotaFiscal notaFiscal = item.getNotaFiscal();
-        Double valorTotalItem = item.getValorTotal();
+        BigDecimal valorTotalItem = item.getValorTotal();
         notaFiscal.setValorTotal(valorTotalItem);
 
         notaFiscalService.salvar(notaFiscalService.converteParaDto(notaFiscal));
@@ -100,9 +101,9 @@ public class ItemNotaFiscalService {
 
     public void calcularValorTotal(ItemNotaFiscal itemNotaFiscal) {
         Integer quantidadeNotaFiscal = itemNotaFiscal.getQuantidade();
-        Double precoUnitarioItemNotaFiscal = itemNotaFiscal.getPrecoUnitario();
+        BigDecimal precoUnitarioItemNotaFiscal = itemNotaFiscal.getPrecoUnitario();
         if (quantidadeNotaFiscal != null && precoUnitarioItemNotaFiscal != null) {
-            Double valorTotal = quantidadeNotaFiscal * precoUnitarioItemNotaFiscal;
+            BigDecimal valorTotal = BigDecimal.valueOf(quantidadeNotaFiscal).multiply(precoUnitarioItemNotaFiscal);
             itemNotaFiscal.setValorTotal(valorTotal);
         }
 
@@ -131,10 +132,30 @@ public class ItemNotaFiscalService {
 
     }
 
-    private void adicionarValorTotalCabecalho(ItemNotaFiscal item) {
-        NotaFiscal cabecalho = item.getNotaFiscal();
-        Double valorTotalItem = item.getValorTotal();
-        cabecalho.setValorTotal(valorTotalItem);
+    private void adicionarValorTotalCabecalho(ItemNotaFiscal itemNota) {
+        NotaFiscal cabecalhoNota = itemNota.getNotaFiscal();
+        BigDecimal valorTotalCabecalho = cabecalhoNota.getValorTotal();
+        BigDecimal valorTotalItem = itemNota.getValorTotal();
+
+        if (valorTotalCabecalho != null && valorTotalItem != null) {
+
+            valorTotalCabecalho = valorTotalCabecalho.add(valorTotalItem);
+
+            cabecalhoNota.setValorTotal(valorTotalCabecalho);
+        } else {
+
+            System.err.println("Um dos valores é nulo. Não foi possível calcular o valor total do cabeçalho.");
+        }
+    }
+
+    private Produto salvarOuBuscarProduto(Produto produto) {
+        if (produto.getId() != null) {
+            return produtoRepository.findById(produto.getId()).orElseThrow(
+                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+        } else {
+            return produtoRepository.findById(produto.getId()).orElseThrow(
+                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+        }
     }
 
     private void atualizarItemNota(ItemNotaFiscal itemNota, NotaFiscalItemDto notaFiscalItemDto) {

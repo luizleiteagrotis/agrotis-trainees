@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.dto;
 
+import java.math.BigDecimal;
+
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 
@@ -7,11 +9,11 @@ public class NotaFiscalItemDto {
 
     private Integer id;
 
-    private Double precoUnitario;
+    private BigDecimal precoUnitario;
 
     private Integer quantidade;
 
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     private NotaFiscal notaFiscal;
 
@@ -25,28 +27,12 @@ public class NotaFiscalItemDto {
         this.id = id;
     }
 
-    public Double getPrecoUnitario() {
-        return precoUnitario;
-    }
-
-    public void setPrecoUnitario(Double precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
-
     public Integer getQuantidade() {
         return quantidade;
     }
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
-    }
-
-    public Double getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
     }
 
     public NotaFiscal getNotaFiscal() {
@@ -63,6 +49,22 @@ public class NotaFiscalItemDto {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    public BigDecimal getPrecoUnitario() {
+        return precoUnitario;
+    }
+
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
+
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
 }

@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -42,6 +43,10 @@ public class Produto {
 
     @Column(name = "estoque")
     private int estoque;
+
+    private BigDecimal custoTotal;
+
+    private BigDecimal custoMedio;
 
     public Integer getId() {
         return id;
@@ -97,6 +102,22 @@ public class Produto {
 
     public void setEstoque(int estoque) {
         this.estoque = estoque;
+    }
+
+    public BigDecimal getCustoTotal() {
+        return custoTotal;
+    }
+
+    public void setCustoTotal(BigDecimal custoTotal) {
+        this.custoTotal = custoTotal;
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
     }
 
 }

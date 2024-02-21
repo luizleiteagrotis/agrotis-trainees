@@ -18,7 +18,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        format-sql: true
+        format_sql: true
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
   data:
     redis:
@@ -29,5 +29,4 @@ spring:
     url: jdbc:sqlserver://localhost:1433;databaseName=crud
     username: sa
     password: Idkmysenha21.
-
 

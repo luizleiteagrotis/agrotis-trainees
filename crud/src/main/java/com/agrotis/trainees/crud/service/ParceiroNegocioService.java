@@ -11,6 +11,7 @@ import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
+import com.agrotis.trainees.crud.service.exceptions.IdExistenteException;
 
 @Service
 public class ParceiroNegocioService {
@@ -25,9 +26,23 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
+
+        if (dto.getNome() == null || dto.getNome().isEmpty()) {
+            throw new EntidadeNaoEncontradaException("O nome do parceiro de negocios e obrigatorio.");
+        }
+        if (dto.getId() != null && repository.existsById(dto.getId())) {
+            throw new IdExistenteException("O ID ja existe: " + dto.getId());
+        }
         ParceiroNegocio entidade = converteParaEntidade(dto);
         repository.save(entidade);
         return converteParaDto(entidade);
+    }
+
+    private void atualizarDadosDoParceiro(ParceiroNegocio parceiroNegocio, ParceiroNegocioDto dto) {
+        parceiroNegocio.setNome(dto.getNome());
+        parceiroNegocio.setInscricaoFiscal(dto.getInscricaoFiscal());
+        parceiroNegocio.setEndereco(dto.getEndereco());
+        parceiroNegocio.setTelefone(dto.getTelefone());
     }
 
     public ParceiroNegocioDto buscarPorId(Integer id) {

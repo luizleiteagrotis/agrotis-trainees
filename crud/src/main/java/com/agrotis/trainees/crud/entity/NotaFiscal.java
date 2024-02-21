@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class NotaFiscal {
     private ParceiroNegocio parceiroNegocio;
 
     @Column(name = "valor_total")
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public Integer getId() {
         return id;
@@ -92,11 +93,11 @@ public class NotaFiscal {
         this.parceiroNegocio = parceiroNegocio;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 
