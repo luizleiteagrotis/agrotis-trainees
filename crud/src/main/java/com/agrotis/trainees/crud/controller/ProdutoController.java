@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
-import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
 @RequestMapping("notas-fiscais/produtos")
@@ -29,7 +28,7 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<?> inserir(@RequestBody ProdutoDto produto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(produto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produto));
     }
 
     @GetMapping
@@ -44,7 +43,7 @@ public class ProdutoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody Produto produto) {
+    public ResponseEntity<?> atualizar(@RequestBody ProdutoDto produto) {
         return ResponseEntity.ok().body(service.atualizar(produto));
     }
 

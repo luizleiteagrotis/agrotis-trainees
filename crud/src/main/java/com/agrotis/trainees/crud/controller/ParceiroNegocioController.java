@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 @RequestMapping("notas-fiscais/parceiros")
@@ -29,7 +28,7 @@ public class ParceiroNegocioController {
 
     @PostMapping
     public ResponseEntity<?> inserir(@RequestBody ParceiroNegocioDto parceiroNegocioDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(parceiroNegocioDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(parceiroNegocioDto));
     }
 
     @GetMapping("/por-nome")
@@ -50,7 +49,7 @@ public class ParceiroNegocioController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocio parceiroNegocio) {
+    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocioDto parceiroNegocio) {
         return ResponseEntity.ok().body(service.atualizar(parceiroNegocio));
     }
 

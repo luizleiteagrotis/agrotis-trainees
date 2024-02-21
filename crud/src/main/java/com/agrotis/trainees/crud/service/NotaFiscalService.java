@@ -6,17 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
@@ -33,33 +29,35 @@ public class NotaFiscalService {
     private final NotaFiscalRepository repository;
     private final NotaFiscalTipoService tipoService;
     private final NotaFiscalWrapper notaFiscalWrapper;
+    private final NumeroService numeroService;
 
     public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalTipoService tipoService,
-                    NotaFiscalWrapper notaFiscalWrapper) {
+                    NotaFiscalWrapper notaFiscalWrapper, NumeroService numeroService) {
         super();
         this.repository = repository;
         this.tipoService = tipoService;
         this.notaFiscalWrapper = notaFiscalWrapper;
+        this.numeroService = numeroService;
     }
 
-    public NotaFiscalDto salvar(NotaFiscalDto dto) {
+    public NotaFiscalDto inserir(NotaFiscalDto dto) {
         NotaFiscal entidade = notaFiscalWrapper.converterParaEntidade(dto);
-        gerarNumero(entidade);
+        numeroService.gerarNumero(entidade);
         entidade = repository.save(entidade);
         return notaFiscalWrapper.converterParaDto(entidade);
     }
 
-    public NotaFiscalDto atualizar(NotaFiscal entidade) {
-        if (entidade.getId() == null) {
+    public NotaFiscalDto atualizar(NotaFiscalDto dto) {
+        if (dto.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do produto.");
         }
 
-        NotaFiscal nota = buscarPorId(entidade.getId());
+        NotaFiscal nota = buscarPorId(dto.getId());
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
-        modelMapper.map(entidade, nota);
+        modelMapper.map(dto, nota);
 
         return notaFiscalWrapper.converterParaDto(repository.save(nota));
     }
@@ -88,43 +86,13 @@ public class NotaFiscalService {
         return repository.findByNumero(numero);
     }
 
-    public void deletarPorId(Integer id) {
-        repository.deleteById(id);
-        LOG.info("id: {} deletado com sucesso", id);
-    }
-
     public List<NotaFiscal> listarTodos() {
         return repository.findAll();
     }
 
-    public void gerarNumero(NotaFiscal notaFiscal) {
-        int tipo = notaFiscal.getTipo().getId();
-        if (notaFiscal.getTipo() != null) {
-
-            if (tipo == 1 || tipo == 2) {
-
-                Integer ultimoNumero = obterUltimoNumeroPorTipo(notaFiscal);
-                notaFiscal.setNumero((ultimoNumero != null) ? ultimoNumero + 1 : 1);
-            }
-
-        }
-    }
-
-    @Transactional
-    public Integer obterUltimoNumeroPorTipo(NotaFiscal nota) {
-
-        try {
-            return repository.findMaxNumeroByTipo(nota.getTipo()).orElse(null);
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    public void atualizarValorTotalNota(NotaFiscalItem item) {
-        NotaFiscal nota = buscarPorId(item.getIdNota().getId());
-        nota.setValorTotal(nota.getValorTotal().add(item.getPrecoUnitario().multiply(new BigDecimal(item.getQuantidade()))));
-
-        salvar(notaFiscalWrapper.converterParaDto(nota));
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+        LOG.info("id: {} deletado com sucesso", id);
     }
 
 }

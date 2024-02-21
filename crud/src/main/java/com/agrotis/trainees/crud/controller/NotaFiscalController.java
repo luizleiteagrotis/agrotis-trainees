@@ -30,7 +30,7 @@ public class NotaFiscalController {
 
     @PostMapping
     public ResponseEntity<?> inserir(@RequestBody NotaFiscalDto nota) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(nota));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(nota));
     }
 
     @GetMapping
@@ -50,7 +50,7 @@ public class NotaFiscalController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscal nota) {
+    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalDto nota) {
         return ResponseEntity.ok().body(service.atualizar(nota));
     }
 

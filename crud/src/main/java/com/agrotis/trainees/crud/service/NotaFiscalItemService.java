@@ -6,15 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
-import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -35,26 +29,30 @@ public class NotaFiscalItemService {
     private final NotaFiscalService notaFiscalService;
     private final NotaFiscalItemWrapper notaFiscalItemWrapper;
     private final NotaFiscalWrapper notaFiscalWrapper;
+    private final EstoqueService estoqueService;
+    private final ItemService itemService;
 
     public NotaFiscalItemService(NotaFiscalItemRepository repository, ProdutoService produtoService,
                     NotaFiscalService notaFiscalService, NotaFiscalItemWrapper notaFiscalItemWrapper,
-                    NotaFiscalWrapper notaFiscalWrapper) {
+                    NotaFiscalWrapper notaFiscalWrapper, ItemService itemService, EstoqueService estoqueService) {
         super();
         this.repository = repository;
         this.produtoService = produtoService;
         this.notaFiscalService = notaFiscalService;
         this.notaFiscalItemWrapper = notaFiscalItemWrapper;
         this.notaFiscalWrapper = notaFiscalWrapper;
+        this.estoqueService = estoqueService;
+        this.itemService = itemService;
 
     }
 
-    public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
+    public NotaFiscalItemDto inserir(NotaFiscalItemDto dto) {
         NotaFiscalItem entidade = notaFiscalItemWrapper.converterParaEntidade(dto);
         Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
 
         try {
-            entidade = alterarEstoque(entidade);
+            entidade = estoqueService.alterarEstoque(entidade);
 
         } catch (EstoqueZeradoException e) {
             System.out.println("Erro: " + e.getMessage());
@@ -74,12 +72,12 @@ public class NotaFiscalItemService {
             throw new CrudException("Obrigatório preencher o id do produto.");
         }
         NotaFiscalItem item = buscarPorId(entidade.getId());
-        entidade = tratarNulos(entidade, item);
+        entidade = itemService.tratarNulos(entidade, item);
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
         try {
-            atualizarEstoque(entidade, item);
+            estoqueService.atualizarEstoque(entidade, item);
         } catch (EstoqueZeradoException e) {
             System.out.println("Erro: " + e.getMessage());
             return null;
@@ -90,10 +88,10 @@ public class NotaFiscalItemService {
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
         modelMapper.map(entidade, item);
-        item = obterValorTotal(item);
+        item = itemService.obterValorTotal(item);
         nota.setValorTotal(nota.getValorTotal().add(item.getValorTotal()));
 
-        notaFiscalService.salvar(notaFiscalWrapper.converterParaDto(nota));
+        notaFiscalService.atualizar(notaFiscalWrapper.converterParaDto(nota));
         return notaFiscalItemWrapper.converterParaDto(repository.save(item));
     }
 
@@ -116,155 +114,13 @@ public class NotaFiscalItemService {
         return repository.findByNota(notaFiscal);
     }
 
-    public void deletarPorId(Integer id) {
-        repository.deleteById(id);
-        LOG.info("id: {} deletado com sucesso", id);
-    }
-
     public List<NotaFiscalItem> listarTodos() {
         return repository.findAll();
     }
 
-    @Transactional
-    public NotaFiscalItem obterValorTotal(NotaFiscalItem entidade) {
-        entidade.setValorTotal(entidade.getPrecoUnitario().multiply(new BigDecimal(entidade.getQuantidade())));
-        return entidade;
-    }
-
-    public NotaFiscalItem alterarEstoque(NotaFiscalItem item) throws EstoqueZeradoException, ValorDiferenteException {
-        NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
-        Produto produto = produtoService.buscarPorId(item.getProduto().getId());
-
-        if (nota.getTipo().getId() == 1) {
-            produto.setEstoque(produto.getEstoque() + item.getQuantidade());
-            item = validarNotaEItem(item);
-
-            ProdutoDto produto2 = produtoService.atualizar(produto);
-        } else {
-            if (produto.getEstoque() - item.getQuantidade() < 0) {
-                throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
-            }
-            produto.setEstoque(produto.getEstoque() - item.getQuantidade());
-            item = validarNotaEItem(item);
-            ProdutoDto produto2 = produtoService.atualizar(produto);
-        }
-        return item;
-    }
-
-    public NotaFiscalItem validarNotaEItem(NotaFiscalItem entidade) throws ValorDiferenteException {
-        NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
-        Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
-        NotaFiscalItem buscarPorProdutoAndId = repository.findByProdutoAndIdNota(produto, nota);
-
-        if (buscarPorProdutoAndId != null) {
-            if (buscarPorProdutoAndId.getPrecoUnitario().equals(entidade.getPrecoUnitario())) {
-                buscarPorProdutoAndId.setQuantidade(buscarPorProdutoAndId.getQuantidade() + entidade.getQuantidade());
-                obterValorTotal(buscarPorProdutoAndId);
-                notaFiscalService.atualizarValorTotalNota(entidade);
-                return buscarPorProdutoAndId;
-            }
-            throw new ValorDiferenteException("Item com preço diferente do original");
-        } else {
-            obterValorTotal(entidade);
-            notaFiscalService.atualizarValorTotalNota(entidade);
-            return entidade;
-        }
-
-    }
-
-    private NotaFiscalItem tratarNulos(NotaFiscalItem entidade, NotaFiscalItem item) {
-
-        Field[] fields = entidade.getClass().getDeclaredFields();
-        Field[] fields2 = item.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-            field.setAccessible(true);
-
-            try {
-                if (field.get(entidade) == null || field.get(entidade).equals(0) || field.get(entidade).equals(0.0)) {
-
-                    field.set(entidade, field.get(item));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return entidade;
-    }
-
-    private NotaFiscalItem atualizarEstoque(NotaFiscalItem entidade, NotaFiscalItem item) throws EstoqueZeradoException {
-        Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
-        Produto produto2 = produtoService.buscarPorId(item.getProduto().getId());
-        NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
-
-        if (nota.getTipo().getId() == 1) {
-            if (produto.getId() != produto2.getId()) {
-                if (produto2.getEstoque() - item.getQuantidade() >= 0) {
-                    produto.setEstoque(produto.getEstoque() - entidade.getQuantidade());
-                    produto2.setEstoque(produto2.getEstoque() - item.getQuantidade());
-                    produtoService.atualizar(produto);
-                    produtoService.atualizar(produto2);
-                } else {
-                    throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
-                }
-
-            } else if (produto2.getEstoque() + entidade.getQuantidade() - (item.getQuantidade()) >= 0) {
-
-                produto.setEstoque(produto.getEstoque() + entidade.getQuantidade() - item.getQuantidade());
-                produtoService.atualizar(produto);
-            } else {
-                throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
-            }
-
-        } else {
-            if (produto.getId() != produto2.getId()) {
-                if (produto.getEstoque() - entidade.getQuantidade() >= 0) {
-                    produto2.setEstoque(produto2.getEstoque() - item.getQuantidade());
-                    produto.setEstoque(produto.getEstoque() + entidade.getQuantidade());
-                    produtoService.atualizar(produto);
-                    produtoService.atualizar(produto2);
-                } else {
-                    throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
-                }
-
-            } else if (produto.getEstoque() + item.getQuantidade() - entidade.getQuantidade() >= 0) {
-                produto.setEstoque(produto.getEstoque() + item.getQuantidade() - entidade.getQuantidade());
-                produtoService.atualizar(produto);
-            } else {
-                throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
-            }
-        }
-        return entidade;
-    }
-
-    public void deletarEstoque(Integer id) {
-        NotaFiscalItem item = buscarPorId(id);
-        NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
-        Produto produto = produtoService.buscarPorId(item.getProduto().getId());
-
-        try {
-            if (nota.getTipo().getId() == 1) {
-
-                if (produto.getEstoque() - item.getQuantidade() < 0) {
-                    throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
-                }
-                produto.setEstoque(produto.getEstoque() - item.getQuantidade());
-                ProdutoDto produto2 = produtoService.atualizar(produto);
-                nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
-                NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
-                deletarPorId(id);
-            } else {
-                produto.setEstoque(produto.getEstoque() + item.getQuantidade());
-                ProdutoDto produto2 = produtoService.atualizar(produto);
-                nota.setValorTotal(nota.getValorTotal().add(item.getValorTotal()));
-                NotaFiscalDto nota2 = notaFiscalService.atualizar(nota);
-                deletarPorId(id);
-            }
-        } catch (EstoqueZeradoException e) {
-            System.out.println("Erro: " + e.getMessage());
-        }
-
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
+        LOG.info("id: {} deletado com sucesso", id);
     }
 
 }

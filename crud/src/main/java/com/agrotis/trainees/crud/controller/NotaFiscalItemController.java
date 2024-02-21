@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.service.EstoqueService;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 
 @RequestMapping("notas-fiscais/items")
@@ -22,15 +23,17 @@ import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 public class NotaFiscalItemController {
 
     private final NotaFiscalItemService service;
+    private final EstoqueService estoqueService;
 
-    public NotaFiscalItemController(NotaFiscalItemService service) {
+    public NotaFiscalItemController(NotaFiscalItemService service, EstoqueService estoqueService) {
         super();
         this.service = service;
+        this.estoqueService = estoqueService;
     }
 
     @PostMapping
     public ResponseEntity<?> inserir(@RequestBody NotaFiscalItemDto item) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(item));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(item));
     }
 
     @GetMapping
@@ -51,7 +54,7 @@ public class NotaFiscalItemController {
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Integer id) {
-        service.deletarEstoque(id);
+        estoqueService.deletarEstoque(id);
         return ResponseEntity.ok().body(null);
     }
 }

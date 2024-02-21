@@ -22,16 +22,19 @@ public class ParceiroNegocioService {
 
     private final ParceiroNegocioRepository repository;
     private final ParceiroNegocioWrapper parceiroNegocioWrapper;
+    private final InscricaoService inscricaoService;
 
-    public ParceiroNegocioService(ParceiroNegocioRepository repository, ParceiroNegocioWrapper parceiroNegocioWrapper) {
+    public ParceiroNegocioService(ParceiroNegocioRepository repository, ParceiroNegocioWrapper parceiroNegocioWrapper,
+                    InscricaoService inscricaoService) {
         super();
         this.repository = repository;
         this.parceiroNegocioWrapper = parceiroNegocioWrapper;
+        this.inscricaoService = inscricaoService;
     }
 
-    public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
+    public ParceiroNegocioDto inserir(ParceiroNegocioDto dto) {
         try {
-            verificarInscricao(dto.getInscricaoFiscal());
+            inscricaoService.verificarInscricao(dto.getInscricaoFiscal());
             ParceiroNegocio entidade = parceiroNegocioWrapper.converterParaEntidade(dto);
             entidade = repository.save(entidade);
             return parceiroNegocioWrapper.converterParaDto(entidade);
@@ -43,16 +46,16 @@ public class ParceiroNegocioService {
 
     }
 
-    public ParceiroNegocioDto atualizar(ParceiroNegocio entidade) {
-        if (entidade.getId() == null) {
+    public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto) {
+        if (dto.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do parceiro.");
         }
 
-        ParceiroNegocio parceiro = buscarPorId(entidade.getId());
+        ParceiroNegocio parceiro = buscarPorId(dto.getId());
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
-        modelMapper.map(entidade, parceiro);
+        modelMapper.map(dto, parceiro);
 
         return parceiroNegocioWrapper.converterParaDto(repository.save(parceiro));
     }
@@ -69,7 +72,7 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocio buscarPorInscricaoFiscal(String inscricaoFiscal) {
-        String inscricaoFiscalNormalizada = normalizarInscricaoFiscal(inscricaoFiscal);
+        String inscricaoFiscalNormalizada = inscricaoService.normalizarInscricaoFiscal(inscricaoFiscal);
 
         return repository.findByInscricaoFiscal(inscricaoFiscalNormalizada).orElseGet(() -> {
             return repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
@@ -88,13 +91,4 @@ public class ParceiroNegocioService {
         return repository.findAll();
     }
 
-    public void verificarInscricao(String inscricaoFiscal) throws InscricaoExisteException {
-        if (repository.existsByInscricaoFiscal(inscricaoFiscal) == true) {
-            throw new InscricaoExisteException("A inscrição fiscal já existe");
-        }
-    }
-
-    private String normalizarInscricaoFiscal(String inscricaoFiscal) {
-        return inscricaoFiscal.replaceAll("[^0-9.-]", "");
-    }
 }

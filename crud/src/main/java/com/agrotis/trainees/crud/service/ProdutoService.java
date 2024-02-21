@@ -22,17 +22,19 @@ public class ProdutoService {
 
     private final ProdutoRepository repository;
     private final ProdutoWrapper produtoWrapper;
+    private final DescricaoService descricaoService;
 
-    public ProdutoService(ProdutoRepository repository, ProdutoWrapper produtoWrapper) {
+    public ProdutoService(ProdutoRepository repository, ProdutoWrapper produtoWrapper, DescricaoService descricaoService) {
         super();
         this.repository = repository;
         this.produtoWrapper = produtoWrapper;
+        this.descricaoService = descricaoService;
     }
 
-    public ProdutoDto salvar(ProdutoDto dto) {
+    public ProdutoDto inserir(ProdutoDto dto) {
         try {
             Produto entidade = produtoWrapper.converterParaEntidade(dto);
-            verificarDescricao(entidade);
+            descricaoService.verificarDescricao(entidade);
             entidade = repository.save(entidade);
             return produtoWrapper.converterParaDto(entidade);
         } catch (DescricaoExisteException e) {
@@ -41,20 +43,20 @@ public class ProdutoService {
         }
     }
 
-    public ProdutoDto atualizar(Produto entidade) {
-        if (entidade.getId() == null) {
+    public ProdutoDto atualizar(ProdutoDto dto) {
+        if (dto.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do produto.");
         }
 
-        Produto produto = buscarPorId(entidade.getId());
+        Produto produto = buscarPorId(dto.getId());
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
-        modelMapper.map(entidade, produto);
+        modelMapper.map(dto, produto);
 
         try {
-            verificarDescricaoEId(produto);
+            descricaoService.verificarDescricaoEId(produto);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
             return null;
@@ -83,19 +85,6 @@ public class ProdutoService {
 
     public List<Produto> listarTodos() {
         return repository.findAll();
-    }
-
-    public void verificarDescricaoEId(Produto entidade) throws DescricaoExisteException {
-        if (repository.existsByDescricaoAndIdNot(entidade.getDescricao(), entidade.getId()) == true) {
-            throw new DescricaoExisteException("A descrição já existe");
-        }
-
-    }
-
-    public void verificarDescricao(Produto entidade) throws DescricaoExisteException {
-        if (repository.existsByDescricao(entidade.getDescricao()) == true) {
-            throw new DescricaoExisteException("A descrição ja existe");
-        }
     }
 
 }
