@@ -35,20 +35,25 @@ public class ItemNotaFiscal {
 
     private BigDecimal valorTotal;
 
-    @Deprecated
     public ItemNotaFiscal() {
-    };
 
-    public ItemNotaFiscal(NotaFiscal notaFiscal, Produto produto, BigDecimal quantidade, BigDecimal precoUnitario) {
+    }
+
+    public ItemNotaFiscal(int id, NotaFiscal notaFiscal, Produto produto, BigDecimal quantidade, BigDecimal precoUnitario) {
         super();
-        this.notaFiscal = notaFiscal;
+        this.id = id;
         this.produto = produto;
+        this.notaFiscal = notaFiscal;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Produto getProduto() {
@@ -89,5 +94,6 @@ public class ItemNotaFiscal {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
-    }
+    };
+
 }

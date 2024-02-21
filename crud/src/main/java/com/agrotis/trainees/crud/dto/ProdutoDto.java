@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -11,7 +12,8 @@ public class ProdutoDto {
     private ParceiroNegocio fabricante;
     private LocalDate dataFabricacao;
     private LocalDate dataValidade;
-    private double estoque;
+    private BigDecimal estoque;
+    private BigDecimal custoMedio;
 
     public int getId() {
         return id;
@@ -61,12 +63,20 @@ public class ProdutoDto {
         this.dataValidade = dataValidade;
     }
 
-    public double getEstoque() {
+    public BigDecimal getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(double estoque) {
+    public void setEstoque(BigDecimal estoque) {
         this.estoque = estoque;
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
     }
 
 }

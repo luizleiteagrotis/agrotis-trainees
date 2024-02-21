@@ -22,28 +22,25 @@ public class ParceiroNegocio {
     private String endereco;
     private String telefone;
 
-    @Deprecated
     public ParceiroNegocio() {
     }
 
-    public ParceiroNegocio(@NotBlank(message = "Este campo é obrigatório") String nome,
+    public ParceiroNegocio(int id, @NotBlank(message = "Este campo é obrigatório") String nome,
                     @NotBlank(message = "Este campo é obrigatório") String inscricaoFiscal, String endereco, String telefone) {
         super();
+        this.id = id;
         this.nome = nome;
         this.inscricaoFiscal = inscricaoFiscal;
         this.endereco = endereco;
         this.telefone = telefone;
     }
 
-    public ParceiroNegocio(@NotBlank(message = "Este campo é obrigatório") String nome, String endereco, String telefone) {
-        super();
-        this.nome = nome;
-        this.endereco = endereco;
-        this.telefone = telefone;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

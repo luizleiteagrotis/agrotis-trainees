@@ -47,9 +47,10 @@ public class NotaFiscal {
 
     }
 
-    public NotaFiscal(@NotBlank(message = "É necessário um tipo de nota fiscal") String tipo,
+    public NotaFiscal(int id, @NotBlank(message = "É necessário um tipo de nota fiscal") String tipo,
                     @NotNull ParceiroNegocio parceiroNegocio, @NotNull int numero, @NotNull LocalDate data) {
         super();
+        this.id = id;
         this.tipo = tipo;
         this.parceiroNegocio = parceiroNegocio;
         this.numero = numero;
@@ -58,6 +59,10 @@ public class NotaFiscal {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTipo() {

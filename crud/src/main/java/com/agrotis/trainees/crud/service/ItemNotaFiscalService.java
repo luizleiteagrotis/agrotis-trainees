@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import com.agrotis.trainees.crud.convert.ItemNotaFiscalConversor;
@@ -45,18 +46,31 @@ public class ItemNotaFiscalService {
             ItemNotaFiscal itemNotaFiscal = itemNotaFiscalConversor.converter(itemNotaFiscalDto);
             itemNotaFiscal.setNotaFiscal(notaFiscalService.verificarPorId(itemNotaFiscalDto.getNotaFiscal().getId()));
             itemNotaFiscal.setProduto(produtoService.verificarPorId(itemNotaFiscalDto.getProduto().getId()));
-
+            Produto produto = itemNotaFiscal.getProduto();
+            NotaFiscal notaFiscal = itemNotaFiscal.getNotaFiscal();
             if (!repository.findByNotaFiscalAndProduto(itemNotaFiscal.getNotaFiscal(), itemNotaFiscal.getProduto()).isEmpty()) {
                 throw new ItemNotaFiscalException("Falha ao salvar no banco: o item já está cadastrado nesta nota fiscal. ");
             }
 
             validar(itemNotaFiscal);
-            if (!controleEstoque.controlarQuantidadeEstoque(itemNotaFiscal)) {
-                return null;
+            BigDecimal valorTotal = calcularValorTotal(itemNotaFiscal.getQuantidade().setScale(2, RoundingMode.HALF_UP),
+                            itemNotaFiscal.getPrecoUnitario().setScale(2, RoundingMode.HALF_UP));
+            BigDecimal custoTotal = produto.getCustoMedio().multiply(produto.getEstoque()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal novoCustoTotal = valorTotal.add(custoTotal).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal estoqueAtualizado = controleEstoque.controlarQuantidadeEstoque(itemNotaFiscal).setScale(2,
+                            RoundingMode.HALF_UP);
+            if (notaFiscal.getTipo().equalsIgnoreCase("entrada")) {
+                BigDecimal novoCustoMedio = CustoMedioService.calcularCustoMedio(
+                                estoqueAtualizado.setScale(2, RoundingMode.HALF_UP),
+                                novoCustoTotal.setScale(2, RoundingMode.HALF_UP));
+                produto.setCustoMedio(novoCustoMedio.setScale(2, RoundingMode.HALF_UP));
+                produto.setEstoque(estoqueAtualizado.setScale(2, RoundingMode.HALF_UP));
+                produtoRepository.save(produto);
             }
 
-            itemNotaFiscal.setValorTotal(calcularValorTotal(itemNotaFiscal.getQuantidade(), itemNotaFiscal.getPrecoUnitario()));
+            itemNotaFiscal.setValorTotal(valorTotal);
             repository.save(itemNotaFiscal);
+
             notaFiscalService.persistirValorTotal(itemNotaFiscal.getNotaFiscal().getId());
             return itemNotaFiscalConversor.converter(itemNotaFiscal);
         } catch (ItemNotaFiscalException infe) {
@@ -156,8 +170,8 @@ public class ItemNotaFiscalService {
         if (verificarPorId(id) != null) {
             ItemNotaFiscal itemNotaFiscal = verificarPorId(id);
             Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
-            double quantidadeEstoque = itemNotaFiscal.getProduto().getEstoque();
-            double quantidadeItem = itemNotaFiscal.getQuantidade().doubleValue();
+            BigDecimal quantidadeEstoque = itemNotaFiscal.getProduto().getEstoque();
+            BigDecimal quantidadeItem = itemNotaFiscal.getQuantidade();
             repository.deleteById(id);
             if (itemNotaFiscal.getNotaFiscal().getTipo().equalsIgnoreCase("entrada")) {
                 quantidadeEstoque = controleEstoque.diminuirEstoque(quantidadeEstoque, quantidadeItem);
@@ -183,7 +197,7 @@ public class ItemNotaFiscalService {
     }
 
     public static BigDecimal calcularValorTotal(BigDecimal quantidade, BigDecimal precoUnitario) {
-        return precoUnitario.multiply(quantidade);
+        return precoUnitario.multiply(quantidade).setScale(2, RoundingMode.HALF_UP);
 
     }
 

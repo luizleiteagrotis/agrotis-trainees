@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class ProdutoService {
                 if (produtoConvertido.getFabricante() == null) {
                     throw new ProdutoExcecao("Falha ao salvar no banco: É obrigatorio informar um parceiro de negocio.");
                 }
-
+                produtoConvertido.setCustoMedio(new BigDecimal(0));
+                produtoConvertido.setEstoque(new BigDecimal(0));
                 validar(produtoConvertido);
                 produtoConvertido = repository.save(produtoConvertido);
                 return produtoConversor.converter(produtoConvertido);

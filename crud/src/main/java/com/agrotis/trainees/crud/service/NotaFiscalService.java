@@ -82,7 +82,6 @@ public class NotaFiscalService {
         return notaFiscalConversor.converter(entidades);
     }
 
-    // TO-DO
     public NotaFiscalDto atualizar(NotaFiscalDto entidade, int id) {
         try {
             NotaFiscal notaFiscal = notaFiscalConversor.converter(entidade);

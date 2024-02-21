@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -40,9 +41,10 @@ public class Produto {
     @Column(name = "data_validade")
     private LocalDate dataValidade;
     @DecimalMin(value = "0.0", message = "O estoque deve ser maior que 0")
-    private double estoque;
+    private BigDecimal estoque;
+    @Column(name = "custo_medio")
+    private BigDecimal custoMedio;
 
-    @Deprecated
     public Produto() {
     }
 
@@ -54,21 +56,7 @@ public class Produto {
         this.fabricante = fabricante;
         this.dataFabricacao = dataFabricacao;
         this.dataValidade = dataValidade;
-    }
 
-    public Produto(String nome, LocalDate dataFabricacao, LocalDate dataValidade, ParceiroNegocio fabricante) {
-        super();
-        this.nome = nome;
-        this.dataFabricacao = dataFabricacao;
-        this.dataValidade = dataValidade;
-        this.fabricante = fabricante;
-    }
-
-    public Produto(String nome, LocalDate dataFabricacao, LocalDate dataValidade) {
-        super();
-        this.nome = nome;
-        this.dataFabricacao = dataFabricacao;
-        this.dataValidade = dataValidade;
     }
 
     public int getId() {
@@ -91,6 +79,14 @@ public class Produto {
         this.descricao = descricao;
     }
 
+    public ParceiroNegocio getFabricante() {
+        return fabricante;
+    }
+
+    public void setFabricante(ParceiroNegocio fabricante) {
+        this.fabricante = fabricante;
+    }
+
     public LocalDate getDataFabricacao() {
         return dataFabricacao;
     }
@@ -107,20 +103,20 @@ public class Produto {
         this.dataValidade = dataValidade;
     }
 
-    public ParceiroNegocio getFabricante() {
-        return fabricante;
-    }
-
-    public void setFabricante(ParceiroNegocio parceiroNegocio) {
-        this.fabricante = parceiroNegocio;
-    }
-
-    public double getEstoque() {
+    public BigDecimal getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(double estoque) {
+    public void setEstoque(BigDecimal estoque) {
         this.estoque = estoque;
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
     }
 
 }

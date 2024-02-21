@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ControleEstoqueException;
@@ -22,51 +24,49 @@ public class ControleEstoque {
 
     }
 
-    public boolean controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
+    public BigDecimal controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
 
         try {
             String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
             Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
-            double quantidadeEstoque = produto.getEstoque();
+            BigDecimal quantidadeEstoque = produto.getEstoque();
 
             if (tipoNotaFiscal.equals("entrada")) {
-                quantidadeEstoque = somarEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue());
+                quantidadeEstoque = somarEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade());
             }
 
             if (tipoNotaFiscal.equals("saida")) {
-                if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue())) {
-                    quantidadeEstoque = diminuirEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade().doubleValue());
+                if (verificarQuantidade(quantidadeEstoque, itemNotaFiscal.getQuantidade())) {
+                    quantidadeEstoque = diminuirEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade());
                 } else {
                     throw new ControleEstoqueException(
                                     "Falha ao calcular a quantidade de estoque: A quantidade de saída é maior que o estoque atual.");
                 }
 
             }
-            produto.setEstoque(quantidadeEstoque);
-            produtoRepository.save(produto);
-            return true;
+
+            return quantidadeEstoque;
         } catch (ControleEstoqueException exp) {
             LOG.error(exp.getMessage());
-            return false;
         } catch (NullPointerException npe) {
             LOG.error(npe.getMessage());
-            return false;
         }
+        return null;
     }
 
     public ItemNotaFiscal atualizarEstoque(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
 
         try {
-            double estoque = itemNotaAtualizar.getProduto().getEstoque();
-            double qtdAntiga = itemNotaAtualizar.getQuantidade().doubleValue();
-            double qtdNova = itemNotaFiscal.getQuantidade().doubleValue();
+            BigDecimal estoque = itemNotaAtualizar.getProduto().getEstoque();
+            BigDecimal qtdAntiga = itemNotaAtualizar.getQuantidade();
+            BigDecimal qtdNova = itemNotaFiscal.getQuantidade();
             if (itemNotaAtualizar.getNotaFiscal().getTipo().equalsIgnoreCase("entrada")) {
-                estoque = estoque - qtdAntiga + qtdNova;
+                estoque = estoque.subtract(qtdAntiga).add(qtdNova);
             }
 
             if (itemNotaAtualizar.getNotaFiscal().getTipo().equalsIgnoreCase("saida")) {
-                estoque = estoque + qtdAntiga - qtdNova;
-                if (estoque < 0) {
+                estoque = estoque.add(qtdAntiga).subtract(qtdNova);
+                if (estoque.compareTo(BigDecimal.ZERO) < 0) {
                     throw new ControleEstoqueException(
                                     "Falha ao calcular a quantidade de estoque: A quantidade de saída é maior que o estoque atual.");
 
@@ -83,18 +83,17 @@ public class ControleEstoque {
         }
     }
 
-    protected boolean verificarQuantidade(double quantidadeEstoque, double quantidadeNota) {
-        return quantidadeEstoque - quantidadeNota >= 0;
+    protected boolean verificarQuantidade(BigDecimal quantidadeEstoque, BigDecimal quantidadeNota) {
+        return quantidadeEstoque.subtract(quantidadeNota).compareTo(BigDecimal.ZERO) >= 0;
     }
 
-    protected double somarEstoque(double quantidadeEstoque, double quantidade) {
-        quantidadeEstoque += quantidade;
-        return quantidadeEstoque;
+    protected BigDecimal somarEstoque(BigDecimal quantidadeEstoque, BigDecimal quantidade) {
+        return quantidadeEstoque.add(quantidade);
     }
 
-    protected double diminuirEstoque(double quantidadeEstoque, double quantidade) {
-        quantidadeEstoque -= quantidade;
-        return quantidadeEstoque;
+    protected BigDecimal diminuirEstoque(BigDecimal quantidadeEstoque, BigDecimal quantidade) {
+        return quantidadeEstoque.subtract(quantidade);
+
     }
 
 }
