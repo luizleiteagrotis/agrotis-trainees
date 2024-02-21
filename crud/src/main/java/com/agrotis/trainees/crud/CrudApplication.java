@@ -11,9 +11,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
+import com.agrotis.trainees.crud.entity.CabecalhoNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.CabecalhoNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -26,12 +27,14 @@ public class CrudApplication implements CommandLineRunner {
     private final NotaFiscalTipoService notaFiscalTipoService;
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
+    private final CabecalhoNotaFiscalService cabecalhoNotaFiscalService;
 
     public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
-                    ProdutoService produtoService) {
+                    ProdutoService produtoService, CabecalhoNotaFiscalService cabecalhoNotaFiscalService) {
         this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
+        this.cabecalhoNotaFiscalService = cabecalhoNotaFiscalService;
     }
 
     public static void main(String[] args) {
@@ -50,7 +53,7 @@ public class CrudApplication implements CommandLineRunner {
         }
 
         System.out.println(
-                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2 - 3");
+                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2 - 3 - 4");
 
         int opcao = scan.nextInt();
 
@@ -99,25 +102,28 @@ public class CrudApplication implements CommandLineRunner {
         }
         if (opcao == 3) {
 
-            LocalDate agora = LocalDate.now();
-            LocalDate ontem = LocalDate.of(agora.getYear(), agora.getMonth(), agora.getDayOfMonth() - 1);
-            LocalDate dataValidade = LocalDate.of(ontem.getYear() + 1, ontem.getMonth().getValue() + 2, ontem.getDayOfMonth() + 3);
-            Produto produto = new Produto();
-
-            produto.setDescricao("Grão - Soja");
-            produto.setFabricante(parceirosSalvos.get(3));
-            produto.setDataFabricacao(Date.valueOf(agora));
-            produto.setDataValidade(Date.valueOf(dataValidade));
-
-            Produto produto2 = produtoService.salvar(produto);
-            LOG.info("id inserido: {}", produto2.getId());
-
-            List<Produto> produtosSalvos = produtoService.listarTodos();
-            for (Produto produtoItem : produtosSalvos) {
-                System.out.println(produtoItem);
-            }
-
-            Produto produtoBuscaID = produtoService.buscarPorId(produtosSalvos.get(1).getId());
+            // LocalDate agora = LocalDate.now();
+            // LocalDate ontem = LocalDate.of(agora.getYear(), agora.getMonth(),
+            // agora.getDayOfMonth() - 1);
+            // LocalDate dataValidade = LocalDate.of(ontem.getYear() + 1,
+            // ontem.getMonth().getValue() + 2, ontem.getDayOfMonth() + 3);
+            // Produto produto = new Produto();
+            //
+            // produto.setDescricao("Grão - Soja");
+            // produto.setFabricante(parceirosSalvos.get(3));
+            // produto.setDataFabricacao(Date.valueOf(agora));
+            // produto.setDataValidade(Date.valueOf(dataValidade));
+            //
+            // Produto produto2 = produtoService.salvar(produto);
+            // LOG.info("id inserido: {}", produto2.getId());
+            //
+            // List<Produto> produtosSalvos = produtoService.listarTodos();
+            // for (Produto produtoItem : produtosSalvos) {
+            // System.out.println(produtoItem);
+            // }
+            //
+            // Produto produtoBuscaID =
+            // produtoService.buscarPorId(produtosSalvos.get(1).getId());
             // LOG.info("Produto {} encontrado por id.",
             // produtoBuscaID.getId());
             // Produto produtoBuscaDescricao =
@@ -134,6 +140,20 @@ public class CrudApplication implements CommandLineRunner {
 
             // produtoService.deletarPorId(produtoBuscaID.getId());
             // LOG.info("Registro do parceiro {} deletado.", produtoBuscaID);
+        }
+        if (opcao == 4) {
+
+            LocalDate agora = LocalDate.now();
+            LocalDate dataEmissao = LocalDate.of(agora.getYear(), agora.getMonth(), agora.getDayOfMonth());
+
+            CabecalhoNotaFiscal cabecalhoNota = new CabecalhoNotaFiscal();
+            cabecalhoNota.setTipoNota("ENTRADA");
+            cabecalhoNota.setNumero(1);
+            cabecalhoNota.setDataEmissao(Date.valueOf(dataEmissao));
+            cabecalhoNota.setParceiro(parceirosSalvos.get(0));
+
+            CabecalhoNotaFiscal cabecalhoNota2 = cabecalhoNotaFiscalService.salvar(cabecalhoNota);
+            LOG.info("id inserido: {}", cabecalhoNota2.getId());
         }
 
     }
