@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +44,14 @@ public class NotaFiscal {
     @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
     private List<NotaFiscalItem> itens;
 
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public NotaFiscal() {
         super();
         // this.dataNota = LocalDate.now();
         // this.itensNota = new ArrayList<>();
         // this.numero = 0;
-        this.valorTotal = 0.0;
+        this.valorTotal = new BigDecimal(0);
     }
 
     public NotaFiscal(NotaFiscalTipo notaFiscalTipo, ParceiroNegocio parceiroNegocio, Integer numero, LocalDate dataNota) {
@@ -60,7 +61,7 @@ public class NotaFiscal {
         this.numero = numero;
         this.data = dataNota;
         this.itens = new ArrayList<>();
-        this.valorTotal = 0.0;
+        this.valorTotal = new BigDecimal(0);
     }
 
     public NotaFiscal(NotaFiscalTipo tipo, ParceiroNegocio parceiro, Integer numero, LocalDate data, List<NotaFiscalItem> itens,
@@ -116,11 +117,11 @@ public class NotaFiscal {
         this.itens = itens;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

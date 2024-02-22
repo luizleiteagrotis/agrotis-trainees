@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,7 +104,7 @@ public class NotaFiscalItemService {
 
     public void adicionarOuAtualizarItemNotaFiscal(NotaFiscalItem item) {
         if (item != null && item.getNotaFiscal() != null && item.getProduto() != null) {
-            double valorTotalItem = calcularValorTotalItem(item);
+            BigDecimal valorTotalItem = calcularValorTotalItem(item);
             NotaFiscal notaFiscal = item.getNotaFiscal();
             if (notaFiscal != null) {
                 atualizarValorTotalNotaFiscal(notaFiscal, valorTotalItem);
@@ -116,19 +117,21 @@ public class NotaFiscalItemService {
         }
     }
 
-    private void atualizarValorTotalNotaFiscal(NotaFiscal notaFiscal, Double valorTotalItem) {
+    private void atualizarValorTotalNotaFiscal(NotaFiscal notaFiscal, BigDecimal valorTotalItem) {
         if (notaFiscal == null) {
             throw new IllegalArgumentException("Nota fiscal não pode ser nula");
         } else {
-            Double valorTotalAtual = notaFiscal.getValorTotal() != null ? notaFiscal.getValorTotal() : 0.0;
-            double novoValorTotal = valorTotalAtual + valorTotalItem;
+            BigDecimal valorTotalAtual = notaFiscal.getValorTotal() != null ? notaFiscal.getValorTotal() : BigDecimal.ZERO;
+            BigDecimal novoValorTotal = valorTotalAtual.add(valorTotalItem);
             notaFiscal.setValorTotal(novoValorTotal);
             notaFiscalService.salvar(notaFiscal);
         }
     }
 
-    private double calcularValorTotalItem(NotaFiscalItem item) {
-        return item.getQuantidade() * item.getPrecoUnitario();
+    private BigDecimal calcularValorTotalItem(NotaFiscalItem item) {
+        BigDecimal quantidade = BigDecimal.valueOf(item.getQuantidade());
+        BigDecimal precoUnitario = item.getPrecoUnitario();
+        return quantidade.multiply(precoUnitario);
     }
 
     private void controlarEstoque(NotaFiscalItem item) {

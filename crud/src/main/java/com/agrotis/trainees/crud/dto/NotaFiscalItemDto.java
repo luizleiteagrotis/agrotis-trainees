@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,8 +14,8 @@ public class NotaFiscalItemDto {
     private NotaFiscalDto notaFiscal;
     private ProdutoDto produto;
     private Integer quantidade;
-    private double precoUnitario;
-    private double valorTotal;
+    private BigDecimal precoUnitario;
+    private BigDecimal valorTotal;
 
     public NotaFiscalItemDto() {
         super();
@@ -54,19 +55,19 @@ public class NotaFiscalItemDto {
         this.quantidade = quantidade;
     }
 
-    public double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setPrecoUnitario(double precoUnitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
-    public double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

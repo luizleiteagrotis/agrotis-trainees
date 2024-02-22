@@ -1,10 +1,10 @@
 CREATE TABLE produto
 (
-    id int NOT NULL,
+    id INT NOT NULL,
     nome VARCHAR(255),
-    descricao varchar(510),
+    descricao VARCHAR(510),
     parceiro_negocio INT NOT NULL,
-    fabricante varchar(255),
+    fabricante VARCHAR(255),
     data_fabricacao DATE,
     data_validade DATE,
     CONSTRAINT pk_produto PRIMARY KEY (id)
@@ -16,4 +16,7 @@ FOREIGN KEY (parceiro_negocio)
 REFERENCES parceiro_negocio;
 
 ALTER TABLE produto
-ADD estoque_produto INT;
+ADD estoque INT;
+
+ALTER TABLE produto
+ADD custo_medio DECIMAL(10,2);

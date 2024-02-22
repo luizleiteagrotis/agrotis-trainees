@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.persistence.Column;
@@ -31,18 +32,16 @@ public class NotaFiscalItem {
     private Integer quantidade;
 
     @NotNull(message = "Necessário inserir o preço unitário")
-    private double precoUnitario;
+    private BigDecimal precoUnitario;
 
     @Column(name = "valor_total")
-    private double valorTotal;
+    private BigDecimal valorTotal;
 
     public NotaFiscalItem() {
         super();
     }
 
-    public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto,
-                    @NotNull(message = "Necessário inserir a quantidade do produto") Integer quantidade,
-                    @NotNull(message = "Necessário inserir o preço unitário") double precoUnitario) {
+    public NotaFiscalItem(NotaFiscal notaFiscal, Produto produto, Integer quantidade, BigDecimal precoUnitario) {
         super();
         this.notaFiscal = notaFiscal;
         this.produto = produto;
@@ -87,19 +86,19 @@ public class NotaFiscalItem {
         this.quantidade = quantidade;
     }
 
-    public double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setPrecoUnitario(double precoUnitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
-    public double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

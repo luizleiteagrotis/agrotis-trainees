@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,14 +103,17 @@ public class NotaFiscalService {
         }
 
         NotaFiscal notaFiscal = itens.get(0).getNotaFiscal();
-        double novoValorTotal = 0;
+        BigDecimal novoValorTotal = BigDecimal.ZERO;
 
         for (NotaFiscalItem item : itens) {
-            double valorItem = item.getPrecoUnitario() * item.getQuantidade();
+            BigDecimal precoUnitario = item.getPrecoUnitario();
+            BigDecimal quantidade = new BigDecimal(item.getQuantidade());
+            BigDecimal valorItem = precoUnitario.multiply(quantidade);
+
             if (notaFiscal.getNotaFiscalTipo() == NotaFiscalTipo.ENTRADA) {
-                novoValorTotal += valorItem;
+                novoValorTotal = novoValorTotal.add(valorItem);
             } else if (notaFiscal.getNotaFiscalTipo() == NotaFiscalTipo.SAIDA) {
-                novoValorTotal -= valorItem;
+                novoValorTotal = novoValorTotal.subtract(valorItem);
             }
         }
 
