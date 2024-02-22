@@ -64,4 +64,9 @@ public class ParceiroNegocioDto {
         this.telefone = telefone;
     }
 
+    @Override
+    public String toString() {
+        return "ParceiroNegocioDto [nome=" + nome + ", inscricaoFiscal=" + inscricaoFiscal + "]";
+    }
+
 }
