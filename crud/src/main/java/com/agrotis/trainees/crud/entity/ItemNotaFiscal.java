@@ -40,6 +40,10 @@ public class ItemNotaFiscal {
     public ItemNotaFiscal() {
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public NotaFiscal getNotaFiscal() {
         return notaFiscal;
     }

@@ -8,10 +8,12 @@ import org.springframework.stereotype.Repository;
 import com.agrotis.trainees.crud.entity.Produto;
 
 @Repository
-public interface ProdutoRepository extends JpaRepository<Produto, Long>{
-	
-   	Optional<Produto> findById(Integer id);
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-	void deleteById(Integer id);
+    Optional<Produto> findById(Integer id);
+
+    void deleteById(Integer id);
+
+    Optional<Produto> findBydescricao(String descricao);
 
 }

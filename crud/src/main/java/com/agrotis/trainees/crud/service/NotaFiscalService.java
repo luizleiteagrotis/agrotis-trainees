@@ -20,34 +20,42 @@ public class NotaFiscalService {
         this.repository = repository;
     }
 
-    public NotaFiscal salvar(NotaFiscal entidade) {
-        return repository.save(entidade);
+    public NotaFiscal salvar(NotaFiscal notaFiscal) {
+        return repository.save(notaFiscal);
     }
 
-    public List<NotaFiscal> buscarTodos() {
+    public NotaFiscal buscarPorId(Integer integer) {
+        return repository.findById(integer).orElseGet(() -> {
+            LOG.error("Nota Fiscal não encontrada para id {}.", integer);
+            return null;
+        });
+    }
+
+    public NotaFiscal atualizar(Integer id, NotaFiscal notaFiscal) {
+        return repository.findById(id).map(NotaFiscal1 -> {
+            NotaFiscal1.setDataNf(notaFiscal.getDataNf());
+            NotaFiscal1.setNumeroDaNota(notaFiscal.getNumeroDaNota());
+            NotaFiscal1.setNotaFiscalTipo(notaFiscal.getNotaFiscalTipo());
+            NotaFiscal1.setParceiroNegocio(notaFiscal.getParceiroNegocio());
+            return repository.save(NotaFiscal1);
+        }).orElseGet(() -> {
+            LOG.error("Nota Fiscal não encontrada para id {}.", id);
+            return null;
+        });
+    }
+
+    public List<NotaFiscal> listarTodos() {
         return repository.findAll();
-    }
-
-    public NotaFiscal buscaPeloId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
-            LOG.info("Não foi possível buscar pelo id {}", id);
-            return null;
-        });
-    }
-
-    public NotaFiscal atualizar(Integer id, NotaFiscal nota_fiscal) {
-        NotaFiscal byId = repository.findById(id).orElseGet(() -> {
-            LOG.info("Não foi possível buscar pelo id {}", id);
-            return null;
-        });
-        return repository.save(nota_fiscal);
     }
 
     public void deletarPorId(Integer id) {
         repository.deleteById(id);
+        LOG.info("Nota Fiscal deletada com sucesso. ID: {}", id);
     }
 
-    public static Logger getLog() {
-        return LOG;
+    public void atualizarValorTotal(Integer id, Double valorTotalItem) {
+        // TODO Auto-generated method stub
+
     }
+
 }
