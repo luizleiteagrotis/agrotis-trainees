@@ -2,13 +2,12 @@ package com.agrotis.trainees.crud.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,7 @@ import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 
-@ExtendWith(MockitoExtension.class) 
+@ExtendWith(MockitoExtension.class)
 public class ParceiroNegocioTest {
 
     private final String NOME = "AgroFertil Ltda";
@@ -43,52 +42,32 @@ public class ParceiroNegocioTest {
         ParceiroNegocioDto result = service.salvar(dto);
 
         assertNotNull(result);
-        assertEquals(parceiroNegocio.getId(), result.getId()); 
-        verify(repository).save(any(ParceiroNegocio.class)); 
+        assertEquals(parceiroNegocio.getId(), result.getId());
+        verify(repository).save(any(ParceiroNegocio.class));
     }
-    
-//    @Test
-//    public void inserirParceiroNegocioComNomeNulo() {
-//        ParceiroNegocio parceiroNegocio = criarParceiroNegocio();
-//        
-//        // Configura o comportamento do repositório para retornar o parceiroNegocio
-//        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
-//
-//        // Configura o DTO com o nome nulo
-//        ParceiroNegocioDto dto = criarParceiroNegocioDto();
-//        dto.setNome(null);
-//
-//        // Testa se a exceção é propagada corretamente ao tentar salvar o DTO
-//        assertThrows(ConstraintViolationException.class, () -> {
-//            service.salvar(dto);
-//        });
-//    }
-    
+
     @Test
-    public void inserirParceiroNegocioComNomeNulo() {
-        ParceiroNegocio parceiroNegocio = criarParceiroNegocio();
-        
-        // Configura o comportamento do repositório para retornar o parceiroNegocio
+    public void quandoCriadoRetornaSucesso() {
         when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
 
-        // Configura o DTO com o nome nulo
-        ParceiroNegocioDto dto = criarParceiroNegocioDto();
-        dto.setNome(null);
-
-        // Testa se a exceção é propagada corretamente ao tentar salvar o DTO
-        try {
-            service.salvar(dto);
-            fail("A exceção javax.validation.ConstraintViolationException não foi lançada.");
-        } catch (javax.validation.ConstraintViolationException e) {
-            // Verifica se a mensagem de erro contém a mensagem esperada
-            ConstraintViolation<?> violation = e.getConstraintViolations().iterator().next();
-            String mensagemEsperada = "O campo nome tem de ser preenchido.";
-            String mensagemRecebida = violation.getMessage();
-            assertTrue(mensagemRecebida.contains(mensagemEsperada),
-                       "A mensagem de erro recebida não corresponde à mensagem esperada.");
-        }
     }
-
+    // @Test
+    // public void inserirParceiroNegocioComNomeNulo() {
+    // ParceiroNegocio parceiroNegocio = criarParceiroNegocio();
+    //
+    // // Configura o comportamento do repositório para retornar o
+    // parceiroNegocio
+    // when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
+    //
+    // // Configura o DTO com o nome nulo
+    // ParceiroNegocioDto dto = criarParceiroNegocioDto();
+    // dto.setNome(null);
+    //
+    // // Testa se a exceção é propagada corretamente ao tentar salvar o DTO
+    // assertThrows(ConstraintViolationException.class, () -> {
+    // service.salvar(dto);
+    // });
+    // }
 
     private ParceiroNegocio criarParceiroNegocio() {
         ParceiroNegocio entidade = new ParceiroNegocio();

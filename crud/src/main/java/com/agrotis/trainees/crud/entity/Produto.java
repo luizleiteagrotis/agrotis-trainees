@@ -18,8 +18,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "produto")
 public class Produto{
@@ -48,7 +46,7 @@ public class Produto{
     private LocalDate dataValidade;
 
     @Column(name = "quantidade_estoque", columnDefinition = "INT DEFAULT 0")   
-    private Integer quantidadeEstoque;
+    private BigDecimal quantidadeEstoque;
     
     private BigDecimal custoTotal;
     
@@ -90,11 +88,11 @@ public class Produto{
         return id;
     }
 
-    public Integer getQuantidadeEstoque() {
+    public BigDecimal getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
 
-    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+    public void setQuantidadeEstoque(BigDecimal quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
     }
     

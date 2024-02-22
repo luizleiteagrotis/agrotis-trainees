@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,25 +34,23 @@ public class CabecalhoNotaService {
 
         ParceiroNegocio parceiroNegocio = cabecalho.getParceiroNegocio();
         ParceiroNegocio fabricanteSalvo = salvarOuBuscarFabricante(parceiroNegocio);
-        cabecalho.setParceiroNegocio(fabricanteSalvo);        
+        cabecalho.setParceiroNegocio(fabricanteSalvo);
 
         // Calcula o valor total do cabeçalho da nota
-        Double valorTotal = calcularValorTotal(cabecalho);
+        BigDecimal valorTotal = calcularValorTotal(cabecalho);
         cabecalho.setValorTotal(valorTotal);
 
         // Salva o cabeçalho da nota no banco de dados
         CabecalhoNota entidadeSalva = repository.save(cabecalho);
 
-        // Converte e retorna o cabeçalho da nota salvo como DTO
         return DtoUtils.converteParaDto(entidadeSalva);
     }
 
-
     public CabecalhoNotaDto buscarPorId(Integer id) {
         CabecalhoNota cabecalho = repository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
 
-        Double valorTotal = calcularValorTotal(cabecalho);
+        BigDecimal valorTotal = calcularValorTotal(cabecalho);
         cabecalho.setValorTotal(valorTotal);
 
         return DtoUtils.converteParaDto(cabecalho);
@@ -61,7 +60,6 @@ public class CabecalhoNotaService {
         return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
 
-    
     public CabecalhoNotaDto atualizar(Integer id, CabecalhoNotaDto dto) {
         return repository.findById(id).map(cabecalhoExistente -> {
             // Debugging: Log the current state of the DTO before updating
@@ -70,10 +68,10 @@ public class CabecalhoNotaService {
             cabecalhoExistente.setData(dto.getData());
             cabecalhoExistente.setNotaFiscalTipo(dto.getNotaFiscalTipo());
             cabecalhoExistente.setNumero(dto.getNumero());
-            
+
             ParceiroNegocio parceiroNegocioExistente = dto.getParceiroNegocio().getId() != null
-                    ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
-                    : null;
+                            ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
+                            : null;
 
             // Debugging: Log the current state of the ParceiroNegocio entity
             LOG.debug("ParceiroNegocio entity before update: {}", parceiroNegocioExistente);
@@ -87,10 +85,11 @@ public class CabecalhoNotaService {
             LOG.debug("ParceiroNegocio entity after update: {}", parceiroNegocioExistente);
 
             cabecalhoExistente.setParceiroNegocio(parceiroNegocioExistente);
-            
+
             CabecalhoNota cabecalhoAtualizado = repository.save(cabecalhoExistente);
-            
-            // Debugging: Log the final state of the updated CabecalhoNota entity
+
+            // Debugging: Log the final state of the updated CabecalhoNota
+            // entity
             LOG.debug("CabecalhoNota entity after update: {}", cabecalhoAtualizado);
 
             return DtoUtils.converteParaDto(cabecalhoAtualizado);
@@ -99,8 +98,6 @@ public class CabecalhoNotaService {
             return new EntidadeNaoEncontradaException("Cabechalho com o ID " + id + " não encontrado");
         });
     }
-
-
 
     public void deletarPorId(Integer id) {
         repository.findById(id).map(entidade -> {
@@ -112,19 +109,18 @@ public class CabecalhoNotaService {
 
     public void atualizarValorTotal(CabecalhoNota cabecalho) {
         repository.save(cabecalho);
-        
+
     }
 
-    private Double calcularValorTotal(CabecalhoNota cabecalho) {
-        return cabecalho.getItens().stream()
-                .mapToDouble(item -> item.getQuantidade() * item.getPrecoUnitario())
-                .sum();
+    private BigDecimal calcularValorTotal(CabecalhoNota cabecalho) {
+        return cabecalho.getItens().stream().map(item -> item.getQuantidade().multiply(item.getPrecoUnitario()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    
+
     private ParceiroNegocio salvarOuBuscarFabricante(ParceiroNegocio fabricante) {
         if (fabricante.getId() != null) {
-            return parceiroNegocioRepository.findById(fabricante.getId())
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Fabricante com o ID " + fabricante.getId() + " não encontrado"));
+            return parceiroNegocioRepository.findById(fabricante.getId()).orElseThrow(() -> new EntidadeNaoEncontradaException(
+                            "Fabricante com o ID " + fabricante.getId() + " não encontrado"));
         } else {
             return parceiroNegocioRepository.save(fabricante);
         }

@@ -1,21 +1,23 @@
 package com.agrotis.trainees.crud.dtos;
 
+import java.math.BigDecimal;
+
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.Produto;
 
 public class ItemNotaDto {
-    
+
     private Integer id;
 
     private CabecalhoNota cabecalhoNota;
 
     private Produto produto;
 
-    private Integer quantidade;
+    private BigDecimal quantidade;
 
-    private Double precoUnitario;
-    
-    private Double valorTotal;
+    private BigDecimal precoUnitario;
+
+    private BigDecimal valorTotal;
 
     public Integer getId() {
         return id;
@@ -41,33 +43,28 @@ public class ItemNotaDto {
         this.produto = produto;
     }
 
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
-    public Double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setPrecoUnitario(Double precoUnitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
-    
-    
-    
-    
-
 
 }

@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class CabecalhoNota{
     @DecimalMin(value = "00.00", inclusive = true)
     @Digits(integer = 10, fraction = 2)
     @Column(name = "valor_total")
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public TipoNota getNotaFiscalTipo() {
         return notaFiscalTipo;
@@ -106,11 +107,11 @@ public class CabecalhoNota{
         return itens;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,10 +50,12 @@ public class ItemNotaService {
 
         Produto produtoDoItemNota = entidade.getProduto();
         Produto salvarOuBuscarProduto = salvarOuBuscarProduto(produtoDoItemNota);
+        BigDecimal valorTotal = calcularValorTotal(entidade);
+        BigDecimal calculoCustoMedio = CustoMedioService.calcularCustoMedio(valorTotal, entidade.getQuantidade());
+        salvarOuBuscarProduto.setCustoMedio(calculoCustoMedio);
         produtoRepository.save(salvarOuBuscarProduto);
         entidade.setProduto(salvarOuBuscarProduto);
 
-        calcularValorTotal(entidade);
         atualizarEstoque(entidade);
 
         entidade = repository.save(entidade);
@@ -100,31 +103,33 @@ public class ItemNotaService {
 
     }
 
-    public void calcularValorTotal(ItemNota notaFiscalItem) {
-        Integer quantidade = notaFiscalItem.getQuantidade();
-        Double precoUnitario = notaFiscalItem.getPrecoUnitario();
+    public BigDecimal calcularValorTotal(ItemNota notaFiscalItem) {
+        BigDecimal quantidade = notaFiscalItem.getQuantidade();
+        BigDecimal precoUnitario = notaFiscalItem.getPrecoUnitario();
+
         if (quantidade != null && precoUnitario != null) {
-            Double valorTotal = quantidade * precoUnitario;
+            BigDecimal valorTotal = quantidade.multiply(precoUnitario);
             notaFiscalItem.setValorTotal(valorTotal);
+            return valorTotal;
         }
+
+        return BigDecimal.ZERO;
     }
 
     private void atualizarEstoque(ItemNota itemNota) {
         Produto produto = itemNota.getProduto();
-        Integer quantidade = itemNota.getQuantidade();
+        BigDecimal quantidade = itemNota.getQuantidade();
         TipoNota notaFiscalTipo = itemNota.getCabecalhoNota().getNotaFiscalTipo();
-        Integer quantidadeProduto = produto.getQuantidadeEstoque();
+        produto.setQuantidadeEstoque(quantidade);
+        BigDecimal quantidadeProduto = produto.getQuantidadeEstoque();
 
         ValidacaoUtils.validarQuantidadeNaoNegativa(quantidade);
 
         if (notaFiscalTipo == TipoNota.SAIDA) {
             ValidacaoUtils.validarQuantidadeEstoqueSuficiente(quantidadeProduto, quantidade);
-        }
-
-        if (notaFiscalTipo == TipoNota.ENTRADA) {
-            produto.setQuantidadeEstoque(quantidadeProduto + quantidade);
-        } else {
-            produto.setQuantidadeEstoque(quantidadeProduto - quantidade);
+            produto.setQuantidadeEstoque(quantidadeProduto.subtract(quantidade));
+        } else if (notaFiscalTipo == TipoNota.ENTRADA) {
+            produto.setQuantidadeEstoque(quantidadeProduto.add(quantidade));
         }
 
         produtoService.salvar(DtoUtils.converteParaDto(produto));
@@ -132,9 +137,9 @@ public class ItemNotaService {
 
     private void adicionarValorTotalCabecalho(ItemNota itemNota) {
         CabecalhoNota cabecalhoNota = itemNota.getCabecalhoNota();
-        Double valorTotalCabecalho = cabecalhoNota.getValorTotal();
-        Double valorTotalItem = itemNota.getValorTotal();
-        valorTotalCabecalho += valorTotalItem;
+        BigDecimal valorTotalCabecalho = cabecalhoNota.getValorTotal();
+        BigDecimal valorTotalItem = itemNota.getValorTotal();
+        valorTotalCabecalho = valorTotalCabecalho.add(valorTotalItem);
         cabecalhoNota.setValorTotal(valorTotalCabecalho);
     }
 
@@ -151,7 +156,7 @@ public class ItemNotaService {
     private CabecalhoNota salvarOuBuscarCabecalho(CabecalhoNota cabecalhoNota) {
         if (cabecalhoNota.getId() != null) {
             return cabecalhoNotaRepository.findById(cabecalhoNota.getId()).orElseThrow(() -> new EntidadeNaoEncontradaException(
-                            "Fabricante com o ID " + cabecalhoNota.getId() + " não encontrado"));
+                            "Cabeçalho com o ID " + cabecalhoNota.getId() + " não encontrado"));
         } else {
             return cabecalhoNotaRepository.save(cabecalhoNota);
         }

@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -38,15 +39,15 @@ public class ItemNota{
     @NotNull(message = "A quantidade não pode ser nula")
     @Positive(message = "A quantidade deve ser um valor positivo")
     @Min(value = 1, message = "A quantidade deve ser no mínimo 1")
-    private Integer quantidade;
+    private BigDecimal quantidade;
 
     @Column(name = "preco_unitario")
     @DecimalMin(value = "0.01", message = "O preço unitário deve ser no mínimo 0.01")
     @NotNull(message = "Preencha o campo preço unitário.")
-    private Double precoUnitario;
+    private BigDecimal precoUnitario;
 
     @Column(name = "valor_total")
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public CabecalhoNota getCabecalhoNota() {
         return cabecalhoNota;
@@ -64,23 +65,23 @@ public class ItemNota{
         this.produto = produto;
     }
 
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public Double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
-    public void setPrecoUnitario(Double precoUnitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
@@ -89,7 +90,7 @@ public class ItemNota{
     }
     
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

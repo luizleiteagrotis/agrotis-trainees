@@ -1,12 +1,7 @@
 package com.agrotis.trainees.crud.dtos;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
@@ -22,7 +17,7 @@ public class ProdutoDto {
 
     private LocalDate dataValidade;
 
-    private Integer quantidadeEstoque;
+    private BigDecimal quantidadeEstoque;
 
     public Integer getId() {
         return id;
@@ -64,11 +59,11 @@ public class ProdutoDto {
         this.dataValidade = dataValidade;
     }
 
-    public Integer getQuantidadeEstoque() {
+    public BigDecimal getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
 
-    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+    public void setQuantidadeEstoque(BigDecimal quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 

@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 
 import com.agrotis.trainees.crud.service.exceptions.CrudException;
 
-public interface CustoMedioService {
+public class CustoMedioService {
 
     public static BigDecimal calcularCustoMedio(BigDecimal custoTotal, BigDecimal quantidadeTotal) {
         if (quantidadeTotal.equals(BigDecimal.ZERO)) {
