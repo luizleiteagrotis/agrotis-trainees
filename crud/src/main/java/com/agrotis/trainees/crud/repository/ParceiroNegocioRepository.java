@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 @Repository
-@Validated
 public interface ParceiroNegocioRepository extends JpaRepository<ParceiroNegocio, Integer> {
 
     Optional<ParceiroNegocio> findByNome(String nome);

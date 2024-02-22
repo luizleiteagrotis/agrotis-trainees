@@ -30,7 +30,7 @@ public class Produto{
     @Column(name = "descricao", length = 100)
     private String descricao;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "fabricante_id")
     @NotNull(message = "Preencha o campo fabricante.")
     private ParceiroNegocio fabricante;

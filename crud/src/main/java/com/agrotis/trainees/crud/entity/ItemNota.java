@@ -3,7 +3,6 @@ package com.agrotis.trainees.crud.entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,12 +24,12 @@ public class ItemNota{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "nota_fiscal_id")
     @NotNull(message = "Preencha o campo cabeçalho da nota")
     private CabecalhoNota cabecalhoNota;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "produto_id")
     @NotNull(message = "Preencha o campo produto.")
     private Produto produto;

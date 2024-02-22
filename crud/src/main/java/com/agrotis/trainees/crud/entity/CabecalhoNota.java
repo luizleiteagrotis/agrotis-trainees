@@ -50,7 +50,7 @@ public class CabecalhoNota{
     private ParceiroNegocio parceiroNegocio;
 
     @NotNull(message = "Informe o numero da nota.")
-    @Column(name = "numero")
+    @Column(name = "numero", unique = true)
     private Integer numero;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")

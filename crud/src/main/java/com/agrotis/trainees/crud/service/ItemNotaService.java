@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.ItemNotaDto;
+import com.agrotis.trainees.crud.dtos.ProdutoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -43,24 +44,19 @@ public class ItemNotaService {
     @Transactional
     public ItemNotaDto salvar(ItemNotaDto dto) {
         ItemNota entidade = DtoUtils.converteParaEntidade(dto);
-
-        CabecalhoNota cabecalhoNota = entidade.getCabecalhoNota();
-        CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(cabecalhoNota);
-        entidade.setCabecalhoNota(cabecalhoSalvo);
-
-        Produto produtoDoItemNota = entidade.getProduto();
-        Produto salvarOuBuscarProduto = salvarOuBuscarProduto(produtoDoItemNota);
+        CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(entidade.getCabecalhoNota());
+        Produto produtoSalvo = salvarOuBuscarProduto(entidade.getProduto());
+        
         BigDecimal valorTotal = calcularValorTotal(entidade);
         BigDecimal calculoCustoMedio = CustoMedioService.calcularCustoMedio(valorTotal, entidade.getQuantidade());
-        salvarOuBuscarProduto.setCustoMedio(calculoCustoMedio);
-        produtoRepository.save(salvarOuBuscarProduto);
-        entidade.setProduto(salvarOuBuscarProduto);
-
+        
+        produtoSalvo.setCustoMedio(calculoCustoMedio);
+        
+        entidade.setCabecalhoNota(cabecalhoSalvo);
+        entidade.setProduto(produtoSalvo);
         atualizarEstoque(entidade);
-
-        entidade = repository.save(entidade);
-
         adicionarValorTotalCabecalho(entidade);
+        entidade = repository.save(entidade);
 
         return DtoUtils.converteParaDto(entidade);
     }
@@ -120,7 +116,6 @@ public class ItemNotaService {
         Produto produto = itemNota.getProduto();
         BigDecimal quantidade = itemNota.getQuantidade();
         TipoNota notaFiscalTipo = itemNota.getCabecalhoNota().getNotaFiscalTipo();
-        produto.setQuantidadeEstoque(quantidade);
         BigDecimal quantidadeProduto = produto.getQuantidadeEstoque();
 
         ValidacaoUtils.validarQuantidadeNaoNegativa(quantidade);
@@ -131,8 +126,6 @@ public class ItemNotaService {
         } else if (notaFiscalTipo == TipoNota.ENTRADA) {
             produto.setQuantidadeEstoque(quantidadeProduto.add(quantidade));
         }
-
-        produtoService.salvar(DtoUtils.converteParaDto(produto));
     }
 
     private void adicionarValorTotalCabecalho(ItemNota itemNota) {
@@ -145,13 +138,14 @@ public class ItemNotaService {
 
     private Produto salvarOuBuscarProduto(Produto produto) {
         if (produto.getId() != null) {
-            return produtoRepository.findById(produto.getId()).orElseThrow(
-                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+            return produtoRepository.findById(produto.getId())
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
         } else {
-            return produtoRepository.findById(produto.getId()).orElseThrow(
-                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+            ProdutoDto produtoSalvo = produtoService.salvar(DtoUtils.converteParaDto(produto));
+            return DtoUtils.converteParaEntidade(produtoSalvo);
         }
     }
+
 
     private CabecalhoNota salvarOuBuscarCabecalho(CabecalhoNota cabecalhoNota) {
         if (cabecalhoNota.getId() != null) {

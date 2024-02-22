@@ -26,7 +26,7 @@ public class ParceiroNegocio {
     @Column(name = "nome")
     private String nome;
 
-    @Column(name = "inscricao_fiscal")
+    @Column(name = "inscricao_fiscal", unique = true)
     @NotBlank(message = "O campo inscrição fiscal deve ser preenchido")
     private String inscricaoFiscal;
 

@@ -86,6 +86,7 @@ public class DtoUtils {
         dto.setPrecoUnitario(entidade.getPrecoUnitario());
         dto.setProduto(entidade.getProduto());
         dto.setQuantidade(entidade.getQuantidade());
+        dto.setValorTotal(entidade.getValorTotal());
         return dto;
     }
 }
