@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.Mockito;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,6 @@ import java.util.Optional;
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
-
-import javassist.NotFoundException;
 
 public class ParceiroNegocioServiceTest {
 
