@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.entity;
 
 import org.springframework.beans.BeanUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -48,6 +51,11 @@ public class Produto {
     @Min(value = 0, message = "Quantidade do produto em estoque deve ser maior ou igual a zero (0)")
     @Column(name = "quantidade_estoque")
     private int quantidadeEstoque;
+
+    @Digits(integer = 19, fraction = 2)
+    @DecimalMin(value = "0")
+    @Column(name = "custo_medio")
+    private BigDecimal custoMedio = BigDecimal.ZERO;
 
     public Produto() {
         super();
@@ -103,6 +111,14 @@ public class Produto {
 
     public void setFabricante(ParceiroNegocio fabricante) {
         this.fabricante = fabricante;
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.agrotis.trainees.crud.dto;
 
 import org.springframework.beans.BeanUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -20,6 +21,8 @@ public class ProdutoDto {
     private ParceiroNegocio fabricante;
 
     private int quantidadeEstoque;
+
+    private BigDecimal custoMedio = BigDecimal.ZERO;
 
     public ProdutoDto() {
         super();
@@ -75,6 +78,14 @@ public class ProdutoDto {
 
     public void setQuantidadeEstoque(int quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
     }
 
 }

@@ -33,11 +33,11 @@ public class ProdutoService {
     public ProdutoDto salvar(ProdutoDto dto) {
         Produto entidade = mapper.converterParaEntidade(dto);
 
-        if (!verificarValidade(entidade)) {
-            throw new DataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
-        }
         if (repository.existsByDescricao(entidade.getDescricao())) {
             throw new ProdutoDuplicadoException("Descrição do produto já existe");
+        }
+        if (!verificarValidade(entidade)) {
+            throw new DataValidadeInvalidaException("A data de validade deve ser após a data de fabricação");
         }
 
         return mapper.converterParaDto(repository.save(entidade));
