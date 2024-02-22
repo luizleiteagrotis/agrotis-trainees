@@ -19,9 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
+import com.agrotis.trainees.crud.utils.NotaFiscalTipoDTOMapper;
 
 public class NotaFiscalTipoServiceTest {
 
@@ -35,6 +37,9 @@ public class NotaFiscalTipoServiceTest {
     @Mock
     private NotaFiscalTipoRepository repository;
 
+    @Mock
+    private NotaFiscalTipoDTOMapper mapper;
+
     @InjectMocks
     private NotaFiscalTipoService service;
 
@@ -45,50 +50,77 @@ public class NotaFiscalTipoServiceTest {
 
     @Test
     public void inserirTipoEntrada() {
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // notaFiscalTipo.setNome(ENTRADA);
-        // when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
-        //
-        // NotaFiscalTipo result = service.inserir(notaFiscalTipo);
-        // assertNotNull(result);
-        // verify(repository, times(1)).save(any(NotaFiscalTipo.class));
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setNome(ENTRADA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+
+        NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+        dto.setNome(notaFiscalTipo.getNome());
+        when(mapper.converterParaEntidade(dto)).thenReturn(notaFiscalTipo);
+        when(repository.save(notaFiscalTipo)).thenReturn(notaFiscalTipo);
+
+        when(service.inserir(dto)).thenReturn(dto);
+        NotaFiscalTipoDto resultado = service.inserir(dto);
+        assertEquals(notaFiscalTipo.getNome(), resultado.getNome());
     }
 
     @Test
     public void inserirTipoSaida() {
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // notaFiscalTipo.setNome(SAIDA);
-        // when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
-        //
-        // NotaFiscalTipo result = service.inserir(notaFiscalTipo);
-        // assertNotNull(result);
-        // verify(repository, times(1)).save(any(NotaFiscalTipo.class));
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setNome(SAIDA);
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+
+        NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+        dto.setNome(notaFiscalTipo.getNome());
+        when(mapper.converterParaEntidade(dto)).thenReturn(notaFiscalTipo);
+        when(repository.save(notaFiscalTipo)).thenReturn(notaFiscalTipo);
+
+        when(service.inserir(dto)).thenReturn(dto);
+        NotaFiscalTipoDto resultado = service.inserir(dto);
+        assertEquals(notaFiscalTipo.getNome(), resultado.getNome());
     }
 
     @Test
     public void inserirDeveObrigarNome() {
-        // NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
-        // when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
-        //
-        // Exception excecao = assertThrows(CrudException.class, () -> {
-        // service.inserir(notaFiscalTipo);
-        // });
-        // assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.",
-        // excecao.getMessage());
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
+
+        NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            service.inserir(dto);
+        });
+        assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.", excecao.getMessage());
     }
 
     @Test
     public void atualizarTipoEntrada() {
-
+        NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
+        notaFiscalTipo.setNome(ENTRADA);
+        notaFiscalTipo.setId(ID_ENTRADA);
+        NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+        dto.setNome(notaFiscalTipo.getNome());
+        dto.setId(notaFiscalTipo.getId());
+        when(mapper.converterParaEntidade(dto)).thenReturn(notaFiscalTipo);
+        assertNotNull(notaFiscalTipo);
+        when(repository.save(notaFiscalTipo)).thenReturn(notaFiscalTipo);
+        when(service.atualizar(dto)).thenReturn(dto);
+        NotaFiscalTipoDto resultado = service.atualizar(dto);
+        assertEquals(notaFiscalTipo.getNome(), resultado.getNome());
     }
 
     @Test
     public void atualizarDeveObrigarId() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         notaFiscalTipo.setNome(ENTRADA);
+        notaFiscalTipo.setId(null);
+        NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+        dto.setNome(notaFiscalTipo.getNome());
+        dto.setId(notaFiscalTipo.getId());
+        when(mapper.converterParaEntidade(dto)).thenReturn(notaFiscalTipo);
         when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
         Exception excecao = assertThrows(CrudException.class, () -> {
-            service.atualizar(notaFiscalTipo);
+            service.atualizar(dto);
         });
         assertEquals("Obrigatório preencher o id do tipo de nota fiscal.", excecao.getMessage());
     }
@@ -97,9 +129,13 @@ public class NotaFiscalTipoServiceTest {
     public void atualizarDeveObrigarNome() {
         NotaFiscalTipo notaFiscalTipo = new NotaFiscalTipo();
         notaFiscalTipo.setId(ID_SAIDA);
+        notaFiscalTipo.setNome(null);
+        NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
+        dto.setNome(notaFiscalTipo.getNome());
+        when(mapper.converterParaEntidade(dto)).thenReturn(notaFiscalTipo);
         when(repository.save(any(NotaFiscalTipo.class))).thenReturn(notaFiscalTipo);
         Exception excecao = assertThrows(CrudException.class, () -> {
-            service.atualizar(notaFiscalTipo);
+            service.atualizar(dto);
         });
         assertEquals("Obrigatório preencher o nome do tipo de nota fiscal.", excecao.getMessage());
     }

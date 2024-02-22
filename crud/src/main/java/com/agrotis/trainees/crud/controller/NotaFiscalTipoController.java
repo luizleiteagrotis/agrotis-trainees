@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 
 @RequestMapping("notas-fiscais/tipos")
@@ -36,8 +35,8 @@ public class NotaFiscalTipoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalTipo notaFiscalTipo) {
-        return ResponseEntity.ok().body(service.atualizar(notaFiscalTipo));
+    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalTipoDto notaFiscalTipoDto) {
+        return ResponseEntity.ok().body(service.atualizar(notaFiscalTipoDto));
     }
 
     @DeleteMapping

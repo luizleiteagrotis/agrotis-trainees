@@ -33,7 +33,8 @@ public class NotaFiscalTipoService {
         return mapper.converterParaDto(entidade);
     }
 
-    public NotaFiscalTipoDto atualizar(NotaFiscalTipo entidade) {
+    public NotaFiscalTipoDto atualizar(NotaFiscalTipoDto dto) {
+        NotaFiscalTipo entidade = mapper.converterParaEntidade(dto);
         if (entidade.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do tipo de nota fiscal.");
         }
