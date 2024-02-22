@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 public class ProdutoDto {
 
     private Integer id;
     private String nome;
     private String descricao;
-    private ParceiroNegocio parceiroNegocio;
+    private ParceiroNegocioDto parceiroNegocio;
     private String fabricante;
     private LocalDate dataFabricacao;
     private LocalDate dataValidade;
@@ -27,7 +27,7 @@ public class ProdutoDto {
         this.id = produto.getId();
         this.nome = produto.getNome();
         this.descricao = produto.getDescricao();
-        this.parceiroNegocio = produto.getParceiroNegocio();
+        this.parceiroNegocio = ParceiroNegocioService.converterParaDto(produto.getParceiroNegocio());
         this.fabricante = produto.getFabricante();
         this.dataFabricacao = produto.getDataFabricacao();
         this.dataValidade = produto.getDataValidade();
@@ -50,11 +50,11 @@ public class ProdutoDto {
         this.descricao = descricao;
     }
 
-    public ParceiroNegocio getParceiroNegocio() {
+    public ParceiroNegocioDto getParceiroNegocio() {
         return parceiroNegocio;
     }
 
-    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+    public void setParceiroNegocio(ParceiroNegocioDto parceiroNegocio) {
         this.parceiroNegocio = parceiroNegocio;
     }
 

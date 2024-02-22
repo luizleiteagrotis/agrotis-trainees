@@ -95,7 +95,7 @@ public class ProdutoService {
         dto.setId(entidade.getId());
         dto.setNome(entidade.getNome());
         dto.setDescricao(entidade.getDescricao());
-        dto.setParceiroNegocio(entidade.getParceiroNegocio());
+        dto.setParceiroNegocio(ParceiroNegocioService.converterParaDto(entidade.getParceiroNegocio()));
         dto.setFabricante(entidade.getFabricante());
         dto.setDataFabricacao(entidade.getDataFabricacao());
         dto.setDataValidade(entidade.getDataValidade());
@@ -109,7 +109,7 @@ public class ProdutoService {
         entidade.setId(dto.getId());
         entidade.setNome(dto.getNome());
         entidade.setDescricao(dto.getDescricao());
-        entidade.setParceiroNegocio(dto.getParceiroNegocio());
+        entidade.setParceiroNegocio(ParceiroNegocioService.converterParaEntidade(dto.getParceiroNegocio()));
         entidade.setFabricante(dto.getFabricante());
         entidade.setDataFabricacao(dto.getDataFabricacao());
         entidade.setDataValidade(dto.getDataValidade());

@@ -33,16 +33,20 @@ public class NotaFiscalService {
 
     @Transactional
     public NotaFiscal salvar(NotaFiscal entidade) {
+        if (entidade.getNumero() == null) {
+            throw new IllegalArgumentException("O número da nota fiscal é obrigatório.");
+        }
         return repository.save(entidade);
     }
 
     public NotaFiscalDto salvar(NotaFiscalDto dto) {
         NotaFiscal entidade = converterParaEntidade(dto);
-        NotaFiscal savedNotaFiscal = repository.save(entidade);
-        List<NotaFiscalItem> itens = savedNotaFiscal.getItensNota();
+        NotaFiscal notaFiscalSalva = repository.save(entidade);
+        List<NotaFiscalItem> itens = notaFiscalSalva.getItens();
         atualizarNotaFiscal(itens);
-        LOG.info("Salva nota fiscal {}", savedNotaFiscal.getNumeroNota());
-        return converterParaDto(savedNotaFiscal);
+        System.out.println(entidade.getNumero());
+        LOG.info("Salva nota fiscal {}", notaFiscalSalva.getNumero());
+        return converterParaDto(notaFiscalSalva);
     }
 
     public NotaFiscalDto buscarPorId(Integer id) throws NotFoundException {
@@ -52,9 +56,9 @@ public class NotaFiscalService {
 
     // ajustar métodos de busca
 
-    public NotaFiscal buscarPorNotaFiscalTipo(NotaFiscalTipo tipoNota) {
-        return repository.findByNotaFiscalTipo(tipoNota).orElseGet(() -> {
-            LOG.error("Nota Fiscal não encontrada para o tipo de {}.", tipoNota);
+    public NotaFiscal buscarPorTipo(NotaFiscalTipo tipo) {
+        return repository.findByTipo(tipo).orElseGet(() -> {
+            LOG.error("Nota Fiscal não encontrada para o tipo de {}.", tipo);
             return null;
         });
     }
@@ -66,16 +70,16 @@ public class NotaFiscalService {
         });
     }
 
-    public NotaFiscal buscarPorNumero(Integer numeroNota) {
-        return repository.findByNumeroNota(numeroNota).orElseGet(() -> {
-            LOG.error("Nota Fiscal não encontrada para o número {}.", numeroNota);
+    public NotaFiscal buscarPorNumero(Integer numero) {
+        return repository.findByNumero(numero).orElseGet(() -> {
+            LOG.error("Nota Fiscal não encontrada para o número {}.", numero);
             return null;
         });
     }
 
-    public NotaFiscal buscarPorData(LocalDate dataNota) {
-        return repository.findByDataNota(dataNota).orElseGet(() -> {
-            LOG.error("Nota Fiscal não encontrada para a data de {}.", dataNota);
+    public NotaFiscal buscarPorData(LocalDate data) {
+        return repository.findByData(data).orElseGet(() -> {
+            LOG.error("Nota Fiscal não encontrada para a data de {}.", data);
             return null;
         });
     }
@@ -92,6 +96,11 @@ public class NotaFiscalService {
 
     @Transactional
     public void atualizarNotaFiscal(List<NotaFiscalItem> itens) {
+        if (itens.isEmpty()) {
+            // Lista vazia para crrigir erro
+            return;
+        }
+
         NotaFiscal notaFiscal = itens.get(0).getNotaFiscal();
         double novoValorTotal = 0;
 
@@ -122,10 +131,10 @@ public class NotaFiscalService {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setId(entidade.getId());
         dto.setNotaFiscalTipo(entidade.getNotaFiscalTipo());
-        dto.setParceiroNegocio(entidade.getParceiroNegocio());
-        dto.setNumeroNota(entidade.getNumeroNota());
-        dto.setDataNota(entidade.getDataNota());
-        dto.setItensNota(entidade.getItensNota());
+        dto.setParceiroNegocio(ParceiroNegocioService.converterParaDto(entidade.getParceiroNegocio()));
+        dto.setNumero(entidade.getNumero());
+        dto.setData(entidade.getData());
+        dto.setItens(entidade.getItens());
         dto.setValorTotal(entidade.getValorTotal());
 
         return dto;
@@ -135,10 +144,10 @@ public class NotaFiscalService {
         NotaFiscal entidade = new NotaFiscal();
         entidade.setId(dto.getId());
         entidade.setNotaFiscalTipo(dto.getNotaFiscalTipo());
-        entidade.setParceiroNegocio(dto.getParceiroNegocio());
-        entidade.setNumeroNota(dto.getNumeroNota());
-        entidade.setDataNota(dto.getDataNota());
-        entidade.setItensNota(dto.getItensNota());
+        entidade.setParceiroNegocio(ParceiroNegocioService.converterParaEntidade(dto.getParceiroNegocio()));
+        entidade.setNumero(dto.getNumero());
+        entidade.setData(dto.getData());
+        entidade.setItens(dto.getItens());
         entidade.setValorTotal(dto.getValorTotal());
 
         return entidade;

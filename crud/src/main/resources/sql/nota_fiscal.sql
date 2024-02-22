@@ -13,3 +13,7 @@ ALTER TABLE nota_fiscal
 ADD CONSTRAINT fk_parceiro_negocio_nota_id
 FOREIGN KEY (parceiro_negocio)
 REFERENCES parceiro_negocio;
+
+EXEC sp_rename 'nota_fiscal.tipo_nota', 'tipo', 'COLUMN';
+EXEC sp_rename 'nota_fiscal.numero_nota', 'numero', 'COLUMN';
+EXEC sp_rename 'nota_fiscal.data_nota', 'data', 'COLUMN';

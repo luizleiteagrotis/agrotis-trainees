@@ -7,16 +7,16 @@ import java.util.stream.Collectors;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 public class NotaFiscalDto {
 
     private Integer id;
     private NotaFiscalTipo notaFiscalTipo;
-    private ParceiroNegocio parceiroNegocio;
-    private Integer numeroNota;
-    private LocalDate dataNota;
-    private List<NotaFiscalItem> itensNota;
+    private ParceiroNegocioDto parceiroNegocio;
+    private Integer numero;
+    private LocalDate data;
+    private List<NotaFiscalItem> itens;
     private Double valorTotal;
 
     public NotaFiscalDto() {
@@ -27,10 +27,10 @@ public class NotaFiscalDto {
         super();
         this.id = nota.getId();
         this.notaFiscalTipo = nota.getNotaFiscalTipo();
-        this.parceiroNegocio = nota.getParceiroNegocio();
-        this.numeroNota = nota.getNumeroNota();
-        this.dataNota = nota.getDataNota();
-        this.itensNota = nota.getItensNota();
+        this.parceiroNegocio = ParceiroNegocioService.converterParaDto(nota.getParceiroNegocio());
+        this.numero = nota.getNumero();
+        this.data = nota.getData();
+        this.itens = nota.getItens();
         this.valorTotal = nota.getValorTotal();
     }
 
@@ -42,36 +42,36 @@ public class NotaFiscalDto {
         this.notaFiscalTipo = notaFiscalTipo;
     }
 
-    public ParceiroNegocio getParceiroNegocio() {
+    public ParceiroNegocioDto getParceiroNegocio() {
         return parceiroNegocio;
     }
 
-    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+    public void setParceiroNegocio(ParceiroNegocioDto parceiroNegocio) {
         this.parceiroNegocio = parceiroNegocio;
     }
 
-    public Integer getNumeroNota() {
-        return numeroNota;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setNumeroNota(Integer numeroNota) {
-        this.numeroNota = numeroNota;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
-    public LocalDate getDataNota() {
-        return dataNota;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDataNota(LocalDate dataNota) {
-        this.dataNota = dataNota;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
-    public List<NotaFiscalItem> getItensNota() {
-        return itensNota;
+    public List<NotaFiscalItem> getItens() {
+        return itens;
     }
 
-    public void setItensNota(List<NotaFiscalItem> itensNota) {
-        this.itensNota = itensNota;
+    public void setItens(List<NotaFiscalItem> itens) {
+        this.itens = itens;
     }
 
     public Double getValorTotal() {

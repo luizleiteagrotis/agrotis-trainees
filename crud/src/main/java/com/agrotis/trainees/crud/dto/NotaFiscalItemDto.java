@@ -3,15 +3,15 @@ package com.agrotis.trainees.crud.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
-import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.service.NotaFiscalService;
+import com.agrotis.trainees.crud.service.ProdutoService;
 
 public class NotaFiscalItemDto {
 
     private Integer id;
-    private NotaFiscal notaFiscal;
-    private Produto produto;
+    private NotaFiscalDto notaFiscal;
+    private ProdutoDto produto;
     private Integer quantidade;
     private double precoUnitario;
     private double valorTotal;
@@ -23,26 +23,26 @@ public class NotaFiscalItemDto {
     public NotaFiscalItemDto(NotaFiscalItem item) {
         super();
         this.id = item.getId();
-        this.notaFiscal = item.getNotaFiscal();
-        this.produto = item.getProduto();
+        this.notaFiscal = NotaFiscalService.converterParaDto(item.getNotaFiscal());
+        this.produto = ProdutoService.converterParaDto(item.getProduto());
         this.quantidade = item.getQuantidade();
         this.precoUnitario = item.getPrecoUnitario();
         this.valorTotal = item.getValorTotal();
     }
 
-    public NotaFiscal getNotaFiscal() {
+    public NotaFiscalDto getNotaFiscal() {
         return notaFiscal;
     }
 
-    public void setNotaFiscal(NotaFiscal notaFiscal) {
+    public void setNotaFiscal(NotaFiscalDto notaFiscal) {
         this.notaFiscal = notaFiscal;
     }
 
-    public Produto getProduto() {
+    public ProdutoDto getProduto() {
         return produto;
     }
 
-    public void setProduto(Produto produto) {
+    public void setProduto(ProdutoDto produto) {
         this.produto = produto;
     }
 

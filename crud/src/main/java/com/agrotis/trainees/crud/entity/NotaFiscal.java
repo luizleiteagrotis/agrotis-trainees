@@ -26,22 +26,22 @@ public class NotaFiscal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "tipo_nota")
+    @Column(name = "tipo")
     @Enumerated(EnumType.STRING)
-    private NotaFiscalTipo notaFiscalTipo;
+    private NotaFiscalTipo tipo;
 
     @ManyToOne
     @JoinColumn(name = "parceiro_negocio")
     private ParceiroNegocio parceiroNegocio;
 
     @NotNull(message = "Obrigatório preencher o número da Nota Fiscal")
-    @Column(name = "numero_nota")
-    private Integer numeroNota;
+    @Column(name = "numero")
+    private Integer numero;
 
-    private LocalDate dataNota;
+    private LocalDate data;
 
     @OneToMany(mappedBy = "id", fetch = FetchType.EAGER)
-    private List<NotaFiscalItem> itensNota;
+    private List<NotaFiscalItem> itens;
 
     private Double valorTotal;
 
@@ -49,17 +49,17 @@ public class NotaFiscal {
         super();
         // this.dataNota = LocalDate.now();
         // this.itensNota = new ArrayList<>();
+        // this.numero = 0;
         this.valorTotal = 0.0;
     }
 
-    public NotaFiscal(NotaFiscalTipo notaFiscalTipo, ParceiroNegocio parceiroNegocio,
-                    @NotNull(message = "Obrigatório preencher o número da Nota Fiscal") Integer numeroNota, LocalDate dataNota) {
+    public NotaFiscal(NotaFiscalTipo notaFiscalTipo, ParceiroNegocio parceiroNegocio, Integer numero, LocalDate dataNota) {
         super();
-        this.notaFiscalTipo = notaFiscalTipo;
+        this.tipo = notaFiscalTipo;
         this.parceiroNegocio = parceiroNegocio;
-        this.numeroNota = numeroNota;
-        this.dataNota = dataNota;
-        this.itensNota = new ArrayList<>();
+        this.numero = numero;
+        this.data = dataNota;
+        this.itens = new ArrayList<>();
         this.valorTotal = 0.0;
     }
 
@@ -77,11 +77,11 @@ public class NotaFiscal {
     }
 
     public NotaFiscalTipo getNotaFiscalTipo() {
-        return notaFiscalTipo;
+        return tipo;
     }
 
     public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo) {
-        this.notaFiscalTipo = notaFiscalTipo;
+        this.tipo = notaFiscalTipo;
     }
 
     public ParceiroNegocio getParceiroNegocio() {
@@ -92,28 +92,28 @@ public class NotaFiscal {
         this.parceiroNegocio = parceiroNegocio;
     }
 
-    public Integer getNumeroNota() {
-        return numeroNota;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setNumeroNota(Integer numeroNota) {
-        this.numeroNota = numeroNota;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
-    public LocalDate getDataNota() {
-        return dataNota;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDataNota(LocalDate dataNota) {
-        this.dataNota = dataNota;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
-    public List<NotaFiscalItem> getItensNota() {
-        return itensNota;
+    public List<NotaFiscalItem> getItens() {
+        return itens;
     }
 
-    public void setItensNota(List<NotaFiscalItem> itensNota) {
-        this.itensNota = itensNota;
+    public void setItens(List<NotaFiscalItem> itens) {
+        this.itens = itens;
     }
 
     public Double getValorTotal() {
