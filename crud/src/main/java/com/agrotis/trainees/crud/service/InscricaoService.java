@@ -22,6 +22,6 @@ public class InscricaoService {
     }
 
     public String normalizarInscricaoFiscal(String inscricaoFiscal) {
-        return inscricaoFiscal.replaceAll("[^0-9.-]", "");
+        return inscricaoFiscal.replaceAll("[^0-9]", "");
     }
 }
