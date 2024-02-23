@@ -21,7 +21,8 @@ public class ProdutoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
 
-    private final ProdutoRepository repository;
+    private ProdutoRepository repository;
+    private ProdutoConversao conversao;
 
     public ProdutoService(ProdutoRepository repository) {
         super();
@@ -29,15 +30,15 @@ public class ProdutoService {
     }
 
     public ProdutoDto salvar(ProdutoDto dto) {
-        Produto entidade = converterParaEntidade(dto);
+        Produto entidade = conversao.converterParaEntidade(dto);
         repository.save(entidade);
         LOG.info("Salvo Produto {}", entidade.getNome());
-        return converterParaDto(entidade);
+        return conversao.converterParaDto(entidade);
     }
 
     public ProdutoDto buscarPorId(Integer id) throws NotFoundException {
         Produto entidade = repository.findById(id).orElseThrow(() -> new NotFoundException());
-        return converterParaDto(entidade);
+        return conversao.converterParaDto(entidade);
     }
 
     // ajustar métodos de busca
@@ -72,7 +73,7 @@ public class ProdutoService {
 
     public List<ProdutoDto> listarTodos() {
         List<Produto> entidades = repository.findAll();
-        return entidades.stream().map(entidade -> converterParaDto(entidade)).collect(Collectors.toList());
+        return entidades.stream().map(entidade -> conversao.converterParaDto(entidade)).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
@@ -81,41 +82,13 @@ public class ProdutoService {
     }
 
     public Produto inserir(@Valid ProdutoDto dto) {
-        Produto entidade = converterParaEntidade(dto);
+        Produto entidade = conversao.converterParaEntidade(dto);
         return repository.save(entidade);
     }
 
     public ProdutoDto atualizar(ProdutoDto dto) {
-        Produto entidade = converterParaEntidade(dto);
-        return converterParaDto(repository.save(entidade));
-    }
-
-    public static ProdutoDto converterParaDto(Produto entidade) {
-        ProdutoDto dto = new ProdutoDto();
-        dto.setId(entidade.getId());
-        dto.setNome(entidade.getNome());
-        dto.setDescricao(entidade.getDescricao());
-        dto.setParceiroNegocio(ParceiroNegocioService.converterParaDto(entidade.getParceiroNegocio()));
-        dto.setFabricante(entidade.getFabricante());
-        dto.setDataFabricacao(entidade.getDataFabricacao());
-        dto.setDataValidade(entidade.getDataValidade());
-        dto.setEstoque(entidade.getEstoque());
-
-        return dto;
-    }
-
-    public static Produto converterParaEntidade(ProdutoDto dto) {
-        Produto entidade = new Produto();
-        entidade.setId(dto.getId());
-        entidade.setNome(dto.getNome());
-        entidade.setDescricao(dto.getDescricao());
-        entidade.setParceiroNegocio(ParceiroNegocioService.converterParaEntidade(dto.getParceiroNegocio()));
-        entidade.setFabricante(dto.getFabricante());
-        entidade.setDataFabricacao(dto.getDataFabricacao());
-        entidade.setDataValidade(dto.getDataValidade());
-        entidade.setEstoque(dto.getEstoque());
-
-        return entidade;
+        Produto entidade = conversao.converterParaEntidade(dto);
+        return conversao.converterParaDto(repository.save(entidade));
     }
 
 }

@@ -136,6 +136,9 @@ public class ParceiroNegocioServiceTest {
         assertThrows(NotFoundException.class, () -> {
             service.buscarPorId(1);
         });
+        
+        // no cadastrar para verificar se só deu excessão ou se salvou (não deve salvar)
+        // verify(repository.save, times(0)).save;
     }
 
     @Test
