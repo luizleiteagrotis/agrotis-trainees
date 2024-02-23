@@ -26,7 +26,7 @@ public class Produto {
     private String descricao;
 
     @Column(name = "estoque_produto")
-    private Integer estoque;
+    private BigDecimal estoque;
 
     @ManyToOne
     @JoinColumn(name = "fabricante_id")
@@ -52,7 +52,6 @@ public class Produto {
 
     public Produto() {
         super();
-        this.estoque = 0;
     }
 
     public Integer getId() {
@@ -95,12 +94,12 @@ public class Produto {
         this.dataValidade = dataValidade;
     }
 
-    public int getEstoque() {
+    public BigDecimal getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(int estoque) {
-        this.estoque = estoque;
+    public void setEstoque(BigDecimal quantidadeTotal) {
+        this.estoque = quantidadeTotal;
     }
 
     public void setId(Integer id, ParceiroNegocio fabricante) {

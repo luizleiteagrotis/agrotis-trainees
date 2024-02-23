@@ -3,13 +3,14 @@ package com.agrotis.trainees.crud.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ProdutoDto {
 
     private Integer id;
     private String descricao;
-    private int estoque;
+    private BigDecimal estoque;
     private ParceiroNegocioDto fabricante;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -38,11 +39,11 @@ public class ProdutoDto {
         this.descricao = descricao;
     }
 
-    public int getEstoque() {
+    public BigDecimal getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(int estoque) {
+    public void setEstoque(BigDecimal estoque) {
         this.estoque = estoque;
     }
 

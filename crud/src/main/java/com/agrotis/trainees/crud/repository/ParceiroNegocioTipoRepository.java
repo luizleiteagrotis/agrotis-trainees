@@ -15,4 +15,5 @@ public interface ParceiroNegocioTipoRepository extends JpaRepository<ParceiroNeg
 
     void deleteById(Integer id);
 
+    Optional<ParceiroNegocio> findByInscricaoFiscal(String inscricaoFiscal);
 }

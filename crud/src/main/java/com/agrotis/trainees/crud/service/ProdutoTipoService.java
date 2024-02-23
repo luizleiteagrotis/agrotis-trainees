@@ -3,7 +3,11 @@ package com.agrotis.trainees.crud.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -18,13 +22,38 @@ import com.agrotis.trainees.crud.repository.ProdutoTipoRepository;
 public class ProdutoTipoService {
 
     private final ProdutoTipoRepository produtoTipoRepository;
+    private final ParceiroNegocioTipoService parceiroNegocioService;
 
     @Autowired
-    private ParceiroNegocioTipoService parceiroNegocioService;
-
     public ProdutoTipoService(ProdutoTipoRepository produtoTipoRepository, ParceiroNegocioTipoService parceiroNegocioService) {
-        this.produtoTipoRepository = produtoTipoRepository;
-        this.parceiroNegocioService = parceiroNegocioService;
+        this.produtoTipoRepository = Objects.requireNonNull(produtoTipoRepository, "produtoTipoRepository cannot be null");
+        this.parceiroNegocioService = Objects.requireNonNull(parceiroNegocioService, "parceiroNegocioService cannot be null");
+    }
+
+    public void adicionarEntradaEstoque(Produto produto, BigDecimal quantidade, BigDecimal valorUnitario) {
+        Objects.requireNonNull(quantidade, "Quantidade cannot be null");
+        Objects.requireNonNull(valorUnitario, "Valor unitário cannot be null");
+
+        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
+        }
+        if (valorUnitario.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor unitário deve ser maior que zero");
+        }
+
+        BigDecimal custoTotal = valorUnitario.multiply(quantidade);
+        BigDecimal quantidadeTotal = produto.getEstoque().add(quantidade);
+        BigDecimal custoMedio = calcularCustoMedio(custoTotal, quantidadeTotal);
+
+        produto.setCustoMedio(custoMedio.setScale(2, RoundingMode.HALF_UP));
+        produto.setEstoque(quantidadeTotal);
+    }
+
+    private BigDecimal calcularCustoMedio(BigDecimal custoTotal, BigDecimal quantidadeTotal) {
+        if (quantidadeTotal.compareTo(BigDecimal.ZERO) <= 0 || custoTotal.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Quantidade e Custo Total devem ser maiores que zero");
+        }
+        return custoTotal.divide(quantidadeTotal, 2, RoundingMode.HALF_UP);
     }
 
     @Transactional
@@ -34,9 +63,8 @@ public class ProdutoTipoService {
         return converterParaDto(savedProduto);
     }
 
-    public ProdutoDto buscarPorId(Integer id) {
-        Produto entidade = produtoTipoRepository.findById(id).orElse(null);
-        return converterParaDto(entidade);
+    public Optional<ProdutoDto> buscarPorId(Integer id) {
+        return produtoTipoRepository.findById(id).map(this::converterParaDto);
     }
 
     public List<ProdutoDto> listarTodos() {
@@ -53,15 +81,28 @@ public class ProdutoTipoService {
         if (entidade != null) {
             entidade.setDescricao(dto.getDescricao());
             entidade.setEstoque(dto.getEstoque());
-            entidade.setFabricante(dto.getFabricante());
+
+            ParceiroNegocio fabricante = converterDtoParaParceiroNegocio(dto.getFabricante());
+            entidade.setFabricante(fabricante);
+
             entidade.setDataFabricacao(dto.getDataFabricacao());
             entidade.setDataValidade(dto.getDataValidade());
+
             entidade = produtoTipoRepository.save(entidade);
             return converterParaDto(entidade);
         } else {
             return null;
         }
+    }
 
+    private ParceiroNegocio converterDtoParaParceiroNegocio(ParceiroNegocioDto dto) {
+        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+        parceiroNegocio.setId(dto.getId());
+        parceiroNegocio.setNome(dto.getNome());
+        parceiroNegocio.setInscricaoFiscal(dto.getInscricaoFiscal());
+        parceiroNegocio.setEndereco(dto.getEndereco());
+        parceiroNegocio.setTelefone(dto.getTelefone());
+        return parceiroNegocio;
     }
 
     public ProdutoDto converterParaDto(Produto entidade) {

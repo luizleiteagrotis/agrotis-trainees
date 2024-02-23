@@ -24,6 +24,17 @@ public class ParceiroNegocio {
 
     private String telefone;
 
+    public ParceiroNegocio(String nome, String inscricaoFiscal, String endereco, String telefone) {
+        this.nome = nome;
+        this.inscricaoFiscal = inscricaoFiscal;
+        this.endereco = endereco;
+        this.telefone = telefone;
+    }
+
+    public ParceiroNegocio() {
+        super();
+    }
+
     public Integer getId() {
         return id;
     }
