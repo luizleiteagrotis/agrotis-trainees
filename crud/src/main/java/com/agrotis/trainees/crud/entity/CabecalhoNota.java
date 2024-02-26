@@ -59,7 +59,7 @@ public class CabecalhoNota{
     private LocalDate data;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cabecalhoNota", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cabecalhoNota",orphanRemoval = true)
     private List<ItemNota> itens = new ArrayList<>();
 
     @DecimalMin(value = "00.00", inclusive = true)

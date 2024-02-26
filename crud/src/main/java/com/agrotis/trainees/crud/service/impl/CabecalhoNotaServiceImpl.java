@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,18 +13,19 @@ import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
+import com.agrotis.trainees.crud.service.CabecalhoNotaService;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.DtoUtils;
 
 @Service
-public class CabecalhoNotaService {
+public class CabecalhoNotaServiceImpl implements CabecalhoNotaService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaServiceImpl.class);
 
     private final CabecalhoNotaRepository repository;
     private final ParceiroNegocioRepository parceiroNegocioRepository;
 
-    public CabecalhoNotaService(CabecalhoNotaRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
+    public CabecalhoNotaServiceImpl(CabecalhoNotaRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         this.repository = repository;
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
@@ -36,11 +37,9 @@ public class CabecalhoNotaService {
         ParceiroNegocio fabricanteSalvo = salvarOuBuscarFabricante(parceiroNegocio);
         cabecalho.setParceiroNegocio(fabricanteSalvo);
 
-        // Calcula o valor total do cabeçalho da nota
         BigDecimal valorTotal = calcularValorTotal(cabecalho);
         cabecalho.setValorTotal(valorTotal);
-
-        // Salva o cabeçalho da nota no banco de dados
+        
         CabecalhoNota entidadeSalva = repository.save(cabecalho);
 
         return DtoUtils.converteParaDto(entidadeSalva);

@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,17 +10,18 @@ import org.springframework.stereotype.Service;
 import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
+import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.DtoUtils;
 
 @Service
-public class ParceiroNegocioService {
+public class ParceiroNegocioServiceImpl implements ParceiroNegocioService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioServiceImpl.class);
 
     private final ParceiroNegocioRepository repository;
 
-    public ParceiroNegocioService(ParceiroNegocioRepository repository) {
+    public ParceiroNegocioServiceImpl(ParceiroNegocioRepository repository) {
         this.repository = repository;
     }
 

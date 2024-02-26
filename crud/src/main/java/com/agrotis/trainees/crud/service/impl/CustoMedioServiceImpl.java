@@ -1,11 +1,11 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import com.agrotis.trainees.crud.service.exceptions.CrudException;
 
-public class CustoMedioService {
+public class CustoMedioServiceImpl {
 
     public static BigDecimal calcularCustoMedio(BigDecimal custoTotal, BigDecimal quantidadeTotal) {
         if (quantidadeTotal.equals(BigDecimal.ZERO)) {

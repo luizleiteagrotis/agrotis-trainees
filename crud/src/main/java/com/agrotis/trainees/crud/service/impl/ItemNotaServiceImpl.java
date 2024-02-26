@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,16 +24,16 @@ import com.agrotis.trainees.crud.utils.DtoUtils;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
-public class ItemNotaService {
+public class ItemNotaServiceImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ItemNotaService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ItemNotaServiceImpl.class);
 
     private final NotaFiscalItemRepository repository;
     private final ProdutoRepository produtoRepository;
-    private final ProdutoService produtoService;
+    private final ProdutoServiceImpl produtoService;
     private final CabecalhoNotaRepository cabecalhoNotaRepository;
 
-    public ItemNotaService(NotaFiscalItemRepository repository, ProdutoService produtoService, ProdutoRepository produtoRepository,
+    public ItemNotaServiceImpl(NotaFiscalItemRepository repository, ProdutoServiceImpl produtoService, ProdutoRepository produtoRepository,
                     CabecalhoNotaRepository cabecalhoNotaRepository) {
         this.repository = repository;
         this.produtoService = produtoService;
@@ -45,13 +45,14 @@ public class ItemNotaService {
     public ItemNotaDto salvar(ItemNotaDto dto) {
         ItemNota entidade = DtoUtils.converteParaEntidade(dto);
         CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(entidade.getCabecalhoNota());
-        Produto produtoSalvo = salvarOuBuscarProduto(entidade.getProduto());
-        
         BigDecimal valorTotal = calcularValorTotal(entidade);
-        BigDecimal calculoCustoMedio = CustoMedioService.calcularCustoMedio(valorTotal, entidade.getQuantidade());
-        
+        Produto produtoSalvo = salvarOuBuscarProduto(entidade.getProduto());
+        BigDecimal quandidadeProduto = entidade.getQuantidade();
+        produtoSalvo.setQuantidadeEstoque(quandidadeProduto);
+        BigDecimal calculoCustoMedio = CustoMedioServiceImpl.calcularCustoMedio(valorTotal, entidade.getQuantidade());
+
         produtoSalvo.setCustoMedio(calculoCustoMedio);
-        
+
         entidade.setCabecalhoNota(cabecalhoSalvo);
         entidade.setProduto(produtoSalvo);
         atualizarEstoque(entidade);
@@ -80,6 +81,15 @@ public class ItemNotaService {
         ItemNota itemNotaAtualizada = repository.save(itemNotaExistente);
         return DtoUtils.converteParaDto(itemNotaAtualizada);
     }
+    
+    public void deletarPorId(Integer id) {
+        repository.findById(id).map(entidade -> {
+            repository.deleteById(id);
+            LOG.info("Deletado com sucesso");
+            return entidade;
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
+
+    }
 
     private void atualizarItemNota(ItemNota itemNota, ItemNotaDto notaFiscalItemDto) {
         CabecalhoNota cabecalhoNota = notaFiscalItemDto.getCabecalhoNota();
@@ -90,14 +100,7 @@ public class ItemNotaService {
         itemNota.setValorTotal(notaFiscalItemDto.getValorTotal());
     }
 
-    public void deletarPorId(Integer id) {
-        repository.findById(id).map(entidade -> {
-            repository.deleteById(id);
-            LOG.info("Deletado com sucesso");
-            return entidade;
-        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
 
-    }
 
     public BigDecimal calcularValorTotal(ItemNota notaFiscalItem) {
         BigDecimal quantidade = notaFiscalItem.getQuantidade();
@@ -138,14 +141,13 @@ public class ItemNotaService {
 
     private Produto salvarOuBuscarProduto(Produto produto) {
         if (produto.getId() != null) {
-            return produtoRepository.findById(produto.getId())
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+            return produtoRepository.findById(produto.getId()).orElseThrow(
+                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
         } else {
             ProdutoDto produtoSalvo = produtoService.salvar(DtoUtils.converteParaDto(produto));
             return DtoUtils.converteParaEntidade(produtoSalvo);
         }
     }
-
 
     private CabecalhoNota salvarOuBuscarCabecalho(CabecalhoNota cabecalhoNota) {
         if (cabecalhoNota.getId() != null) {

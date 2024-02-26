@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.ProdutoDto;
-import com.agrotis.trainees.crud.service.ProdutoService;
+import com.agrotis.trainees.crud.service.impl.ProdutoServiceImpl;
 
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
     
-    private final ProdutoService service;
+    private final ProdutoServiceImpl service;
     
     @Autowired
-    public ProdutoController(ProdutoService service) {
+    public ProdutoController(ProdutoServiceImpl service) {
         this.service = service;
     }
     

@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service;
+package com.agrotis.trainees.crud.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,20 +12,21 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.service.ProdutoService;
 import com.agrotis.trainees.crud.service.exceptions.CampoVazioOuNuloException;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.DtoUtils;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
-public class ProdutoService {
+public class ProdutoServiceImpl implements ProdutoService{
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProdutoServiceImpl.class);
 
     private final ProdutoRepository produtoRepository;
     private final ParceiroNegocioRepository parceiroNegocioRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository, ParceiroNegocioRepository parceiroNegocioRepository) {
+    public ProdutoServiceImpl(ProdutoRepository produtoRepository, ParceiroNegocioRepository parceiroNegocioRepository) {
         this.produtoRepository = produtoRepository;
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }

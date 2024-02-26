@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.ParceiroNegocioDto;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.impl.ParceiroNegocioServiceImpl;
 
 @RestController
 @RequestMapping("/parceiros-negocio")
 public class ParceiroNegocioController {
 
-    private final ParceiroNegocioService service;
+    private final ParceiroNegocioServiceImpl service;
 
     @Autowired
-    public ParceiroNegocioController(ParceiroNegocioService service) {
+    public ParceiroNegocioController(ParceiroNegocioServiceImpl service) {
         this.service = service; 
     }
 
