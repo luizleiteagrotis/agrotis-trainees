@@ -15,16 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
+import com.agrotis.trainees.crud.service.CabecalhoNotaService;
 import com.agrotis.trainees.crud.service.impl.CabecalhoNotaServiceImpl;
 
 @RestController
 @RequestMapping("/cabecalhos")
 public class CabecalhoNotaController {
 
-    private final CabecalhoNotaServiceImpl service;
+    private final CabecalhoNotaService service;
 
     @Autowired
-    public CabecalhoNotaController(CabecalhoNotaServiceImpl service) {
+    public CabecalhoNotaController(CabecalhoNotaService service) {
         this.service = service;
     }
 

@@ -15,16 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agrotis.trainees.crud.dtos.ItemNotaDto;
+import com.agrotis.trainees.crud.service.ItemNotaService;
 import com.agrotis.trainees.crud.service.impl.ItemNotaServiceImpl;
 
 @RestController
 @RequestMapping("/itens-nota")
 public class ItemNotaController {
 
-    private final ItemNotaServiceImpl service;
+    private final ItemNotaService service;
 
     @Autowired
-    public ItemNotaController(ItemNotaServiceImpl service) {
+    public ItemNotaController(ItemNotaService service) {
         this.service = service;
     }
 
