@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -10,86 +11,81 @@ import com.agrotis.trainees.crud.convert.ParceiroNegocioConversor;
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.ParceiroNegocioExcecao;
-import com.agrotis.trainees.crud.repository.PaceiroNegocioRepository;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 
 @Service
 public class ParceiroNegocioService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 
-    private final PaceiroNegocioRepository repository;
+    private final ParceiroNegocioRepository repository;
     private final ParceiroNegocioConversor parceiroNegocioConversor;
 
-    public ParceiroNegocioService(PaceiroNegocioRepository repository, ParceiroNegocioConversor parceiroNegocioConversor) {
+    public ParceiroNegocioService(ParceiroNegocioRepository repository, ParceiroNegocioConversor parceiroNegocioConversor) {
         super();
         this.repository = repository;
         this.parceiroNegocioConversor = parceiroNegocioConversor;
 
     }
 
-    public ParceiroNegocioDto salvar(ParceiroNegocioDto entidade) {
+    public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) throws ParceiroNegocioExcecao {
         try {
-            ParceiroNegocio parceiro = parceiroNegocioConversor.converter(entidade);
-            validarInscricaoFiscal(parceiro);
-            validarParceiro(parceiro);
+            ParceiroNegocio entidade = parceiroNegocioConversor.converter(dto);
+            validarParceiro(entidade);
+            validarInscricaoFiscal(entidade);
             LOG.info("Salvo com sucesso.");
-            parceiro = repository.save(parceiro);
-            return parceiroNegocioConversor.converter(parceiro);
+            entidade = repository.save(entidade);
+            return parceiroNegocioConversor.converter(entidade);
 
         } catch (ParceiroNegocioExcecao e) {
             LOG.error(e.getMessage());
-            return null;
+            throw e;
         }
 
     }
 
     public ParceiroNegocioDto buscarPorId(int id) {
-        ParceiroNegocio parceiro = repository.findById(id).orElseGet(() -> {
+        ParceiroNegocio entidade = repository.findById(id).orElseGet(() -> {
             LOG.error("Não foi possível encontrar um parceiro com este id {}.", id);
             return null;
         });
-        if (parceiro == null) {
-            return null;
-        }
-        return parceiroNegocioConversor.converter(parceiro);
+
+        return parceiroNegocioConversor.converter(entidade);
     }
 
     public ParceiroNegocioDto buscarPorInscricaoFiscal(String inscricaoFiscal) {
-        ParceiroNegocio parceiro = repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
+        ParceiroNegocio entidade = repository.findByInscricaoFiscal(inscricaoFiscal).orElseGet(() -> {
             LOG.error("Não foi possível encontrar esta inscriçâo Fiscal {}.", inscricaoFiscal);
             return null;
         });
-        if (parceiro == null) {
-            return null;
-        }
-        return parceiroNegocioConversor.converter(parceiro);
+        return parceiroNegocioConversor.converter(entidade);
     }
 
     public List<ParceiroNegocioDto> listarTodos() {
-        List<ParceiroNegocio> parceiros = repository.findAll();
-        return parceiroNegocioConversor.converter(parceiros);
+        List<ParceiroNegocio> entidades = repository.findAll();
+        return parceiroNegocioConversor.converter(entidades);
     }
 
-    public ParceiroNegocioDto atualizar(ParceiroNegocioDto parceiro, int id) {
+    public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto, int id) {
         try {
-            ParceiroNegocio parceiroConvertido = parceiroNegocioConversor.converter(parceiro);
-            ParceiroNegocio parceiroNegocio = validarPorId(id);
+            ParceiroNegocio entidade = parceiroNegocioConversor.converter(dto);
+            ParceiroNegocio entidadeParaAtualizar = validarPorId(id);
 
-            if (parceiroConvertido.getInscricaoFiscal() != null) {
-                parceiroNegocio.setInscricaoFiscal(parceiroConvertido.getInscricaoFiscal());
+            if (entidade.getInscricaoFiscal() != null) {
+                entidadeParaAtualizar.setInscricaoFiscal(entidade.getInscricaoFiscal());
             }
-            if (parceiroConvertido.getNome() != null) {
-                parceiroNegocio.setNome(parceiroConvertido.getNome());
+            if (entidade.getNome() != null) {
+                entidadeParaAtualizar.setNome(entidade.getNome());
             }
-            if (parceiroConvertido.getEndereco() != null) {
-                parceiroNegocio.setEndereco(parceiroConvertido.getEndereco());
+            if (entidade.getEndereco() != null) {
+                entidadeParaAtualizar.setEndereco(entidade.getEndereco());
             }
-            if (parceiroConvertido.getTelefone() != null) {
-                parceiroNegocio.setTelefone(parceiroConvertido.getTelefone());
+            if (entidade.getTelefone() != null) {
+                entidadeParaAtualizar.setTelefone(entidade.getTelefone());
             }
-            validarParceiro(parceiroNegocio);
-            repository.save(parceiroNegocio);
-            return parceiroNegocioConversor.converter(parceiroNegocio);
+            validarParceiro(entidadeParaAtualizar);
+            repository.save(entidadeParaAtualizar);
+            return parceiroNegocioConversor.converter(entidadeParaAtualizar);
         } catch (ParceiroNegocioExcecao e) {
             LOG.error(e.getMessage());
             return null;
@@ -107,32 +103,33 @@ public class ParceiroNegocioService {
         }
     }
 
-    private void validarParceiro(ParceiroNegocio entidade) throws ParceiroNegocioExcecao {
+    public void validarParceiro(ParceiroNegocio entidade) throws ParceiroNegocioExcecao {
         if (entidade == null) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira valores válidos.");
         }
 
-        if (entidade.getNome().isEmpty()) {
+        if (StringUtils.isEmpty(entidade.getNome())) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira um nome válido.");
         }
 
-        if (entidade.getInscricaoFiscal() != null && entidade.getInscricaoFiscal().length() != 14) {
-            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Digite uma inscrição válida.");
-
-        }
-
-        if (entidade.getTelefone().length() < 10 || entidade.getTelefone().length() > 11) {
+        if (StringUtils.isEmpty(entidade.getTelefone()) || entidade.getTelefone().length() < 10
+                        || entidade.getTelefone().length() > 11) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Digite um telefone válido.");
         }
 
     }
 
-    private void validarInscricaoFiscal(ParceiroNegocio parceiro) throws ParceiroNegocioExcecao {
-        if (repository.findByInscricaoFiscal(parceiro.getInscricaoFiscal()).isPresent()) {
+    public void validarInscricaoFiscal(ParceiroNegocio entidade) throws ParceiroNegocioExcecao {
+
+        if (StringUtils.isEmpty(entidade.getInscricaoFiscal())) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: É obrigatorio inserir uma inscrição fiscal.");
+        }
+        if (repository.findByInscricaoFiscal(entidade.getInscricaoFiscal()).isPresent()) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Inscrição fiscal já está cadastrada.");
         }
-        if (parceiro.getInscricaoFiscal() == null) {
-            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: É obrigatorio inserir uma inscrição fiscal.");
+        if (entidade.getInscricaoFiscal().length() != 14) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Digite uma inscrição válida.");
+
         }
     }
 

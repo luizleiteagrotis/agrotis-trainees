@@ -25,10 +25,9 @@ public class ParceiroNegocio {
     public ParceiroNegocio() {
     }
 
-    public ParceiroNegocio(int id, @NotBlank(message = "Este campo é obrigatório") String nome,
+    public ParceiroNegocio(@NotBlank(message = "Este campo é obrigatório") String nome,
                     @NotBlank(message = "Este campo é obrigatório") String inscricaoFiscal, String endereco, String telefone) {
         super();
-        this.id = id;
         this.nome = nome;
         this.inscricaoFiscal = inscricaoFiscal;
         this.endereco = endereco;
@@ -37,10 +36,6 @@ public class ParceiroNegocio {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {

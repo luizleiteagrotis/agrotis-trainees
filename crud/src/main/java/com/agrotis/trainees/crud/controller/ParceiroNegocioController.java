@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
+import com.agrotis.trainees.crud.exception.ParceiroNegocioExcecao;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 @RequestMapping("parceiros-negocio")
@@ -24,7 +25,7 @@ public class ParceiroNegocioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody ParceiroNegocioDto parceiroNegocioDto) {
+    public ResponseEntity<?> salvar(@RequestBody ParceiroNegocioDto parceiroNegocioDto) throws ParceiroNegocioExcecao {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(parceiroNegocioDto));
     }
 
