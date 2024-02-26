@@ -146,14 +146,34 @@ public class CrudApplication implements CommandLineRunner {
             LocalDate agora = LocalDate.now();
             LocalDate dataEmissao = LocalDate.of(agora.getYear(), agora.getMonth(), agora.getDayOfMonth());
 
-            CabecalhoNotaFiscal cabecalhoNota = new CabecalhoNotaFiscal();
-            cabecalhoNota.setTipoNota("ENTRADA");
-            cabecalhoNota.setNumero(1);
-            cabecalhoNota.setDataEmissao(Date.valueOf(dataEmissao));
-            cabecalhoNota.setParceiro(parceirosSalvos.get(0));
-
-            CabecalhoNotaFiscal cabecalhoNota2 = cabecalhoNotaFiscalService.salvar(cabecalhoNota);
-            LOG.info("id inserido: {}", cabecalhoNota2.getId());
+//            CabecalhoNotaFiscal cabecalhoNota = new CabecalhoNotaFiscal();
+//            cabecalhoNota.setTipoNota("ENTRADA");
+//            cabecalhoNota.setNumero(1);
+//            cabecalhoNota.setDataEmissao(Date.valueOf(dataEmissao));
+//            cabecalhoNota.setParceiro(parceirosSalvos.get(0));
+//
+//            CabecalhoNotaFiscal cabecalhoNota2 = cabecalhoNotaFiscalService.salvar(cabecalhoNota);
+//            LOG.info("id inserido: {}", cabecalhoNota2.getId());
+            
+            List<CabecalhoNotaFiscal> notasFiscaisSalvas = cabecalhoNotaFiscalService.listarTodos();
+            
+            for (CabecalhoNotaFiscal cabecalhoNota : notasFiscaisSalvas) {
+                System.out.println(cabecalhoNota);
+            }
+            
+            CabecalhoNotaFiscal notaFiscalBuscaID = cabecalhoNotaFiscalService.buscarPorId(notasFiscaisSalvas.get(0).getId());
+            LOG.info("Nota Fiscal {} encontrado por id.", notaFiscalBuscaID.getId());
+            
+            CabecalhoNotaFiscal notaFiscalBuscaNumero = cabecalhoNotaFiscalService.buscarPorNumero(notasFiscaisSalvas.get(1).getId());
+            LOG.info("Nota Fiscal {} encontrado por numero.", notaFiscalBuscaNumero.getNumero());
+            
+            List<CabecalhoNotaFiscal> listNotasFiscaisBuscaTipo = cabecalhoNotaFiscalService.buscarPorTipo(notasFiscaisSalvas.get(2).getTipoNota());
+            LOG.info("{} notas fiscais encontradas para o tipo {}.",listNotasFiscaisBuscaTipo.size(),notasFiscaisSalvas.get(2).getTipoNota() );
+            
+            List<CabecalhoNotaFiscal> listNotasBuscaParceiro = cabecalhoNotaFiscalService.buscarPorParceiro(notasFiscaisSalvas.get(3).getParceiro());
+            LOG.info("{} notas fiscais encontradas para o parceiro {}.",listNotasBuscaParceiro.size(),notasFiscaisSalvas.get(3).getParceiro());
+            
+            
         }
 
     }
