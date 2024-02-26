@@ -375,6 +375,8 @@ public class ProdutoServiceTest {
             assertEquals(esperados.get(i).getNome(), resultado.get(i).getNome());
             assertEquals(esperados.get(i).getDescricao(), resultado.get(i).getDescricao());
         }
+
+        // adicionando comentário teste para envio github
     }
 
 }
