@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,36 +43,62 @@ public class ItemNotaServiceImpl implements ItemNotaService {
         this.cabecalhoNotaRepository = cabecalhoNotaRepository;
     }
 
+//    @Override   
+//    @Transactional
+//    public ItemNotaDto salvar(ItemNotaDto dto) {
+//        ItemNota itemNota = DtoUtils.converteParaEntidade(dto);
+//        CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(itemNota.getCabecalhoNota());
+//        Produto produtoSalvo = salvarOuBuscarProduto(itemNota.getProduto());
+//        BigDecimal quantidade = itemNota.getQuantidade();
+//        produtoSalvo.setQuantidadeEstoque(quantidade);
+//        itemNota.setValorTotal(calcularValorTotal(itemNota));
+//        produtoSalvo.setCustoTotal(itemNota.getValorTotal());
+//        BigDecimal custoMedio = CustoMedioServiceImpl.calcularCustoMedio(itemNota.getValorTotal(), quantidade);
+//        produtoSalvo.setCustoMedio(custoMedio);
+//        itemNota.setCabecalhoNota(cabecalhoSalvo);
+//        
+//        itemNota.setProduto(produtoSalvo);
+//        atualizarEstoque(itemNota);
+//        adicionarValorTotalCabecalho(itemNota);
+//        ItemNota entidadeSalva = repository.save(itemNota);
+//        return DtoUtils.converteParaDto(entidadeSalva);
+//    }
+    
+    @Override   
     @Transactional
     public ItemNotaDto salvar(ItemNotaDto dto) {
-        ItemNota entidade = DtoUtils.converteParaEntidade(dto);
-        CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(entidade.getCabecalhoNota());
-        BigDecimal valorTotal = calcularValorTotal(entidade);
-        Produto produtoSalvo = salvarOuBuscarProduto(entidade.getProduto());
-        BigDecimal quandidadeProduto = entidade.getQuantidade();
-        produtoSalvo.setQuantidadeEstoque(quandidadeProduto);
-        BigDecimal calculoCustoMedio = CustoMedioServiceImpl.calcularCustoMedio(valorTotal, entidade.getQuantidade());
-
-        produtoSalvo.setCustoMedio(calculoCustoMedio);
-
-        entidade.setCabecalhoNota(cabecalhoSalvo);
-        entidade.setProduto(produtoSalvo);
-        atualizarEstoque(entidade);
-        adicionarValorTotalCabecalho(entidade);
-        entidade = repository.save(entidade);
-
-        return DtoUtils.converteParaDto(entidade);
+        ItemNota itemNota = DtoUtils.converteParaEntidade(dto);
+        CabecalhoNota cabecalhoSalvo = salvarOuBuscarCabecalho(itemNota.getCabecalhoNota());
+        Produto produtoSalvo = salvarOuBuscarProduto(itemNota.getProduto());
+        BigDecimal quantidade = itemNota.getQuantidade();
+        produtoSalvo.setQuantidadeEstoque(quantidade);
+        itemNota.setValorTotal(calcularValorTotal(itemNota));
+        produtoSalvo.setCustoTotal(itemNota.getValorTotal());
+        BigDecimal custoMedio = CustoMedioServiceImpl.calcularCustoMedio(produtoSalvo.getCustoTotal(), quantidade);
+        produtoSalvo.setCustoMedio(custoMedio);
+        itemNota.setCabecalhoNota(cabecalhoSalvo);
+        
+        itemNota.setProduto(produtoSalvo);
+        atualizarEstoque(itemNota);
+        adicionarValorTotalCabecalho(itemNota);
+        calcularValorTotalProduto(itemNota); // Adicionando o cálculo do custo médio do produto
+        ItemNota entidadeSalva = repository.save(itemNota);
+        return DtoUtils.converteParaDto(entidadeSalva);
     }
 
+
+    @Override
     public List<ItemNotaDto> listarTodos() {
         return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
-
+    
+    @Override
     public ItemNotaDto buscarPorId(Integer id) {
         return repository.findById(id).map(DtoUtils::converteParaDto)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + id));
     }
 
+    @Override
     @Transactional
     public ItemNotaDto atualizar(Integer id, ItemNotaDto notaFiscalItemDto) {
         ItemNota itemNotaExistente = repository.findById(id)
@@ -83,6 +110,7 @@ public class ItemNotaServiceImpl implements ItemNotaService {
         return DtoUtils.converteParaDto(itemNotaAtualizada);
     }
     
+    @Override
     public void deletarPorId(Integer id) {
         repository.findById(id).map(entidade -> {
             repository.deleteById(id);
@@ -93,8 +121,7 @@ public class ItemNotaServiceImpl implements ItemNotaService {
     }
 
     private void atualizarItemNota(ItemNota itemNota, ItemNotaDto notaFiscalItemDto) {
-        CabecalhoNota cabecalhoNota = notaFiscalItemDto.getCabecalhoNota();
-        itemNota.setCabecalhoNota(cabecalhoNota);
+        itemNota.setCabecalhoNota(notaFiscalItemDto.getCabecalhoNota());
         itemNota.setPrecoUnitario(notaFiscalItemDto.getPrecoUnitario());
         itemNota.setProduto(notaFiscalItemDto.getProduto());
         itemNota.setQuantidade(notaFiscalItemDto.getQuantidade());
@@ -118,20 +145,20 @@ public class ItemNotaServiceImpl implements ItemNotaService {
 
     private void atualizarEstoque(ItemNota itemNota) {
         Produto produto = itemNota.getProduto();
-        BigDecimal quantidade = itemNota.getQuantidade();
-        TipoNota notaFiscalTipo = itemNota.getCabecalhoNota().getNotaFiscalTipo();
-        BigDecimal quantidadeProduto = produto.getQuantidadeEstoque();
+        BigDecimal quantidade = itemNota.getProduto().getQuantidadeEstoque();
+        TipoNota tipoNota = itemNota.getCabecalhoNota().getNotaFiscalTipo();
+        BigDecimal quantidadeEstoque = produto.getQuantidadeEstoque();
 
         ValidacaoUtils.validarQuantidadeNaoNegativa(quantidade);
 
-        if (notaFiscalTipo == TipoNota.SAIDA) {
-            ValidacaoUtils.validarQuantidadeEstoqueSuficiente(quantidadeProduto, quantidade);
-            produto.setQuantidadeEstoque(quantidadeProduto.subtract(quantidade));
-        } else if (notaFiscalTipo == TipoNota.ENTRADA) {
-            produto.setQuantidadeEstoque(quantidadeProduto.add(quantidade));
+        if (tipoNota == TipoNota.SAIDA) {
+            ValidacaoUtils.validarQuantidadeEstoqueSuficiente(quantidadeEstoque, quantidade);
+            produto.setQuantidadeEstoque(quantidadeEstoque.subtract(quantidade));
+        } else if (tipoNota == TipoNota.ENTRADA) {
+            produto.setQuantidadeEstoque(quantidade);
         }
     }
-
+    
     private void adicionarValorTotalCabecalho(ItemNota itemNota) {
         CabecalhoNota cabecalhoNota = itemNota.getCabecalhoNota();
         BigDecimal valorTotalCabecalho = cabecalhoNota.getValorTotal();
@@ -140,8 +167,8 @@ public class ItemNotaServiceImpl implements ItemNotaService {
         cabecalhoNota.setValorTotal(valorTotalCabecalho);
     }
 
-    private Produto salvarOuBuscarProduto(Produto produto) {
-        if (produto.getId() != null) {
+    public Produto salvarOuBuscarProduto(Produto produto) {
+        if (produto != null && produto.getId() != null) {
             return produtoRepository.findById(produto.getId()).orElseThrow(
                             () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
         } else {
@@ -149,6 +176,7 @@ public class ItemNotaServiceImpl implements ItemNotaService {
             return DtoUtils.converteParaEntidade(produtoSalvo);
         }
     }
+
 
     private CabecalhoNota salvarOuBuscarCabecalho(CabecalhoNota cabecalhoNota) {
         if (cabecalhoNota.getId() != null) {
@@ -158,5 +186,20 @@ public class ItemNotaServiceImpl implements ItemNotaService {
             return cabecalhoNotaRepository.save(cabecalhoNota);
         }
     }
+    
+    private void calcularValorTotalProduto(ItemNota itemNota) {
+        Produto produto = itemNota.getProduto();
+        BigDecimal quantidadeTotal = produto.getQuantidadeEstoque().add(itemNota.getQuantidade());
+        BigDecimal custoTotalAtualizado = produto.getCustoTotal().add(itemNota.getValorTotal());
+        
+        if (quantidadeTotal.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal custoMedio = custoTotalAtualizado.divide(quantidadeTotal, 2, RoundingMode.HALF_UP);
+            produto.setCustoMedio(custoMedio);
+        } else {
+            // Se a quantidade total for zero, o custo médio também deve ser zero para evitar divisão por zero
+            produto.setCustoMedio(BigDecimal.ZERO);
+        }
+    }
+
 
 }

@@ -30,18 +30,14 @@ public class CabecalhoNotaServiceImpl implements CabecalhoNotaService {
         this.parceiroNegocioRepository = parceiroNegocioRepository;
     }
 
+    @Override
     public CabecalhoNotaDto salvar(CabecalhoNotaDto cabecalhoDto) {
         CabecalhoNota cabecalho = DtoUtils.converteParaEntidade(cabecalhoDto);
-
-        ParceiroNegocio parceiroNegocio = cabecalho.getParceiroNegocio();
-        ParceiroNegocio fabricanteSalvo = salvarOuBuscarFabricante(parceiroNegocio);
+        ParceiroNegocio fabricanteSalvo = salvarOuBuscarFabricante(cabecalho.getParceiroNegocio());
         cabecalho.setParceiroNegocio(fabricanteSalvo);
-
         BigDecimal valorTotal = calcularValorTotal(cabecalho);
         cabecalho.setValorTotal(valorTotal);
-        
         CabecalhoNota entidadeSalva = repository.save(cabecalho);
-
         return DtoUtils.converteParaDto(entidadeSalva);
     }
 
@@ -59,43 +55,26 @@ public class CabecalhoNotaServiceImpl implements CabecalhoNotaService {
         return repository.findAll().stream().map(DtoUtils::converteParaDto).collect(Collectors.toList());
     }
 
+    @Override
     public CabecalhoNotaDto atualizar(Integer id, CabecalhoNotaDto dto) {
         return repository.findById(id).map(cabecalhoExistente -> {
-            // Debugging: Log the current state of the DTO before updating
-            LOG.debug("DTO before update: {}", dto);
-
             cabecalhoExistente.setData(dto.getData());
             cabecalhoExistente.setNotaFiscalTipo(dto.getNotaFiscalTipo());
             cabecalhoExistente.setNumero(dto.getNumero());
 
-            ParceiroNegocio parceiroNegocioExistente = dto.getParceiroNegocio().getId() != null
-                            ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
-                            : null;
-
-            // Debugging: Log the current state of the ParceiroNegocio entity
-            LOG.debug("ParceiroNegocio entity before update: {}", parceiroNegocioExistente);
+            ParceiroNegocio parceiroNegocioExistente = dto.getParceiroNegocio().getId() != null ?
+                    parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null) : null;
 
             if (parceiroNegocioExistente == null) {
-                ParceiroNegocio novoParceiroNegocio = dto.getParceiroNegocio();
-                parceiroNegocioExistente = parceiroNegocioRepository.save(novoParceiroNegocio);
+                parceiroNegocioExistente = parceiroNegocioRepository.save(dto.getParceiroNegocio());
             }
-
-            // Debugging: Log the final state of the ParceiroNegocio entity
-            LOG.debug("ParceiroNegocio entity after update: {}", parceiroNegocioExistente);
 
             cabecalhoExistente.setParceiroNegocio(parceiroNegocioExistente);
 
             CabecalhoNota cabecalhoAtualizado = repository.save(cabecalhoExistente);
 
-            // Debugging: Log the final state of the updated CabecalhoNota
-            // entity
-            LOG.debug("CabecalhoNota entity after update: {}", cabecalhoAtualizado);
-
             return DtoUtils.converteParaDto(cabecalhoAtualizado);
-        }).orElseThrow(() -> {
-            LOG.info("Não foi possível encontrar o cabecalho pelo ID {}", id);
-            return new EntidadeNaoEncontradaException("Cabechalho com o ID " + id + " não encontrado");
-        });
+        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível encontrar o cabeçalho pelo ID: " + id));
     }
 
     public void deletarPorId(Integer id) {

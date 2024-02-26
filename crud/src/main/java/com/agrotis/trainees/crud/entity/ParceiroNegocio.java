@@ -37,7 +37,7 @@ public class ParceiroNegocio {
     @NotBlank(message = "Preencha o campo telefone.")
     private String telefone;
 
-    @OneToMany(mappedBy = "fabricante", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fabricante")
     private List<Produto> produtos;
 
     // Getters e Setters
