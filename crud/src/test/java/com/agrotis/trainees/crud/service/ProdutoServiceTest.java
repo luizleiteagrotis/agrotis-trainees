@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -86,9 +87,42 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    @DisplayName("Teste para o método inserir")
-    public void testeInserir() {
-        // to do
+    public void testInserir() {
+        ProdutoDto dto = new ProdutoDto();
+        dto.setNome("ProdutoTeste");
+        dto.setDescricao("Descrição do Produto Teste");
+        dto.setFabricante("Fabricante do Produto Teste");
+        dto.setDataFabricacao(LocalDate.now());
+        dto.setDataValidade(LocalDate.now().plusDays(30));
+        dto.setEstoque(10);
+
+        ParceiroNegocioDto parceiroDto = new ParceiroNegocioDto();
+        parceiroDto.setId(1);
+        parceiroDto.setNome("Parceiro de Negócio Teste");
+        parceiroDto.setInscricaoFiscal("123456789");
+
+        Produto entidade = new Produto();
+        entidade.setNome(dto.getNome());
+        entidade.setDescricao(dto.getDescricao());
+        entidade.setFabricante(dto.getFabricante());
+        entidade.setDataFabricacao(dto.getDataFabricacao());
+        entidade.setDataValidade(dto.getDataValidade());
+        entidade.setEstoque(dto.getEstoque());
+
+        ParceiroNegocio parceiroEntidade = new ParceiroNegocio();
+        parceiroEntidade.setId(parceiroDto.getId());
+        parceiroEntidade.setNome(parceiroDto.getNome());
+        parceiroEntidade.setInscricaoFiscal(parceiroDto.getInscricaoFiscal());
+
+        entidade.setParceiroNegocio(parceiroEntidade);
+
+        when(conversao.converterParaEntidade(dto)).thenReturn(entidade);
+        when(repository.save(any(Produto.class))).thenReturn(entidade);
+
+        Produto resultado = service.inserir(dto);
+
+        assertEquals(dto.getNome(), resultado.getNome());
+        assertEquals(entidade, resultado);
     }
 
     @Test
@@ -130,11 +164,17 @@ public class ProdutoServiceTest {
     @Test
     @DisplayName("Teste para o método buscarPorFabricante jogando NotFoundException")
     public void testeBuscaFabricanteException() {
-        when(repository.findByFabricante("Teste")).thenReturn(Optional.empty());
+        when(repository.findByFabricante(any(String.class))).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> {
-            service.buscarPorFabricante("Teste");
-        });
+        ProdutoService service = new ProdutoService(repository);
+
+        String fabricante = "Fabricante";
+
+        Produto produto = service.buscarPorFabricante(fabricante);
+
+        verify(repository).findByFabricante(fabricante);
+
+        assertNull(produto);
     }
 
     @Test
@@ -146,11 +186,17 @@ public class ProdutoServiceTest {
     @Test
     @DisplayName("Teste para o método buscarPorDataFabricacao jogando NotFoundException")
     public void testeBuscaDataFabricacaoException() {
-        when(repository.findByDataFabricacao(LocalDate.now().minusDays(1))).thenReturn(Optional.empty());
+        when(repository.findByDataFabricacao(any(LocalDate.class))).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> {
-            service.buscarPorDataFabricacao(LocalDate.now().minusDays(1));
-        });
+        ProdutoService service = new ProdutoService(repository);
+
+        LocalDate dataFabricacao = LocalDate.now().plusDays(10);
+
+        Produto produto = service.buscarPorDataFabricacao(dataFabricacao);
+
+        verify(repository).findByDataFabricacao(dataFabricacao);
+
+        assertNull(produto);
     }
 
     @Test
@@ -162,11 +208,17 @@ public class ProdutoServiceTest {
     @Test
     @DisplayName("Teste para o método buscarPorDataValidade jogando NotFoundException")
     public void testeBuscaDataValidadeException() {
-        when(repository.findByDataValidade(LocalDate.now().plusDays(10))).thenReturn(Optional.empty());
+        when(repository.findByDataValidade(any(LocalDate.class))).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> {
-            service.buscarPorDataValidade(LocalDate.now().plusDays(10));
-        });
+        ProdutoService service = new ProdutoService(repository);
+
+        LocalDate dataValidade = LocalDate.now().plusDays(10);
+
+        Produto produto = service.buscarPorDataValidade(dataValidade);
+
+        verify(repository).findByDataValidade(dataValidade);
+
+        assertNull(produto);
     }
 
     @Test

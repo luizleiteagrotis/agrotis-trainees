@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -81,9 +79,13 @@ public class ProdutoService {
         LOG.info("Produto deletado com sucesso");
     }
 
-    public Produto inserir(@Valid ProdutoDto dto) {
+    public Produto inserir(ProdutoDto dto) {
         Produto entidade = conversao.converterParaEntidade(dto);
-        return repository.save(entidade);
+        Produto produtoSalvo = repository.save(entidade);
+        if (produtoSalvo == null) {
+            throw new RuntimeException("Falha ao salvar o produto");
+        }
+        return produtoSalvo;
     }
 
     public ProdutoDto atualizar(ProdutoDto dto) {
