@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.exception.ProdutoExcecao;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
 @RequestMapping("produtos")
@@ -28,7 +29,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody ProdutoDto produtoDto) {
+    public ResponseEntity<?> salvar(@RequestBody ProdutoDto produtoDto) throws ProdutoExcecao {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(produtoDto));
     }
 
@@ -50,18 +51,18 @@ public class ProdutoController {
 
     @GetMapping("/data-fabricacao/{dataFabricacao}")
     public ResponseEntity<?> buscarPorDataFabricacao(
-                    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFabricacao) {
+                    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFabricacao) throws ProdutoExcecao {
         return ResponseEntity.ok().body(service.buscarPorDataFabricacao(dataFabricacao));
     }
 
     @GetMapping("/data-validade/{dataValidade}")
     public ResponseEntity<?> buscarPorDataValidade(
-                    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataValidade) {
+                    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataValidade) throws ProdutoExcecao {
         return ResponseEntity.ok().body(service.buscarPorDataValidade(dataValidade));
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<?> buscarPorNome(@PathVariable String nome) {
+    public ResponseEntity<?> buscarPorNome(@PathVariable String nome) throws ProdutoExcecao {
         return ResponseEntity.ok().body(service.buscarPorNome(nome));
     }
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import com.agrotis.trainees.crud.convert.ProdutoConversor;
@@ -20,31 +21,32 @@ public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
     private final ProdutoRepository repository;
     private final ProdutoConversor produtoConversor;
+    private final Validador validador;
 
-    public ProdutoService(ProdutoRepository repository, ProdutoConversor produtoConversor) {
+    public ProdutoService(ProdutoRepository repository, ProdutoConversor produtoConversor, Validador validador) {
         super();
         this.repository = repository;
         this.produtoConversor = produtoConversor;
+        this.validador = validador;
 
     }
 
-    public ProdutoDto salvar(ProdutoDto entidadeDto) {
+    public ProdutoDto salvar(ProdutoDto entidadeDto) throws ProdutoExcecao {
         try {
             Produto produtoConvertido = produtoConversor.converter(entidadeDto);
-            if (Validador.existeParceiroPorId(produtoConvertido.getFabricante().getId())) {
-                if (produtoConvertido.getFabricante() == null) {
-                    throw new ProdutoExcecao("Falha ao salvar no banco: É obrigatorio informar um parceiro de negocio.");
-                }
+            if (validador.existeParceiroPorId(produtoConvertido.getFabricante().getId())) {
                 produtoConvertido.setCustoMedio(new BigDecimal(0));
                 produtoConvertido.setEstoque(new BigDecimal(0));
                 validar(produtoConvertido);
                 produtoConvertido = repository.save(produtoConvertido);
                 return produtoConversor.converter(produtoConvertido);
+            } else {
+                throw new ProdutoExcecao("Falha ao salvar no banco: É obrigatorio informar um parceiro de negocio.");
             }
-            return null;
+
         } catch (ProdutoExcecao pe) {
             LOG.error(pe.getMessage());
-            return null;
+            throw pe;
         }
     }
 
@@ -56,28 +58,64 @@ public class ProdutoService {
         return produtoConversor.converter(produto);
     }
 
-    // public List<ProdutoDto> buscarPorFornecedor(ParceiroNegocio parceiro) {
-    // List<Produto> produtos = repository.findByFabricante(parceiro);
-    // return converter(produtos);
-    // }
+    public List<ProdutoDto> buscarPorDataFabricacao(LocalDate data) throws ProdutoExcecao {
+        try {
+            if (data == null) {
+                throw new ProdutoExcecao("Falha ao trazer dados: É obrigatorio informar uma data.");
+            }
 
-    public List<ProdutoDto> buscarPorDataFabricacao(LocalDate data) {
-        List<Produto> produtos = repository.findByDataFabricacao(data);
-        return produtoConversor.converter(produtos);
+            List<Produto> produtos = repository.findByDataFabricacao(data);
+            if (produtos.isEmpty()) {
+                LOG.info("Não possui nenhum produto cadastrado com esta Data de Fabricacao.");
+                return Collections.emptyList();
+            }
+            return produtoConversor.converter(produtos);
+        } catch (ProdutoExcecao pe) {
+            LOG.error(pe.getMessage());
+            throw pe;
+        }
     }
 
-    public List<ProdutoDto> buscarPorDataValidade(LocalDate data) {
-        List<Produto> produtos = repository.findByDataValidade(data);
-        return produtoConversor.converter(produtos);
+    public List<ProdutoDto> buscarPorDataValidade(LocalDate data) throws ProdutoExcecao {
+        try {
+            if (data == null) {
+                throw new ProdutoExcecao("Falha ao trazer dados: É obrigatorio informar uma data.");
+            }
+            List<Produto> produtos = repository.findByDataValidade(data);
+            if (produtos.isEmpty()) {
+                LOG.info("Não possui nenhum produto cadastrado com esta Data de Validade.");
+                return Collections.emptyList();
+            }
+            return produtoConversor.converter(produtos);
+        } catch (ProdutoExcecao pe) {
+            LOG.error(pe.getMessage());
+            throw pe;
+        }
     }
 
-    public List<ProdutoDto> buscarPorNome(String nome) {
-        List<Produto> produtos = repository.findByNome(nome);
-        return produtoConversor.converter(produtos);
+    public List<ProdutoDto> buscarPorNome(String nome) throws ProdutoExcecao {
+        try {
+            if (nome == null || nome.isBlank()) {
+                throw new ProdutoExcecao("Falha ao trazer dados: É obrigatorio informar nome.");
+            }
+            List<Produto> produtos = repository.findByNome(nome);
+            if (produtos.isEmpty()) {
+                LOG.info("Não possui nenhum produto cadastrado com este nome.");
+                return Collections.emptyList();
+            }
+            return produtoConversor.converter(produtos);
+        } catch (ProdutoExcecao pe) {
+            LOG.error(pe.getMessage());
+            throw pe;
+        }
     }
 
     public List<ProdutoDto> listarTodos() {
         List<Produto> produtos = repository.findAll();
+        if (produtos.isEmpty()) {
+            LOG.info("Não possui nenhum produto cadastrado.");
+            return Collections.emptyList();
+        }
         return produtoConversor.converter(produtos);
     }
 
@@ -112,7 +150,7 @@ public class ProdutoService {
     }
 
     public void deletarPorId(int id) {
-        if (this.buscarPorId(id) != null) {
+        if (validador.existeProdutoPorId(id)) {
             repository.deleteById(id);
             LOG.info("Deletado com sucesso");
         } else {
@@ -131,6 +169,10 @@ public class ProdutoService {
         }
         if (produto.getDataValidade() == null) {
             throw new ProdutoExcecao("Falha ao salvar no banco: Por favor insira uma data de validade válida");
+        }
+
+        if (produto.getDataFabricacao() == null) {
+            throw new ProdutoExcecao("Falha ao salvar no banco: Por favor insira uma data de fabricação válida");
         }
 
         if (produto.getDataValidade().isBefore(produto.getDataFabricacao())) {

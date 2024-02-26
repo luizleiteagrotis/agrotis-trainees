@@ -9,33 +9,33 @@ import com.agrotis.trainees.crud.service.ProdutoService;
 
 @Component
 public class Validador {
-    private static ParceiroNegocioService parceiroNegocioService;
-    private static NotaFiscalService notaFiscalService;
-    private static ProdutoService produtoService;
-    private static ItemNotaFiscalService itemNotaFiscalService;
+    private ParceiroNegocioService parceiroNegocioService;
+    private NotaFiscalService notaFiscalService;
+    private ProdutoService produtoService;
+    private ItemNotaFiscalService itemNotaFiscalService;
 
     Validador(ParceiroNegocioService parceiroNegocioService, NotaFiscalService notaFiscalService, ProdutoService produtoService,
                     ItemNotaFiscalService itemNotaFiscalService) {
         super();
-        Validador.parceiroNegocioService = parceiroNegocioService;
-        Validador.notaFiscalService = notaFiscalService;
-        Validador.produtoService = produtoService;
-        Validador.itemNotaFiscalService = itemNotaFiscalService;
+        this.parceiroNegocioService = parceiroNegocioService;
+        this.notaFiscalService = notaFiscalService;
+        this.produtoService = produtoService;
+        this.itemNotaFiscalService = itemNotaFiscalService;
     }
 
-    public static boolean existeParceiroPorId(int id) {
+    public boolean existeParceiroPorId(int id) {
         return parceiroNegocioService.buscarPorId(id) != null;
     }
 
-    public static boolean existeNotaFiscalPorId(int id) {
+    public boolean existeNotaFiscalPorId(int id) {
         return notaFiscalService.buscarPorId(id) != null;
     }
 
-    public static boolean existeProdutoPorId(int id) {
+    public boolean existeProdutoPorId(int id) {
         return produtoService.buscarPorId(id) != null;
     }
 
-    public static boolean existeItemNotaFiscalPorId(int id) {
+    public boolean existeItemNotaFiscalPorId(int id) {
         return itemNotaFiscalService.buscarPorId(id) != null;
     }
 

@@ -24,11 +24,14 @@ public class NotaFiscalService {
     private static final Logger LOG = LoggerFactory.getLogger(NotaFiscalService.class);
     private final NotaFiscalRepository repository;
     private final NotaFiscalConversor notaFiscalConversor;
+    private final Validador validador;
 
-    public NotaFiscalService(NotaFiscalRepository notaFiscalRepository, NotaFiscalConversor notaFiscalConversor) {
+    public NotaFiscalService(NotaFiscalRepository notaFiscalRepository, NotaFiscalConversor notaFiscalConversor,
+                    Validador validador) {
         super();
         this.repository = notaFiscalRepository;
         this.notaFiscalConversor = notaFiscalConversor;
+        this.validador = validador;
     }
 
     public NotaFiscalDto salvar(NotaFiscalDto notaFiscal) {
@@ -146,7 +149,7 @@ public class NotaFiscalService {
     }
 
     private void validar(NotaFiscal notaFiscal) throws NotaFiscalExcecao {
-        if (notaFiscal.getParceiroNegocio() == null || !Validador.existeParceiroPorId(notaFiscal.getParceiroNegocio().getId())) {
+        if (notaFiscal.getParceiroNegocio() == null || !validador.existeParceiroPorId(notaFiscal.getParceiroNegocio().getId())) {
             throw new NotaFiscalExcecao("Falha ao salvar no banco: Informe um parceiro válido.");
         }
 
