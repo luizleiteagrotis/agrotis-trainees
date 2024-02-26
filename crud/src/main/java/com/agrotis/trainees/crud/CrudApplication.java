@@ -136,7 +136,7 @@ public class CrudApplication implements CommandLineRunner {
             // produtoBuscaID.setDescricao("Outros Insumos - BIG BAG");
             // produtoBuscaID.setFabricante(parceirosSalvos.get(3));
             // produtoService.atualizar(produtoBuscaID.getId());
-            // LOG.info("Registro do parceiro {} atualizado.", produtoBuscaID);
+            // LOG.info("Registro do produto {} atualizado.", produtoBuscaID);
 
             // produtoService.deletarPorId(produtoBuscaID.getId());
             // LOG.info("Registro do parceiro {} deletado.", produtoBuscaID);
@@ -173,7 +173,11 @@ public class CrudApplication implements CommandLineRunner {
             List<CabecalhoNotaFiscal> listNotasBuscaParceiro = cabecalhoNotaFiscalService.buscarPorParceiro(notasFiscaisSalvas.get(3).getParceiro());
             LOG.info("{} notas fiscais encontradas para o parceiro {}.",listNotasBuscaParceiro.size(),notasFiscaisSalvas.get(3).getParceiro());
             
+            notaFiscalBuscaID.setTipoNota("SAIDA");
+            notaFiscalBuscaID.setNumero(2);
             
+            notaFiscalBuscaID = cabecalhoNotaFiscalService.atualizar(notaFiscalBuscaID.getId());
+            LOG.info("Registro do parceiro {} atualizado.", notaFiscalBuscaID);
         }
 
     }

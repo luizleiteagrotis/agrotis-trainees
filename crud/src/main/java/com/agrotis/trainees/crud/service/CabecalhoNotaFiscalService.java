@@ -57,5 +57,10 @@ public class CabecalhoNotaFiscalService {
     		return null;
     	});
     }
+    
+    public CabecalhoNotaFiscal atualizar(Integer id) {
+    	CabecalhoNotaFiscal nota = buscarPorId(id);
+    	return repository.save(nota);
+    }
 
 }
