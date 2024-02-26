@@ -62,5 +62,9 @@ public class CabecalhoNotaFiscalService {
     	CabecalhoNotaFiscal nota = buscarPorId(id);
     	return repository.save(nota);
     }
+    
+    public void deletarPorId(Integer id) {
+    	repository.deleteById(id);
+    }
 
 }

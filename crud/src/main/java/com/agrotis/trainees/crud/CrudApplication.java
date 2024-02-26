@@ -178,7 +178,9 @@ public class CrudApplication implements CommandLineRunner {
             
             notaFiscalBuscaID = cabecalhoNotaFiscalService.atualizar(notaFiscalBuscaID.getId());
             LOG.info("Registro do parceiro {} atualizado.", notaFiscalBuscaID);
+            
+            cabecalhoNotaFiscalService.deletarPorId(notaFiscalBuscaID.getId());
+            LOG.info("Registro do parceiro {} removido.", notaFiscalBuscaID);
         }
-
     }
 }
