@@ -27,7 +27,7 @@ public class ItemNotaFiscal {
 
     @NotNull(message = "Obrigatorio inserir a quantidade!")
     @Column(name = "quantidade")
-    private Integer quantidade;
+    private BigDecimal quantidade;
 
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
@@ -54,23 +54,24 @@ public class ItemNotaFiscal {
     }
 
     @NotNull(message = "Obrigatorio inserir a quantidade do produto")
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
+
     public BigDecimal getValorTotal() {
-        return valorTotal;
-    }
+		return valorTotal;
+	}
 
-    public void setValorTotal(BigDecimal valorTotal) {
-        this.valorTotal = valorTotal;
-    }
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
+	}
 
-    public NotaFiscal getNotaFiscal() {
+	public NotaFiscal getNotaFiscal() {
         return notaFiscal;
     }
 

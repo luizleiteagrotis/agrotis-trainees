@@ -100,37 +100,40 @@ public class ItemNotaFiscalService {
     }
 
     public void calcularValorTotal(ItemNotaFiscal itemNotaFiscal) {
-        Integer quantidadeNotaFiscal = itemNotaFiscal.getQuantidade();
+        BigDecimal quantidadeNotaFiscal = itemNotaFiscal.getQuantidade(); 
         BigDecimal precoUnitarioItemNotaFiscal = itemNotaFiscal.getPrecoUnitario();
+        
         if (quantidadeNotaFiscal != null && precoUnitarioItemNotaFiscal != null) {
-            BigDecimal valorTotal = BigDecimal.valueOf(quantidadeNotaFiscal).multiply(precoUnitarioItemNotaFiscal);
+            BigDecimal valorTotal = quantidadeNotaFiscal.multiply(precoUnitarioItemNotaFiscal);
+            
             itemNotaFiscal.setValorTotal(valorTotal);
         }
-
     }
 
     public ProdutoDto atualizarEstoque(ItemNotaFiscal itemNotaFiscal) {
 
         Produto produto = itemNotaFiscal.getProduto();
-        Integer quantidade = itemNotaFiscal.getQuantidade();
+        BigDecimal quantidade = itemNotaFiscal.getQuantidade();
 
         com.agrotis.trainees.crud.entity.enums.NotaFiscalTipo notaFiscalTipo = itemNotaFiscal.getNotaFiscal().getTipo();
-        Integer estoque = itemNotaFiscal.getProduto().getEstoque();
+        BigDecimal estoque = itemNotaFiscal.getProduto().getEstoque();
+
         if (notaFiscalTipo == NotaFiscalTipo.ENTRADA) {
-            produto.setEstoque(estoque + quantidade);
+            produto.setEstoque(estoque.add(quantidade)); // Add directly
             System.out.println("Nota Fiscal TIPO Entrada");
         } else {
-            if (estoque - quantidade >= 0) {
-                produto.setEstoque(estoque - quantidade);
+            if (estoque.subtract(quantidade).compareTo(BigDecimal.ZERO) >= 0) {
+                produto.setEstoque(estoque.subtract(quantidade)); // Subtract directly
                 System.out.println("Nota Fiscal TIPO Saida");
             } else {
-                throw new IllegalArgumentException("Nao e possivel remover mais itens que o disponivel em estoque.");
+                throw new IllegalArgumentException("Não é possível remover mais itens do que o disponível em estoque.");
             }
         }
         System.out.println(produto.getEstoque());
         return produtoService.salvar(produtoService.converteParaDto(produto));
-
     }
+
+
 
     private void adicionarValorTotalCabecalho(ItemNotaFiscal itemNota) {
         NotaFiscal cabecalhoNota = itemNota.getNotaFiscal();

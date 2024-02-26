@@ -19,7 +19,7 @@ public class ProdutoDto {
 
     private LocalDate dataValidade;
 
-    private int estoque;
+    private BigDecimal estoque;
 
     private BigDecimal custoTotal;
 
@@ -73,15 +73,16 @@ public class ProdutoDto {
         this.dataValidade = dataValidade;
     }
 
-    public int getEstoque() {
-        return estoque;
-    }
+  
+    public BigDecimal getEstoque() {
+		return estoque;
+	}
 
-    public void setEstoque(int estoque) {
-        this.estoque = estoque;
-    }
+	public void setEstoque(BigDecimal estoque) {
+		this.estoque = estoque;
+	}
 
-    public BigDecimal getCustoTotal() {
+	public BigDecimal getCustoTotal() {
         return custoTotal;
     }
 
