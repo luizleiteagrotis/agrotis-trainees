@@ -6,7 +6,7 @@ import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
 
 @Component
-public class ProdutoConversao {
+public class ProdutoConversaoService {
 
     public ProdutoDto converterParaDto(Produto entidade) {
         ProdutoDto dto = new ProdutoDto();

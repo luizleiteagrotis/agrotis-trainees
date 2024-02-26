@@ -36,7 +36,7 @@ public class ProdutoServiceTest {
     private ProdutoRepository repository;
 
     @Mock
-    private ProdutoConversao conversao;
+    private ProdutoConversaoService conversao;
 
     @InjectMocks
     private ProdutoService service;
@@ -376,7 +376,6 @@ public class ProdutoServiceTest {
             assertEquals(esperados.get(i).getDescricao(), resultado.get(i).getDescricao());
         }
 
-        // adicionando comentário teste para envio github
     }
 
 }

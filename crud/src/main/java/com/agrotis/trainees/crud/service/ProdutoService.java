@@ -20,7 +20,7 @@ public class ProdutoService {
     private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
 
     private ProdutoRepository repository;
-    private ProdutoConversao conversao;
+    private ProdutoConversaoService conversao;
 
     public ProdutoService(ProdutoRepository repository) {
         super();
