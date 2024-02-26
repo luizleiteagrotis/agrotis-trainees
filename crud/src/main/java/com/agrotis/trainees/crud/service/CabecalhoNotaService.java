@@ -2,8 +2,11 @@ package com.agrotis.trainees.crud.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
 
+@Service
 public interface CabecalhoNotaService {
     CabecalhoNotaDto salvar(CabecalhoNotaDto cabecalhoDto);
     CabecalhoNotaDto buscarPorId(Integer id);

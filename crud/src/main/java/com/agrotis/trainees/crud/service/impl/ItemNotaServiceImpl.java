@@ -19,12 +19,13 @@ import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.service.ItemNotaService;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 import com.agrotis.trainees.crud.utils.DtoUtils;
 import com.agrotis.trainees.crud.utils.ValidacaoUtils;
 
 @Service
-public class ItemNotaServiceImpl {
+public class ItemNotaServiceImpl implements ItemNotaService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ItemNotaServiceImpl.class);
 

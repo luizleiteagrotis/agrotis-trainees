@@ -56,7 +56,7 @@ public class ProdutoServiceImpl implements ProdutoService{
     }
 
     public void deletarPorId(Integer id) {
-        Produto produto = produtoRepository.findById(id)
+        produtoRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + id + " não encontrado"));
         produtoRepository.deleteById(id);
         LOG.info("Deletado com sucesso");
