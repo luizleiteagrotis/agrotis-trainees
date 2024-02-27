@@ -1,17 +1,15 @@
 package com.agrotis.trainees.crud.service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
+import com.agrotis.trainees.crud.service.exceptions.CampoEmptyOrNullException;
 import com.agrotis.trainees.crud.service.exceptions.EntidadeNaoEncontradaException;
 
 @Service
@@ -29,6 +27,17 @@ public class ProdutoService {
     }
 
     public ProdutoDto salvar(ProdutoDto produto) {
+    	if (produto.getId() == null) {
+            throw new CampoEmptyOrNullException("ID do produto não pode ser nulo.");
+        }
+        if (produto.getNome() == null || produto.getNome().isEmpty()) {
+            throw new CampoEmptyOrNullException("Nome do produto não pode ser nulo ou vazio.");
+        }
+        if (produto.getFabricante() == null || produto.getFabricante().getId() == null) {
+            throw new CampoEmptyOrNullException("Fabricante do produto não pode ser nulo.");
+        }
+        
+    	
         Produto entidade = converteParaEntidade(produto);
         ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
         entidade.setFabricante(fabricanteSalvo);
@@ -44,12 +53,25 @@ public class ProdutoService {
 
     }
 
+//    public void deletarPorId(Integer id) {
+//        repository.findById(id).map(produto -> {
+//            repository.deleteById(id);
+//            LOG.info("Produto Deletado com sucesso");
+//            return produto;
+//        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado pelo id"));
+//    }
+    
     public void deletarPorId(Integer id) {
-        repository.findById(id).map(produto -> {
-            repository.deleteById(id);
-            LOG.info("Produto Deletado com sucesso");
-            return produto;
-        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado pelo id"));
+        repository.findById(id).ifPresentOrElse(
+            produto -> {
+                repository.deleteById(id);
+                LOG.info("Produto Deletado com sucesso");
+            },
+            () -> {
+                LOG.info("Produto com o ID {} não foi encontrado pelo id", id);
+                throw new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado pelo id");
+            }
+        );
     }
 
     public List<ProdutoDto> listarTodos() {
@@ -106,9 +128,7 @@ public class ProdutoService {
     }
 
     public static Produto converteParaEntidade(ProdutoDto dto) {
-    	  if (dto == null) {
-              throw new IllegalArgumentException("O objeto ProdutoDto não pode ser nulo.");
-          }
+    	  
     	  
         Produto entidade = new Produto();
         entidade.setId(dto.getId());
