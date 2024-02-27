@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
+import com.agrotis.trainees.crud.exception.NotaFiscalExcecao;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 
 @RequestMapping("notas-fiscais")
@@ -29,12 +30,12 @@ public class NotaFiscalController {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody NotaFiscalDto notaFiscalDto) {
+    public ResponseEntity<?> salvar(@RequestBody NotaFiscalDto notaFiscalDto) throws NotaFiscalExcecao {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(notaFiscalDto));
     }
 
     @GetMapping
-    public ResponseEntity<?> listarTodos() {
+    public ResponseEntity<?> listarTodos() throws NotaFiscalExcecao {
         return ResponseEntity.ok().body(service.listarTodos());
     }
 
@@ -44,17 +45,18 @@ public class NotaFiscalController {
     }
 
     @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<?> buscarPorTipoNotaFiscal(@PathVariable String tipo) {
+    public ResponseEntity<?> buscarPorTipoNotaFiscal(@PathVariable String tipo) throws NotaFiscalExcecao {
         return ResponseEntity.ok().body(service.buscarPorTipoNotaFiscal(tipo));
     }
 
     @GetMapping("/numero/{numero}")
-    public ResponseEntity<?> buscarPorNumero(@PathVariable int numero) {
+    public ResponseEntity<?> buscarPorNumero(@PathVariable int numero) throws NotaFiscalExcecao {
         return ResponseEntity.ok().body(service.buscarPorNumero(numero));
     }
 
     @GetMapping("/data/{data}")
-    public ResponseEntity<?> buscarPorData(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+    public ResponseEntity<?> buscarPorData(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data)
+                    throws NotaFiscalExcecao {
         return ResponseEntity.ok().body(service.buscarPorData(data));
     }
 
