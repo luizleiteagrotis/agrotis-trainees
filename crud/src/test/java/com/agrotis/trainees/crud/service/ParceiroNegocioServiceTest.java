@@ -1,6 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,7 +12,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +20,9 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
@@ -351,8 +349,13 @@ public class ParceiroNegocioServiceTest {
         dto.setEndereco("Endereço");
         dto.setTelefone("1234ABCDE5678"); // Telefone com caracteres não numéricos
 
-        ParceiroNegocioService service = new ParceiroNegocioService(repository); // Instancie o serviço aqui
+        // Mockando o comportamento do repositório para retornar um objeto ParceiroNegocio válido
+        ParceiroNegocio parceiroNegocioSalvo = criarParceiroNegocio();
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocioSalvo);
 
+        ParceiroNegocioService service = new ParceiroNegocioService(repository);
+
+        // Espera-se que uma exceção EntidadeNaoEncontradaException seja lançada
         assertThrows(EntidadeNaoEncontradaException.class, () -> service.salvar(dto));
     }
 
@@ -362,16 +365,42 @@ public class ParceiroNegocioServiceTest {
         // Teste com telefone inválido (menos de 11 dígitos)
         assertFalse(ParceiroNegocioService.seTelefoneForValido("1234567890"));
     }
-
+    
     @Test
-    public void testTelefoneVazio() {
-        // Teste com telefone vazio
-        assertFalse(ParceiroNegocioService.seTelefoneForValido(""));
+    public void inserirParceiroNegocioComTelefoneVazio() {
+        // Criando um DTO com telefone vazio
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setNome(NOME);
+        dto.setInscricaoFiscal(INSCRICAO_FISCAL);
+        dto.setEndereco(ENDERECO);
+        dto.setTelefone(""); // Telefone vazio
+
+        // Chamando o método salvar do serviço e esperando uma exceção
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.salvar(dto));
     }
     
+    
+     @Test
+     public void inserirParceiroNegocioComTelefoneValido() {
+        // Criando um DTO com telefone válido
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setTelefone("41996483268"); // Telefone válido, contém 11 dígitos
 
+        // Mockando o comportamento do repositório e chamando o método salvar do serviço
+        ParceiroNegocio parceiroNegocioSalvo = criarParceiroNegocio();
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocioSalvo);
+        ParceiroNegocioDto result = service.salvar(dto);
 
+        // Verificando se o método save do repositório foi chamado uma vez
+        verify(repository, times(1)).save(any(ParceiroNegocio.class));
+
+        // Verificando se o objeto retornado pelo serviço não é nulo
+        assertNotNull(result);
+    }
 }
+
+
+
     
 
     

@@ -84,9 +84,6 @@ public class ParceiroNegocioService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade nao encontrada"));
     }
     
-
-
-    
     
 
     public List<ParceiroNegocioDto> listarTodos() {

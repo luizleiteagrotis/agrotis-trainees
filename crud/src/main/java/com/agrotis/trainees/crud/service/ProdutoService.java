@@ -90,6 +90,8 @@ public class ProdutoService {
             return new EntidadeNaoEncontradaException("Produto com o ID " + id + " não encontrado");
         });
     }
+    
+   
 
     public static ProdutoDto converteParaDto(Produto entidade) {
         ProdutoDto dto = new ProdutoDto();
@@ -104,6 +106,10 @@ public class ProdutoService {
     }
 
     public static Produto converteParaEntidade(ProdutoDto dto) {
+    	  if (dto == null) {
+              throw new IllegalArgumentException("O objeto ProdutoDto não pode ser nulo.");
+          }
+    	  
         Produto entidade = new Produto();
         entidade.setId(dto.getId());
         entidade.setDescricao(dto.getDescricao());

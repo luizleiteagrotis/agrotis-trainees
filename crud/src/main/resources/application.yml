@@ -28,5 +28,9 @@ spring:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     url: jdbc:sqlserver://localhost:1433;databaseName=crud
     username: sa
-    password: Idkmysenha21.
+    password: W1ll1@nS1lv@.
+
+  jpa:
+    hibernate:
+      ddl-auto: update  
 
