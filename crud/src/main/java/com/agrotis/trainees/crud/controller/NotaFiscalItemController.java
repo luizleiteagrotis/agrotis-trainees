@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
+import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.service.EstoqueService;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 
@@ -32,7 +33,7 @@ public class NotaFiscalItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscalItemDto item) {
+    public ResponseEntity<?> inserir(@RequestBody NotaFiscalItemDto item) throws DescricaoExisteException {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(item));
     }
 
@@ -47,13 +48,13 @@ public class NotaFiscalItemController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItemDto item) {
+    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItemDto item) throws DescricaoExisteException {
         return ResponseEntity.ok().body(service.atualizar(item));
     }
 
     @DeleteMapping
     @RequestMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+    public ResponseEntity<?> deletar(@PathVariable Integer id) throws DescricaoExisteException {
         estoqueService.deletarEstoque(id);
         return ResponseEntity.ok().body(null);
     }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
 @RequestMapping("notas-fiscais/produtos")
@@ -27,7 +28,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody ProdutoDto produto) {
+    public ResponseEntity<?> inserir(@RequestBody ProdutoDto produto) throws DescricaoExisteException {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(produto));
     }
 
@@ -43,7 +44,7 @@ public class ProdutoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody ProdutoDto produto) {
+    public ResponseEntity<?> atualizar(@RequestBody ProdutoDto produto) throws DescricaoExisteException {
         return ResponseEntity.ok().body(service.atualizar(produto));
     }
 

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.Produto;
@@ -31,7 +32,7 @@ public class ProdutoService {
         this.descricaoService = descricaoService;
     }
 
-    public ProdutoDto inserir(ProdutoDto dto) {
+    public ProdutoDto inserir(ProdutoDto dto) throws DescricaoExisteException {
         try {
             Produto entidade = produtoWrapper.converterParaEntidade(dto);
             descricaoService.verificarDescricao(entidade);
@@ -39,11 +40,11 @@ public class ProdutoService {
             return produtoWrapper.converterParaDto(entidade);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
-            return null;
+            throw e;
         }
     }
 
-    public ProdutoDto atualizar(ProdutoDto dto) {
+    public ProdutoDto atualizar(ProdutoDto dto) throws DescricaoExisteException {
         if (dto.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do produto.");
         }
@@ -59,22 +60,22 @@ public class ProdutoService {
             descricaoService.verificarDescricaoEId(produto);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
-            return null;
+            throw e;
         }
         return produtoWrapper.converterParaDto(repository.save(produto));
     }
 
     public Produto buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
+        return repository.findById(id).orElseThrow(() -> {
             LOG.error("Informações não encontradas para o id {}. ", id);
-            return null;
+            return new NoSuchElementException("Informações não encontradas para o id " + id);
         });
     }
 
     public Produto buscarPorDescricao(String descricao) {
-        return repository.findByDescricao(descricao).orElseGet(() -> {
+        return repository.findByDescricao(descricao).orElseThrow(() -> {
             LOG.error("Informações não encontradas para a descrição {}. ", descricao);
-            return null;
+            return new NoSuchElementException("Informações não encontradas para a descrição " + descricao);
         });
     }
 

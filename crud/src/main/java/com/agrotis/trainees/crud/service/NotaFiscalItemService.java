@@ -13,6 +13,7 @@ import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.CrudException;
+import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
 import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
@@ -46,7 +47,7 @@ public class NotaFiscalItemService {
 
     }
 
-    public NotaFiscalItemDto inserir(NotaFiscalItemDto dto) {
+    public NotaFiscalItemDto inserir(NotaFiscalItemDto dto) throws DescricaoExisteException {
         NotaFiscalItem entidade = notaFiscalItemWrapper.converterParaEntidade(dto);
         Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
@@ -65,7 +66,7 @@ public class NotaFiscalItemService {
         return notaFiscalItemWrapper.converterParaDto(entidade);
     }
 
-    public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) {
+    public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) throws DescricaoExisteException {
         NotaFiscalItem entidade = notaFiscalItemWrapper.converterParaEntidade(dto);
 
         if (entidade.getId() == null) {

@@ -7,6 +7,7 @@ import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
 import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
@@ -35,7 +36,8 @@ public class EstoqueService {
         this.notaFiscalItemRepository = notaFiscalItemRepository;
     }
 
-    public NotaFiscalItem atualizarEstoque(NotaFiscalItem entidade, NotaFiscalItem item) throws EstoqueZeradoException {
+    public NotaFiscalItem atualizarEstoque(NotaFiscalItem entidade, NotaFiscalItem item)
+                    throws EstoqueZeradoException, DescricaoExisteException {
         Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
         Produto produto2 = produtoService.buscarPorId(item.getProduto().getId());
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
@@ -80,7 +82,8 @@ public class EstoqueService {
         return entidade;
     }
 
-    public NotaFiscalItem alterarEstoque(NotaFiscalItem item) throws EstoqueZeradoException, ValorDiferenteException {
+    public NotaFiscalItem alterarEstoque(NotaFiscalItem item)
+                    throws EstoqueZeradoException, ValorDiferenteException, DescricaoExisteException {
         NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
@@ -100,7 +103,7 @@ public class EstoqueService {
         return item;
     }
 
-    public void deletarEstoque(Integer id) {
+    public void deletarEstoque(Integer id) throws DescricaoExisteException {
         NotaFiscalItem item = notaFiscalItemRepository.findById(id).orElse(null);
         NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
@@ -112,7 +115,11 @@ public class EstoqueService {
                     throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
                 }
                 produto.setEstoque(produto.getEstoque() - item.getQuantidade());
-                ProdutoDto produto2 = produtoService.atualizar(wrapper.converterParaDto(produto));
+                try {
+                    ProdutoDto produto2 = produtoService.atualizar(wrapper.converterParaDto(produto));
+                } catch (DescricaoExisteException e) {
+                    System.out.println("Erro: " + e.getMessage());
+                }
                 nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
                 NotaFiscalDto nota2 = notaFiscalService.atualizar(notaFiscalWrapper.converterParaDto(nota));
                 notaFiscalItemRepository.deleteById(id);
