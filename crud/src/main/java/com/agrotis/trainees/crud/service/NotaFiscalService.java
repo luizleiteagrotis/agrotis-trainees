@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -43,7 +44,7 @@ public class NotaFiscalService {
 
     public NotaFiscalDto atualizar(NotaFiscalDto dto) {
         if (dto.getId() == null) {
-            throw new CrudException("Obrigatório preencher o id do produto.");
+            throw new CrudException("Obrigatório preencher o id");
         }
 
         NotaFiscal nota = buscarPorId(dto.getId());
@@ -57,16 +58,16 @@ public class NotaFiscalService {
     }
 
     public NotaFiscal buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
+        return repository.findById(id).orElseThrow(() -> {
             LOG.error("Informações não encontradas para o id {}", id);
-            return null;
+            return new NoSuchElementException("Informações não encontradas para o id " + id);
         });
     }
 
     public NotaFiscal buscarPorTipoeNumero(NotaFiscalTipo tipo, Integer numero) {
-        return repository.findByTipoAndNumero(tipo, numero).orElseGet(() -> {
+        return repository.findByTipoAndNumero(tipo, numero).orElseThrow(() -> {
             LOG.error("Informações não encontradas para o id {} e numero de nota {}", tipo, numero);
-            return null;
+            return new NoSuchElementException("Informações não encontradas para o id e numero informados ");
         });
     }
 
