@@ -130,7 +130,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    @DisplayName("Teste para o método buscarPorId jogando RuntimeException")
+    @DisplayName("Teste para o método Inserir jogando RuntimeException")
     public void testeInserirException() {
         ProdutoDto dto = new ProdutoDto();
 
@@ -193,16 +193,16 @@ public class ProdutoServiceTest {
     @Test
     @DisplayName("Teste para o método buscarPorId")
     public void testeBuscarPorId() throws NotFoundException {
-        Produto produto = new Produto();
-        produto.setId(1);
-        produto.setNome("Produto");
+        Produto entidade = new Produto();
+        entidade.setId(1);
+        entidade.setNome("Produto");
 
         ProdutoDto dto = new ProdutoDto();
-        dto.setId(produto.getId());
-        dto.setNome(produto.getNome());
+        dto.setId(entidade.getId());
+        dto.setNome(entidade.getNome());
 
-        when(repository.findById(1)).thenReturn(Optional.of(produto));
-        when(conversao.converterParaDto(produto)).thenReturn(dto);
+        when(repository.findById(1)).thenReturn(Optional.of(entidade));
+        when(conversao.converterParaDto(entidade)).thenReturn(dto);
 
         ProdutoDto resultado = service.buscarPorId(1);
 

@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ParceiroNegocioConversaoService;
 
 public class NotaFiscalDto {
+
+    private ParceiroNegocioConversaoService conversaoParceiro;
 
     private Integer id;
     private NotaFiscalTipo notaFiscalTipo;
@@ -28,7 +30,7 @@ public class NotaFiscalDto {
         super();
         this.id = nota.getId();
         this.notaFiscalTipo = nota.getNotaFiscalTipo();
-        this.parceiroNegocio = ParceiroNegocioService.converterParaDto(nota.getParceiroNegocio());
+        this.parceiroNegocio = conversaoParceiro.converterParaDto(nota.getParceiroNegocio());
         this.numero = nota.getNumero();
         this.data = nota.getData();
         this.itens = nota.getItens();

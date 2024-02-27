@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
-import com.agrotis.trainees.crud.service.NotaFiscalService;
-import com.agrotis.trainees.crud.service.ProdutoService;
+import com.agrotis.trainees.crud.service.NotaFiscalConversaoService;
+import com.agrotis.trainees.crud.service.ProdutoConversaoService;
 
 public class NotaFiscalItemDto {
+
+    private NotaFiscalConversaoService conversaoNota;
+    private ProdutoConversaoService conversaoProduto;
 
     private Integer id;
     private NotaFiscalDto notaFiscal;
@@ -24,8 +27,8 @@ public class NotaFiscalItemDto {
     public NotaFiscalItemDto(NotaFiscalItem item) {
         super();
         this.id = item.getId();
-        this.notaFiscal = NotaFiscalService.converterParaDto(item.getNotaFiscal());
-        this.produto = ProdutoService.converterParaDto(item.getProduto());
+        this.notaFiscal = conversaoNota.converterParaDto(item.getNotaFiscal());
+        this.produto = conversaoProduto.converterParaDto(item.getProduto());
         this.quantidade = item.getQuantidade();
         this.precoUnitario = item.getPrecoUnitario();
         this.valorTotal = item.getValorTotal();

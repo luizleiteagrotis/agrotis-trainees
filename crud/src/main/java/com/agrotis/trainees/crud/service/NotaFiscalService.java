@@ -14,18 +14,18 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
+import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
 @Service
 public class NotaFiscalService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
-
-    private final NotaFiscalRepository repository;
+    private NotaFiscalConversaoService conversao;
+    private NotaFiscalRepository repository;
 
     public NotaFiscalService(NotaFiscalRepository repository) {
         super();
@@ -41,53 +41,65 @@ public class NotaFiscalService {
     }
 
     public NotaFiscalDto salvar(NotaFiscalDto dto) {
-        NotaFiscal entidade = converterParaEntidade(dto);
+        NotaFiscal entidade = conversao.converterParaEntidade(dto);
         NotaFiscal notaFiscalSalva = repository.save(entidade);
         List<NotaFiscalItem> itens = notaFiscalSalva.getItens();
         atualizarNotaFiscal(itens);
-        System.out.println(entidade.getNumero());
         LOG.info("Salva nota fiscal {}", notaFiscalSalva.getNumero());
-        return converterParaDto(notaFiscalSalva);
+        return conversao.converterParaDto(notaFiscalSalva);
     }
 
     public NotaFiscalDto buscarPorId(Integer id) throws NotFoundException {
         NotaFiscal entidade = repository.findById(id).orElseThrow(() -> new NotFoundException());
-        return converterParaDto(entidade);
+        return conversao.converterParaDto(entidade);
     }
 
     // ajustar métodos de busca
 
-    public NotaFiscal buscarPorTipo(NotaFiscalTipo tipo) {
-        return repository.findByTipo(tipo).orElseGet(() -> {
+    public NotaFiscalDto buscarPorTipo(NotaFiscalTipo tipo) throws NotFoundException {
+        NotaFiscal entidade = repository.findByTipo(tipo).orElseThrow(() -> {
             LOG.error("Nota Fiscal não encontrada para o tipo de {}.", tipo);
-            return null;
+            return new NotFoundException(); // não estou conseguindo inserir
+                                            // mensagens quando faço esse tipo
+                                            // de chamada por conta do
+                                            // javassist, que não me deixa
+                                            // importar o
+                                            // NotFountException(String);
         });
+
+        return conversao.converterParaDto(entidade);
     }
 
-    public NotaFiscal buscarPorParceiroNegocio(ParceiroNegocio parceiroNegocio) {
-        return repository.findByParceiroNegocio(parceiroNegocio).orElseGet(() -> {
-            LOG.error("Nota Fiscal não encontrada para o parceiro {}.", parceiroNegocio);
-            return null;
+    public NotaFiscalDto buscarPorParceiroNegocio(ParceiroNegocioDto parceiroNegocioDto) throws NotFoundException {
+        NotaFiscal entidade = repository.findByParceiroNegocio(parceiroNegocioDto).orElseThrow(() -> {
+            LOG.error("Nota Fiscal não encontrada para o parceiro {}.", parceiroNegocioDto);
+            return new NotFoundException();
         });
+
+        return conversao.converterParaDto(entidade);
     }
 
-    public NotaFiscal buscarPorNumero(Integer numero) {
-        return repository.findByNumero(numero).orElseGet(() -> {
+    public NotaFiscalDto buscarPorNumero(Integer numero) throws NotFoundException {
+        NotaFiscal entidade = repository.findByNumero(numero).orElseThrow(() -> {
             LOG.error("Nota Fiscal não encontrada para o número {}.", numero);
-            return null;
+            return new NotFoundException();
         });
+
+        return conversao.converterParaDto(entidade);
     }
 
-    public NotaFiscal buscarPorData(LocalDate data) {
-        return repository.findByData(data).orElseGet(() -> {
+    public NotaFiscalDto buscarPorData(LocalDate data) throws NotFoundException {
+        NotaFiscal entidade = repository.findByData(data).orElseThrow(() -> {
             LOG.error("Nota Fiscal não encontrada para a data de {}.", data);
-            return null;
+            return new NotFoundException();
         });
+
+        return conversao.converterParaDto(entidade);
     }
 
     public List<NotaFiscalDto> listarTodos() {
         List<NotaFiscal> entidades = repository.findAll();
-        return entidades.stream().map(entidade -> converterParaDto(entidade)).collect(Collectors.toList());
+        return entidades.stream().map(entidade -> conversao.converterParaDto(entidade)).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer integer) {
@@ -98,6 +110,8 @@ public class NotaFiscalService {
     @Transactional
     public void atualizarNotaFiscal(List<NotaFiscalItem> itens) {
         if (itens.isEmpty()) {
+            // throw new IllegalArgumentException("A lista de itens não pode
+            // estar vazia");
             // Lista vazia para crrigir erro
             return;
         }
@@ -122,39 +136,13 @@ public class NotaFiscalService {
     }
 
     public NotaFiscal inserir(@Valid NotaFiscalDto dto) {
-        NotaFiscal entidade = converterParaEntidade(dto);
+        NotaFiscal entidade = conversao.converterParaEntidade(dto);
         return repository.save(entidade);
     }
 
     public NotaFiscalDto atualizar(NotaFiscalDto dto) {
-        NotaFiscal entidade = converterParaEntidade(dto);
-        return converterParaDto(repository.save(entidade));
-    }
-
-    public static NotaFiscalDto converterParaDto(NotaFiscal entidade) {
-        NotaFiscalDto dto = new NotaFiscalDto();
-        dto.setId(entidade.getId());
-        dto.setNotaFiscalTipo(entidade.getNotaFiscalTipo());
-        dto.setParceiroNegocio(ParceiroNegocioService.converterParaDto(entidade.getParceiroNegocio()));
-        dto.setNumero(entidade.getNumero());
-        dto.setData(entidade.getData());
-        dto.setItens(entidade.getItens());
-        dto.setValorTotal(entidade.getValorTotal());
-
-        return dto;
-    }
-
-    public static NotaFiscal converterParaEntidade(NotaFiscalDto dto) {
-        NotaFiscal entidade = new NotaFiscal();
-        entidade.setId(dto.getId());
-        entidade.setNotaFiscalTipo(dto.getNotaFiscalTipo());
-        entidade.setParceiroNegocio(ParceiroNegocioService.converterParaEntidade(dto.getParceiroNegocio()));
-        entidade.setNumero(dto.getNumero());
-        entidade.setData(dto.getData());
-        entidade.setItens(dto.getItens());
-        entidade.setValorTotal(dto.getValorTotal());
-
-        return entidade;
+        NotaFiscal entidade = conversao.converterParaEntidade(dto);
+        return conversao.converterParaDto(repository.save(entidade));
     }
 
 }

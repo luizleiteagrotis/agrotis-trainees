@@ -17,9 +17,10 @@ import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 @Service
 public class ParceiroNegocioService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
+    private Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
 
-    private final ParceiroNegocioRepository repository;
+    private ParceiroNegocioRepository repository;
+    private ParceiroNegocioConversaoService conversao;
 
     public ParceiroNegocioService(ParceiroNegocioRepository repository) {
         super();
@@ -27,20 +28,20 @@ public class ParceiroNegocioService {
     }
 
     public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
-        ParceiroNegocio entidade = converterParaEntidade(dto);
+        ParceiroNegocio entidade = conversao.converterParaEntidade(dto);
         repository.save(entidade);
         LOG.info("Salvo Parceiro de Negócio {}", entidade.getNome());
-        return converterParaDto(entidade);
+        return conversao.converterParaDto(entidade);
     }
 
     public ParceiroNegocioDto buscarPorId(Integer id) throws NotFoundException {
         ParceiroNegocio entidade = repository.findById(id).orElseThrow(() -> new NotFoundException());
-        return converterParaDto(entidade);
+        return conversao.converterParaDto(entidade);
     }
 
     public ParceiroNegocioDto buscarPorInscricaoFiscal(String inscricaoFiscal) throws NotFoundException {
         ParceiroNegocio entidade = repository.findByInscricaoFiscal(inscricaoFiscal).orElseThrow(() -> new NotFoundException());
-        return converterParaDto(entidade);
+        return conversao.converterParaDto(entidade);
     }
 
     public void deletarPorId(Integer id) {
@@ -50,39 +51,17 @@ public class ParceiroNegocioService {
 
     public List<ParceiroNegocioDto> listarTodos() {
         List<ParceiroNegocio> entidades = repository.findAll();
-        return entidades.stream().map(entidade -> converterParaDto(entidade)).collect(Collectors.toList());
+        return entidades.stream().map(entidade -> conversao.converterParaDto(entidade)).collect(Collectors.toList());
     }
 
     public ParceiroNegocio inserir(@Valid ParceiroNegocioDto dto) {
-        ParceiroNegocio entidade = converterParaEntidade(dto);
+        ParceiroNegocio entidade = conversao.converterParaEntidade(dto);
         return repository.save(entidade);
     }
 
     public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto) {
-        ParceiroNegocio entidade = converterParaEntidade(dto);
-        return converterParaDto(repository.save(entidade));
-    }
-
-    public static ParceiroNegocioDto converterParaDto(ParceiroNegocio entidade) {
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setId(entidade.getId());
-        dto.setNome(entidade.getNome());
-        dto.setInscricaoFiscal(entidade.getInscricaoFiscal());
-        dto.setEndereco(entidade.getEndereco());
-        dto.setTelefone(entidade.getTelefone());
-
-        return dto;
-    }
-
-    public static ParceiroNegocio converterParaEntidade(ParceiroNegocioDto dto) {
-        ParceiroNegocio entidade = new ParceiroNegocio();
-        entidade.setId(dto.getId());
-        entidade.setNome(dto.getNome());
-        entidade.setInscricaoFiscal(dto.getInscricaoFiscal());
-        entidade.setEndereco(dto.getEndereco());
-        entidade.setTelefone(dto.getTelefone());
-
-        return entidade;
+        ParceiroNegocio entidade = conversao.converterParaEntidade(dto);
+        return conversao.converterParaDto(repository.save(entidade));
     }
 
 }
