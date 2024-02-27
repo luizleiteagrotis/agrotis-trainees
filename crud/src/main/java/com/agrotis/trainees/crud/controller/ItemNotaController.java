@@ -36,20 +36,20 @@ public class ItemNotaController {
 	
 	@PostMapping
 	public ResponseEntity<?> cadastrar(@Valid @RequestBody ItemCadastroDto cadastroDto, UriComponentsBuilder uriBuilder) {
-		ItemRetornoDto retornoDto = itemService.salvar(cadastroDto);
+		ItemRetornoDto retornoDto = itemService.cadastrar(cadastroDto);
 		URI uri = uriBuilder.path("/notas-fiscais/itens/{id}").buildAndExpand(retornoDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ItemRetornoDto> buscarPorId(@PathVariable(name = "id") Long id) {
-		ItemRetornoDto retornoDto = itemService.buscar(id);
+		ItemRetornoDto retornoDto = itemService.buscarPor(id);
 		return ResponseEntity.ok(retornoDto);
 	}
 	
 	@GetMapping
 	public ResponseEntity<Page<ItemRetornoDto>> listarTodos(Pageable pageable) {
-		Page<ItemRetornoDto> itens = itemService.buscarTodos(pageable);
+		Page<ItemRetornoDto> itens = itemService.listarTodos(pageable);
 		return ResponseEntity.ok(itens);
 	}
 	

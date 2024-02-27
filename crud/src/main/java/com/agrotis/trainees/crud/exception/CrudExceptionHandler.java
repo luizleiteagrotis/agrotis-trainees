@@ -5,19 +5,17 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.agrotis.trainees.crud.repository.wrapper.EntityNotFoundException;
 import com.agrotis.trainees.crud.repository.wrapper.JpaRepositoryWrapperException;
 import com.agrotis.trainees.crud.service.cabecalho.CabecalhoNotaServiceException;
-import com.agrotis.trainees.crud.service.item.ItemNotaServiceException;
+import com.agrotis.trainees.crud.service.item.atualizar.ItemAtualizacaoRnException;
+import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRnException;
+import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
 import com.agrotis.trainees.crud.service.produto.ProdutoServiceException;
 
 @ControllerAdvice
@@ -69,19 +67,28 @@ public class CrudExceptionHandler {
 	}
 	
 	@ExceptionHandler(ProdutoServiceException.class)
-	public ResponseEntity<String> handler(ProdutoServiceException exception) {
-		String mensagemErro = exception.getMessage();
-		return ResponseEntity.badRequest().body(mensagemErro);
-	}
-	
-	@ExceptionHandler(ItemNotaServiceException.class)
-	public ResponseEntity<String> handler(ItemNotaServiceException exception) {
+	public ResponseEntity<String> handle(ProdutoServiceException exception) {
 		String mensagemErro = exception.getMessage();
 		return ResponseEntity.badRequest().body(mensagemErro);
 	}
 	
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<?> handler(EntityNotFoundException exception) {
+	public ResponseEntity<?> handle(EntityNotFoundException exception) {
 		return ResponseEntity.notFound().build();
+	}
+	
+	@ExceptionHandler(ItemCadastroRnException.class)
+	public ResponseEntity<String> handle(ItemCadastroRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+
+	@ExceptionHandler(ItemAtualizacaoRnException.class)
+	public ResponseEntity<String> handle(ItemAtualizacaoRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(ItemDelecaoRnException.class)
+	public ResponseEntity<String> handle(ItemDelecaoRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
 }

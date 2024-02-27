@@ -9,12 +9,14 @@ import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.agrotis.trainees.crud.dto.item.ItemAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.item.ItemCadastroDto;
 import com.agrotis.trainees.crud.dto.item.ItemRetornoDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
+import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,19 +24,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ItemMapperImpl implements ItemMapper {
 
 	private ObjectMapper mapper;
-	private Validator validator;
 	private CabecalhoNotaRepository cabecalhoRepository;
 	private ProdutoRepository produtoRepository;
+	private ItemNotaRepository itemRepository;
 	
 	@Autowired
 	public ItemMapperImpl(ObjectMapper mapper,
 			Validator validator,
 			CabecalhoNotaRepository cabecalhoRepository, 
-			ProdutoRepository produtoRepository) {
+			ProdutoRepository produtoRepository,
+			ItemNotaRepository itemRepository) {
 		this.mapper = mapper;
-		this.validator = validator;
 		this.cabecalhoRepository = cabecalhoRepository;
 		this.produtoRepository = produtoRepository;
+		this.itemRepository = itemRepository;
 	}
 
 	@Override
@@ -53,6 +56,19 @@ public class ItemMapperImpl implements ItemMapper {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
 		retornoDto.setIdCabecalho(cabecalho.getId());
 		return retornoDto;
+	}
+	
+	@Override
+	public ItemNota converterParaEntidade(ItemAtualizacaoDto atualizacaoDto) {
+		Long idItem = atualizacaoDto.getId();
+		ItemNota item = itemRepository.buscarPor(idItem);
+		if (atualizacaoDto.getPrecoUnitario() != null) {
+			item.setPrecoUnitario(atualizacaoDto.getPrecoUnitario());
+		}
+		if (atualizacaoDto.getQuantidade() != null) {
+			item.setQuantidade(atualizacaoDto.getQuantidade());
+		}
+		return item;
 	}
 	
 	private Produto buscarProduto(ItemCadastroDto cadastroDto) {
