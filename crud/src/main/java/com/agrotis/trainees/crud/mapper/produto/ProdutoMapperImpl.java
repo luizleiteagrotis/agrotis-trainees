@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.mapper.produto;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,8 @@ public class ProdutoMapperImpl implements ProdutoMapper {
 			produto.setFabricante(fabricante);
 		}
 		produto.setEstoque(0);
+		produto.setCustoTotal(BigDecimal.ZERO);
+		produto.setCustoMedio(BigDecimal.ZERO);
 		return produto;
 	}
 
