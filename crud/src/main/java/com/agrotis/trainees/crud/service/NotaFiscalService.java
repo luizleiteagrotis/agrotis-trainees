@@ -71,6 +71,7 @@ public class NotaFiscalService {
     }
 
     public void deletarPorId(Integer id) {
+        buscarPorId(id);
         repository.deleteById(id);
     }
 }
