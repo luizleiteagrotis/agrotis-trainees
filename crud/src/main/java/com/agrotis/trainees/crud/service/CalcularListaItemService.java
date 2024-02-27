@@ -1,5 +1,7 @@
 package com.agrotis.trainees.crud.service;
 
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,7 @@ import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
+@Service
 public class CalcularListaItemService {
 
     private final NotaFiscalRepository repository;
