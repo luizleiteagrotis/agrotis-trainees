@@ -27,8 +27,8 @@ public class ItemNotaFiscalService {
         this.produtoService = produtoService;
     }
 
-    private double calcularValorTotal(ItemNotaFiscal item) {
-        double valorTotal = item.getQuantidade() * item.getPreco_unitario();
+    private float calcularValorTotal(ItemNotaFiscal item) {
+        float valorTotal = item.getQuantidade() * item.getPreco_unitario();
         return valorTotal;
     }
 
