@@ -3,7 +3,7 @@ package com.agrotis.trainees.crud.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import exception.CrudException;
+import com.agrotis.trainees.crud.exception.CrudException;
 
 public interface CustoMedioService {
 
