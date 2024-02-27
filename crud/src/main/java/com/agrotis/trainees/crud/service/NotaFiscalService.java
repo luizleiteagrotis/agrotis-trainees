@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
@@ -20,9 +17,6 @@ import com.agrotis.trainees.crud.wrapper.NotaFiscalWrapper;
 
 @Service
 public class NotaFiscalService {
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private static final Logger LOG = LoggerFactory.getLogger(NotaFiscal.class);
 
