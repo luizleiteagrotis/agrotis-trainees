@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
+import com.agrotis.trainees.crud.exception.InscricaoExisteException;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 
 @RequestMapping("notas-fiscais/parceiros")
@@ -27,7 +28,7 @@ public class ParceiroNegocioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody ParceiroNegocioDto parceiroNegocioDto) {
+    public ResponseEntity<?> inserir(@RequestBody ParceiroNegocioDto parceiroNegocioDto) throws InscricaoExisteException {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(parceiroNegocioDto));
     }
 
