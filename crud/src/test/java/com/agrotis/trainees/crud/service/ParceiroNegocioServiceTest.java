@@ -1,10 +1,11 @@
 package com.agrotis.trainees.crud.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +29,11 @@ import com.agrotis.trainees.crud.utils.ParceiroNegocioDTOMapper;
 
 public class ParceiroNegocioServiceTest {
 
-    private final Integer ID = 1000;
-    private final String NOME = "TESTETDDDD";
-    private final String INSCRICAOFISCAL = "12234534345";
-    private final String ENDERECO = "RUA CABRAL";
-    private final String TELEFONE = "(47) 88881-8888";
+    private final Integer ID = 1;
+    private final String NOME = "Cocapec";
+    private final String INSCRICAOFISCAL = "12345";
+    private final String ENDERECO = "Rua São Paulo";
+    private final String TELEFONE = "41 89191-9191";
 
     @Mock
     private ParceiroNegocioRepository repository;
@@ -44,274 +44,223 @@ public class ParceiroNegocioServiceTest {
     @InjectMocks
     private ParceiroNegocioService service;
 
+    private ParceiroNegocio parceiroNegocio;
+
+    private ParceiroNegocioDto parceiroNegocioDto;
+
+    private Optional<ParceiroNegocio> parceiroNegocioOpcional;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        inicializaParceiroNegocio();
     }
 
     @Test
     public void deveriaNaosalvarQuandoJaExisteUmParceiroCadastrado() {
         // given
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setNome(NOME);
-        parceiroNegocio.setEndereco(ENDERECO);
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-        parceiroNegocio.setTelefone(TELEFONE);
-
-        when(repository.existsByNomeOrInscricaoFiscal(parceiroNegocio.getNome(), parceiroNegocio.getInscricaoFiscal()))
-                        .thenReturn(true);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        dto.setEndereco(parceiroNegocio.getEndereco());
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        dto.setTelefone(parceiroNegocio.getTelefone());
-
-        when(mapper.conveterParaEntidade(dto)).thenReturn(parceiroNegocio);
-        when(repository.save(parceiroNegocio)).thenReturn(parceiroNegocio);
+        when(mapper.conveterParaEntidade(parceiroNegocioDto)).thenReturn(parceiroNegocio);
+        when(repository.existsByNomeOrInscricaoFiscal(anyString(), anyString()))
+        .thenReturn(true);
 
         // when
         Exception excecao = assertThrows(FabricanteDuplicadoException.class, () -> {
-            service.salvar(dto);
+            service.salvar(parceiroNegocioDto);
         });
 
         // then
+        assertEquals(FabricanteDuplicadoException.class, excecao.getClass());
         assertEquals("Nome do fabricante ou inscrição fiscal já existem", excecao.getMessage());
     }
 
     @Test
     public void deveInserirParceiro() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setNome(NOME);
-        parceiroNegocio.setEndereco(ENDERECO);
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-        parceiroNegocio.setTelefone(TELEFONE);
-
-        when(repository.existsByNomeOrInscricaoFiscal(parceiroNegocio.getNome(), parceiroNegocio.getInscricaoFiscal()))
+        when(mapper.conveterParaEntidade(parceiroNegocioDto)).thenReturn(parceiroNegocio);
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.existsByNomeOrInscricaoFiscal(anyString(), anyString()))
                         .thenReturn(false);
+        when(repository.save(any())).thenReturn(parceiroNegocio);
 
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        dto.setEndereco(parceiroNegocio.getEndereco());
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        dto.setTelefone(parceiroNegocio.getTelefone());
-
-        when(mapper.conveterParaEntidade(dto)).thenReturn(parceiroNegocio);
-        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
-
-        when(service.salvar(dto)).thenReturn(dto);
-        ParceiroNegocioDto resultado = service.salvar(dto);
-        assertEquals(parceiroNegocio.getNome(), resultado.getNome());
+        ParceiroNegocioDto parceiroNegocioSalvo = service.salvar(parceiroNegocioDto);
+        
+        assertNotNull(parceiroNegocioSalvo);
+        assertEquals(ParceiroNegocioDto.class, parceiroNegocioSalvo.getClass());
+        assertEquals(ID, parceiroNegocioSalvo.getId());
     }
 
     @Test
     public void deveriaNaoAtualizarQuandoJaExisteUmParceiroCadastradoComOMesmoNome() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setNome(NOME);
-        parceiroNegocio.setEndereco(ENDERECO);
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-        parceiroNegocio.setTelefone(TELEFONE);
-
-        when(repository.existsByNomeAndIdNot(parceiroNegocio.getNome(), parceiroNegocio.getId())).thenReturn(true);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        dto.setEndereco(parceiroNegocio.getEndereco());
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        dto.setTelefone(parceiroNegocio.getTelefone());
-
-        when(mapper.conveterParaEntidade(dto)).thenReturn(parceiroNegocio);
-        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
+        when(mapper.conveterParaEntidade(parceiroNegocioDto)).thenReturn(parceiroNegocio);
+        when(repository.existsByNomeAndIdNot(anyString(), anyInt())).thenReturn(true);        
 
         Exception excecao = assertThrows(FabricanteDuplicadoException.class, () -> {
-            service.atualizar(dto);
+            service.atualizar(parceiroNegocioDto);
         });
 
-        assertEquals("Já existe um fabricante com o mesmo nome: " + parceiroNegocio.getNome(), excecao.getMessage());
+        assertEquals(FabricanteDuplicadoException.class, excecao.getClass());
+        assertEquals("Já existe um fabricante com o mesmo nome: " + NOME, excecao.getMessage());
     }
 
     @Test
     public void deveriaNaoAtualizarQuandoJaExisteUmParceiroCadastradoComAMesmaInscricao() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setNome(NOME);
-        parceiroNegocio.setEndereco(ENDERECO);
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-        parceiroNegocio.setTelefone(TELEFONE);
-
-        when(repository.existsByInscricaoFiscalAndIdNot(parceiroNegocio.getInscricaoFiscal(), parceiroNegocio.getId()))
+        when(mapper.conveterParaEntidade(parceiroNegocioDto)).thenReturn(parceiroNegocio);
+        when(repository.existsByInscricaoFiscalAndIdNot(anyString(), anyInt()))
                         .thenReturn(true);
 
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        dto.setEndereco(parceiroNegocio.getEndereco());
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        dto.setTelefone(parceiroNegocio.getTelefone());
-
-        when(mapper.conveterParaEntidade(dto)).thenReturn(parceiroNegocio);
-        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
-
         Exception excecao = assertThrows(FabricanteDuplicadoException.class, () -> {
-            service.atualizar(dto);
+            service.atualizar(parceiroNegocioDto);
         });
 
-        assertTrue(excecao.getMessage().contains(parceiroNegocio.getInscricaoFiscal()));
-        assertEquals("Já existe um fabricante com a mesma inscrição: " + parceiroNegocio.getInscricaoFiscal(),
+        assertEquals(FabricanteDuplicadoException.class, excecao.getClass());
+        assertEquals("Já existe um fabricante com a mesma inscrição: " + INSCRICAOFISCAL,
                         excecao.getMessage());
     }
 
     @Test
     public void deveAtualizarParceiro() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setNome(NOME);
-        parceiroNegocio.setEndereco(ENDERECO);
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-        parceiroNegocio.setTelefone(TELEFONE);
-
+        when(mapper.conveterParaEntidade(parceiroNegocioDto)).thenReturn(parceiroNegocio);
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
         when(repository.existsByInscricaoFiscalAndIdNot(parceiroNegocio.getInscricaoFiscal(), parceiroNegocio.getId()))
-                        .thenReturn(false);
-
+        .thenReturn(false);
         when(repository.existsByNomeAndIdNot(parceiroNegocio.getNome(), parceiroNegocio.getId())).thenReturn(false);
+        when(repository.save(any())).thenReturn(parceiroNegocio);
 
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        dto.setEndereco(parceiroNegocio.getEndereco());
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        dto.setTelefone(parceiroNegocio.getTelefone());
-
-        when(mapper.conveterParaEntidade(dto)).thenReturn(parceiroNegocio);
-        when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
-
-        when(service.atualizar(dto)).thenReturn(dto);
-        ParceiroNegocioDto resultado = service.atualizar(dto);
-        assertEquals(parceiroNegocio.getNome(), resultado.getNome());
+        ParceiroNegocioDto parceiroNegocioSalvo = service.atualizar(parceiroNegocioDto);
+        
+        assertNotNull(parceiroNegocioSalvo);
+        assertEquals(ParceiroNegocioDto.class, parceiroNegocioSalvo.getClass());
+        assertEquals(ID, parceiroNegocioSalvo.getId());
     }
 
     @Test
     public void deveriaNaoBuscarPorIdInexistente() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setId(ID);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setId(parceiroNegocio.getId());
-        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(dto);
-        when(repository.findById(ID)).thenReturn(Optional.empty());
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findById(anyInt())).thenReturn(Optional.empty());
 
         Exception excecao = assertThrows(FabricanteNaoEncontradoException.class, () -> {
-            service.buscarPorId(dto.getId());
+            service.buscarPorId(ID);
         });
 
-        assertEquals("Fabricante não encontrado para id " + dto.getId(), excecao.getMessage());
+        assertEquals(FabricanteNaoEncontradoException.class, excecao.getClass());
+        assertEquals("Fabricante não encontrado para id " + ID, excecao.getMessage());
 
     }
 
     @Test
     public void deveEncontrarParceiroPorIdExistente() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findById(anyInt())).thenReturn(parceiroNegocioOpcional);
 
-        parceiroNegocio.setId(ID);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setId(parceiroNegocio.getId());
-        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(dto);
-        when(repository.findById(ID)).thenReturn(Optional.of(parceiroNegocio));
-
-        when(service.buscarPorId(ID)).thenReturn(dto);
-        ParceiroNegocioDto parceiroAchado = service.buscarPorId(dto.getId());
-        assertEquals(dto.getNome(), parceiroAchado.getNome());
+        ParceiroNegocioDto parceiroAchado = service.buscarPorId(ID);
+        
+        assertNotNull(parceiroAchado);
+        assertEquals(ParceiroNegocioDto.class, parceiroAchado.getClass());
+        assertEquals(ID, parceiroAchado.getId());
     }
 
     @Test
     public void deveriaNaoBuscarPorNomeInexistente() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setNome(NOME);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(dto);
-        when(repository.findByNome(NOME)).thenReturn(Optional.empty());
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findByNome(any())).thenReturn(Optional.empty());
 
         Exception excecao = assertThrows(FabricanteNaoEncontradoException.class, () -> {
-            service.buscarPorNome(dto.getNome());
+            service.buscarPorNome(NOME);
         });
 
-        assertEquals("Fabricante não encontrado para nome " + dto.getNome(), excecao.getMessage());
-
+        assertEquals(FabricanteNaoEncontradoException.class, excecao.getClass());
+        assertEquals("Fabricante não encontrado para nome " + NOME, excecao.getMessage());
     }
 
     @Test
     public void deveEncontrarParceiroPorNomeExistente() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findByNome(any())).thenReturn(parceiroNegocioOpcional);
 
-        parceiroNegocio.setNome(NOME);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setNome(parceiroNegocio.getNome());
-        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(dto);
-        when(repository.findByNome(NOME)).thenReturn(Optional.of(parceiroNegocio));
-
-        when(service.buscarPorNome(NOME)).thenReturn(dto);
-        ParceiroNegocioDto parceiroAchado = service.buscarPorNome(dto.getNome());
-        assertEquals(dto, parceiroAchado);
+        ParceiroNegocioDto parceiroAchado = service.buscarPorNome(NOME);
+        
+        assertNotNull(parceiroAchado);
+        assertEquals(ParceiroNegocioDto.class, parceiroAchado.getClass());
+        assertEquals(NOME, parceiroAchado.getNome());
     }
 
     @Test
-    public void deveriaNaoBuscarPosInscricaoFiscalInexistente() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(dto);
-        when(repository.findByInscricaoFiscal(INSCRICAOFISCAL)).thenReturn(Optional.empty());
+    public void deveriaNaoBuscarPorInscricaoFiscalInexistente() {
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findByInscricaoFiscal(any())).thenReturn(Optional.empty());
 
         Exception excecao = assertThrows(FabricanteNaoEncontradoException.class, () -> {
-            service.buscarPorInscricao(dto.getInscricaoFiscal());
+            service.buscarPorInscricao(INSCRICAOFISCAL);
         });
 
-        assertEquals("Fabricante não encontrado para inscrição fiscal " + dto.getInscricaoFiscal(), excecao.getMessage());
+        assertEquals(FabricanteNaoEncontradoException.class, excecao.getClass());
+        assertEquals("Fabricante não encontrado para inscrição fiscal " + INSCRICAOFISCAL, excecao.getMessage());
     }
 
     @Test
-    public void deveEncontrarParceiroPorInscricaoFiscal() {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
+    public void deveEncontrarParceiroPorInscricaoFiscalExistente() {
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findByInscricaoFiscal(any())).thenReturn(parceiroNegocioOpcional);
 
-        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
-
-        ParceiroNegocioDto dto = new ParceiroNegocioDto();
-        dto.setInscricaoFiscal(parceiroNegocio.getInscricaoFiscal());
-        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(dto);
-        when(repository.findByInscricaoFiscal(INSCRICAOFISCAL)).thenReturn(Optional.of(parceiroNegocio));
-
-        when(service.buscarPorInscricao(INSCRICAOFISCAL)).thenReturn(dto);
-        ParceiroNegocioDto parceiroAchado = service.buscarPorInscricao(dto.getInscricaoFiscal());
-        assertEquals(dto, parceiroAchado);
+        ParceiroNegocioDto parceiroAchado = service.buscarPorInscricao(INSCRICAOFISCAL);
+        
+        assertNotNull(parceiroAchado);
+        assertEquals(ParceiroNegocioDto.class, parceiroAchado.getClass());
+        assertEquals(INSCRICAOFISCAL, parceiroAchado.getInscricaoFiscal());
     }
 
     @Test
     public void listarTodos() {
-        List<ParceiroNegocio> lista = Arrays.asList(new ParceiroNegocio(), new ParceiroNegocio());
-        when(repository.findAll()).thenReturn(lista);
-
-        List<ParceiroNegocioDto> listaDto = service.listarTodos();
-        assertNotNull(listaDto);
-        assertEquals(2, listaDto.size());
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findAll()).thenReturn(List.of(parceiroNegocio, parceiroNegocio));
+        
+        List<ParceiroNegocioDto> parceirosNegocios = service.listarTodos();
+       
+        assertNotNull(parceirosNegocios);
+        assertEquals(2, parceirosNegocios.size());
+        assertEquals(ParceiroNegocioDto.class, parceirosNegocios.get(0).getClass());
+        assertEquals(ID, parceirosNegocios.get(1).getId());
         verify(repository, times(1)).findAll();
     }
 
     @Test
+    public void deveriaNaoDeletarParceiroIdInexistente() {
+        when(repository.findById(anyInt())).thenReturn(Optional.empty());
+        
+        Exception excecao = assertThrows(FabricanteNaoEncontradoException.class, () -> {
+            service.deletarPorId(ID);
+        });
+            
+        assertEquals(FabricanteNaoEncontradoException.class, excecao.getClass());
+        assertEquals("Fabricante não encontrado para id " + ID, excecao.getMessage());
+    }
+
+    @Test
     public void deletarPorId() {
-        int id = 1;
-        doNothing().when(repository).deleteById(id);
-        service.deletarPorId(id);
-        verify(repository, times(1)).deleteById(id);
+        when(mapper.converterParaDto(parceiroNegocio)).thenReturn(parceiroNegocioDto);
+        when(repository.findById(anyInt())).thenReturn(parceiroNegocioOpcional);
+        doNothing().when(repository).deleteById(anyInt());
+        service.deletarPorId(ID);
+        verify(repository, times(1)).deleteById(anyInt());
+    }
+
+    private void inicializaParceiroNegocio() {
+
+        parceiroNegocio = new ParceiroNegocio();
+        parceiroNegocio.setId(ID);
+        parceiroNegocio.setNome(NOME);
+        parceiroNegocio.setInscricaoFiscal(INSCRICAOFISCAL);
+        parceiroNegocio.setEndereco(ENDERECO);
+        parceiroNegocio.setTelefone(TELEFONE);
+
+        parceiroNegocioDto = new ParceiroNegocioDto();
+        parceiroNegocioDto.setId(ID);
+        parceiroNegocioDto.setNome(NOME);
+        parceiroNegocioDto.setInscricaoFiscal(INSCRICAOFISCAL);
+        parceiroNegocioDto.setEndereco(ENDERECO);
+        parceiroNegocioDto.setTelefone(TELEFONE);
+
+        parceiroNegocioOpcional = Optional.of(parceiroNegocio);
+
     }
 
 }

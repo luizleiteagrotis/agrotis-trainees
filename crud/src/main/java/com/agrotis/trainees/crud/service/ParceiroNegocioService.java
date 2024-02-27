@@ -76,6 +76,7 @@ public class ParceiroNegocioService {
     }
 
     public void deletarPorId(Integer id) {
+        buscarPorId(id);
         repository.deleteById(id);
     }
 
