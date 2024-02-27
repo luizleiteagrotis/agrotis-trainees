@@ -1,4 +1,3 @@
-// Produto.java
 package com.agrotis.trainees.crud.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +25,7 @@ public class Produto {
     private String descricao;
 
     @Column(name = "estoque_produto")
-    private BigDecimal estoque;
+    private Integer estoque;
 
     @ManyToOne
     @JoinColumn(name = "fabricante_id")
@@ -40,10 +39,21 @@ public class Produto {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataValidade;
 
-    private BigDecimal custoMedio;
+    @Column(name = "custo_medio")
+    private BigDecimal custoMedio;;
 
     public BigDecimal getCustoMedio() {
         return custoMedio;
+    }
+
+    public Produto(String descricao, ParceiroNegocio parceiroNegocio, String fabricante, LocalDate dataFabricacao,
+                    LocalDate dataValidade) {
+        super();
+        this.descricao = descricao;
+        this.fabricante = parceiroNegocio;
+        this.dataFabricacao = dataFabricacao;
+        this.dataValidade = dataValidade;
+        this.estoque = 0;
     }
 
     public void setCustoMedio(BigDecimal custoMedio) {
@@ -74,8 +84,8 @@ public class Produto {
         return fabricante;
     }
 
-    public void setFabricante(ParceiroNegocio parceiroNegocioDto) {
-        this.fabricante = parceiroNegocioDto;
+    public void setFabricante(ParceiroNegocio fabricante) {
+        this.fabricante = fabricante;
     }
 
     public LocalDate getDataFabricacao() {
@@ -94,11 +104,11 @@ public class Produto {
         this.dataValidade = dataValidade;
     }
 
-    public BigDecimal getEstoque() {
+    public Integer getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(BigDecimal quantidadeTotal) {
+    public void setEstoque(Integer quantidadeTotal) {
         this.estoque = quantidadeTotal;
     }
 
@@ -106,5 +116,4 @@ public class Produto {
         this.id = id;
         this.fabricante = fabricante;
     }
-
 }

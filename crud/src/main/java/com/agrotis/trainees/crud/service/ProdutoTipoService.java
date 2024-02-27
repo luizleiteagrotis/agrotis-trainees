@@ -1,141 +1,86 @@
 package com.agrotis.trainees.crud.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
-import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ProdutoTipoRepository;
 
 @Service
 public class ProdutoTipoService {
 
-    private final ProdutoTipoRepository produtoTipoRepository;
-    private final ParceiroNegocioTipoService parceiroNegocioService;
+    private static final Logger LOG = LoggerFactory.getLogger(ProdutoTipoService.class);
 
-    @Autowired
-    public ProdutoTipoService(ProdutoTipoRepository produtoTipoRepository, ParceiroNegocioTipoService parceiroNegocioService) {
-        this.produtoTipoRepository = Objects.requireNonNull(produtoTipoRepository, "produtoTipoRepository cannot be null");
-        this.parceiroNegocioService = Objects.requireNonNull(parceiroNegocioService, "parceiroNegocioService cannot be null");
+    private ProdutoTipoRepository repository;
+    private ProdutoConversaoService conversao;
+
+    public ProdutoTipoService(ProdutoTipoRepository repository) {
+        super();
+        this.repository = repository;
     }
 
-    public void adicionarEntradaEstoque(Produto produto, BigDecimal quantidade, BigDecimal valorUnitario) {
-        Objects.requireNonNull(quantidade, "Quantidade cannot be null");
-        Objects.requireNonNull(valorUnitario, "Valor unitário cannot be null");
-
-        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
-        }
-        if (valorUnitario.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Valor unitário deve ser maior que zero");
-        }
-
-        BigDecimal custoTotal = valorUnitario.multiply(quantidade);
-        BigDecimal quantidadeTotal = produto.getEstoque().add(quantidade);
-        BigDecimal custoMedio = calcularCustoMedio(custoTotal, quantidadeTotal);
-
-        produto.setCustoMedio(custoMedio.setScale(2, RoundingMode.HALF_UP));
-        produto.setEstoque(quantidadeTotal);
+    public ProdutoDto salvar(ProdutoDto dto) {
+        Produto entidade = conversao.converterParaEntidade(dto);
+        repository.save(entidade);
+        LOG.info("Salvo Produto {}", entidade.getDescricao());
+        return conversao.converterParaDto(entidade);
     }
 
-    private BigDecimal calcularCustoMedio(BigDecimal custoTotal, BigDecimal quantidadeTotal) {
-        if (quantidadeTotal.compareTo(BigDecimal.ZERO) <= 0 || custoTotal.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Quantidade e Custo Total devem ser maiores que zero");
-        }
-        return custoTotal.divide(quantidadeTotal, 2, RoundingMode.HALF_UP);
+    public ProdutoDto buscarPorId(Integer id) throws NotFoundException {
+        Produto entidade = repository.findById(id).orElseThrow(() -> new NotFoundException());
+        return conversao.converterParaDto(entidade);
     }
 
-    @Transactional
-    public ProdutoDto inserir(ProdutoDto dto) {
-        Produto entidade = converterParaEntidade(dto);
-        Produto savedProduto = produtoTipoRepository.save(entidade);
-        return converterParaDto(savedProduto);
+    public Produto buscarPorFabricante(String fabricante) {
+        return repository.findByFabricante(fabricante).orElseGet(() -> {
+            LOG.error("Produto não encontrado para o fabricante {}.", fabricante);
+            return null;
+        });
     }
 
-    public Optional<ProdutoDto> buscarPorId(Integer id) {
-        return produtoTipoRepository.findById(id).map(this::converterParaDto);
+    public Produto buscarPorDataFabricacao(LocalDate dataFabricacao) {
+        return repository.findByDataFabricacao(dataFabricacao).orElseGet(() -> {
+            LOG.error("Produto não encontrado para data de fabricacao {}.", dataFabricacao);
+            return null;
+        });
+    }
+
+    public Produto buscarPorDataValidade(LocalDate dataValidade) {
+        return repository.findByDataValidade(dataValidade).orElseGet(() -> {
+            LOG.error("Produto não encontrado para data de validade {}.", dataValidade);
+            return null;
+        });
     }
 
     public List<ProdutoDto> listarTodos() {
-        List<Produto> entidades = produtoTipoRepository.findAll();
-        return entidades.stream().map(this::converterParaDto).collect(Collectors.toList());
+        List<Produto> entidades = repository.findAll();
+        return entidades.stream().map(entidade -> conversao.converterParaDto(entidade)).collect(Collectors.toList());
     }
 
     public void deletarPorId(Integer id) {
-        produtoTipoRepository.deleteById(id);
+        repository.deleteById(id);
+        LOG.info("Produto deletado com sucesso");
+    }
+
+    public Produto inserir(ProdutoDto dto) {
+        Produto entidade = conversao.converterParaEntidade(dto);
+        Produto produtoSalvo = repository.save(entidade);
+        if (produtoSalvo == null) {
+            throw new RuntimeException("Falha ao salvar o produto");
+        }
+        return produtoSalvo;
     }
 
     public ProdutoDto atualizar(ProdutoDto dto) {
-        Produto entidade = produtoTipoRepository.findById(dto.getId()).orElse(null);
-        if (entidade != null) {
-            entidade.setDescricao(dto.getDescricao());
-            entidade.setEstoque(dto.getEstoque());
-
-            ParceiroNegocio fabricante = converterDtoParaParceiroNegocio(dto.getFabricante());
-            entidade.setFabricante(fabricante);
-
-            entidade.setDataFabricacao(dto.getDataFabricacao());
-            entidade.setDataValidade(dto.getDataValidade());
-
-            entidade = produtoTipoRepository.save(entidade);
-            return converterParaDto(entidade);
-        } else {
-            return null;
-        }
+        Produto entidade = conversao.converterParaEntidade(dto);
+        return conversao.converterParaDto(repository.save(entidade));
     }
 
-    private ParceiroNegocio converterDtoParaParceiroNegocio(ParceiroNegocioDto dto) {
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-        parceiroNegocio.setId(dto.getId());
-        parceiroNegocio.setNome(dto.getNome());
-        parceiroNegocio.setInscricaoFiscal(dto.getInscricaoFiscal());
-        parceiroNegocio.setEndereco(dto.getEndereco());
-        parceiroNegocio.setTelefone(dto.getTelefone());
-        return parceiroNegocio;
-    }
-
-    public ProdutoDto converterParaDto(Produto entidade) {
-        ProdutoDto dto = new ProdutoDto();
-        dto.setId(entidade.getId());
-        dto.setDescricao(entidade.getDescricao());
-        dto.setEstoque(entidade.getEstoque());
-
-        ParceiroNegocioDto fabricanteDto = parceiroNegocioService.converterParaDto(entidade.getFabricante());
-        dto.setFabricante(fabricanteDto);
-
-        dto.setDataFabricacao(entidade.getDataFabricacao());
-        dto.setDataValidade(entidade.getDataValidade());
-        return dto;
-    }
-
-    public Produto converterParaEntidade(ProdutoDto dto) {
-        Produto entidade = new Produto();
-        entidade.setId(dto.getId());
-        ParceiroNegocio parceiroNegocio = new ParceiroNegocio();
-        parceiroNegocio.setId(dto.getFabricante().getId());
-        parceiroNegocio.setNome(dto.getFabricante().getNome());
-        parceiroNegocio.setInscricaoFiscal(dto.getFabricante().getInscricaoFiscal());
-        parceiroNegocio.setEndereco(dto.getFabricante().getEndereco());
-        parceiroNegocio.setTelefone(dto.getFabricante().getTelefone());
-
-        entidade.setFabricante(parceiroNegocio);
-
-        entidade.setDescricao(dto.getDescricao());
-        entidade.setEstoque(dto.getEstoque());
-        entidade.setDataFabricacao(dto.getDataFabricacao());
-        entidade.setDataValidade(dto.getDataValidade());
-
-        return entidade;
-    }
 }

@@ -9,3 +9,6 @@ CREATE TABLE produto (
 
 	ALTER TABLE produto
 	ADD estoque_produto int;
+	
+	ALTER TABLE produto
+    ADD custo_medio DECIMAL(10,2);
