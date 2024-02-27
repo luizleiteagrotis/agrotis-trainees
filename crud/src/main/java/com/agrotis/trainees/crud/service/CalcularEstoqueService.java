@@ -34,7 +34,6 @@ public class CalcularEstoqueService {
         ItemNotaFiscal itemExistente = repository.findByProdutoAndNotaFiscal(item.getProduto(), item.getNotaFiscal());
 
         int diferencaQuantidade = itemExistente != null ? quantidade - itemExistente.getQuantidade() : quantidade;
-        System.out.println(itemExistente);
         if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - diferencaQuantidade) < 0) {
             throw new QuantidadeInsuficienteException(
                             "Quantidade insuficiente em estoque para a saída do produto. Quantidade em estoque: "
