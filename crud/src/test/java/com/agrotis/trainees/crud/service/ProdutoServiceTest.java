@@ -5,6 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,15 +16,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.DataValidadeInvalidaException;
 import com.agrotis.trainees.crud.exception.ProdutoDuplicadoException;
@@ -31,8 +36,11 @@ import com.agrotis.trainees.crud.utils.ProdutoDTOMapper;
 
 public class ProdutoServiceTest {
 
-    private final Integer ID = 1000;
-    private final String DESCRICAO = "Adubo";
+    private final Integer ID = 1;
+    private final String DESCRICAO = "Descrição do Produto";
+    // private final ParceiroNegocio FABRICANTE = new ParceiroNegocio();
+    private final int QUANTIDADEESTOQUE = 0;
+    private final BigDecimal CUSTOMEDIO = new BigDecimal(0);
 
     @Mock
     private ProdutoRepository repository;
@@ -40,195 +48,212 @@ public class ProdutoServiceTest {
     @Mock
     private ProdutoDTOMapper mapper;
 
+    @Mock
+    private ParceiroNegocio fabricante;
+
     @InjectMocks
     private ProdutoService service;
+
+    private Produto produto;
+
+    private ProdutoDto produtoDto;
+
+    private Optional<Produto> produtoOpcional;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        inicializarProduto();
     }
 
-    private Produto criarProduto() {
-        Produto produto = Mockito.mock(Produto.class);
-        return produto;
-    }
+ @Test
+ public void naoDeveriaSalvarProduto() {
+ when(mapper.converterParaEntidade(produtoDto)).thenReturn(produto);
+ when(repository.existsByDescricao(anyString())).thenReturn(true);
 
-    @Test
-    public void naoDeveriaSalvarProduto() {
-        ProdutoDto dto = new ProdutoDto();
-        Produto produto = new Produto();
-        Date date = new Date(2020, 02, 02);
-        produto.setDataFabricacao(date);
-        Date validade = new Date(2026, 02, 02);
-        produto.setDataFabricacao(date);
-        produto.setDataValidade(validade);
-        produto.setDescricao("Banana");
-        dto.setDataFabricacao(produto.getDataFabricacao());
-        dto.setDataValidade(produto.getDataValidade());
-        dto.setDescricao(produto.getDescricao());
-        when(mapper.converterParaEntidade(dto)).thenReturn(produto);
-        when(repository.existsByDescricao(produto.getDescricao())).thenReturn(true);
+ Exception excecao = assertThrows(ProdutoDuplicadoException.class, () -> {
+ service.salvar(produtoDto);
+ });
 
-        Exception excecao = assertThrows(ProdutoDuplicadoException.class, () -> {
-            service.salvar(dto);
-        });
-
-        assertEquals("Descrição do produto já existe", excecao.getMessage());
-    }
+ assertEquals(ProdutoDuplicadoException.class, excecao.getClass());
+ assertEquals("Descrição do produto já existe", excecao.getMessage());
+ }
 
     @Test
     public void naoDeveriaSalvarProdutoDataInvalida() {
-        ProdutoDto dto = new ProdutoDto();
-        Produto produto = new Produto();
-        Date date = new Date(2026, 02, 02);
-        produto.setDataFabricacao(date);
-        Date validade = new Date(202, 02, 02);
-        produto.setDataFabricacao(date);
-        produto.setDataValidade(validade);
-        produto.setDescricao("Banana");
-        dto.setDataFabricacao(produto.getDataFabricacao());
-        dto.setDataValidade(produto.getDataValidade());
-        dto.setDescricao(produto.getDescricao());
-        when(mapper.converterParaEntidade(dto)).thenReturn(produto);
-        when(repository.existsByDescricao(produto.getDescricao())).thenReturn(false);
+
+        produto.setDataFabricacao(new Date());
+        produto.setDataValidade(new Date(1000));
+
+        when(mapper.converterParaEntidade(any(ProdutoDto.class))).thenReturn(produto);
+        when(repository.existsByDescricao(anyString())).thenReturn(false);
 
         Exception excecao = assertThrows(DataValidadeInvalidaException.class, () -> {
-            service.salvar(dto);
+            service.salvar(produtoDto);
         });
 
         assertEquals("A data de validade deve ser após a data de fabricação", excecao.getMessage());
     }
 
-    @Test
-    public void deveSalvarProduto() {
-        ProdutoDto dto = new ProdutoDto();
-        Produto produto = new Produto();
-        Date date = new Date(2020, 02, 02);
-        produto.setDataFabricacao(date);
-        Date validade = new Date(2026, 02, 02);
-        produto.setDataFabricacao(date);
-        produto.setDataValidade(validade);
-        produto.setDescricao("Banana");
-        dto.setDataFabricacao(produto.getDataFabricacao());
-        dto.setDataValidade(produto.getDataValidade());
-        dto.setDescricao(produto.getDescricao());
-        when(mapper.converterParaEntidade(dto)).thenReturn(produto);
-        when(repository.existsByDescricao(produto.getDescricao())).thenReturn(false);
-        when(repository.save(produto)).thenReturn(produto);
+ @Test
+ public void deveSalvarProduto() {
+ when(mapper.converterParaEntidade(produtoDto)).thenReturn(produto);
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.existsByDescricao(anyString())).thenReturn(false);
+ when(repository.save(any())).thenReturn(produto);
 
-        when(service.salvar(dto)).thenReturn(dto);
-        verify(repository, times(1)).save(produto);
-        ProdutoDto resultado = service.salvar(dto);
-        assertEquals(produto.getDescricao(), resultado.getDescricao());
-    }
+ ProdutoDto produtoSalvo = service.salvar(produtoDto);
 
-    @Test
-    public void deveriaNaoAtualizarProdutoComDescricaoExistente() {
-        Produto produto = new Produto();
-        produto.setDescricao("Adubo");
-        produto.setId(1000);
+ assertNotNull(produtoSalvo);
+ assertEquals(ProdutoDto.class, produtoSalvo.getClass());
+ assertEquals(ID, produtoSalvo.getId());
+ verify(repository, times(1)).save(produto);
+ }
 
-        when(repository.existsByDescricaoAndIdNot(produto.getDescricao(), produto.getId())).thenReturn(true);
+ @Test
+ public void deveriaNaoAtualizarProdutoComDescricaoExistente() {
+ when(mapper.converterParaEntidade(produtoDto)).thenReturn(produto);
+ when(repository.existsByDescricaoAndIdNot(anyString(),
+ anyInt())).thenReturn(true);
 
-        ProdutoDto dto = new ProdutoDto();
-        dto.setDescricao(produto.getDescricao());
-        dto.setId(produto.getId());
+ Exception excecao = assertThrows(ProdutoDuplicadoException.class, () -> {
+ service.atualizar(produtoDto);
+ });
 
-        when(mapper.converterParaEntidade(dto)).thenReturn(produto);
-        when(repository.save(any(Produto.class))).thenReturn(produto);
+ assertEquals(ProdutoDuplicadoException.class, excecao.getClass());
+ assertEquals("Descrição do produto já existe", excecao.getMessage());
+ }
 
-        Exception excecao = assertThrows(ProdutoDuplicadoException.class, () -> {
-            service.atualizar(dto);
-        });
+ @Test
+ public void deveAtualizarProduto() {
+ when(mapper.converterParaEntidade(produtoDto)).thenReturn(produto);
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.existsByDescricaoAndIdNot(any(), any())).thenReturn(false);
+ when(repository.save(any(Produto.class))).thenReturn(produto);
 
-        assertEquals("Descrição do produto já existe", excecao.getMessage());
-    }
+ ProdutoDto produtoAtualizado = service.atualizar(produtoDto);
 
-    @Test
-    public void deveAtualizarProduto() {
-        Produto produto = new Produto();
+ assertNotNull(produtoAtualizado);
+ verify(repository, times(1)).save(produto);
+ assertEquals(ProdutoDto.class, produtoAtualizado.getClass());
+ assertEquals(ID, produtoAtualizado.getId());
+ }
 
-        when(repository.existsByDescricaoAndIdNot(any(), any())).thenReturn(false);
+ @Test
+ public void deveriaNaoBuscarPorIdInexistente() {
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.findById(anyInt())).thenReturn(Optional.empty());
 
-        ProdutoDto dto = new ProdutoDto();
+ Exception excecao = assertThrows(ProdutoNaoEncontradoException.class, () -> {
+ service.buscarPorId(ID);
+ });
 
-        when(mapper.converterParaEntidade(dto)).thenReturn(produto);
-        when(repository.save(any(Produto.class))).thenReturn(produto);
+ assertEquals(ProdutoNaoEncontradoException.class, excecao.getClass());
+ assertEquals("Produto não encontrado para o id " + ID, excecao.getMessage());
+ }
 
-        when(service.atualizar(dto)).thenReturn(dto);
-        verify(repository, times(1)).save(produto);
-        ProdutoDto resultado = service.atualizar(dto);
-        assertEquals(dto, resultado);
-    }
+ @Test
+ public void deveEncontrarProdutoPorIdExistente() {
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.findById(anyInt())).thenReturn(produtoOpcional);
 
-    @Test
-    public void deveriaNaoBuscarProdutoPorIdInexistente() {
-        when(repository.findById(ID)).thenReturn(Optional.empty());
-        
-        Exception excecao = assertThrows(ProdutoNaoEncontradoException.class, () -> {
-            service.buscarPorId(ID);
-        });
-        
-        assertEquals("Produto não encontrado para o id " + ID, excecao.getMessage());
-    }
+ ProdutoDto produdoAchado = service.buscarPorId(produtoDto.getId());
 
-    @Test
-    public void deveEncontrarProdutoPorId() {
-        Produto produto = new Produto();
-        produto.setId(1000);
-        ProdutoDto produtoDto = new ProdutoDto();
-        when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
-        when(repository.findById(anyInt())).thenReturn(Optional.of(produto));
-        produtoDto.setId(produto.getId());
+ assertNotNull(produdoAchado);
+ assertEquals(ProdutoDto.class, produdoAchado.getClass());
+ assertEquals(ID, produdoAchado.getId());
+ }
 
-        when(service.buscarPorId(produtoDto.getId())).thenReturn(produtoDto);
-        verify(repository, times(1)).findById(anyInt());
-        ProdutoDto produdoAchado = service.buscarPorId(produtoDto.getId());
-        assertEquals(produto.getId(), produdoAchado.getId());
-    }
+ @Test
+ public void deveriaNaoEncontrarProdutoPorDescricaoInexistente() {
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.findByDescricao(any())).thenReturn(Optional.empty());
 
-    @Test
-    public void deveriaNaoEncontrarProdutoPorDescricaoInexistente() {
-        when(repository.findByDescricao(DESCRICAO)).thenReturn(Optional.empty());
-        
-        Exception excecao = assertThrows(ProdutoNaoEncontradoException.class, () -> {
-            service.buscarPorDescricao(DESCRICAO);
-        });
-            
-            assertEquals("Produto não encontrada para o nome " + DESCRICAO, excecao.getMessage());
-    }
+ Exception excecao = assertThrows(ProdutoNaoEncontradoException.class, () -> {
+ service.buscarPorDescricao(DESCRICAO);
+ });
 
-    @Test
-    public void deveEscontrarProdutoPorDescricao() {
-        Produto produto = new Produto();
+ assertEquals(ProdutoNaoEncontradoException.class, excecao.getClass());
+ assertEquals("Produto não encontrada para o nome " + DESCRICAO,
+ excecao.getMessage());
+ }
+
+ @Test
+ public void deveEscontrarProdutoPorDescricao() {
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.findByDescricao(any())).thenReturn(produtoOpcional);
+
+ ProdutoDto produtoAchado = service.buscarPorDescricao(DESCRICAO);
+
+ assertNotNull(produtoAchado);
+ verify(repository, times(1)).findByDescricao(DESCRICAO);
+ assertEquals(ProdutoDto.class, produtoAchado.getClass());
+ assertEquals(DESCRICAO, produtoAchado.getDescricao());
+ }
+
+ @Test
+ public void listarTodos() {
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.findAll()).thenReturn(List.of(produto, produto));
+
+ List<ProdutoDto> produtos = service.listarTodos();
+
+ assertNotNull(produtos);
+ assertEquals(2, produtos.size());
+ assertEquals(ProdutoDto.class, produtos.get(0).getClass());
+ assertEquals(ID, produtos.get(1).getId());
+ verify(repository, times(1)).findAll();
+ }
+
+ @Test
+ public void deveriaNaoDeletarProdutoIdInexistente() {
+ when(repository.findById(anyInt())).thenReturn(Optional.empty());
+
+ Exception excecao = assertThrows(ProdutoNaoEncontradoException.class, () -> {
+ service.deletarPorId(ID);
+ });
+
+ assertEquals(ProdutoNaoEncontradoException.class, excecao.getClass());
+ assertEquals("Produto não encontrado para o id " + ID, excecao.getMessage());
+ verify(repository, never()).deleteById(anyInt());
+ }
+
+ @Test
+ public void deveRemoverProdutoPorId() {
+ when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
+ when(repository.findById(any())).thenReturn(produtoOpcional);
+ doNothing().when(repository).deleteById(ID);
+ service.deletarPorId(ID);
+ verify(repository, times(1)).deleteById(anyInt());
+ }
+
+    private void inicializarProduto() {
+        produto = new Produto();
+        produto.setId(ID);
+        produto.setQuantidadeEstoque(QUANTIDADEESTOQUE);
         produto.setDescricao(DESCRICAO);
-        ProdutoDto produtoDto = new ProdutoDto();
+        produto.setCustoMedio(CUSTOMEDIO);
+        produto.setFabricante(fabricante);
+        SimpleDateFormat dataFormadata = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            produto.setDataFabricacao(dataFormadata.parse("12-12-2004"));
+            produto.setDataValidade(dataFormadata.parse("31-12-2025"));
 
-        when(mapper.converterParaDto(produto)).thenReturn(produtoDto);
-        when(repository.findByDescricao(DESCRICAO)).thenReturn(Optional.of(produto));
-        produtoDto.setDescricao(produto.getDescricao());
+        } catch (ParseException e) {
+            throw new RuntimeException("Erro ao inicializar os dados da data");
+        }
 
-        when(service.buscarPorDescricao(DESCRICAO)).thenReturn(produtoDto);
-        verify(repository, times(1)).findByDescricao(DESCRICAO);
-        ProdutoDto produtoAchado = service.buscarPorDescricao(DESCRICAO);
-        assertEquals(produto.getDescricao(), produtoAchado.getDescricao());
-    }
+        produtoDto = new ProdutoDto();
+        produtoDto.setId(ID);
+        produtoDto.setQuantidadeEstoque(QUANTIDADEESTOQUE);
+        produtoDto.setDescricao(DESCRICAO);
+        produtoDto.setCustoMedio(CUSTOMEDIO);
+        produtoDto.setFabricante(fabricante);
+        produtoDto.setDataFabricacao(produto.getDataFabricacao());
+        produtoDto.setDataValidade(produto.getDataValidade());
 
-    @Test
-    public void deveRemoverProdutoPorId() {
-        service.deletarPorId(ID);
-        verify(repository, times(1)).deleteById(ID);
-    }
+        produtoOpcional = Optional.of(produto);
 
-    @Test
-    public void listarTodos() {
-        List<Produto> produtos = Arrays.asList(new Produto(), new Produto());
-        when(repository.findAll()).thenReturn(produtos);
-
-        List<ProdutoDto> produtoDtos = service.listarTodos();
-        assertNotNull(produtoDtos);
-        assertEquals(2, produtoDtos.size());
-        verify(repository, times(1)).findAll();
     }
 
 }
