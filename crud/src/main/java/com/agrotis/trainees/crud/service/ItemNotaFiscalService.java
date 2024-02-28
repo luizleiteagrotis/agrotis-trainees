@@ -15,8 +15,6 @@ import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ItemDuplicadoException;
 import com.agrotis.trainees.crud.exception.ItemNaoEncontrado;
-import com.agrotis.trainees.crud.exception.ProdutoDuplicadoException;
-import com.agrotis.trainees.crud.exception.QuantidadeInsuficienteException;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 import com.agrotis.trainees.crud.utils.ItemNotaFiscalDTOMapper;
 import com.agrotis.trainees.crud.utils.NotaFiscalDTOMapper;
@@ -39,8 +37,13 @@ public class ItemNotaFiscalService {
 
     private final NotaFiscalDTOMapper mapperNotaFiscal;
 
+    private final CalcularEstoqueService calcularEstoqueService;
+
+    private final CalcularListaItemService calcularListaItemService;
+
     public ItemNotaFiscalService(ItemNotaFiscalRepository repository, ProdutoService produtoService, NotaFiscalService notaService,
-                    ItemNotaFiscalDTOMapper mapper, NotaFiscalDTOMapper mapperNotaFiscal, ProdutoDTOMapper mapperProduto) {
+                    ItemNotaFiscalDTOMapper mapper, NotaFiscalDTOMapper mapperNotaFiscal, ProdutoDTOMapper mapperProduto,
+                    CalcularEstoqueService calcularEstoqueService, CalcularListaItemService calcularListaItemService) {
         super();
         this.repository = repository;
         this.mapper = mapper;
@@ -48,17 +51,19 @@ public class ItemNotaFiscalService {
         this.mapperProduto = mapperProduto;
         this.notaService = notaService;
         this.mapperNotaFiscal = mapperNotaFiscal;
+        this.calcularEstoqueService = calcularEstoqueService;
+        this.calcularListaItemService = calcularListaItemService;
     }
 
     public ItemNotaFiscalDto salvar(ItemNotaFiscalDto dto) {
 
         ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
 
-        NotaFiscalDto notaFiscalDto = notaService.buscarPorId(entidade.getNotaFiscal().getId());
-        entidade.setNotaFiscal(mapperNotaFiscal.converterParaEntidade(notaFiscalDto));
-
         ProdutoDto produtoDto = produtoService.buscarPorId(entidade.getProduto().getId());
         entidade.setProduto(mapperProduto.converterParaEntidade(produtoDto));
+
+        NotaFiscalDto notaFiscalDto = notaService.buscarPorId(entidade.getNotaFiscal().getId());
+        entidade.setNotaFiscal(mapperNotaFiscal.converterParaEntidade(notaFiscalDto));
 
         entidade.setValorTotal(entidade.getValorUnitario().multiply(BigDecimal.valueOf(entidade.getQuantidade())));
 
@@ -66,9 +71,13 @@ public class ItemNotaFiscalService {
             throw new ItemDuplicadoException("O item já existe na nota");
         }
 
-        atualizarEstoque(entidade);
+        if (entidade.getNotaFiscal().getNotaFiscalTipo().getNome().equalsIgnoreCase("ENTRADA")) {
+            CustoMedioService.calcularCustoMedioProdutoExistente(false, entidade);
+        }
+
+        calcularEstoqueService.atualizarEstoque(entidade);
         ItemNotaFiscal entidadeSalva = repository.save(entidade);
-        notaService.adicionarItem(entidade);
+        calcularListaItemService.adicionarItem(entidade);
         return mapper.converterParaDto(entidadeSalva);
     }
 
@@ -85,12 +94,12 @@ public class ItemNotaFiscalService {
         entidade.setValorTotal(entidade.getValorUnitario().multiply(BigDecimal.valueOf(entidade.getQuantidade())));
 
         if (repository.existsByProdutoAndNotaFiscalAndIdNot(entidade.getProduto(), entidade.getNotaFiscal(), entidade.getId())) {
-            throw new ProdutoDuplicadoException("Já existe um item de nota fiscal com o mesmo produto e nota fiscal");
+            throw new ItemDuplicadoException("Já existe um item de nota fiscal com o mesmo produto e nota fiscal");
         }
 
-        atualizarEstoque(entidade);
+        calcularEstoqueService.atualizarEstoque(entidade);
         ItemNotaFiscal entidadeSalva = repository.save(entidade);
-        notaService.atualizarValorTotal(entidadeSalva.getNotaFiscal());
+        calcularListaItemService.atualizarValorTotal(entidadeSalva.getNotaFiscal());
         return mapper.converterParaDto(entidadeSalva);
     }
 
@@ -116,38 +125,18 @@ public class ItemNotaFiscalService {
     }
 
     public void deletarPorId(Integer id) {
-        ItemNotaFiscalDto dto = buscarPorId(id);
-        ItemNotaFiscal entidade = mapper.convertarParaEntidade(dto);
+        ItemNotaFiscal entidade = repository.findById(id)
+                        .orElseThrow(() -> new ItemNaoEncontrado("Item de nota fiscal não encontrado para o id " + id));
 
+        if (entidade.getNotaFiscal().getNotaFiscalTipo().getNome().equalsIgnoreCase("ENTRADA")) {
+            CustoMedioService.calcularCustoMedioProdutoExistente(true, entidade);
+        }
         entidade.setQuantidade(0);
         entidade.setValorTotal(entidade.getValorUnitario().multiply(BigDecimal.valueOf(entidade.getQuantidade())));
 
-        atualizarEstoque(entidade);
-        notaService.removerItem(entidade, entidade.getNotaFiscal());
+        calcularEstoqueService.atualizarEstoque(entidade);
+        calcularListaItemService.removerItem(entidade, entidade.getNotaFiscal());
         repository.deleteById(id);
-    }
-
-    public void atualizarEstoque(ItemNotaFiscal item) throws QuantidadeInsuficienteException {
-        Produto produto = item.getProduto();
-        String tipo = item.getNotaFiscal().getNotaFiscalTipo().getNome();
-        int quantidade = item.getQuantidade();
-        int quantidadeProduto = produto.getQuantidadeEstoque();
-
-        ItemNotaFiscal itemExistente = repository.findByProdutoAndNotaFiscal(item.getProduto(), item.getNotaFiscal());
-
-        int diferencaQuantidade = itemExistente != null ? quantidade - itemExistente.getQuantidade() : quantidade;
-
-        if (tipo.equalsIgnoreCase("SAÍDA") && (quantidadeProduto - diferencaQuantidade) < 0) {
-            throw new QuantidadeInsuficienteException(
-                            "Quantidade insuficiente em estoque para a saída do produto. Quantidade em estoque: "
-                                            + quantidadeProduto + " " + ". Quantidade item saída: " + diferencaQuantidade);
-        }
-
-        int novaQuantidadeEstoque = tipo.equalsIgnoreCase("ENTRADA") ? quantidadeProduto + diferencaQuantidade
-                        : quantidadeProduto - diferencaQuantidade;
-        produto.setQuantidadeEstoque(novaQuantidadeEstoque);
-
-        produtoService.atualizar(mapperProduto.converterParaDto(produto));
     }
 
 }
