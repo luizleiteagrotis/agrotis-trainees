@@ -24,12 +24,11 @@ public class ControleEstoque {
 
     }
 
-    public BigDecimal controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) {
+    public BigDecimal controlarQuantidadeEstoque(ItemNotaFiscal itemNotaFiscal) throws ControleEstoqueException {
 
         try {
             String tipoNotaFiscal = itemNotaFiscal.getNotaFiscal().getTipo();
-            Produto produto = produtoService.verificarPorId(itemNotaFiscal.getProduto().getId());
-            BigDecimal quantidadeEstoque = produto.getEstoque();
+            BigDecimal quantidadeEstoque = itemNotaFiscal.getProduto().getEstoque();
 
             if (tipoNotaFiscal.equals("entrada")) {
                 quantidadeEstoque = somarEstoque(quantidadeEstoque, itemNotaFiscal.getQuantidade());
@@ -48,10 +47,11 @@ public class ControleEstoque {
             return quantidadeEstoque;
         } catch (ControleEstoqueException exp) {
             LOG.error(exp.getMessage());
+            throw exp;
         } catch (NullPointerException npe) {
             LOG.error(npe.getMessage());
+            throw npe;
         }
-        return null;
     }
 
     public ItemNotaFiscal atualizarEstoque(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
@@ -83,15 +83,15 @@ public class ControleEstoque {
         }
     }
 
-    protected boolean verificarQuantidade(BigDecimal quantidadeEstoque, BigDecimal quantidadeNota) {
+    public boolean verificarQuantidade(BigDecimal quantidadeEstoque, BigDecimal quantidadeNota) {
         return quantidadeEstoque.subtract(quantidadeNota).compareTo(BigDecimal.ZERO) >= 0;
     }
 
-    protected BigDecimal somarEstoque(BigDecimal quantidadeEstoque, BigDecimal quantidade) {
+    public BigDecimal somarEstoque(BigDecimal quantidadeEstoque, BigDecimal quantidade) {
         return quantidadeEstoque.add(quantidade);
     }
 
-    protected BigDecimal diminuirEstoque(BigDecimal quantidadeEstoque, BigDecimal quantidade) {
+    public BigDecimal diminuirEstoque(BigDecimal quantidadeEstoque, BigDecimal quantidade) {
         return quantidadeEstoque.subtract(quantidade);
 
     }

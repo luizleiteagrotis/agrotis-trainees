@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -194,7 +195,7 @@ public class NotaFiscalService {
      * busca o id da nota fiscal e todos os item vinculados a ele, fazendo o
      * calculo do valor total daquela nota e salvando caso tenha alteração
      */
-    public void persistirValorTotal(int idNotaFiscal) {
+    public BigDecimal persistirValorTotal(int idNotaFiscal) {
         NotaFiscal entidade = verificarPorId(idNotaFiscal);
         List<ItemNotaFiscal> itens = entidade.getItemNotaFiscal();
         BigDecimal valorTotalNota = BigDecimal.ZERO;
@@ -205,6 +206,6 @@ public class NotaFiscalService {
         }
         entidade.setValorTotal(valorTotalNota);
         repository.save(entidade);
-
+        return valorTotalNota.setScale(2, RoundingMode.HALF_UP);
     }
 }

@@ -39,9 +39,8 @@ public class ItemNotaFiscal {
 
     }
 
-    public ItemNotaFiscal(int id, NotaFiscal notaFiscal, Produto produto, BigDecimal quantidade, BigDecimal precoUnitario) {
+    public ItemNotaFiscal(NotaFiscal notaFiscal, Produto produto, BigDecimal quantidade, BigDecimal precoUnitario) {
         super();
-        this.id = id;
         this.produto = produto;
         this.notaFiscal = notaFiscal;
         this.quantidade = quantidade;

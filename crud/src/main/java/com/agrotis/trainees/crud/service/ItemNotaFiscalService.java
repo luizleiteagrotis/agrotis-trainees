@@ -13,7 +13,8 @@ import com.agrotis.trainees.crud.dto.ItemNotaFiscalDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.exception.ItemNotaFiscalException;
+import com.agrotis.trainees.crud.exception.ControleEstoqueException;
+import com.agrotis.trainees.crud.exception.ItemNotaFiscalExcecao;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
@@ -40,44 +41,18 @@ public class ItemNotaFiscalService {
         this.produtoRepository = produtoRepository;
     }
 
-    public ItemNotaFiscalDto salvar(ItemNotaFiscalDto itemNotaFiscalDto) {
+    public ItemNotaFiscalDto salvar(ItemNotaFiscalDto itemNotaFiscalDto) throws ItemNotaFiscalExcecao, ControleEstoqueException {
 
         try {
-            ItemNotaFiscal itemNotaFiscal = itemNotaFiscalConversor.converter(itemNotaFiscalDto);
-            itemNotaFiscal.setNotaFiscal(notaFiscalService.verificarPorId(itemNotaFiscalDto.getNotaFiscal().getId()));
-            itemNotaFiscal.setProduto(produtoService.verificarPorId(itemNotaFiscalDto.getProduto().getId()));
-            Produto produto = itemNotaFiscal.getProduto();
-            NotaFiscal notaFiscal = itemNotaFiscal.getNotaFiscal();
-            if (!repository.findByNotaFiscalAndProduto(itemNotaFiscal.getNotaFiscal(), itemNotaFiscal.getProduto()).isEmpty()) {
-                throw new ItemNotaFiscalException("Falha ao salvar no banco: o item já está cadastrado nesta nota fiscal. ");
-            }
-
-            validar(itemNotaFiscal);
-            BigDecimal valorTotal = calcularValorTotal(itemNotaFiscal.getQuantidade().setScale(2, RoundingMode.HALF_UP),
-                            itemNotaFiscal.getPrecoUnitario().setScale(2, RoundingMode.HALF_UP));
-            BigDecimal custoTotal = produto.getCustoMedio().multiply(produto.getEstoque()).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal novoCustoTotal = valorTotal.add(custoTotal).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal estoqueAtualizado = controleEstoque.controlarQuantidadeEstoque(itemNotaFiscal).setScale(2,
-                            RoundingMode.HALF_UP);
-            if (notaFiscal.getTipo().equalsIgnoreCase("entrada")) {
-                BigDecimal novoCustoMedio = CustoMedioService.calcularCustoMedio(
-                                estoqueAtualizado.setScale(2, RoundingMode.HALF_UP),
-                                novoCustoTotal.setScale(2, RoundingMode.HALF_UP));
-                produto.setCustoMedio(novoCustoMedio.setScale(2, RoundingMode.HALF_UP));
-                produto.setEstoque(estoqueAtualizado.setScale(2, RoundingMode.HALF_UP));
-                produtoRepository.save(produto);
-            }
-
-            itemNotaFiscal.setValorTotal(valorTotal);
-            repository.save(itemNotaFiscal);
-
-            notaFiscalService.persistirValorTotal(itemNotaFiscal.getNotaFiscal().getId());
+            ItemNotaFiscal itemNotaFiscal = converterItemNotaFiscal(itemNotaFiscalDto);
+            verificarItemExistente(itemNotaFiscal);
+            atualizarEstoqueECusto(itemNotaFiscal);
+            persistirEntidades(itemNotaFiscal);
             return itemNotaFiscalConversor.converter(itemNotaFiscal);
-        } catch (ItemNotaFiscalException infe) {
+        } catch (ItemNotaFiscalExcecao infe) {
             LOG.error(infe.getMessage());
-            return null;
+            throw infe;
         }
-
     }
 
     public ItemNotaFiscalDto buscarPorId(int id) {
@@ -87,16 +62,6 @@ public class ItemNotaFiscalService {
         });
 
         return itemNotaFiscalConversor.converter(entidade);
-    }
-
-    // TO-DO
-    public List<ItemNotaFiscal> buscarPorProduto(Produto produto) {
-        return repository.findByProduto(produto);
-    }
-
-    // TO-DO
-    public List<ItemNotaFiscal> buscarPorNotaFiscal(NotaFiscal notaFiscal) {
-        return repository.findByNotaFiscal(notaFiscal);
     }
 
     public List<ItemNotaFiscalDto> buscarPorQuantidade(BigDecimal quantidade) {
@@ -123,46 +88,15 @@ public class ItemNotaFiscalService {
         try {
             ItemNotaFiscal itemNotaFiscal = itemNotaFiscalConversor.converter(item);
             ItemNotaFiscal itemNotaAtualizar = verificarPorId(id);
-
-            if (itemNotaFiscal.getNotaFiscal() != null) {
-                itemNotaAtualizar.setNotaFiscal(notaFiscalService.verificarPorId(itemNotaFiscal.getNotaFiscal().getId()));
-            }
-            if (itemNotaFiscal.getProduto() != null) {
-                itemNotaAtualizar.setProduto(produtoService.verificarPorId(itemNotaAtualizar.getProduto().getId()));
-            }
-            if (itemNotaFiscal.getPrecoUnitario() != null) {
-                itemNotaAtualizar.setPrecoUnitario(itemNotaFiscal.getPrecoUnitario());
-            }
-            if (itemNotaFiscal.getQuantidade() != null && itemNotaFiscal.getQuantidade().doubleValue() >= 0) {
-                itemNotaAtualizar = controleEstoque.atualizarEstoque(itemNotaFiscal, itemNotaAtualizar);
-                itemNotaAtualizar.setQuantidade(itemNotaFiscal.getQuantidade());
-            }
-            itemNotaAtualizar.setValorTotal(
-                            calcularValorTotal(itemNotaAtualizar.getQuantidade(), itemNotaAtualizar.getPrecoUnitario()));
+            itemNotaAtualizar = atribuirValores(itemNotaFiscal, itemNotaAtualizar);
             validar(itemNotaAtualizar);
             repository.save(itemNotaAtualizar);
             notaFiscalService.persistirValorTotal(itemNotaAtualizar.getNotaFiscal().getId());
             return itemNotaFiscalConversor.converter(itemNotaAtualizar);
-        } catch (ItemNotaFiscalException infe) {
+        } catch (ItemNotaFiscalExcecao infe) {
             LOG.error(infe.getMessage());
             return null;
         }
-    }
-
-    private void validar(ItemNotaFiscal itemNotaFiscal) throws ItemNotaFiscalException {
-
-        if (itemNotaFiscal.getPrecoUnitario().doubleValue() <= 0) {
-            throw new ItemNotaFiscalException("Falha ao salvar no banco: o preço não pode ser menor ou igual a 0. ");
-        }
-        if (itemNotaFiscal.getQuantidade().doubleValue() <= 0) {
-            throw new ItemNotaFiscalException("Falha ao salvar no banco: o preço não pode ser menor ou igual a 0. ");
-        }
-
-        if (itemNotaFiscal.getNotaFiscal() == null || itemNotaFiscal.getProduto() == null) {
-            throw new ItemNotaFiscalException("Falha ao salvar no banco: a nota fiscal e o produto não podem ser nulo. ");
-
-        }
-
     }
 
     public void deletarPorId(int id) {
@@ -176,7 +110,7 @@ public class ItemNotaFiscalService {
             if (itemNotaFiscal.getNotaFiscal().getTipo().equalsIgnoreCase("entrada")) {
                 quantidadeEstoque = controleEstoque.diminuirEstoque(quantidadeEstoque, quantidadeItem);
 
-            } else if (itemNotaFiscal.getNotaFiscal().getTipo().equalsIgnoreCase("saida")) {
+            } else {
                 quantidadeEstoque = controleEstoque.somarEstoque(quantidadeEstoque, quantidadeItem);
             }
             produto.setEstoque(quantidadeEstoque);
@@ -189,6 +123,80 @@ public class ItemNotaFiscalService {
 
     }
 
+    private ItemNotaFiscal atribuirValores(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
+        if (itemNotaFiscal.getNotaFiscal() != null) {
+            itemNotaAtualizar.setNotaFiscal(notaFiscalService.verificarPorId(itemNotaFiscal.getNotaFiscal().getId()));
+        }
+        if (itemNotaFiscal.getProduto() != null) {
+            itemNotaAtualizar.setProduto(produtoService.verificarPorId(itemNotaAtualizar.getProduto().getId()));
+        }
+        if (itemNotaFiscal.getPrecoUnitario() != null) {
+            itemNotaAtualizar.setPrecoUnitario(itemNotaFiscal.getPrecoUnitario());
+        }
+        if (itemNotaFiscal.getQuantidade() != null && itemNotaFiscal.getQuantidade().doubleValue() >= 0) {
+            itemNotaAtualizar = controleEstoque.atualizarEstoque(itemNotaFiscal, itemNotaAtualizar);
+            itemNotaAtualizar.setQuantidade(itemNotaFiscal.getQuantidade());
+        }
+        itemNotaAtualizar
+                        .setValorTotal(calcularValorTotal(itemNotaAtualizar.getQuantidade(), itemNotaAtualizar.getPrecoUnitario()));
+        return itemNotaAtualizar;
+    }
+
+    private void atualizarEstoqueECusto(ItemNotaFiscal itemNotaFiscal) throws ControleEstoqueException {
+        Produto produto = itemNotaFiscal.getProduto();
+        NotaFiscal notaFiscal = itemNotaFiscal.getNotaFiscal();
+        BigDecimal valorTotal = calcularValorTotal(itemNotaFiscal.getQuantidade(), itemNotaFiscal.getPrecoUnitario()).setScale(2,
+                        RoundingMode.HALF_UP);
+        BigDecimal estoqueAtualizado = controleEstoque.controlarQuantidadeEstoque(itemNotaFiscal);
+        produto.setEstoque(estoqueAtualizado);
+        if (notaFiscal.getTipo().equalsIgnoreCase("entrada")) {
+            BigDecimal custoTotal = CustoMedioService.calcularCustoTotal(produto.getCustoMedio().setScale(2, RoundingMode.HALF_UP),
+                            produto.getEstoque().setScale(2, RoundingMode.HALF_UP));
+            BigDecimal custoTotalAtualizado = CustoMedioService.adicionarCustoTotal(valorTotal, custoTotal);
+            BigDecimal custoMedioAtualizado = CustoMedioService.calcularCustoMedio(estoqueAtualizado, custoTotalAtualizado);
+            produto.setCustoMedio(custoMedioAtualizado);
+        }
+        produtoRepository.save(produto);
+    }
+
+    private void persistirEntidades(ItemNotaFiscal itemNotaFiscal) {
+        itemNotaFiscal.setValorTotal(calcularValorTotal(itemNotaFiscal.getQuantidade(), itemNotaFiscal.getPrecoUnitario()));
+        repository.save(itemNotaFiscal);
+        itemNotaFiscal.getNotaFiscal().setValorTotal(notaFiscalService.persistirValorTotal(itemNotaFiscal.getNotaFiscal().getId()));
+    }
+
+    void verificarItemExistente(ItemNotaFiscal itemNotaFiscal) throws ItemNotaFiscalExcecao {
+        if (!repository.findByNotaFiscalAndProduto(itemNotaFiscal.getNotaFiscal(), itemNotaFiscal.getProduto()).isEmpty()) {
+            throw new ItemNotaFiscalExcecao("Falha ao salvar no banco: o item já está cadastrado nesta nota fiscal. ");
+        }
+
+        validar(itemNotaFiscal);
+    }
+
+    private ItemNotaFiscal converterItemNotaFiscal(ItemNotaFiscalDto itemNotaFiscalDto) throws ItemNotaFiscalExcecao {
+        ItemNotaFiscal itemNotaFiscal = itemNotaFiscalConversor.converter(itemNotaFiscalDto);
+        validar(itemNotaFiscal);
+        itemNotaFiscal.setNotaFiscal(notaFiscalService.verificarPorId(itemNotaFiscalDto.getNotaFiscal().getId()));
+        itemNotaFiscal.setProduto(produtoService.verificarPorId(itemNotaFiscalDto.getProduto().getId()));
+        return itemNotaFiscal;
+    }
+
+    private void validar(ItemNotaFiscal itemNotaFiscal) throws ItemNotaFiscalExcecao {
+
+        if (itemNotaFiscal.getPrecoUnitario() == null || itemNotaFiscal.getPrecoUnitario().doubleValue() <= 0) {
+            throw new ItemNotaFiscalExcecao("Falha ao salvar no banco: o preço não pode ser menor ou igual a 0. ");
+        }
+        if (itemNotaFiscal.getQuantidade() == null || itemNotaFiscal.getQuantidade().doubleValue() <= 0) {
+            throw new ItemNotaFiscalExcecao("Falha ao salvar no banco: o preço não pode ser menor ou igual a 0. ");
+        }
+
+        if (itemNotaFiscal.getNotaFiscal() == null || itemNotaFiscal.getProduto() == null) {
+            throw new ItemNotaFiscalExcecao("Falha ao salvar no banco: a nota fiscal e o produto não podem ser nulo. ");
+
+        }
+
+    }
+
     public ItemNotaFiscal verificarPorId(int id) {
         return repository.findById(id).orElseGet(() -> {
             LOG.error("Não foi possível encontrar um item com este id {}", id);
@@ -196,7 +204,7 @@ public class ItemNotaFiscalService {
         });
     }
 
-    public static BigDecimal calcularValorTotal(BigDecimal quantidade, BigDecimal precoUnitario) {
+    public BigDecimal calcularValorTotal(BigDecimal quantidade, BigDecimal precoUnitario) {
         return precoUnitario.multiply(quantidade).setScale(2, RoundingMode.HALF_UP);
 
     }

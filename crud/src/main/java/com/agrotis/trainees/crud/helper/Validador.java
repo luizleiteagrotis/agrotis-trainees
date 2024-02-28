@@ -2,41 +2,40 @@ package com.agrotis.trainees.crud.helper;
 
 import org.springframework.stereotype.Component;
 
-import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
-import com.agrotis.trainees.crud.service.NotaFiscalService;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
-import com.agrotis.trainees.crud.service.ProdutoService;
+import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
+import com.agrotis.trainees.crud.repository.ProdutoRepository;
 
 @Component
 public class Validador {
-    private ParceiroNegocioService parceiroNegocioService;
-    private NotaFiscalService notaFiscalService;
-    private ProdutoService produtoService;
-    private ItemNotaFiscalService itemNotaFiscalService;
+    private ParceiroNegocioRepository parceiroNegocioRepository;
+    private NotaFiscalRepository notaFiscalRepository;
+    private ProdutoRepository produtoRepository;
 
-    Validador(ParceiroNegocioService parceiroNegocioService, NotaFiscalService notaFiscalService, ProdutoService produtoService,
-                    ItemNotaFiscalService itemNotaFiscalService) {
+    Validador(ParceiroNegocioRepository parceiroNegocioRepository, NotaFiscalRepository notaFiscalRepository,
+                    ProdutoRepository produtoRepository) {
         super();
-        this.parceiroNegocioService = parceiroNegocioService;
-        this.notaFiscalService = notaFiscalService;
-        this.produtoService = produtoService;
-        this.itemNotaFiscalService = itemNotaFiscalService;
+        this.parceiroNegocioRepository = parceiroNegocioRepository;
+        this.notaFiscalRepository = notaFiscalRepository;
+        this.produtoRepository = produtoRepository;
     }
 
     public boolean existeParceiroPorId(int id) {
-        return parceiroNegocioService.buscarPorId(id) != null;
+        return parceiroNegocioRepository.findById(id).orElseGet(() -> {
+            return null;
+        }) != null;
     }
 
     public boolean existeNotaFiscalPorId(int id) {
-        return notaFiscalService.buscarPorId(id) != null;
+        return notaFiscalRepository.findById(id).orElseGet(() -> {
+            return null;
+        }) != null;
     }
 
     public boolean existeProdutoPorId(int id) {
-        return produtoService.buscarPorId(id) != null;
-    }
-
-    public boolean existeItemNotaFiscalPorId(int id) {
-        return itemNotaFiscalService.buscarPorId(id) != null;
+        return produtoRepository.findById(id).orElseGet(() -> {
+            return null;
+        }) != null;
     }
 
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 import com.agrotis.trainees.crud.dto.ItemNotaFiscalDto;
+import com.agrotis.trainees.crud.exception.ControleEstoqueException;
+import com.agrotis.trainees.crud.exception.ItemNotaFiscalExcecao;
 import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 
 @RequestMapping("notas-fiscais/itens")
@@ -26,7 +28,8 @@ public class ItemNotaFiscalController {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody ItemNotaFiscalDto itemNotaFiscalDto) {
+    public ResponseEntity<?> salvar(@RequestBody ItemNotaFiscalDto itemNotaFiscalDto)
+                    throws ItemNotaFiscalExcecao, ControleEstoqueException {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(itemNotaFiscalDto));
     }
 

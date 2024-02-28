@@ -13,6 +13,18 @@ public class ItemNotaFiscalDto {
     private BigDecimal precoUnitario;
     private BigDecimal valorTotal;
 
+    public ItemNotaFiscalDto() {
+
+    }
+
+    public ItemNotaFiscalDto(Produto produto, NotaFiscal notaFiscal, BigDecimal quantidade, BigDecimal precoUnitario) {
+        super();
+        this.produto = produto;
+        this.notaFiscal = notaFiscal;
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

@@ -22,4 +22,15 @@ public interface CustoMedioService {
 
         return custoTotal.divide(quantidadeTotal, 2, RoundingMode.HALF_UP);
     }
+
+    public static BigDecimal calcularCustoTotal(BigDecimal custoMedio, BigDecimal estoque) {
+        if (custoMedio == null || estoque == null) {
+            throw new CrudException("O quantidade total e o custo total não podem ser nulos.");
+        }
+        return custoMedio.multiply(estoque);
+    }
+
+    public static BigDecimal adicionarCustoTotal(BigDecimal valorTotal, BigDecimal custoTotal) {
+        return valorTotal.add(custoTotal);
+    }
 }
