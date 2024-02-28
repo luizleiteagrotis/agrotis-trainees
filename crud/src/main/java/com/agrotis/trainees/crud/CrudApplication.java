@@ -177,10 +177,10 @@ public class CrudApplication implements CommandLineRunner {
             notaFiscalBuscaID.setNumero(2);
             
             notaFiscalBuscaID = cabecalhoNotaFiscalService.atualizar(notaFiscalBuscaID.getId());
-            LOG.info("Registro do parceiro {} atualizado.", notaFiscalBuscaID);
+            LOG.info("Registro da nota fiscal {} atualizado.", notaFiscalBuscaID);
             
             cabecalhoNotaFiscalService.deletarPorId(notaFiscalBuscaID.getId());
-            LOG.info("Registro do parceiro {} removido.", notaFiscalBuscaID);
+            LOG.info("Registro da nota fiscal {} removido.", notaFiscalBuscaID);
         }
         if (opcao == 5) {
         	
@@ -197,6 +197,11 @@ public class CrudApplication implements CommandLineRunner {
         	
         	ItemNotaFiscal itemNotaBuscaProduto = itemNotaFiscalService.buscarPorProduto(produtosSalvos.get(1));
         	LOG.info("Item Nota Fiscal {} encontrado por produto.", itemNotaBuscaProduto.getId());
+        	
+        	itemNotaBuscaID.setPrecoUnitario(BigDecimal.valueOf(3.5));
+        	itemNotaFiscalService.atualizar(itemNotaBuscaID.getId());
+        	LOG.info("Registro do item nota fiscal {} atualizado.", itemNotaBuscaID);
+        	
         }
     }
 }

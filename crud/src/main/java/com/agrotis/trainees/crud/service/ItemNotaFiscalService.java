@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.agrotis.trainees.crud.entity.CabecalhoNotaFiscal;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ItemNotaFiscalRepository;
@@ -40,4 +41,9 @@ public class ItemNotaFiscalService {
 	    		return null;
 	    	});
 	    }
+	    
+	    public ItemNotaFiscal atualizar(Integer id) {
+	    	ItemNotaFiscal nota = buscarPorId(id);
+	    	return repository.save(nota);
+	    } 
 }
