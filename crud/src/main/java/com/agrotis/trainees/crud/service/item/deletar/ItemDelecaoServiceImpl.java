@@ -10,17 +10,21 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.wrapper.EntityNotFoundException;
 import com.agrotis.trainees.crud.service.item.ItemDelecaoService;
+import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 
 @Component
 public class ItemDelecaoServiceImpl implements ItemDelecaoService {
 
 	private List<ItemDelecaoRn> delecaoRns;
 	private ItemNotaRepository itemRepository;
+	private SalvadorEmCascata salvadorEmCascata;
 	
 	@Autowired
-	public ItemDelecaoServiceImpl(List<ItemDelecaoRn> delecaoRns, ItemNotaRepository itemRepository) {
+	public ItemDelecaoServiceImpl(List<ItemDelecaoRn> delecaoRns, ItemNotaRepository itemRepository,
+			SalvadorEmCascata salvadorEmCascata) {
 		this.delecaoRns = delecaoRns;
 		this.itemRepository = itemRepository;
+		this.salvadorEmCascata = salvadorEmCascata;
 	}
 
 	@Override
@@ -33,6 +37,7 @@ public class ItemDelecaoServiceImpl implements ItemDelecaoService {
 			rn.operarSobre(item);
 		});
 		
+		salvadorEmCascata.salvar(item);
 		itemRepository.deletar(idItem);
 	}
 

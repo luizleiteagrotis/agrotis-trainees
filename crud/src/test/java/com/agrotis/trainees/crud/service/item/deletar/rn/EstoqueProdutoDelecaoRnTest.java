@@ -23,9 +23,6 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
 
 @ExtendWith(MockitoExtension.class)
 class EstoqueProdutoDelecaoRnTest {
-
-	@Mock
-	private ProdutoRepository produtoRepository;
 	
 	@InjectMocks
 	private EstoqueProdutoDelecaoRn estoqueProdutoDelecaoRn;
@@ -63,30 +60,6 @@ class EstoqueProdutoDelecaoRnTest {
 		estoqueProdutoDelecaoRn.operarSobre(item);
 		
 		assertThat(produto.getEstoque(), is(equalTo(estoqueEsperado(30))));
-	}
-	
-	@Test
-	public void deveSalvarProdutoQuandoRealizarOperacoesComSucesso() {
-		produto.setEstoque(estoqueInicialProduto(10));
-		item.setQuantidade(quantidadeItem(20));
-		cabecalho.setTipo(TipoNota.SAIDA);
-		
-		estoqueProdutoDelecaoRn.operarSobre(item);
-		
-		verify(produtoRepository, times(1)).salvar(produto);
-	}
-	
-	@Test
-	public void deveNaoSalvarProdutoQuandoDeletarItemComCabecalhoTipoEntradaEEstoqueFicarNegativo() {
-		produto.setEstoque(estoqueInicialProduto(10));
-		item.setQuantidade(quantidadeItem(20));
-		cabecalho.setTipo(TipoNota.ENTRADA);
-
-		try {
-			estoqueProdutoDelecaoRn.operarSobre(item);			
-		} catch (ItemDelecaoRnException ignored) {}
-		
-		verify(produtoRepository, never()).salvar(produto);
 	}
 	
 	@Test

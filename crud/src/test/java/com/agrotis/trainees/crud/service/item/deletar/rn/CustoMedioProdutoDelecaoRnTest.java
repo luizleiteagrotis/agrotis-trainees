@@ -24,9 +24,6 @@ import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 @ExtendWith(MockitoExtension.class)
 class CustoMedioProdutoDelecaoRnTest {
 	
-	@Mock
-	private ProdutoRepository produtoRepository;
-	
 	@InjectMocks
 	private CustoMedioProdutoDelecaoRn custoMedioProdutoDelecaoRn;
 	
@@ -64,17 +61,6 @@ class CustoMedioProdutoDelecaoRnTest {
 		custoMedioProdutoDelecaoRn.operarSobre(item);
 		
 		assertThat(produto.getCustoMedio(), is(equalTo(custoMedioEsperado("0.00"))));
-	}
-	
-	@Test
-	public void deveSalvarProdutoQuandoOperacoesBemSucedidas() {
-		produto.setCustoTotal(custoTotal("25.00"));
-		produto.setEstoque(10);
-		cabecalho.setTipo(TipoNota.ENTRADA);
-		
-		custoMedioProdutoDelecaoRn.operarSobre(item);
-		
-		verify(produtoRepository, times(1)).salvar(produto);
 	}
 	
 	private BigDecimal custoTotal(String valor) {

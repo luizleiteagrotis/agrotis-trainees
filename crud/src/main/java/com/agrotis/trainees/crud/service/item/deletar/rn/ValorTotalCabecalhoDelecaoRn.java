@@ -14,13 +14,6 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
 @Component
 public class ValorTotalCabecalhoDelecaoRn implements ItemDelecaoRn {
 
-	private CabecalhoNotaRepository cabecalhoRepository;
-	
-	@Autowired
-	public ValorTotalCabecalhoDelecaoRn(CabecalhoNotaRepository cabecalhoRepository) {
-		this.cabecalhoRepository = cabecalhoRepository;
-	}
-
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
@@ -35,7 +28,6 @@ public class ValorTotalCabecalhoDelecaoRn implements ItemDelecaoRn {
 		}
 		cabecalho.setValorTotal(novoValorCabecalho);
 		item.setCabecalhoNota(cabecalho);
-		cabecalhoRepository.salvar(cabecalho);
 		return item;
 	}
 	

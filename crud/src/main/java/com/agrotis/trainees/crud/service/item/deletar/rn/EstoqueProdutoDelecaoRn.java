@@ -14,13 +14,6 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
 @Component
 public class EstoqueProdutoDelecaoRn implements ItemDelecaoRn {
 
-	private ProdutoRepository produtoRepository;
-	
-	@Autowired
-	public EstoqueProdutoDelecaoRn(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
-	}
-
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
@@ -45,7 +38,6 @@ public class EstoqueProdutoDelecaoRn implements ItemDelecaoRn {
 		}
 		produto.setEstoque(novoEstoqueProduto);
 		item.setProduto(produto);
-		produtoRepository.salvar(produto);
 		return item;
 	}
 

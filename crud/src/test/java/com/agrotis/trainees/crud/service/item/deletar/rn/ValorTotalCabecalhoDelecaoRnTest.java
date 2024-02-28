@@ -25,9 +25,6 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
 
 @ExtendWith(MockitoExtension.class)
 class ValorTotalCabecalhoDelecaoRnTest {
-
-	@Mock
-	private CabecalhoNotaRepository cabecalhoRepository;
 	
 	@InjectMocks
 	private ValorTotalCabecalhoDelecaoRn valorTotalCabecalhoDelecaoRn;
@@ -65,29 +62,6 @@ class ValorTotalCabecalhoDelecaoRnTest {
 		valorTotalCabecalhoDelecaoRn.operarSobre(item);
 		
 		assertThat(cabecalho.getValorTotal(), is(equalTo(valorEsperado("10.00"))));
-	}
-	
-	@Test
-	public void deveSalvarCabecalhoQuandoOperacoesForemBemSucedidas() {
-		cabecalho.setValorTotal(valorInicialCabecalho("30.00"));
-		item.setValorTotal(valorItem("20.00"));
-		cabecalho.setTipo(TipoNota.SAIDA);
-		
-		valorTotalCabecalhoDelecaoRn.operarSobre(item);
-		
-		verify(cabecalhoRepository, times(1)).salvar(cabecalho);
-	}
-	
-	@Test
-	public void deveNaoSalvarCabecalhoQuandoNovoValorTotalCabecalhoFicarNegativo() {
-		cabecalho.setValorTotal(valorInicialCabecalho("10.00"));
-		item.setValorTotal(valorItem("20.00"));
-		
-		try {
-			valorTotalCabecalhoDelecaoRn.operarSobre(item);
-		} catch (ItemDelecaoRnException ignored) {}
-		
-		verify(cabecalhoRepository, never()).salvar(cabecalho);
 	}
 	
 	@Test

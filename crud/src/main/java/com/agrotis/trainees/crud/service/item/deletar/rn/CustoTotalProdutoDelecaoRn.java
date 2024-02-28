@@ -14,13 +14,6 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRn;
 
 @Component
 public class CustoTotalProdutoDelecaoRn implements ItemDelecaoRn {
-
-	private ProdutoRepository produtoRepository;
-	
-	@Autowired
-	public CustoTotalProdutoDelecaoRn(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
-	}
 	
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
@@ -40,7 +33,6 @@ public class CustoTotalProdutoDelecaoRn implements ItemDelecaoRn {
 				novoCustoTotal = custoTotalProduto.subtract(quantidadeItem.multiply(custoMedio)); 
 		}
 		produto.setCustoTotal(novoCustoTotal);
-		produtoRepository.salvar(produto);
 		return item;
 	}
 

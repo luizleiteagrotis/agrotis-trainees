@@ -18,13 +18,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
-import com.agrotis.trainees.crud.repository.wrapper.EntityNotFoundException;
+import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 
 @ExtendWith(MockitoExtension.class)
 class ItemDelecaoServiceImplTest {
 
 	@Mock
 	private ItemMapper itemMapper;
+	
+	@Mock
+	private SalvadorEmCascata salvadorEmCascata;
 	
 	@Mock
 	private ItemNotaRepository itemRepository;
@@ -45,7 +48,7 @@ class ItemDelecaoServiceImplTest {
 	@BeforeEach
 	public void setUp() {
 		delecaoRns = new ArrayList<>();
-		itemDelecaoServiceImpl = new ItemDelecaoServiceImpl(delecaoRns, itemRepository);
+		itemDelecaoServiceImpl = new ItemDelecaoServiceImpl(delecaoRns, itemRepository, salvadorEmCascata);
 		item = new ItemNota();
 	}
 	
@@ -58,6 +61,29 @@ class ItemDelecaoServiceImplTest {
 		itemDelecaoServiceImpl.deletar(ITEM_ID);
 		
 		verify(itemRepository, times(1)).deletar(ITEM_ID);
+	}
+	
+	@Test
+	public void deveSalvarItemEmCascataQuandoPassarPorTodasAsRns() {
+		when(itemRepository.buscarPor(ITEM_ID)).thenReturn(item);
+		
+		itemDelecaoServiceImpl.deletar(ITEM_ID);
+		
+		verify(salvadorEmCascata, times(1)).salvar(item);
+	}
+	
+	@Test
+	public void deveExecutarTodosOsRnsQuandoEncontrarUmItemComSucesso() {
+		when(itemRepository.buscarPor(ITEM_ID)).thenReturn(item);
+		delecaoRns.add(itemDelecaoRn1);
+		delecaoRns.add(itemDelecaoRn2);
+		
+		try {
+			itemDelecaoServiceImpl.deletar(ITEM_ID);
+		} catch (Exception ignored) {}
+		
+		verify(itemDelecaoRn1, times(1)).operarSobre(item);
+		verify(itemDelecaoRn2, times(1)).operarSobre(item);
 	}
 	
 	@Test
@@ -85,19 +111,5 @@ class ItemDelecaoServiceImplTest {
 		} catch (ItemDelecaoRnException ignored) {}
 		
 		verify(itemDelecaoRn2, never()).operarSobre(item);
-	}
-
-	@Test
-	public void deveExecutarTodosOsRnsQuandoDeletarUmItemComSucesso() {
-		when(itemRepository.buscarPor(ITEM_ID)).thenReturn(item);
-		delecaoRns.add(itemDelecaoRn1);
-		delecaoRns.add(itemDelecaoRn2);
-		
-		try {
-			itemDelecaoServiceImpl.deletar(ITEM_ID);
-		} catch (Exception ignored) {}
-		
-		verify(itemDelecaoRn1, times(1)).operarSobre(item);
-		verify(itemDelecaoRn2, times(1)).operarSobre(item);
 	}
 }

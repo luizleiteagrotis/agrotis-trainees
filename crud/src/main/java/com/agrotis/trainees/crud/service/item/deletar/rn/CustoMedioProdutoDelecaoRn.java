@@ -16,13 +16,6 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRn;
 @Component
 public class CustoMedioProdutoDelecaoRn implements ItemDelecaoRn {
 
-	private ProdutoRepository produtoRepository;
-	
-	@Autowired
-	public CustoMedioProdutoDelecaoRn(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
-	}
-
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
@@ -38,7 +31,6 @@ public class CustoMedioProdutoDelecaoRn implements ItemDelecaoRn {
 				custoMedio = BigDecimal.ZERO;
 			}
 			produto.setCustoMedio(custoMedio);
-			produtoRepository.salvar(produto);
 		}
 		return item;
 	}
