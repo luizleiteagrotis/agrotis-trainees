@@ -78,8 +78,8 @@ public class NotaFiscalItemService {
             estoqueService.atualizarEstoque(entidade, item);
         } catch (EstoqueZeradoException e) {
             System.out.println("Erro: " + e.getMessage());
-            return null;
         }
+
         nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
 
         ModelMapper modelMapper = new ModelMapper();

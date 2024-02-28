@@ -35,10 +35,8 @@ public class ItemService {
 
         if (buscarPorProdutoAndId != null) {
             if (buscarPorProdutoAndId.getPrecoUnitario().equals(entidade.getPrecoUnitario())) {
-                buscarPorProdutoAndId.setQuantidade(buscarPorProdutoAndId.getQuantidade() + entidade.getQuantidade());
-                obterValorTotal(buscarPorProdutoAndId);
-                valorNotaFiscalService.atualizarValorTotalNota(entidade);
-                return buscarPorProdutoAndId;
+                NotaFiscalItem itemAtualizado = alterarQuantidadeItem(entidade);
+                return itemAtualizado;
             }
             throw new ValorDiferenteException("Item com preço diferente do original");
         } else {
@@ -46,6 +44,18 @@ public class ItemService {
             valorNotaFiscalService.atualizarValorTotalNota(entidade);
             return entidade;
         }
+
+    }
+
+    public NotaFiscalItem alterarQuantidadeItem(NotaFiscalItem entidade) {
+        NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
+        Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
+        NotaFiscalItem buscarPorProdutoAndId = repository.findByProdutoAndIdNota(produto, nota);
+
+        buscarPorProdutoAndId.setQuantidade(buscarPorProdutoAndId.getQuantidade() + entidade.getQuantidade());
+        obterValorTotal(buscarPorProdutoAndId);
+        valorNotaFiscalService.atualizarValorTotalNota(entidade);
+        return buscarPorProdutoAndId;
 
     }
 
@@ -58,7 +68,7 @@ public class ItemService {
             field.setAccessible(true);
 
             try {
-                if (field.get(entidade) == null || field.get(entidade).equals(0) || field.get(entidade).equals(0.0)) {
+                if (field.get(entidade) == null || field.get(entidade).equals(0) || field.get(entidade).equals(new BigDecimal(0))) {
 
                     field.set(entidade, field.get(item));
                 }
