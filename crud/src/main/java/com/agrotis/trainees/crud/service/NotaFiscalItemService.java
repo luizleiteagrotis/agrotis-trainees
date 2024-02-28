@@ -116,8 +116,8 @@ public class NotaFiscalItemService {
         return repository.findAll();
     }
 
-    public void deletarPorId(Integer id) {
-        repository.deleteById(id);
+    public void deletarPorId(Integer id) throws DescricaoExisteException, EstoqueZeradoException {
+        estoqueService.deletarEstoque(id);
         LOG.info("id: {} deletado com sucesso", id);
     }
 

@@ -56,7 +56,7 @@ public class NotaFiscalItemController {
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Integer id) throws DescricaoExisteException, EstoqueZeradoException {
-        estoqueService.deletarEstoque(id);
+        service.deletarPorId(id);
         return ResponseEntity.ok().body(null);
     }
 }
