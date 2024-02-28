@@ -6,15 +6,19 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNotaFiscal;
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.service.CabecalhoNotaFiscalService;
+import com.agrotis.trainees.crud.service.ItemNotaFiscalService;
 import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -28,13 +32,15 @@ public class CrudApplication implements CommandLineRunner {
     private final ParceiroNegocioService parceiroNegocioService;
     private final ProdutoService produtoService;
     private final CabecalhoNotaFiscalService cabecalhoNotaFiscalService;
+    private final ItemNotaFiscalService itemNotaFiscalService;
 
     public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegocioService,
-                    ProdutoService produtoService, CabecalhoNotaFiscalService cabecalhoNotaFiscalService) {
+                    ProdutoService produtoService, CabecalhoNotaFiscalService cabecalhoNotaFiscalService, ItemNotaFiscalService itemNotaFiscalService) {
         this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegocioService = parceiroNegocioService;
         this.produtoService = produtoService;
         this.cabecalhoNotaFiscalService = cabecalhoNotaFiscalService;
+        this.itemNotaFiscalService = itemNotaFiscalService;
     }
 
     public static void main(String[] args) {
@@ -48,12 +54,10 @@ public class CrudApplication implements CommandLineRunner {
         Scanner scan = new Scanner(System.in);
         List<ParceiroNegocio> parceirosSalvos = parceiroNegocioService.listarTodos();
 
-        for (ParceiroNegocio parceiro : parceirosSalvos) {
-            System.out.println(parceiro);
-        }
+        List<Produto> produtosSalvos = produtoService.listarTodos();
 
         System.out.println(
-                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2 - 3 - 4");
+                        "Insira um número para mexer com o CRUD do tipo nota fiscal , parceiro de negócio, produto, nota fiscal ou item nota fiscal: 1 - 2 - 3 - 4 - 5");
 
         int opcao = scan.nextInt();
 
@@ -117,10 +121,6 @@ public class CrudApplication implements CommandLineRunner {
             // Produto produto2 = produtoService.salvar(produto);
             // LOG.info("id inserido: {}", produto2.getId());
             //
-            // List<Produto> produtosSalvos = produtoService.listarTodos();
-            // for (Produto produtoItem : produtosSalvos) {
-            // System.out.println(produtoItem);
-            // }
             //
             // Produto produtoBuscaID =
             // produtoService.buscarPorId(produtosSalvos.get(1).getId());
@@ -181,6 +181,18 @@ public class CrudApplication implements CommandLineRunner {
             
             cabecalhoNotaFiscalService.deletarPorId(notaFiscalBuscaID.getId());
             LOG.info("Registro do parceiro {} removido.", notaFiscalBuscaID);
+        }
+        if (opcao == 5) {
+        	
+        	ItemNotaFiscal itemNota = new ItemNotaFiscal();
+        	itemNota.setPrecoUnitario(BigDecimal.valueOf(2.5));
+        	itemNota.setProduto(produtosSalvos.get(0));
+        	itemNota.setQuantidade(50);
+        	itemNota.calculaValorTotal();
+        	
+
+        	
+
         }
     }
 }

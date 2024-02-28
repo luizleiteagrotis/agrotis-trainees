@@ -14,7 +14,7 @@ import com.agrotis.trainees.crud.repository.CabecalhoNotaFiscalRepository;
 @Service
 public class CabecalhoNotaFiscalService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CabecalhoNotaFiscalService.class);
 
     private final CabecalhoNotaFiscalRepository repository;
 

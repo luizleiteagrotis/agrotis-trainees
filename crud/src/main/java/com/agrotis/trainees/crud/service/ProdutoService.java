@@ -12,7 +12,7 @@ import com.agrotis.trainees.crud.repository.ProdutoRepository;
 @Service
 public class ProdutoService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProdutoService.class);
 
     private final ProdutoRepository repository;
 
