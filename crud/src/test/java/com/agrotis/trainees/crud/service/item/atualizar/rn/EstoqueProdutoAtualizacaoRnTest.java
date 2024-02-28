@@ -20,7 +20,7 @@ import com.agrotis.trainees.crud.entity.TipoNota;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 import com.agrotis.trainees.crud.service.item.atualizar.ItemAtualizacaoRnException;
-import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
+import com.agrotis.trainees.crud.util.CalculadorItem;
 
 @ExtendWith(MockitoExtension.class)
 class EstoqueProdutoAtualizacaoRnTest {

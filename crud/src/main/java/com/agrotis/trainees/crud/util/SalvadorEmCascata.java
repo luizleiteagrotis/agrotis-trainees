@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service.item.util;
+package com.agrotis.trainees.crud.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

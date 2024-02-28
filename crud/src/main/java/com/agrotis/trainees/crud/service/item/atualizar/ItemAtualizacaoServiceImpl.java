@@ -12,8 +12,8 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.service.item.ItemAtualizacaoService;
-import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 import com.agrotis.trainees.crud.util.ItemNotaFactory;
+import com.agrotis.trainees.crud.util.SalvadorEmCascata;
 
 @Component
 public class ItemAtualizacaoServiceImpl implements ItemAtualizacaoService{

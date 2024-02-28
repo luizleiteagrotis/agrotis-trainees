@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service.item.util;
+package com.agrotis.trainees.crud.util;
 
 public class CalculadorItemException extends RuntimeException {
 

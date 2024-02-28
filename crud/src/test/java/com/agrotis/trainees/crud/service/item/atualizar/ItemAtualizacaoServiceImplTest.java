@@ -23,9 +23,9 @@ import com.agrotis.trainees.crud.dto.item.ItemAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.item.ItemRetornoDto;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
-import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
-import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
+import com.agrotis.trainees.crud.util.CalculadorItem;
 import com.agrotis.trainees.crud.util.ItemNotaFactory;
+import com.agrotis.trainees.crud.util.SalvadorEmCascata;
 
 @ExtendWith(MockitoExtension.class)
 class ItemAtualizacaoServiceImplTest {

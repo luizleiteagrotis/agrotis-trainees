@@ -12,9 +12,9 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.service.item.ItemCadastroService;
-import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
-import com.agrotis.trainees.crud.service.item.util.CalculadorItemException;
-import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
+import com.agrotis.trainees.crud.util.CalculadorItem;
+import com.agrotis.trainees.crud.util.CalculadorItemException;
+import com.agrotis.trainees.crud.util.SalvadorEmCascata;
 
 @Component
 public class ItemCadastroServiceImpl implements ItemCadastroService {

@@ -23,8 +23,8 @@ import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
 import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRnException;
-import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
-import com.agrotis.trainees.crud.service.item.util.CalculadorItemException;
+import com.agrotis.trainees.crud.util.CalculadorItem;
+import com.agrotis.trainees.crud.util.CalculadorItemException;
 
 @ExtendWith(MockitoExtension.class)
 class ValorTotalCadastroRnTest {

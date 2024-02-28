@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service.item.util;
+package com.agrotis.trainees.crud.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.agrotis.trainees.crud.entity.ItemNota;
+import com.agrotis.trainees.crud.util.CalculadorItem;
+import com.agrotis.trainees.crud.util.CalculadorItemException;
 
 @ExtendWith(MockitoExtension.class)
 class CalculadorItemTest {

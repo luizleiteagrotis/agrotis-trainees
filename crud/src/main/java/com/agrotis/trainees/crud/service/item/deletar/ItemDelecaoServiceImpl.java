@@ -10,7 +10,7 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.wrapper.EntityNotFoundException;
 import com.agrotis.trainees.crud.service.item.ItemDelecaoService;
-import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
+import com.agrotis.trainees.crud.util.SalvadorEmCascata;
 
 @Component
 public class ItemDelecaoServiceImpl implements ItemDelecaoService {

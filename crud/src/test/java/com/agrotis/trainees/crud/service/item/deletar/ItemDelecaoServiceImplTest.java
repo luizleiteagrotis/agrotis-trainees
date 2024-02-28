@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
-import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
+import com.agrotis.trainees.crud.util.SalvadorEmCascata;
 
 @ExtendWith(MockitoExtension.class)
 class ItemDelecaoServiceImplTest {

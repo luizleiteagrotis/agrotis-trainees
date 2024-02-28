@@ -1,4 +1,4 @@
-package com.agrotis.trainees.crud.service.item.util;
+package com.agrotis.trainees.crud.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -21,6 +21,7 @@ import com.agrotis.trainees.crud.repository.cabecalho.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.repository.parceiro.ParceiroRepository;
 import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
+import com.agrotis.trainees.crud.util.SalvadorEmCascata;
 
 @ExtendWith(MockitoExtension.class)
 class SalvadorEmCascataTest {
