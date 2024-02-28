@@ -1,12 +1,9 @@
 package com.agrotis.trainees.crud.service.item.deletar.rn;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.math.BigDecimal;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +16,13 @@ import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
-import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
+import com.agrotis.trainees.crud.util.CalculadorProduto;
 
 @ExtendWith(MockitoExtension.class)
 class CustoMedioProdutoDelecaoRnTest {
+	
+	@Mock
+	private CalculadorProduto calculadorProduto;
 	
 	@InjectMocks
 	private CustoMedioProdutoDelecaoRn custoMedioProdutoDelecaoRn;
@@ -42,36 +42,19 @@ class CustoMedioProdutoDelecaoRnTest {
 	
 	@Test
 	public void deveRecalcularCustoMedioQuandoCabecalhoTipoEntrada() {
-		produto.setCustoTotal(custoTotal("25.00"));
-		produto.setEstoque(10);
 		cabecalho.setTipo(TipoNota.ENTRADA);
 		
 		custoMedioProdutoDelecaoRn.operarSobre(item);
 		
-		assertThat(produto.getCustoMedio(), is(equalTo(custoMedioEsperado("2.50"))));
+		verify(calculadorProduto, times(1)).calcularCustoMedio(produto);
 	}
 	
 	@Test
 	public void deveNaoRecalcularCustoMedioQuandoCabecalhoTipoSaida() {
-		produto.setCustoTotal(custoTotal("25.00"));
-		produto.setEstoque(10);
-		produto.setCustoMedio(custoMedioAtual("0.00"));
 		cabecalho.setTipo(TipoNota.SAIDA);
 		
 		custoMedioProdutoDelecaoRn.operarSobre(item);
 		
-		assertThat(produto.getCustoMedio(), is(equalTo(custoMedioEsperado("0.00"))));
-	}
-	
-	private BigDecimal custoTotal(String valor) {
-		return new BigDecimal(valor);
-	}
-	
-	private BigDecimal custoMedioAtual(String valor) {
-		return new BigDecimal(valor);
-	}
-	
-	private BigDecimal custoMedioEsperado(String valor) {
-		return new BigDecimal(valor);
+		verify(calculadorProduto, never()).calcularCustoMedio(produto);
 	}
 }

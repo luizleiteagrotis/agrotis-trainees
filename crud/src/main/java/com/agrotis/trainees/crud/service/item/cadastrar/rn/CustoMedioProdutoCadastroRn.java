@@ -1,30 +1,30 @@
 package com.agrotis.trainees.crud.service.item.cadastrar.rn;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
-import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
-import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRn;
+import com.agrotis.trainees.crud.util.CalculadorProduto;
 
 @Component
 public class CustoMedioProdutoCadastroRn implements ItemCadastroRn {
 	
+	private CalculadorProduto calculadorProduto;
+	
+	@Autowired
+	public CustoMedioProdutoCadastroRn(CalculadorProduto calculadorProduto) {
+		this.calculadorProduto = calculadorProduto;
+	}
+
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
 		TipoNota tipoCabecalho = cabecalho.getTipo();
 		if (tipoCabecalho == TipoNota.ENTRADA) {
-			Produto produto = item.getProduto();
-			BigDecimal custoTotal = produto.getCustoTotal();
-			BigDecimal estoque = BigDecimal.valueOf(produto.getEstoque());
-			BigDecimal novoCustoMedio = custoTotal.divide(estoque, RoundingMode.HALF_UP).setScale(2);
-			produto.setCustoMedio(novoCustoMedio);
+			calculadorProduto.calcularCustoMedio(item.getProduto());
 		}
 		return item;
 	}

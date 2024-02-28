@@ -1,12 +1,9 @@
 package com.agrotis.trainees.crud.service.item.cadastrar.rn;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.math.BigDecimal;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +16,13 @@ import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
-import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
+import com.agrotis.trainees.crud.util.CalculadorProduto;
 
 @ExtendWith(MockitoExtension.class)
 class CustoMedioProdutoCadastroRnTest {
+	
+	@Mock
+	private CalculadorProduto calculadorProduto;
 	
 	@InjectMocks
 	private CustoMedioProdutoCadastroRn custoMedioProdutoCadastroRn;
@@ -42,40 +42,19 @@ class CustoMedioProdutoCadastroRnTest {
 	
 	@Test
 	public void deveCalcularCustoMedioQuandoCabecalhoTipoEntrada() {
-		produto.setCustoTotal(custoTotalProduto("10.00"));
-		produto.setEstoque(estoqueProduto(20));
 		cabecalho.setTipo(TipoNota.ENTRADA);
 		
 		custoMedioProdutoCadastroRn.operarSobre(item);
 		
-		assertThat(produto.getCustoMedio(), is(equalTo(custoMedioEsperado("00.50"))));
+		verify(calculadorProduto, times(1)).calcularCustoMedio(produto);
 	}
 	
 	@Test
 	public void deveNaoCalcularCustoMedioQuandoCabecalhoTipoSaida() {
-		produto.setCustoTotal(custoTotalProduto("10.00"));
-		produto.setEstoque(estoqueProduto(20));
-		produto.setCustoMedio(custoMedioInicial("5.00"));
 		cabecalho.setTipo(TipoNota.SAIDA);
 		
 		custoMedioProdutoCadastroRn.operarSobre(item);
 		
-		assertThat(produto.getCustoMedio(), is(equalTo(custoMedioEsperado("5.00"))));
-	}
-		
-	private Integer estoqueProduto(Integer valor) {
-		return valor;
-	}
-	
-	private BigDecimal custoMedioInicial(String valor) {
-		return new BigDecimal(valor);
-	}
-	
-	private BigDecimal custoTotalProduto(String valor) {
-		return new BigDecimal(valor);
-	}
-	
-	private BigDecimal custoMedioEsperado(String valor) {
-		return new BigDecimal(valor);
+		verify(calculadorProduto, never()).calcularCustoMedio(produto);
 	}
 }

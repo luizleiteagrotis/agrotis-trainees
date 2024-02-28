@@ -12,25 +12,24 @@ import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
 import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRn;
+import com.agrotis.trainees.crud.util.CalculadorProduto;
 
 @Component
 public class CustoMedioProdutoDelecaoRn implements ItemDelecaoRn {
 
+	private CalculadorProduto calculadorProduto;
+	
+	@Autowired
+	public CustoMedioProdutoDelecaoRn(CalculadorProduto calculadorProduto) {
+		this.calculadorProduto = calculadorProduto;
+	}
+	
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
 		TipoNota tipoCabecalho = cabecalho.getTipo();
 		if (tipoCabecalho == TipoNota.ENTRADA) {
-			Produto produto = item.getProduto();
-			BigDecimal custoTotal = produto.getCustoTotal();
-			BigDecimal estoque = BigDecimal.valueOf(produto.getEstoque());
-			BigDecimal custoMedio = null;
-			if (!estoque.equals(BigDecimal.ZERO)) {
-				custoMedio = custoTotal.divide(estoque, RoundingMode.HALF_UP).setScale(2);
-			} else {
-				custoMedio = BigDecimal.ZERO;
-			}
-			produto.setCustoMedio(custoMedio);
+			calculadorProduto.calcularCustoMedio(item.getProduto());
 		}
 		return item;
 	}
