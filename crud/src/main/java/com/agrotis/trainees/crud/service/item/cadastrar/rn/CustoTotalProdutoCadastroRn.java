@@ -35,7 +35,9 @@ public class CustoTotalProdutoCadastroRn implements ItemCadastroRn {
 				novoCustoTotal = custoTotalProduto.add(valorTotalItem);
 				break;
 			case SAIDA:
-				novoCustoTotal = custoTotalProduto.subtract(valorTotalItem);
+				BigDecimal quantidadeItem = BigDecimal.valueOf(item.getQuantidade());
+				BigDecimal custoMedio = produto.getCustoMedio();
+				novoCustoTotal = custoTotalProduto.subtract(quantidadeItem.multiply(custoMedio));
 				break;
 		}
 		produto.setCustoTotal(novoCustoTotal);

@@ -55,14 +55,15 @@ class CustoTotalProdutoCadastroRnTest {
 	}
 	
 	@Test
-	public void deveDiminuirCustoTotalProdutoQuandoItemComCabecalhoTipoSaida() {
+	public void deveDiminuirCustoTotalComBaseNoCustoMedioProdutoQuandoItemComCabecalhoTipoSaida() {
 		produto.setCustoTotal(custoTotalInicial("30.00"));
-		item.setValorTotal(valorTotalItem("20.00"));
+		produto.setCustoMedio(custoMedioProduto("2.50"));
+		item.setQuantidade(quantidadeItem(10));
 		cabecalho.setTipo(TipoNota.SAIDA);
 		
 		custoTotalProdutoCadastroRn.operarSobre(item);
 		
-		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("10.00"))));
+		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("5.00"))));
 	}
 	
 	@Test
@@ -79,7 +80,8 @@ class CustoTotalProdutoCadastroRnTest {
 	@Test
 	public void deveSalvarProdutoQuandoExecutarOperacoesComSucessoDeItemComCabecalhoTipoSaida() {
 		produto.setCustoTotal(custoTotalInicial("30.00"));
-		item.setValorTotal(valorTotalItem("20.00"));
+		produto.setCustoMedio(custoMedioProduto("2.50"));
+		item.setQuantidade(quantidadeItem(10));
 		cabecalho.setTipo(TipoNota.SAIDA);
 		
 		custoTotalProdutoCadastroRn.operarSobre(item);
@@ -96,6 +98,14 @@ class CustoTotalProdutoCadastroRnTest {
 	}
 	
 	private BigDecimal custoTotalEsperado(String valor) {
+		return new BigDecimal(valor);
+	}
+	
+	private Integer quantidadeItem(Integer valor) {
+		return valor;
+	}
+	
+	private BigDecimal custoMedioProduto(String valor) {
 		return new BigDecimal(valor);
 	}
 }
