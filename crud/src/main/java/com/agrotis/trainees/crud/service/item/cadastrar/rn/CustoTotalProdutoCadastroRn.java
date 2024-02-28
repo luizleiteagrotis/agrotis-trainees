@@ -14,13 +14,6 @@ import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRn;
 
 @Component
 public class CustoTotalProdutoCadastroRn implements ItemCadastroRn {
-
-	private ProdutoRepository produtoRepository;
-	
-	@Autowired
-	public CustoTotalProdutoCadastroRn(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
-	}
 	
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
@@ -41,7 +34,6 @@ public class CustoTotalProdutoCadastroRn implements ItemCadastroRn {
 				break;
 		}
 		produto.setCustoTotal(novoCustoTotal);
-		produtoRepository.salvar(produto);
 		return item;
 	}
 

@@ -14,13 +14,6 @@ import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRn;
 @Component
 public class EstoqueProdutoCadastroRn implements ItemCadastroRn {
 
-	private ProdutoRepository produtoRepository;
-
-	@Autowired
-	public EstoqueProdutoCadastroRn(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
-	}
-
 	@Override
 	public ItemNota operarSobre(ItemNota item) {
 		CabecalhoNota cabecalho = item.getCabecalhoNota();
@@ -34,7 +27,6 @@ public class EstoqueProdutoCadastroRn implements ItemCadastroRn {
 			subtrairEstoque(produto, item.getQuantidade());
 			break;
 		}
-		produto = produtoRepository.salvar(produto);
 		item.setProduto(produto);
 		return item;
 	}

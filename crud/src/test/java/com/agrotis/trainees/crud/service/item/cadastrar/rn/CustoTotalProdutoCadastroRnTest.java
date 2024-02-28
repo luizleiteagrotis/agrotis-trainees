@@ -24,9 +24,6 @@ import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 @ExtendWith(MockitoExtension.class)
 class CustoTotalProdutoCadastroRnTest {
 	
-	@Mock
-	private ProdutoRepository produtoRepository;
-	
 	@InjectMocks
 	private CustoTotalProdutoCadastroRn custoTotalProdutoCadastroRn;
 	
@@ -64,29 +61,6 @@ class CustoTotalProdutoCadastroRnTest {
 		custoTotalProdutoCadastroRn.operarSobre(item);
 		
 		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("5.00"))));
-	}
-	
-	@Test
-	public void deveSalvarProdutoQuandoExecutarOperacoesComSucessoDeItemComCabecalhoTipoEntrada() {
-		produto.setCustoTotal(custoTotalInicial("00.00"));
-		item.setValorTotal(valorTotalItem("10.00"));
-		cabecalho.setTipo(TipoNota.ENTRADA);
-		
-		custoTotalProdutoCadastroRn.operarSobre(item);
-		
-		verify(produtoRepository, times(1)).salvar(produto);
-	}
-	
-	@Test
-	public void deveSalvarProdutoQuandoExecutarOperacoesComSucessoDeItemComCabecalhoTipoSaida() {
-		produto.setCustoTotal(custoTotalInicial("30.00"));
-		produto.setCustoMedio(custoMedioProduto("2.50"));
-		item.setQuantidade(quantidadeItem(10));
-		cabecalho.setTipo(TipoNota.SAIDA);
-		
-		custoTotalProdutoCadastroRn.operarSobre(item);
-		
-		verify(produtoRepository, times(1)).salvar(produto);
 	}
 	
 	private BigDecimal valorTotalItem(String valor) {

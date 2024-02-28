@@ -23,9 +23,6 @@ import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRnException;
 
 @ExtendWith(MockitoExtension.class)
 class EstoqueProdutoCadastroRnTest {
-
-	@Mock
-	private ProdutoRepository produtoRepository;
 	
 	@InjectMocks
 	private EstoqueProdutoCadastroRn estoqueProdutoCadastroRn;	
@@ -64,30 +61,6 @@ class EstoqueProdutoCadastroRnTest {
 		estoqueProdutoCadastroRn.operarSobre(item);
 		
 		assertThat(produto.getEstoque(), is(equalTo(estoqueEsperado(30))));
-	}
-	
-	@Test
-	public void deveSalvarProdutoQuandoRealizarOperacoesComSucesso() {
-		produto.setEstoque(estoqueInicial(40));
-		item.setQuantidade(quantidadeItem(10));
-		cabecalhoNota.setTipo(TipoNota.SAIDA);
-		
-		estoqueProdutoCadastroRn.operarSobre(item);
-		
-		verify(produtoRepository, times(1)).salvar(produto);
-	}
-	
-	@Test
-	public void deveNaoSalvarProdutoQuandoNaoTemEstoqueSuficienteParaUmItemComCabecalhoTipoSaida() {
-		produto.setEstoque(estoqueInicial(0));
-		item.setQuantidade(quantidadeItem(10));
-		cabecalhoNota.setTipo(TipoNota.SAIDA);
-		
-		try {
-			estoqueProdutoCadastroRn.operarSobre(item);
-		} catch (ItemCadastroRnException igonored) {}
-		
-		verify(produtoRepository, never()).salvar(produto);
 	}
 	
 	@Test

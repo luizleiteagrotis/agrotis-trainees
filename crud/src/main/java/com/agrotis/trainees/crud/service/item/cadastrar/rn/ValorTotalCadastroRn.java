@@ -17,12 +17,10 @@ import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRn;
 @Component
 public class ValorTotalCadastroRn implements ItemCadastroRn {
 
-	private CabecalhoNotaRepository cabecalhoRepository;
 	private CalculadorItem calculadorItem;
 	
 	@Autowired
-	public ValorTotalCadastroRn(CabecalhoNotaRepository cabecalhoRepository, CalculadorItem calculadorItem) {
-		this.cabecalhoRepository = cabecalhoRepository;
+	public ValorTotalCadastroRn(CalculadorItem calculadorItem) {
 		this.calculadorItem = calculadorItem;
 	}
 
@@ -43,7 +41,6 @@ public class ValorTotalCadastroRn implements ItemCadastroRn {
 		BigDecimal valorTotalCabecalho = cabecalho.getValorTotal();
 		BigDecimal valorTotalItem = item.getValorTotal();
 		cabecalho.setValorTotal(valorTotalCabecalho.add(valorTotalItem));
-		cabecalhoRepository.salvar(cabecalho);
 		return cabecalho;
 	}
 

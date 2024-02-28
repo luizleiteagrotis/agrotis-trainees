@@ -14,19 +14,20 @@ import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.service.item.ItemCadastroService;
 import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
 import com.agrotis.trainees.crud.service.item.util.CalculadorItemException;
+import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 
 @Component
 public class ItemCadastroServiceImpl implements ItemCadastroService {
 
 	private List<ItemCadastroRn> cadastroRns;
-	private ItemNotaRepository itemRepository;
 	private ItemMapper itemMapper;
+	private SalvadorEmCascata salvadorEmCascata;
 	
 	@Autowired
-	public ItemCadastroServiceImpl(List<ItemCadastroRn> cadastroRns, ItemMapper itemMapper, ItemNotaRepository itemRepository) {
+	public ItemCadastroServiceImpl(List<ItemCadastroRn> cadastroRns, ItemMapper itemMapper, SalvadorEmCascata salvadorEmCascata) {
 		this.cadastroRns = cadastroRns;
 		this.itemMapper = itemMapper;
-		this.itemRepository = itemRepository;
+		this.salvadorEmCascata = salvadorEmCascata;
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class ItemCadastroServiceImpl implements ItemCadastroService {
 	public ItemRetornoDto cadastrar(ItemCadastroDto cadastroDto) {
 		ItemNota item = itemMapper.converterParaEntidade(cadastroDto);
 		executarRns(item);
-		itemRepository.salvar(item);
+		salvadorEmCascata.salvar(item);
 		return itemMapper.converterParaDto(item);
 	}
 	

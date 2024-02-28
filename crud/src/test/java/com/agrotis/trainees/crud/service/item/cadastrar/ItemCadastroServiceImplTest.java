@@ -22,6 +22,7 @@ import com.agrotis.trainees.crud.dto.item.ItemRetornoDto;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
+import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 
 @ExtendWith(MockitoExtension.class)
 class ItemCadastroServiceImplTest {
@@ -36,7 +37,7 @@ class ItemCadastroServiceImplTest {
 	private ItemCadastroRn itemCadastroRn2;
 	
 	@Mock
-	private ItemNotaRepository itemRepository;
+	private SalvadorEmCascata salvadorEmCascata;
 	
 	private ItemCadastroServiceImpl itemCadastroServiceImpl;
 
@@ -48,7 +49,7 @@ class ItemCadastroServiceImplTest {
 	@BeforeEach
 	public void setUp() {
 		cadastroRns = new ArrayList<>();
-		itemCadastroServiceImpl = new ItemCadastroServiceImpl(cadastroRns, itemMapper, itemRepository);
+		itemCadastroServiceImpl = new ItemCadastroServiceImpl(cadastroRns, itemMapper, salvadorEmCascata);
 		itemCadastroDto = new ItemCadastroDto();
 		item = new ItemNota();
 		itemRetornoDto = new ItemRetornoDto();
@@ -82,18 +83,18 @@ class ItemCadastroServiceImplTest {
 	}
 	
 	@Test
-	public void deveSalvarItemQuandoExecutarTodasAsRns() {
+	public void deveSalvarItemEmCascataQuandoExecutarTodasAsRns() {
 		cadastroRns.add(itemCadastroRn1);
 		when(itemMapper.converterParaEntidade(itemCadastroDto)).thenReturn(item);
 		when(itemCadastroRn1.operarSobre(item)).thenReturn(item);
 		
 		itemCadastroServiceImpl.cadastrar(itemCadastroDto);
 		
-		verify(itemRepository, times(1)).salvar(item);
+		verify(salvadorEmCascata, times(1)).salvar(item);
 	}
 	
 	@Test
-	public void deveNaoSalvarItemQuandoUmaRnFalhar() {
+	public void deveNaoSalvarItemEmCascataQuandoUmaRnFalhar() {
 		cadastroRns.add(itemCadastroRn1);
 		when(itemMapper.converterParaEntidade(itemCadastroDto)).thenReturn(item);
 		when(itemCadastroRn1.operarSobre(item)).thenThrow(ItemCadastroRnException.class);
@@ -102,7 +103,7 @@ class ItemCadastroServiceImplTest {
 			itemCadastroServiceImpl.cadastrar(itemCadastroDto);
 		} catch (ItemCadastroRnException ignored) {}
 		
-		verify(itemRepository, never()).salvar(item);
+		verify(salvadorEmCascata, never()).salvar(item);
 	}
 	
 	@Test

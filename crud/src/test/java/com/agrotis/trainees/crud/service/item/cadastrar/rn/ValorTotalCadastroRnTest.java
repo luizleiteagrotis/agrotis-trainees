@@ -30,9 +30,6 @@ import com.agrotis.trainees.crud.service.item.util.CalculadorItemException;
 class ValorTotalCadastroRnTest {
 	
 	@Mock
-	private CabecalhoNotaRepository cabecalhoRepository;
-	
-	@Mock
 	private CalculadorItem calculadorItem;
 	
 	@InjectMocks
@@ -73,31 +70,6 @@ class ValorTotalCadastroRnTest {
 		valorTotalCabecalhoCadastroRn.operarSobre(item);
 		
 		assertThat(cabecalhoNota.getValorTotal(), is(equalTo(valorTotalEsperado("40.00"))));
-		verify(cabecalhoRepository, times(1)).salvar(cabecalhoNota);
-	}
-	
-	@Test
-	public void deveSalvarCabecalhoQuandoRealizarOperacoesComSucesso() {
-		cabecalhoNota.setTipo(TipoNota.SAIDA);
-		cabecalhoNota.setValorTotal(valorInicialCabecalho("30.00"));
-		item.setValorTotal(valorTotalItem("10.00"));
-		when(calculadorItem.calcularValorTotal(item)).thenReturn(item);
-		
-		valorTotalCabecalhoCadastroRn.operarSobre(item);
-		
-		verify(cabecalhoRepository, times(1)).salvar(cabecalhoNota);
-	}
-	
-	@Test
-	public void deveNaoSalvarCabecalhoQuandoCalculadorItemDerException() {
-		when(calculadorItem.calcularValorTotal(item)).thenThrow(CalculadorItemException.class);
-		
-		try {
-			valorTotalCabecalhoCadastroRn.operarSobre(item);
-		} catch (ItemCadastroRnException ignored) {
-		}
-		
-		verify(cabecalhoRepository, never()).salvar(cabecalhoNota);
 	}
 	
 	@Test
