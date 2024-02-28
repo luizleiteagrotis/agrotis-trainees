@@ -34,10 +34,26 @@ public class ProdutoService {
             throw new CampoEmptyOrNullException("Nome do produto não pode ser nulo ou vazio.");
         }
         if (produto.getFabricante() == null || produto.getFabricante().getId() == null) {
-            throw new CampoEmptyOrNullException("Fabricante do produto não pode ser nulo.");
+            throw new CampoEmptyOrNullException("ID do Fabricante do produto não pode ser nulo.");
+        }
+        if (produto.getDataFabricacao() == null) {
+            throw new CampoEmptyOrNullException("Data de fabricação do produto não pode ser nula.");
+        }
+        if (produto.getDataValidade() == null) {
+            throw new CampoEmptyOrNullException("Data de validade do produto não pode ser nula.");
+        }
+        if (produto.getDescricao() == null || produto.getDescricao().isEmpty()) {
+            throw new CampoEmptyOrNullException("Descrição do produto não pode ser nula ou vazia.");
+        }
+        if (produto.getEstoque() == null) {
+            throw new CampoEmptyOrNullException("Estoque do produto não pode ser nulo.");
+        }
+        if (produto.getDataValidade().isBefore(produto.getDataFabricacao())) {
+            throw new CampoEmptyOrNullException("Data de validade não pode ser anterior à data de fabricação.");
         }
         
-    	
+        
+
         Produto entidade = converteParaEntidade(produto);
         ParceiroNegocio fabricanteSalvo = parceiroNegocioRepository.save(entidade.getFabricante());
         entidade.setFabricante(fabricanteSalvo);
@@ -48,6 +64,10 @@ public class ProdutoService {
     }
 
     public ProdutoDto buscarPorId(Integer id) {
+    	 if (id < 0) {
+    	        throw new EntidadeNaoEncontradaException("ID do produto não é válido.");
+    	    }
+
         return repository.findById(id).map(ProdutoService::converteParaDto)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("O produto nao foi encontrado pelo id {}. "));
 

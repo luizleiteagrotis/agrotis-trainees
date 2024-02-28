@@ -18,8 +18,30 @@ public class NotaFiscalItemDto {
     private NotaFiscal notaFiscal;
 
     private Produto produto;
+    
+    private BigDecimal custoTotal;
 
-    public Integer getId() {
+    private BigDecimal custoMedio;
+    
+    
+
+    public BigDecimal getCustoTotal() {
+		return custoTotal;
+	}
+
+	public void setCustoTotal(BigDecimal custoTotal) {
+		this.custoTotal = custoTotal;
+	}
+
+	public BigDecimal getCustoMedio() {
+		return custoMedio;
+	}
+
+	public void setCustoMedio(BigDecimal custoMedio) {
+		this.custoMedio = custoMedio;
+	}
+
+	public Integer getId() {
         return id;
     }
 

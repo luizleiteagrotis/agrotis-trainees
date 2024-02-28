@@ -1,4 +1,5 @@
 package com.agrotis.trainees.crud.service;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,13 +57,13 @@ public class ProdutoServiceTest {
         produtoDto.setNome("Nome do Produto");
         produtoDto.setDescricao("Descrição do Produto");
         produtoDto.setId(3);
-        produtoDto.setDataFabricacao((LocalDate.of(2024, 2, 21)));
+        produtoDto.setDataFabricacao(LocalDate.of(2024, 2, 21));
         produtoDto.setDataValidade(LocalDate.of(2025, 2, 21));
         produtoDto.setEstoque(new BigDecimal(10));
         
         // Criar um fabricante válido
         ParceiroNegocio fabricante = new ParceiroNegocio();
-        fabricante.setId(3); // Defina um ID válido para o fabricante
+        fabricante.setId(1); // Defina um ID válido para o fabricante
         // Defina outros atributos do fabricante conforme necessário
         
         produtoDto.setFabricante(fabricante);
@@ -73,7 +74,7 @@ public class ProdutoServiceTest {
         produtoSalvo.setNome("Nome do Produto");
         produtoSalvo.setDescricao("Descrição do Produto");
         produtoSalvo.setFabricante(fabricante);
-        produtoSalvo.setDataFabricacao((LocalDate.of(2024, 2, 21)));
+        produtoSalvo.setDataFabricacao(LocalDate.of(2024, 2, 21));
         produtoSalvo.setDataValidade(LocalDate.of(2025, 2, 21));
         produtoSalvo.setEstoque(new BigDecimal(10));
         // Defina outros atributos do produtoSalvo conforme necessário
@@ -92,8 +93,6 @@ public class ProdutoServiceTest {
         verify(produtoRepository).save(any(Produto.class));
     }
     
-
-
     
     
     @Test
@@ -223,14 +222,88 @@ public class ProdutoServiceTest {
     }
     
     @Test
-    void salvar_DeveLancarExcecaoQuandoFabricanteIdENulo() {
+    void salvar_DeveLancarExcecaoQuandoIdFabricanteNulo() {
         ProdutoDto produtoDto = criarProdutoDto();
-        produtoDto.setFabricante(new ParceiroNegocio());
         produtoDto.getFabricante().setId(null);
 
         assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
     }
     
+    @Test
+    void salvar_DeveLancarExcecaoQuandoDataFabricacaoNula() {
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setDataFabricacao(null);
+
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+    
+    @Test
+    void salvar_DeveLancarExcecaoQuandoDataValidadeNula() {
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setDataValidade(null);
+
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+    
+    @Test
+    void salvar_DeveLancarExcecaoQuandoDescricaoNula() {
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setDescricao(null);
+
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+    
+    @Test
+    void salvar_DeveLancarExcecaoQuandoEstoqueNulo() {
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setEstoque(null);
+
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+    
+    @Test
+    void salvar_DeveLancarExcecaoQuandoDescricaoVazia() {
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setDescricao("");
+
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+    
+    
+    
+    @Test
+    void salvar_DeveLancarExcecaoQuandoFabricanteNulo() {
+        // Dados de entrada
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setFabricante(null);
+
+        // Verificação da exceção lançada
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+
+
+    
+    @Test
+    void salvar_DeveLancarExcecaoQuandoDataValidadeMenorQueDataFabricacao() {
+        // Dados de entrada
+        ProdutoDto produtoDto = criarProdutoDto();
+        produtoDto.setDataFabricacao(LocalDate.of(2024, 2, 21));
+        produtoDto.setDataValidade(LocalDate.of(2024, 2, 20)); // Data de validade anterior à data de fabricação
+
+        // Verificação da exceção lançada
+        assertThrows(CampoEmptyOrNullException.class, () -> service.salvar(produtoDto));
+    }
+    
+    @Test
+    void buscarPeloIdLancaExcecao_SeIdNegativo() {
+        // Dados de entrada
+        int idNegativo = -1;
+
+        // Verificação da exceção lançada
+        assertThrows(EntidadeNaoEncontradaException.class, () -> service.buscarPorId(idNegativo));
+    }
+    
+   
     
     @Test
     void update_DeveAtualizarFabricante_QuandoFabricanteEncontrado() {
@@ -316,13 +389,13 @@ public class ProdutoServiceTest {
         assertEquals(produtoDto.getDescricao(), result.getDescricao());
         verify(produtoRepository).save(any(Produto.class));
     }
-
-
     
+     
 
     private ProdutoDto criarProdutoDto() {
         ProdutoDto dto = new ProdutoDto();
         dto.setId(1);
+        dto.setNome("Nome do Produto");
         dto.setDescricao("Milho Teste");
         dto.setEstoque(new BigDecimal(10));
         dto.setDataFabricacao(LocalDate.of(2024, 2, 21));
@@ -342,6 +415,7 @@ public class ProdutoServiceTest {
         produto.setDataFabricacao(LocalDate.of(2024, 2, 21));
         produto.setDataValidade(LocalDate.of(2025, 2, 21));
         ParceiroNegocio fabricante = new ParceiroNegocio();
+        fabricante.setId(1);
         fabricante.setNome("Milho");
         produto.setFabricante(fabricante);
         return produto;
