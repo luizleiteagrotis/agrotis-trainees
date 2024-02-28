@@ -83,7 +83,7 @@ public class EstoqueService {
     }
 
     public NotaFiscalItem alterarEstoque(NotaFiscalItem item)
-                    throws EstoqueZeradoException, ValorDiferenteException, DescricaoExisteException {
+                    throws ValorDiferenteException, DescricaoExisteException, EstoqueZeradoException {
         NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 

@@ -17,6 +17,7 @@ import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
+import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.service.EstoqueService;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 
@@ -34,7 +35,8 @@ public class NotaFiscalItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?> inserir(@RequestBody NotaFiscalItemDto item) throws DescricaoExisteException {
+    public ResponseEntity<?> inserir(@RequestBody NotaFiscalItemDto item)
+                    throws DescricaoExisteException, EstoqueZeradoException, ValorDiferenteException {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.inserir(item));
     }
 
@@ -49,7 +51,8 @@ public class NotaFiscalItemController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItemDto item) throws DescricaoExisteException {
+    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalItemDto item)
+                    throws DescricaoExisteException, EstoqueZeradoException {
         return ResponseEntity.ok().body(service.atualizar(item));
     }
 

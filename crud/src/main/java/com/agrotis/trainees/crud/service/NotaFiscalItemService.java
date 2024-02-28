@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -47,27 +48,28 @@ public class NotaFiscalItemService {
 
     }
 
-    public NotaFiscalItemDto inserir(NotaFiscalItemDto dto) throws DescricaoExisteException {
+    public NotaFiscalItemDto inserir(NotaFiscalItemDto dto)
+                    throws DescricaoExisteException, EstoqueZeradoException, ValorDiferenteException {
         NotaFiscalItem entidade = notaFiscalItemWrapper.converterParaEntidade(dto);
         try {
             entidade = estoqueService.alterarEstoque(entidade);
 
         } catch (EstoqueZeradoException e) {
             System.out.println("Erro: " + e.getMessage());
-            return null;
+            throw e;
         } catch (ValorDiferenteException e) {
             System.out.println("Erro: " + e.getMessage());
-            return null;
+            throw e;
         }
         entidade = repository.save(entidade);
         return notaFiscalItemWrapper.converterParaDto(entidade);
     }
 
-    public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) throws DescricaoExisteException {
+    public NotaFiscalItemDto atualizar(NotaFiscalItemDto dto) throws DescricaoExisteException, EstoqueZeradoException {
         NotaFiscalItem entidade = notaFiscalItemWrapper.converterParaEntidade(dto);
 
         if (entidade.getId() == null) {
-            throw new CrudException("Obrigatório preencher o id do produto.");
+            throw new CrudException("Obrigatório preencher o id do item.");
         }
         NotaFiscalItem item = buscarPorId(entidade.getId());
         entidade = itemService.tratarNulos(entidade, item);
@@ -78,6 +80,7 @@ public class NotaFiscalItemService {
             estoqueService.atualizarEstoque(entidade, item);
         } catch (EstoqueZeradoException e) {
             System.out.println("Erro: " + e.getMessage());
+            throw e;
         }
 
         nota.setValorTotal(nota.getValorTotal().subtract(item.getValorTotal()));
@@ -94,16 +97,16 @@ public class NotaFiscalItemService {
     }
 
     public NotaFiscalItem buscarPorId(Integer id) {
-        return repository.findById(id).orElseGet(() -> {
+        return repository.findById(id).orElseThrow(() -> {
             LOG.error("Informações não encontradas para o id {}", id);
-            return null;
+            throw new NoSuchElementException("Informações não encontradas para o id " + id);
         });
     }
 
     public NotaFiscalItem buscarPorProduto(Produto produto) {
-        return repository.findByProduto(produto).orElseGet(() -> {
+        return repository.findByProduto(produto).orElseThrow(() -> {
             LOG.error("Informações não encontradas para o produto {}", produto);
-            return null;
+            throw new NoSuchElementException("Informações não encontradas para o produto " + produto.getDescricao());
         });
     }
 
