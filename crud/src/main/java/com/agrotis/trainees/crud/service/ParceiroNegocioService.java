@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
@@ -17,16 +18,17 @@ import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 @Service
 public class ParceiroNegocioService {
 
-    private Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
-
-    private ParceiroNegocioRepository repository;
+    private static final Logger LOG = LoggerFactory.getLogger(ParceiroNegocioService.class);
     private ParceiroNegocioConversaoService conversao;
+    private ParceiroNegocioRepository repository;
 
-    public ParceiroNegocioService(ParceiroNegocioRepository repository) {
+    public ParceiroNegocioService(ParceiroNegocioConversaoService conversao, ParceiroNegocioRepository repository) {
         super();
+        this.conversao = conversao;
         this.repository = repository;
     }
 
+    @Transactional
     public ParceiroNegocioDto salvar(ParceiroNegocioDto dto) {
         ParceiroNegocio entidade = conversao.converterParaEntidade(dto);
         repository.save(entidade);
@@ -39,6 +41,7 @@ public class ParceiroNegocioService {
         return conversao.converterParaDto(entidade);
     }
 
+    @Transactional
     public ParceiroNegocioDto buscarPorInscricaoFiscal(String inscricaoFiscal) throws NotFoundException {
         ParceiroNegocio entidade = repository.findByInscricaoFiscal(inscricaoFiscal).orElseThrow(() -> new NotFoundException());
         return conversao.converterParaDto(entidade);

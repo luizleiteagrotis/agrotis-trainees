@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.ParceiroNegocioConversaoService;
 
 public class ProdutoDto {
+
+    private ParceiroNegocioConversaoService conversaoParceiro;
 
     private Integer id;
     private String nome;
@@ -27,7 +29,7 @@ public class ProdutoDto {
         this.id = produto.getId();
         this.nome = produto.getNome();
         this.descricao = produto.getDescricao();
-        this.parceiroNegocio = ParceiroNegocioService.converterParaDto(produto.getParceiroNegocio());
+        this.parceiroNegocio = conversaoParceiro.converterParaDto(produto.getParceiroNegocio());
         this.fabricante = produto.getFabricante();
         this.dataFabricacao = produto.getDataFabricacao();
         this.dataValidade = produto.getDataValidade();

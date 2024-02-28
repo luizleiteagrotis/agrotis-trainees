@@ -8,12 +8,22 @@ import com.agrotis.trainees.crud.entity.Produto;
 @Component
 public class ProdutoConversaoService {
 
+    private ParceiroNegocioConversaoService conversaoParceiro;
+
+    // public ProdutoConversaoService() {
+    // super();
+    // }
+
+    public ProdutoConversaoService(ParceiroNegocioConversaoService conversaoParceiro) {
+        this.conversaoParceiro = conversaoParceiro;
+    }
+
     public ProdutoDto converterParaDto(Produto entidade) {
         ProdutoDto dto = new ProdutoDto();
         dto.setId(entidade.getId());
         dto.setNome(entidade.getNome());
         dto.setDescricao(entidade.getDescricao());
-        dto.setParceiroNegocio(ParceiroNegocioService.converterParaDto(entidade.getParceiroNegocio()));
+        dto.setParceiroNegocio(conversaoParceiro.converterParaDto(entidade.getParceiroNegocio()));
         dto.setFabricante(entidade.getFabricante());
         dto.setDataFabricacao(entidade.getDataFabricacao());
         dto.setDataValidade(entidade.getDataValidade());
@@ -27,7 +37,7 @@ public class ProdutoConversaoService {
         entidade.setId(dto.getId());
         entidade.setNome(dto.getNome());
         entidade.setDescricao(dto.getDescricao());
-        entidade.setParceiroNegocio(ParceiroNegocioService.converterParaEntidade(dto.getParceiroNegocio()));
+        entidade.setParceiroNegocio(conversaoParceiro.converterParaEntidade(dto.getParceiroNegocio()));
         entidade.setFabricante(dto.getFabricante());
         entidade.setDataFabricacao(dto.getDataFabricacao());
         entidade.setDataValidade(dto.getDataValidade());

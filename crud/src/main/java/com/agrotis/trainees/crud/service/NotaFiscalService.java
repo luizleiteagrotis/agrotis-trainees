@@ -27,9 +27,10 @@ public class NotaFiscalService {
     private NotaFiscalConversaoService conversao;
     private NotaFiscalRepository repository;
 
-    public NotaFiscalService(NotaFiscalRepository repository) {
+    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalConversaoService conversao) {
         super();
         this.repository = repository;
+        this.conversao = conversao;
     }
 
     @Transactional

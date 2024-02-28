@@ -17,6 +17,9 @@ public class ProdutoConversaoServiceTest {
     @Test
     @DisplayName("Teste para o método converterParaDto")
     public void testeConverterDto() {
+        ParceiroNegocioConversaoService conversaoParceiro = new ParceiroNegocioConversaoService();
+        ProdutoConversaoService conversao = new ProdutoConversaoService(conversaoParceiro);
+
         Produto entidade = new Produto();
         entidade.setId(1);
         entidade.setNome("Produto");
@@ -31,8 +34,7 @@ public class ProdutoConversaoServiceTest {
         parceiro.setNome("Parceiro");
         entidade.setParceiroNegocio(parceiro);
 
-        ProdutoConversaoService produtoConversaoService = new ProdutoConversaoService();
-        ProdutoDto dto = produtoConversaoService.converterParaDto(entidade);
+        ProdutoDto dto = conversao.converterParaDto(entidade);
 
         assertEquals(entidade.getId(), dto.getId());
         assertEquals(entidade.getNome(), dto.getNome());
@@ -49,6 +51,9 @@ public class ProdutoConversaoServiceTest {
     @Test
     @DisplayName("Teste para o método converterParaEntidade")
     public void testeConverterEntidade() {
+        ParceiroNegocioConversaoService conversaoParceiro = new ParceiroNegocioConversaoService();
+        ProdutoConversaoService conversao = new ProdutoConversaoService(conversaoParceiro);
+
         ProdutoDto dto = new ProdutoDto();
         dto.setId(1);
         dto.setNome("Produto");
@@ -63,8 +68,7 @@ public class ProdutoConversaoServiceTest {
         parceiro.setNome("Parceiro");
         dto.setParceiroNegocio(parceiro);
 
-        ProdutoConversaoService produtoConversaoService = new ProdutoConversaoService();
-        Produto entidade = produtoConversaoService.converterParaEntidade(dto);
+        Produto entidade = conversao.converterParaEntidade(dto);
 
         assertEquals(dto.getId(), entidade.getId());
         assertEquals(dto.getNome(), entidade.getNome());

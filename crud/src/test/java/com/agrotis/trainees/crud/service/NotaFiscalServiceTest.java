@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -91,6 +92,19 @@ public class NotaFiscalServiceTest {
         assertEquals(dto.getNumero(), resultado.getNumero());
         verify(repository, times(1)).save(entidade);
 
+    }
+
+    @Test
+    @DisplayName("Teste para o método salvar lançando IllegalArgumentException")
+    public void testeSalvarException() {
+        NotaFiscal entidade = new NotaFiscal();
+        entidade.setNumero(null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.salvar(entidade);
+        });
+
+        verify(repository, never()).save(entidade);
     }
 
     @Test
@@ -297,13 +311,25 @@ public class NotaFiscalServiceTest {
             return dto;
         });
 
+        when(conversaoParceiro.converterParaDto(any(ParceiroNegocio.class))).thenAnswer(invocation -> {
+            ParceiroNegocio parceiro = invocation.getArgument(0);
+            ParceiroNegocioDto parceiroDto = new ParceiroNegocioDto();
+            parceiroDto.setId(parceiro.getId());
+            parceiroDto.setInscricaoFiscal(parceiro.getInscricaoFiscal());
+            parceiroDto.setNome(parceiro.getNome());
+            parceiroDto.setEndereco(parceiro.getEndereco());
+            parceiroDto.setTelefone(parceiro.getTelefone());
+
+            return parceiroDto;
+        });
+
         List<NotaFiscalDto> resultado = service.listarTodos();
 
         assertEquals(2, resultado.size());
 
         assertEquals(notaFiscal1.getId(), resultado.get(0).getId());
         assertEquals(notaFiscal1.getNotaFiscalTipo(), resultado.get(0).getNotaFiscalTipo());
-        assertEquals(notaFiscal1.getParceiroNegocio(), resultado.get(0).getParceiroNegocio());
+        assertEquals(notaFiscal1.getParceiroNegocio().getId(), resultado.get(0).getParceiroNegocio().getId());
         assertEquals(notaFiscal1.getNumero(), resultado.get(0).getNumero());
         assertEquals(notaFiscal1.getData(), resultado.get(0).getData());
         assertEquals(notaFiscal1.getItens(), resultado.get(0).getItens());
@@ -311,7 +337,7 @@ public class NotaFiscalServiceTest {
 
         assertEquals(notaFiscal2.getId(), resultado.get(1).getId());
         assertEquals(notaFiscal2.getNotaFiscalTipo(), resultado.get(1).getNotaFiscalTipo());
-        assertEquals(notaFiscal2.getParceiroNegocio(), resultado.get(1).getParceiroNegocio());
+        assertEquals(notaFiscal1.getParceiroNegocio().getId(), resultado.get(1).getParceiroNegocio().getId());
         assertEquals(notaFiscal2.getNumero(), resultado.get(1).getNumero());
         assertEquals(notaFiscal2.getData(), resultado.get(1).getData());
         assertEquals(notaFiscal2.getItens(), resultado.get(1).getItens());
@@ -321,19 +347,93 @@ public class NotaFiscalServiceTest {
     @Test
     @DisplayName("Teste para o método deletarPorId")
     public void testeDeletarId() {
-        // to do
+        service.deletarPorId(1);
+
+        verify(repository).deleteById(1);
     }
 
     @Test
     @DisplayName("Teste para o método inserir")
     public void testeInserir() {
-        // to do
+
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setId(1);
+        dto.setData(LocalDate.now());
+        dto.setItens(new ArrayList<>());
+        dto.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+        dto.setNumero(123456);
+        dto.setValorTotal(BigDecimal.ZERO);
+
+        ParceiroNegocioDto parceiroDto = new ParceiroNegocioDto();
+        parceiroDto.setId(1);
+        parceiroDto.setNome("Parceiro");
+        parceiroDto.setInscricaoFiscal("Inscricao");
+        dto.setParceiroNegocio(parceiroDto);
+
+        NotaFiscal entidade = new NotaFiscal();
+        entidade.setId(dto.getId());
+        entidade.setData(dto.getData());
+        entidade.setItens(dto.getItens());
+        entidade.setNotaFiscalTipo(dto.getNotaFiscalTipo());
+        entidade.setNumero(dto.getNumero());
+        entidade.setValorTotal(dto.getValorTotal());
+
+        ParceiroNegocio parceiroEntidade = new ParceiroNegocio();
+        parceiroEntidade.setId(parceiroDto.getId());
+        parceiroEntidade.setNome(parceiroDto.getNome());
+        parceiroEntidade.setInscricaoFiscal(parceiroDto.getInscricaoFiscal());
+        entidade.setParceiroNegocio(parceiroEntidade);
+
+        when(conversao.converterParaEntidade(dto)).thenReturn(entidade);
+        when(repository.save(entidade)).thenReturn(entidade);
+
+        NotaFiscal resultado = service.inserir(dto);
+
+        assertEquals(dto.getNumero(), resultado.getNumero());
+        verify(repository, times(1)).save(entidade);
+
     }
 
     @Test
     @DisplayName("Teste para o método atualizar")
     public void testeAtualizar() {
-        // to do
+        NotaFiscalDto dto = new NotaFiscalDto();
+        dto.setId(1);
+        dto.setData(LocalDate.now());
+        dto.setItens(new ArrayList<>());
+        dto.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+        dto.setNumero(123456);
+        dto.setValorTotal(BigDecimal.ZERO);
+
+        ParceiroNegocioDto parceiroDto = new ParceiroNegocioDto();
+        parceiroDto.setId(1);
+        parceiroDto.setNome("Parceiro");
+        parceiroDto.setInscricaoFiscal("Inscricao");
+        dto.setParceiroNegocio(parceiroDto);
+
+        NotaFiscal entidade = new NotaFiscal();
+        entidade.setId(dto.getId());
+        entidade.setData(dto.getData());
+        entidade.setItens(dto.getItens());
+        entidade.setNotaFiscalTipo(dto.getNotaFiscalTipo());
+        entidade.setNumero(dto.getNumero());
+        entidade.setValorTotal(dto.getValorTotal());
+
+        ParceiroNegocio parceiroEntidade = new ParceiroNegocio();
+        parceiroEntidade.setId(parceiroDto.getId());
+        parceiroEntidade.setNome(parceiroDto.getNome());
+        parceiroEntidade.setInscricaoFiscal(parceiroDto.getInscricaoFiscal());
+        entidade.setParceiroNegocio(parceiroEntidade);
+
+        when(conversao.converterParaEntidade(dto)).thenReturn(entidade);
+        when(repository.save(entidade)).thenReturn(entidade);
+        when(conversao.converterParaDto(entidade)).thenReturn(dto);
+
+        NotaFiscalDto resultado = service.salvar(dto);
+
+        assertEquals(dto.getNumero(), resultado.getNumero());
+        verify(repository, times(1)).save(entidade);
+
     }
 
     // Para os métodos de conversão e para o método de atualizarNotaFiscal,
