@@ -8,5 +8,5 @@ import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 
 public interface ItemNotaFiscalRepository extends JpaRepository<ItemNotaFiscal, Integer> {
 
-
+	   Optional<ItemNotaFiscal> findByProduto(Integer produtoId);
 }

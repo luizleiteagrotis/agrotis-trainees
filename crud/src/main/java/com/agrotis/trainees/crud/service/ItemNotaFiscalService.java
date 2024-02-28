@@ -23,5 +23,21 @@ public class ItemNotaFiscalService {
 	      return repository.save(entidade);
 	  }
 	  
+	  public List<ItemNotaFiscal> listarTodos() {
+	        return repository.findAll();
+	    }
 
+	    public ItemNotaFiscal buscarPorId(Integer id) {
+	        return repository.findById(id).orElseGet(() -> {
+	            LOG.error("Item Nota Fiscal não encontrada para o id {}.", id);
+	            return null;
+	        });
+	    }
+	    
+	    public ItemNotaFiscal buscarPorProduto(Produto produto) {
+	    	return repository.findByProduto(produto.getId()).orElseGet(() -> {
+	    		LOG.error("Item Nota Fiscal não encontrada para o produto {}", produto);
+	    		return null;
+	    	});
+	    }
 }

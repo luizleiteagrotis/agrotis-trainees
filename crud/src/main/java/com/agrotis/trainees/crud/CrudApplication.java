@@ -190,9 +190,13 @@ public class CrudApplication implements CommandLineRunner {
         	itemNota.setQuantidade(50);
         	itemNota.calculaValorTotal();
         	
-
+        	List<ItemNotaFiscal> itensNotaSalvos = itemNotaFiscalService.listarTodos();
         	
-
+        	ItemNotaFiscal itemNotaBuscaID = itemNotaFiscalService.buscarPorId(itensNotaSalvos.get(0).getId());
+        	LOG.info("Item Nota Fiscal {} encontrado por id.", itemNotaBuscaID.getId());
+        	
+        	ItemNotaFiscal itemNotaBuscaProduto = itemNotaFiscalService.buscarPorProduto(produtosSalvos.get(1));
+        	LOG.info("Item Nota Fiscal {} encontrado por produto.", itemNotaBuscaProduto.getId());
         }
     }
 }
