@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -84,6 +85,10 @@ public class Produto {
 	}
     public Integer getQuantidade() {
                 return null;
+    }
+    public void setQuantidadeEstoque(BigDecimal bigDecimal) {
+        QuantidadeEstoque = getQuantidadeEstoque();
+        
     }
    
 	

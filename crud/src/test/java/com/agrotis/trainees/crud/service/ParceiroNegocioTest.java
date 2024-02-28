@@ -1,8 +1,7 @@
-package com.agrotis.trainees.crud;
+package com.agrotis.trainees.crud.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,13 +20,12 @@ import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import dto.ParceiroNegocioDto;
 
 @ExtendWith(MockitoExtension.class)
-public class ParceirNegocioTest {
-
+public class ParceiroNegocioTest {
     private final String NOME = "Agrotis";
     private final String INSCRICAO_FISCAL = "400289-22";
     private final String ENDERECO = "Avenidade Grega";
     private final String TELEFONE = "41998567895";
-
+    
     @Mock
     private ParceiroNegocioRepository repository;
 
@@ -53,7 +51,6 @@ public class ParceirNegocioTest {
 
     }
     
-
     private ParceiroNegocio criarParceiroNegocio() {
         ParceiroNegocio entidade = new ParceiroNegocio();
         entidade.setNome(NOME);

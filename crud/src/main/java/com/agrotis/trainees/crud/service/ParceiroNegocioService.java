@@ -59,7 +59,7 @@ public class ParceiroNegocioService {
 	return repository.save(parceiro);
 		
 		
-		
+	
 	}
 	  public ParceiroNegocioDto atualizar(Integer id, ParceiroNegocioDto dto) {
 	        return repository.findById(id).map(parceiroExistente -> {

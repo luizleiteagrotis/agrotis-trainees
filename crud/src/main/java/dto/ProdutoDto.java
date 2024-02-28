@@ -1,5 +1,6 @@
 package dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -74,6 +75,11 @@ public class ProdutoDto {
 
     public void setDataValidade(LocalDate dataValidade) {
         this.dataValidade = dataValidade;
+    }
+
+    public Integer setQuantidadeEstoque(BigDecimal bigDecimal) {
+        return quantidadeEstoque;
+    
     }
 
    
