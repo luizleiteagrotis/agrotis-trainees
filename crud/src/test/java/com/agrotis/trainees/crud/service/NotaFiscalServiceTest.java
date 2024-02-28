@@ -28,6 +28,7 @@ import java.util.Optional;
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.dto.ParceiroNegocioDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
+import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
@@ -53,8 +54,32 @@ public class NotaFiscalServiceTest {
     }
 
     @Test
-    @DisplayName("Teste para o método salvar")
+    @DisplayName("Teste para o método salvar com valores válidos")
     public void testeSalvar() {
+        NotaFiscal notaFiscal = new NotaFiscal();
+        notaFiscal.setNumero(123456);
+
+        when(repository.save(notaFiscal)).thenReturn(notaFiscal);
+
+        NotaFiscal resultado = service.salvar(notaFiscal);
+
+        verify(repository, times(1)).save(notaFiscal);
+        assertEquals(notaFiscal, resultado);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSalvar_NumeroNulo() {
+        NotaFiscal notaFiscal = new NotaFiscal();
+        notaFiscal.setNumero(null);
+
+        service.salvar(notaFiscal);
+
+        verify(repository, never()).save(notaFiscal);
+    }
+
+    @Test
+    @DisplayName("Teste para o método salvarDto")
+    public void testeSalvarDto() {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setId(1);
         dto.setData(LocalDate.now());
@@ -86,6 +111,7 @@ public class NotaFiscalServiceTest {
         when(conversao.converterParaEntidade(dto)).thenReturn(entidade);
         when(repository.save(entidade)).thenReturn(entidade);
         when(conversao.converterParaDto(entidade)).thenReturn(dto);
+        // doNothing().when(atualizar).atualizarNotaFiscal(dto.getItens());
 
         NotaFiscalDto resultado = service.salvar(dto);
 
@@ -105,12 +131,6 @@ public class NotaFiscalServiceTest {
         });
 
         verify(repository, never()).save(entidade);
-    }
-
-    @Test
-    @DisplayName("Teste para o método salvar")
-    public void testeSalvarDto() {
-        // to do
     }
 
     @Test
@@ -399,44 +419,70 @@ public class NotaFiscalServiceTest {
     public void testeAtualizar() {
         NotaFiscalDto dto = new NotaFiscalDto();
         dto.setId(1);
-        dto.setData(LocalDate.now());
-        dto.setItens(new ArrayList<>());
-        dto.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
         dto.setNumero(123456);
-        dto.setValorTotal(BigDecimal.ZERO);
-
-        ParceiroNegocioDto parceiroDto = new ParceiroNegocioDto();
-        parceiroDto.setId(1);
-        parceiroDto.setNome("Parceiro");
-        parceiroDto.setInscricaoFiscal("Inscricao");
-        dto.setParceiroNegocio(parceiroDto);
+        dto.setData(LocalDate.of(2023, 10, 15));
+        dto.setValorTotal(BigDecimal.valueOf(1000.00));
 
         NotaFiscal entidade = new NotaFiscal();
         entidade.setId(dto.getId());
-        entidade.setData(dto.getData());
-        entidade.setItens(dto.getItens());
-        entidade.setNotaFiscalTipo(dto.getNotaFiscalTipo());
         entidade.setNumero(dto.getNumero());
+        entidade.setData(dto.getData());
         entidade.setValorTotal(dto.getValorTotal());
-
-        ParceiroNegocio parceiroEntidade = new ParceiroNegocio();
-        parceiroEntidade.setId(parceiroDto.getId());
-        parceiroEntidade.setNome(parceiroDto.getNome());
-        parceiroEntidade.setInscricaoFiscal(parceiroDto.getInscricaoFiscal());
-        entidade.setParceiroNegocio(parceiroEntidade);
 
         when(conversao.converterParaEntidade(dto)).thenReturn(entidade);
         when(repository.save(entidade)).thenReturn(entidade);
         when(conversao.converterParaDto(entidade)).thenReturn(dto);
 
-        NotaFiscalDto resultado = service.salvar(dto);
+        NotaFiscalDto resultado = service.atualizar(dto);
 
-        assertEquals(dto.getNumero(), resultado.getNumero());
-        verify(repository, times(1)).save(entidade);
+        assertEquals(dto, resultado);
 
     }
 
-    // Para os métodos de conversão e para o método de atualizarNotaFiscal,
-    // criar novas services e testar separadamente
+    @Test
+    @DisplayName("Teste para atualizarNotaFiscal")
+    public void testAtualizarNotaFiscal() {
+        NotaFiscal entidade = new NotaFiscal();
+        entidade.setId(1);
+        entidade.setValorTotal(BigDecimal.ZERO);
+        entidade.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+
+        List<NotaFiscalItem> itens = new ArrayList<>();
+        NotaFiscalItem item1 = new NotaFiscalItem();
+        item1.setId(1);
+        item1.setPrecoUnitario(BigDecimal.TEN);
+        item1.setQuantidade(10); // VT = 100
+        item1.setNotaFiscal(entidade);
+
+        NotaFiscalItem item2 = new NotaFiscalItem();
+        item2.setId(2);
+        item2.setPrecoUnitario(BigDecimal.valueOf(20));
+        item2.setQuantidade(20); // VT = 400
+        item2.setNotaFiscal(entidade);
+
+        itens.add(item1);
+        itens.add(item2);
+
+        // when(repository.save(entidade)).thenAnswer(invocation ->
+        // invocation.getArgument(0));
+        when(repository.save(entidade)).thenReturn(entidade);
+
+        service.atualizarNotaFiscal(itens);
+
+        verify(repository, times(1)).save(entidade);
+
+        BigDecimal valorTotalEsperado = item1.getValorTotal().add(item2.getValorTotal());
+        assertEquals(valorTotalEsperado, entidade.getValorTotal());
+    }
+
+    @Test
+    @DisplayName("Teste para atualizarNotaFiscal quando lista de itens está vazia")
+    public void testAtualizarNotaFiscalListaVazia() {
+        List<NotaFiscalItem> itens = new ArrayList<>();
+
+        service.atualizarNotaFiscal(itens);
+
+        verify(repository, never()).save(any(NotaFiscal.class));
+    }
 
 }

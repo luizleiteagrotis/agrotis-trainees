@@ -27,10 +27,10 @@ public class NotaFiscalService {
     private NotaFiscalConversaoService conversao;
     private NotaFiscalRepository repository;
 
-    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalConversaoService conversao) {
+    public NotaFiscalService(NotaFiscalConversaoService conversao, NotaFiscalRepository repository) {
         super();
-        this.repository = repository;
         this.conversao = conversao;
+        this.repository = repository;
     }
 
     @Transactional
@@ -108,11 +108,19 @@ public class NotaFiscalService {
         LOG.info("Deletado com sucesso");
     }
 
+    public NotaFiscal inserir(@Valid NotaFiscalDto dto) {
+        NotaFiscal entidade = conversao.converterParaEntidade(dto);
+        return repository.save(entidade);
+    }
+
+    public NotaFiscalDto atualizar(NotaFiscalDto dto) {
+        NotaFiscal entidade = conversao.converterParaEntidade(dto);
+        return conversao.converterParaDto(repository.save(entidade));
+    }
+
     @Transactional
     public void atualizarNotaFiscal(List<NotaFiscalItem> itens) {
         if (itens.isEmpty()) {
-            // throw new IllegalArgumentException("A lista de itens não pode
-            // estar vazia");
             // Lista vazia para crrigir erro
             return;
         }
@@ -134,16 +142,7 @@ public class NotaFiscalService {
 
         notaFiscal.setValorTotal(novoValorTotal);
         repository.save(notaFiscal);
-    }
 
-    public NotaFiscal inserir(@Valid NotaFiscalDto dto) {
-        NotaFiscal entidade = conversao.converterParaEntidade(dto);
-        return repository.save(entidade);
-    }
-
-    public NotaFiscalDto atualizar(NotaFiscalDto dto) {
-        NotaFiscal entidade = conversao.converterParaEntidade(dto);
-        return conversao.converterParaDto(repository.save(entidade));
     }
 
 }
