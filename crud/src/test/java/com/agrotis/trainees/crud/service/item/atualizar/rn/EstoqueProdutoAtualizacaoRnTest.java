@@ -24,12 +24,6 @@ import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
 
 @ExtendWith(MockitoExtension.class)
 class EstoqueProdutoAtualizacaoRnTest {
-
-	@Mock
-	private ProdutoRepository produtoRepository;
-	
-	@Mock 
-	private ItemNotaRepository itemRepository;
 	
 	@Mock
 	private CalculadorItem calculadorItem;
@@ -98,18 +92,6 @@ class EstoqueProdutoAtualizacaoRnTest {
 		estoqueProdutoAtualizacaoRn.operarSobre(novoItem, antigoItem);
 	
 		assertThat(produto.getEstoque(), is(equalTo(estoqueEsperado(50))));
-	}
-	
-	@Test
-	public void deveSalvarItemQuandoOperacoesForemBemSucedidas() {
-		produto.setEstoque(estoqueInicialProduto(50));
-		antigoItem.setQuantidade(quantidadeInicialItem(20));
-		novoItem.setQuantidade(quantidadeNovaItem(10));
-		cabecalho.setTipo(TipoNota.ENTRADA);
-		
-		estoqueProdutoAtualizacaoRn.operarSobre(novoItem, antigoItem);
-		
-		verify(produtoRepository, times(1)).salvar(produto);
 	}
 	
 	@Test

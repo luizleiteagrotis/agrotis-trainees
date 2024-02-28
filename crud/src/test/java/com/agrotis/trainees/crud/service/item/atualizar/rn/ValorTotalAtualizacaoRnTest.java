@@ -27,9 +27,6 @@ import com.agrotis.trainees.crud.service.item.util.CalculadorItemException;
 
 @ExtendWith(MockitoExtension.class)
 class ValorTotalAtualizacaoRnTest {
-
-	@Mock
-	private CabecalhoNotaRepository cabecalhoRepository;
 	
 	@Mock
 	private CalculadorItem calculadorItem;
@@ -76,35 +73,12 @@ class ValorTotalAtualizacaoRnTest {
 	}
 	
 	@Test
-	public void deveSalvarCabecalhoQuandoOperacoesForemBemSucedidas() {
-		antigoItem.setValorTotal(antigoValorItem("20.00"));
-		novoItem.setValorTotal(novoValorItem("10.00"));
-		cabecalho.setValorTotal(atualValorCabecalho("50.00"));
-		when(calculadorItem.calcularValorTotal(novoItem)).thenReturn(novoItem);
-		
-		valorTotalAtualizacaoRn.operarSobre(novoItem, antigoItem);
-		
-		verify(cabecalhoRepository, times(1)).salvar(cabecalho);
-	}
-	
-	@Test
 	public void deveLancarItemAtualizacaoRnExceptionQuandoCalculadorItemLancarException() {
 		when(calculadorItem.calcularValorTotal(novoItem)).thenThrow(CalculadorItemException.class);
 		
 		ItemAtualizacaoRnException exception = assertThrows(ItemAtualizacaoRnException.class, () -> {
 			valorTotalAtualizacaoRn.operarSobre(novoItem, antigoItem);
 		});
-	}
-	
-	@Test
-	public void naoDeveSalvarCabecalhoCalculadorItemLancarException() {
-		when(calculadorItem.calcularValorTotal(novoItem)).thenThrow(CalculadorItemException.class);
-		
-		try {
-			valorTotalAtualizacaoRn.operarSobre(novoItem, antigoItem);			
-		} catch (ItemAtualizacaoRnException ignored) {}
-		
-		verify(cabecalhoRepository, never()).salvar(cabecalho);
 	}
 	
 	private BigDecimal novoValorItem(String valor) {

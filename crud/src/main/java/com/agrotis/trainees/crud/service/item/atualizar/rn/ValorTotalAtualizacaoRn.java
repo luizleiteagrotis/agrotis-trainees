@@ -16,12 +16,10 @@ import com.agrotis.trainees.crud.service.item.util.CalculadorItemException;
 @Component
 public class ValorTotalAtualizacaoRn implements ItemAtualizacaoRn{
 
-	private CabecalhoNotaRepository cabecalhoRepository;
 	private CalculadorItem calculadorItem;
 		
 	@Autowired
 	public ValorTotalAtualizacaoRn(CabecalhoNotaRepository cabecalhoRepository, CalculadorItem calculadorItem) {
-		this.cabecalhoRepository = cabecalhoRepository;
 		this.calculadorItem = calculadorItem;
 	}
 
@@ -38,7 +36,6 @@ public class ValorTotalAtualizacaoRn implements ItemAtualizacaoRn{
 		BigDecimal novoValorItem = novoItem.getValorTotal();
 		BigDecimal novoValorCabecalho = valorAtualCabecalho.subtract(antigoValorItem).add(novoValorItem);
 		cabecalho.setValorTotal(novoValorCabecalho);
-		cabecalhoRepository.salvar(cabecalho);
 		return novoItem;
 	}
 

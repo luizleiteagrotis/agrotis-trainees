@@ -12,6 +12,7 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.service.item.ItemAtualizacaoService;
+import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 import com.agrotis.trainees.crud.util.ItemNotaFactory;
 
 @Component
@@ -19,15 +20,15 @@ public class ItemAtualizacaoServiceImpl implements ItemAtualizacaoService{
 
 	private ItemMapper itemMapper;
 	private ItemNotaFactory itemNotaFactory;
-	private ItemNotaRepository itemRepository;
+	private SalvadorEmCascata salvadorEmCascata;
 	private List<ItemAtualizacaoRn> atualizacaoRns;
 	
 	@Autowired
 	public ItemAtualizacaoServiceImpl(ItemMapper itemMapper, ItemNotaFactory itemNotaFactory, 
-			ItemNotaRepository itemRepository, List<ItemAtualizacaoRn> atualizacaoRns) {
+			SalvadorEmCascata salvadorEmCascata, List<ItemAtualizacaoRn> atualizacaoRns) {
 		this.itemMapper = itemMapper;
 		this.itemNotaFactory = itemNotaFactory;
-		this.itemRepository = itemRepository;
+		this.salvadorEmCascata = salvadorEmCascata;
 		this.atualizacaoRns = atualizacaoRns;
 	}
 
@@ -39,7 +40,7 @@ public class ItemAtualizacaoServiceImpl implements ItemAtualizacaoService{
 		
 		atualizacaoRns.forEach((rn) -> rn.operarSobre(itemOriginal, itemClone));
 		
-		itemRepository.salvar(itemOriginal);
+		salvadorEmCascata.salvar(itemOriginal);
 		return itemMapper.converterParaDto(itemOriginal);
 	}
 }

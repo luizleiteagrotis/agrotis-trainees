@@ -2,25 +2,16 @@ package com.agrotis.trainees.crud.service.item.atualizar.rn;
 
 import java.math.BigDecimal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.entity.TipoNota;
-import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 import com.agrotis.trainees.crud.service.item.atualizar.ItemAtualizacaoRn;
 
 @Component
 public class CustoTotalProdutoAtualizacaoRn implements ItemAtualizacaoRn {
-
-	private ProdutoRepository produtoRepository;
-
-	@Autowired
-	public CustoTotalProdutoAtualizacaoRn(ProdutoRepository produtoRepository) {
-		this.produtoRepository = produtoRepository;
-	}
 	
 	@Override
 	public ItemNota operarSobre(ItemNota novoItem, ItemNota antigoItem) {
@@ -44,7 +35,6 @@ public class CustoTotalProdutoAtualizacaoRn implements ItemAtualizacaoRn {
 				break;
 		}
 		produto.setCustoTotal(novoCustoTotal);
-		produtoRepository.salvar(produto);
 		return novoItem;
 	}
 	

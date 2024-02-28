@@ -24,6 +24,7 @@ import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.mapper.item.ItemMapper;
 import com.agrotis.trainees.crud.repository.item.ItemNotaRepository;
 import com.agrotis.trainees.crud.service.item.util.CalculadorItem;
+import com.agrotis.trainees.crud.service.item.util.SalvadorEmCascata;
 import com.agrotis.trainees.crud.util.ItemNotaFactory;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +40,7 @@ class ItemAtualizacaoServiceImplTest {
 	private ItemNotaFactory itemNotaFactory;
 	
 	@Mock
-	private ItemNotaRepository itemRepository;
+	private SalvadorEmCascata salvadorEmCascata;
 	
 	@Mock
 	private ItemAtualizacaoRn itemAtualizacaoRn1;
@@ -59,7 +60,7 @@ class ItemAtualizacaoServiceImplTest {
 	@BeforeEach
 	public void setUp() {
 		atualizacaoRns = new ArrayList<>();
-		itemAtualizacaoServiceImpl = new ItemAtualizacaoServiceImpl(itemMapper, itemNotaFactory, itemRepository, atualizacaoRns);
+		itemAtualizacaoServiceImpl = new ItemAtualizacaoServiceImpl(itemMapper, itemNotaFactory, salvadorEmCascata, atualizacaoRns);
 		itemAtualizacaoDto = new ItemAtualizacaoDto();
 		itemNovo = new ItemNota();
 		itemAntigo = new ItemNota();
@@ -84,7 +85,7 @@ class ItemAtualizacaoServiceImplTest {
 	}
 	
 	@Test
-	public void deveNaoSalvarItemQuandoUmaRnFalhar() {
+	public void deveNaoSalvarItemEmCascataQuandoUmaRnFalhar() {
 		atualizacaoRns.add(itemAtualizacaoRn1);
 		when(itemMapper.converterParaEntidade(itemAtualizacaoDto)).thenReturn(itemNovo);
 		when(itemNotaFactory.criarClone(ID_ITEM)).thenReturn(itemAntigo);
@@ -94,11 +95,11 @@ class ItemAtualizacaoServiceImplTest {
 			itemAtualizacaoServiceImpl.atualizar(itemAtualizacaoDto);
 		} catch (Exception ignored) {}
 		
-		verify(itemRepository, never()).salvar(itemNovo);
+		verify(salvadorEmCascata, never()).salvar(itemNovo);
 	}
 	
 	@Test
-	public void deveSalvarItemQuandoOperacoesForemBemSucedidas() {
+	public void deveSalvarItemEmCascataQuandoOperacoesForemBemSucedidas() {
 		atualizacaoRns.add(itemAtualizacaoRn1);
 		when(itemMapper.converterParaEntidade(itemAtualizacaoDto)).thenReturn(itemNovo);
 		when(itemNotaFactory.criarClone(ID_ITEM)).thenReturn(itemAntigo);
@@ -106,7 +107,7 @@ class ItemAtualizacaoServiceImplTest {
 		
 		itemAtualizacaoServiceImpl.atualizar(itemAtualizacaoDto);
 		
-		verify(itemRepository, times(1)).salvar(itemNovo);
+		verify(salvadorEmCascata, times(1)).salvar(itemNovo);
 	}
 	
 	@Test
