@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,17 +53,21 @@ public class ProdutoServiceTest {
         assertEquals(produtoSalvo.getId(), result.getId());
         verify(produtoRepository).save(any(Produto.class));
     }
+    
+    
 
     @Test
-    void salvarDeveLancarCampoVazioOuNuloException_QuandoDtoInvalido() {
+    void salvarDeveLancarCampoVazioOuNuloExceptionQuandoDtoInvalido() {
         ProdutoDto produtoDto = new ProdutoDto();
+        produtoDto.setDescricao(null);
+        produtoDto.setDataValidade(null);
         assertThrows(CampoVazioOuNuloException.class, () -> {
             service.salvar(produtoDto);
         });
     }
 
     @Test
-    void buscaPeloIdDeveRetornarProdutoDto_QuandoEncontrarProduto() {
+    void buscaPeloIdDeveRetornarProdutoDtoQuandoEncontrarProduto() {
         int id = 1;
         Produto produto = criarProduto();
         when(produtoRepository.findById(id)).thenReturn(Optional.of(produto));
@@ -74,7 +79,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void buscaPeloIdDeveLancarEntidadeNaoEncontradaException_QuandoNaoEncontrarProduto() {
+    void buscaPeloIdDeveLancarEntidadeNaoEncontradaExceptionQuandoNaoEncontrarProduto() {
         int id = 1;
         when(produtoRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -97,7 +102,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void deletarPorIdDeveDeletarProduto_QuandoEncontrarProduto() {
+    void deletarPorIdDeveDeletarProdutoQuandoEncontrarProduto() {
         int id = 1;
         Produto produto = criarProduto();
         when(produtoRepository.findById(id)).thenReturn(Optional.of(produto));
@@ -118,7 +123,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void atualizarDeveAtualizarProduto_QuandoEncontrarProduto() {
+    void atualizarDeveAtualizarProdutoQuandoEncontrarProduto() {
         int id = 1;
         Produto produtoExistente = criarProduto();
         ProdutoDto produtoDto = criarProdutoDto();
@@ -133,13 +138,60 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void atualizar_DeveLancarEntidadeNaoEncontradaException_QuandoNaoEncontrarProduto() {
+    void atualizar_DeveLancarEntidadeNaoEncontradaExceptionQuandoNaoEncontrarProduto() {
         int id = 1;
         ProdutoDto produtoDto = criarProdutoDto();
         when(produtoRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(EntidadeNaoEncontradaException.class, () -> {
             service.atualizar(id, produtoDto);
+        });
+    }
+
+    @Test
+    void salvarOuBuscarFabricante_DeveRetornarFabricanteExistente_QuandoIdNaoForNulo() {
+        ParceiroNegocioRepository parceiroNegocioRepository = mock(ParceiroNegocioRepository.class);
+
+        ParceiroNegocio fabricante = new ParceiroNegocio();
+
+        when(parceiroNegocioRepository.save(fabricante)).thenReturn(fabricante);
+
+        ProdutoServiceImpl service = new ProdutoServiceImpl(produtoRepository, parceiroNegocioRepository);
+
+        ParceiroNegocio resultado = service.salvarOuBuscarFabricante(fabricante);
+
+        assertEquals(fabricante, resultado);
+    }
+
+
+    @Test
+    void salvarOuBuscarFabricante_DeveSalvarNovoFabricante_QuandoIdForNulo() {
+        ParceiroNegocioRepository parceiroNegocioRepository = mock(ParceiroNegocioRepository.class);
+
+        ParceiroNegocio fabricante = new ParceiroNegocio(); // ID será nulo por
+                                                            // padrão
+
+        when(parceiroNegocioRepository.save(fabricante)).thenReturn(fabricante);
+
+        ProdutoServiceImpl service = new ProdutoServiceImpl(produtoRepository, parceiroNegocioRepository);
+
+        ParceiroNegocio resultado = service.salvarOuBuscarFabricante(fabricante);
+
+        assertEquals(fabricante, resultado);
+    }
+
+    @Test
+    void salvarOuBuscarFabricanteDeveLancarEntidadeNaoEncontradaExceptionQuandoFabricanteNaoForEncontrado() {
+        ParceiroNegocioRepository parceiroNegocioRepository = mock(ParceiroNegocioRepository.class);
+
+        ParceiroNegocio fabricante = new ParceiroNegocio();
+
+        when(parceiroNegocioRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+
+        ProdutoServiceImpl service = new ProdutoServiceImpl(produtoRepository, parceiroNegocioRepository);
+
+        assertThrows(EntidadeNaoEncontradaException.class, () -> {
+            service.salvarOuBuscarFabricante(fabricante);
         });
     }
 

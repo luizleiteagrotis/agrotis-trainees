@@ -49,7 +49,7 @@ public class ParceiroNegocioController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
     
-    @GetMapping("/buscarPorNome/{nome}")
+    @GetMapping("/por-nome/{nome}")
     public ResponseEntity<?> buscarPorNome(@PathVariable String nome){
         return ResponseEntity.ok(service.buscarPorNome(nome));
     }

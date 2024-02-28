@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
+import com.agrotis.trainees.crud.entity.ItemNota;
 
 @Service
 public interface CabecalhoNotaService {
@@ -13,6 +14,7 @@ public interface CabecalhoNotaService {
     List<CabecalhoNotaDto> listarTodos();
     CabecalhoNotaDto atualizar(Integer id, CabecalhoNotaDto dto);
     void deletarPorId(Integer id);
+    void adicionarValorTotalCabecalho(ItemNota itemNota);
     
 
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ItemNota;
+import com.agrotis.trainees.crud.entity.Produto;
 
 @Service
 public interface ProdutoService {
@@ -14,5 +16,7 @@ public interface ProdutoService {
     List<ProdutoDto> buscarTodos();
     void deletarPorId(Integer id);
     ProdutoDto atualizar(Integer id, ProdutoDto produtoDto);
+    Produto salvarOuBuscarProduto(Produto produto);
+    void atualizarEstoque(ItemNota itemNota);
 
 }

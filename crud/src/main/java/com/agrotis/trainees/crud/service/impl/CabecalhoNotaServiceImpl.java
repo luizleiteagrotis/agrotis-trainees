@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
@@ -62,8 +63,9 @@ public class CabecalhoNotaServiceImpl implements CabecalhoNotaService {
             cabecalhoExistente.setNotaFiscalTipo(dto.getNotaFiscalTipo());
             cabecalhoExistente.setNumero(dto.getNumero());
 
-            ParceiroNegocio parceiroNegocioExistente = dto.getParceiroNegocio().getId() != null ?
-                    parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null) : null;
+            ParceiroNegocio parceiroNegocioExistente = dto.getParceiroNegocio().getId() != null
+                            ? parceiroNegocioRepository.findById(dto.getParceiroNegocio().getId()).orElse(null)
+                            : null;
 
             if (parceiroNegocioExistente == null) {
                 parceiroNegocioExistente = parceiroNegocioRepository.save(dto.getParceiroNegocio());
@@ -85,12 +87,7 @@ public class CabecalhoNotaServiceImpl implements CabecalhoNotaService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
     }
 
-    public void atualizarValorTotal(CabecalhoNota cabecalho) {
-        repository.save(cabecalho);
-
-    }
-
-    private BigDecimal calcularValorTotal(CabecalhoNota cabecalho) {
+    public BigDecimal calcularValorTotal(CabecalhoNota cabecalho) {
         return cabecalho.getItens().stream().map(item -> item.getQuantidade().multiply(item.getPrecoUnitario()))
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -102,6 +99,14 @@ public class CabecalhoNotaServiceImpl implements CabecalhoNotaService {
         } else {
             return parceiroNegocioRepository.save(fabricante);
         }
+    }
+
+    public void adicionarValorTotalCabecalho(ItemNota itemNota) {
+        CabecalhoNota cabecalhoNota = itemNota.getCabecalhoNota();
+        BigDecimal valorTotalCabecalho = cabecalhoNota.getValorTotal();
+        BigDecimal valorTotalItem = itemNota.getValorTotal();
+        valorTotalCabecalho = valorTotalCabecalho.add(valorTotalItem);
+        cabecalhoNota.setValorTotal(valorTotalCabecalho);
     }
 
 }

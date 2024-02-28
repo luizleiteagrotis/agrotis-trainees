@@ -28,6 +28,7 @@ import com.agrotis.trainees.crud.service.impl.ParceiroNegocioServiceImpl;
 public class ParceiroNegocioTest {
 
     private final String NOME = "AgroFertil Ltda";
+    private final Integer ID = 1;
     private final String INSCRICAO_FISCAL = "154474-114";
     private final String ENDERECO = "Rua dos Calvos, 71";
     private final String TELEFONE = "4335256025";
@@ -39,7 +40,7 @@ public class ParceiroNegocioTest {
     private ParceiroNegocioServiceImpl service;
 
     @Test
-    public void inserirParceiroNegocio() {
+    void deveInserirParceiroDeNegocio() {
         ParceiroNegocio parceiroNegocio = criarParceiroNegocio();
         when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroNegocio);
 
@@ -50,18 +51,49 @@ public class ParceiroNegocioTest {
         assertEquals(parceiroNegocio.getId(), result.getId());
         verify(repository).save(any(ParceiroNegocio.class));
     }
+    
+    @Test
+    void deveLancarExcecaoQuandoJaHouverInscricaoFiscalNoBanco() {
+        when(repository.save(any(ParceiroNegocio.class))).thenAnswer(invocation -> {
+            ParceiroNegocio parceiroNegocio = invocation.getArgument(0);
+            if ("inscricaoFiscalExistente".equals(parceiroNegocio.getInscricaoFiscal())) {
+                throw new RuntimeException("Inscrição fiscal já existente no banco de dados");
+            }
+            return parceiroNegocio;
+        });
+
+        ParceiroNegocioDto dto = criarParceiroNegocioDto();
+        dto.setInscricaoFiscal("inscricaoFiscalExistente");
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> service.salvar(dto));
+        assertEquals("Inscrição fiscal já existente no banco de dados", exception.getMessage());
+    }
+
+    
+    
 
     @Test
     void verificarBuscarPorId() {
         ParceiroNegocio parceiroNegocio = criarParceiroNegocio();
-        when(repository.findById(1)).thenReturn(Optional.of(parceiroNegocio));
+        when(repository.findById(ID)).thenReturn(Optional.of(parceiroNegocio));
 
-        ParceiroNegocioDto result = service.buscarPorId(1);
+        ParceiroNegocioDto result = service.buscarPorId(ID);
 
         assertNotNull(result);
         assertEquals(parceiroNegocio.getNome(), result.getNome());
+        assertEquals(parceiroNegocio.getId(), result.getId());
     }
+    
+    
+    
+    @Test
+    void buscarPorIdDeveLancarExcecaoQuandoNaoEncontrarParceiroNegocio() {
+        when(repository.findById(ID)).thenReturn(Optional.empty());
 
+        assertThrows(EntidadeNaoEncontradaException.class, () -> {
+            service.buscarPorId(ID);
+        });
+    }
+    
     @Test
     void verificaBuscarTodos() {
         List<ParceiroNegocio> parceiros = new ArrayList<>();
@@ -89,18 +121,12 @@ public class ParceiroNegocioTest {
     @Test
     void deletarPorIdSucesso() {
         ParceiroNegocio parceiroNegocio = criarParceiroNegocio();
-        when(repository.findById(1)).thenReturn(Optional.of(parceiroNegocio));
+        when(repository.findById(ID)).thenReturn(Optional.of(parceiroNegocio));
 
-        service.deletarPorId(1);
+        service.deletarPorId(ID);
 
-        verify(repository).deleteById(1);
+        verify(repository).deleteById(ID);
     }
-
-    // @Test
-    // void deletarDeveLancarExcecaoEntidadeNaoEncontrada() {
-    // when(repository.findById(anyInt())).thenThrow(new
-    // EntidadeNaoEncontradaException());
-    // }
 
     @Test
     void verificaSeAtualizaOParceiro() {
@@ -124,25 +150,38 @@ public class ParceiroNegocioTest {
             service.buscarPorNome(nome);
         });
     }
+    
+    @Test
+    void buscarPorNomeDeveBuscarNome() {
+        String nome = "Nome Existente";
+        ParceiroNegocio parceiro = new ParceiroNegocio();
+        parceiro.setNome(nome);
+
+        when(repository.findByNome(nome)).thenReturn(Optional.of(parceiro));
+
+        ParceiroNegocioDto resultado = service.buscarPorNome(nome);
+
+        assertNotNull(resultado);
+        assertEquals(nome, resultado.getNome());
+    }
+
 
     @Test
     void atualizarDeveLancarExcecaoQuandoNaoEncontrarParceiroNegocio() {
 
-        int idInexistente = 1;
         when(repository.findById(anyInt()))
-                        .thenThrow(new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + idInexistente));
+                        .thenThrow(new EntidadeNaoEncontradaException("Entidade não encontrada com o ID: " + ID));
 
         try {
             service.buscarPorId(1);
         } catch (Exception e) {
             assertEquals(EntidadeNaoEncontradaException.class, e.getClass());
-            assertEquals("Entidade não encontrada com o ID: " + idInexistente, e.getMessage());
+            assertEquals("Entidade não encontrada com o ID: " + ID, e.getMessage());
         }
     }
 
     @Test
     void atualizarDeveAtualizarParceiroNegocioQuandoEncontrar() {
-        int idExistente = 1;
         ParceiroNegocio parceiroExistente = criarParceiroNegocio();
         ParceiroNegocioDto dto = new ParceiroNegocioDto();
         dto.setNome("Novo Nome");
@@ -150,12 +189,14 @@ public class ParceiroNegocioTest {
         when(repository.findById(anyInt())).thenReturn(Optional.of(parceiroExistente));
         when(repository.save(any(ParceiroNegocio.class))).thenReturn(parceiroExistente);
 
-        ParceiroNegocioDto result = service.atualizar(idExistente, dto);
+        ParceiroNegocioDto result = service.atualizar(ID, dto);
 
-        verify(repository).findById(idExistente);
+        verify(repository).findById(ID);
         verify(repository).save(parceiroExistente);
         assertEquals(dto.getNome(), result.getNome());
     }
+    
+    
 
     private ParceiroNegocio criarParceiroNegocio() {
         ParceiroNegocio entidade = new ParceiroNegocio();

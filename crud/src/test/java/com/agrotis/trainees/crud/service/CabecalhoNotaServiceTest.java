@@ -3,13 +3,13 @@ package com.agrotis.trainees.crud.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.agrotis.trainees.crud.dtos.CabecalhoNotaDto;
 import com.agrotis.trainees.crud.entity.CabecalhoNota;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.CabecalhoNotaRepository;
@@ -110,7 +111,7 @@ public class CabecalhoNotaServiceTest {
         EntidadeNaoEncontradaException exception = assertThrows(EntidadeNaoEncontradaException.class, () -> {
             cabecalhoNotaService.atualizar(id, cabecalhoDto);
         });
-        assertEquals("Cabechalho com o ID " + id + " não encontrado", exception.getMessage());
+        assertEquals("Não foi possível encontrar o cabeçalho pelo ID: " + id, exception.getMessage());
     }
 
     @Test
@@ -121,6 +122,17 @@ public class CabecalhoNotaServiceTest {
         assertThrows(EntidadeNaoEncontradaException.class, () -> {
             cabecalhoNotaService.deletarPorId(id);
         });
+    }
+    
+    @Test
+    void calcularValorTotal_DeveRetornarZero_QuandoCabecalhoSemItens() {
+        // Criando um cabeçalho de nota sem itens
+        CabecalhoNota cabecalho = new CabecalhoNota();
+        
+        // Criando uma instância do serviço
+        
+        // Verificando se o valor total é zero
+        assertEquals(BigDecimal.ZERO, cabecalhoNotaService.calcularValorTotal(cabecalho));
     }
 
     private CabecalhoNotaDto criarCabecalhoNotaDto() {

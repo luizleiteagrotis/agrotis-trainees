@@ -132,4 +132,8 @@ public class CabecalhoNota{
         return Objects.equals(id, other.id);
     }
 
+    public void setItens(List<ItemNota> asList) {
+        this.itens.add((ItemNota) asList);
+    }
+
 }

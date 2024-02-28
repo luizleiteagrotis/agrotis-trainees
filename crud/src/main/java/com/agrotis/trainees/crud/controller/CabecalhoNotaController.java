@@ -19,7 +19,7 @@ import com.agrotis.trainees.crud.service.CabecalhoNotaService;
 import com.agrotis.trainees.crud.service.impl.CabecalhoNotaServiceImpl;
 
 @RestController
-@RequestMapping("/cabecalhos")
+@RequestMapping("/notas-fiscais")
 public class CabecalhoNotaController {
 
     private final CabecalhoNotaService service;

@@ -1,6 +1,8 @@
 package com.agrotis.trainees.crud.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -8,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.agrotis.trainees.crud.dtos.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.entity.enums.TipoNota;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.ProdutoService;
@@ -79,7 +83,7 @@ public class ProdutoServiceImpl implements ProdutoService {
         }
     }
 
-    private ParceiroNegocio salvarOuBuscarFabricante(ParceiroNegocio fabricante) {
+    public ParceiroNegocio salvarOuBuscarFabricante(ParceiroNegocio fabricante) {
         if (fabricante.getId() != null) {
             return parceiroNegocioRepository.findById(fabricante.getId()).orElseThrow(() -> new EntidadeNaoEncontradaException(
                             "Fabricante com o ID " + fabricante.getId() + " não encontrado"));
@@ -88,7 +92,7 @@ public class ProdutoServiceImpl implements ProdutoService {
         }
     }
 
-    private void atualizarProdutoExistente(Produto produtoExistente, ProdutoDto produtoDto) {
+    public void atualizarProdutoExistente(Produto produtoExistente, ProdutoDto produtoDto) {
         produtoExistente.setDescricao(produtoDto.getDescricao());
 
         ParceiroNegocio fabricanteDto = produtoDto.getFabricante();
@@ -101,7 +105,37 @@ public class ProdutoServiceImpl implements ProdutoService {
         produtoExistente.setDataValidade(produtoDto.getDataValidade());
         produtoExistente.setDataFabricacao(produtoDto.getDataFabricacao());
     }
-    
-    
-    
+
+    public void atualizarEstoque(ItemNota itemNota) {
+        Produto produto = itemNota.getProduto();
+        BigDecimal quantidadeNota = itemNota.getQuantidade();
+        BigDecimal quantidadeEstoque = produto.getQuantidadeEstoque();
+        TipoNota tipoNota = itemNota.getCabecalhoNota().getNotaFiscalTipo();
+
+        ValidacaoUtils.validarQuantidadeNaoNegativa(quantidadeNota);
+
+        if (tipoNota == TipoNota.SAIDA) {
+            ValidacaoUtils.validarQuantidadeEstoqueSuficiente(quantidadeEstoque, quantidadeNota);
+            produto.setQuantidadeEstoque(quantidadeEstoque.subtract(quantidadeNota));
+        } else if (tipoNota == TipoNota.ENTRADA) {
+            if (quantidadeEstoque == null || quantidadeEstoque.equals(BigDecimal.ZERO)) {
+                produto.setQuantidadeEstoque(quantidadeNota);
+            } else {
+                produto.setQuantidadeEstoque(quantidadeEstoque.add(quantidadeNota));
+
+            }
+
+        }
+    }
+
+    public Produto salvarOuBuscarProduto(Produto produto) {
+        if (produto != null && produto.getId() != null) {
+            return produtoRepository.findById(produto.getId()).orElseThrow(
+                            () -> new EntidadeNaoEncontradaException("Produto com o ID " + produto.getId() + " não encontrado"));
+        } else {
+            ProdutoDto produtoSalvo = salvar(DtoUtils.converteParaDto(produto));
+            return DtoUtils.converteParaEntidade(produtoSalvo);
+        }
+    }
+
 }
