@@ -36,7 +36,11 @@ public class CustoTotalProdutoAtualizacaoRn implements ItemAtualizacaoRn {
 				novoCustoTotal = custoTotalProduto.subtract(valorTotalAntigo).add(valorTotalNovo);
 				break;
 			case SAIDA:
-				novoCustoTotal = custoTotalProduto.add(valorTotalAntigo).subtract(valorTotalNovo);
+				BigDecimal quantidadeAntiga = BigDecimal.valueOf(antigoItem.getQuantidade());
+				BigDecimal quantidadeNova = BigDecimal.valueOf(novoItem.getQuantidade());
+				BigDecimal custoMedio = produto.getCustoMedio(); 
+				novoCustoTotal = custoTotalProduto.add(custoMedio.multiply(quantidadeAntiga))
+												  .subtract(custoMedio.multiply(quantidadeNova));
 				break;
 		}
 		produto.setCustoTotal(novoCustoTotal);

@@ -70,27 +70,29 @@ class CustoTotalProdutoAtualizacaoRnTest {
 	}
 	
 	@Test
-	public void deveDiminuirCustoTotalProdutoQuandoValorTotalItemAumentarECabecalhoTipoSaida() {
-		itemAntigo.setValorTotal(valorTotalAntigo("10.00"));
-		itemNovo.setValorTotal(valorTotalNovo("20.00"));
+	public void deveDiminuirCustoTotalProdutoComBaseNoCustoMedioQuandoQuantidadeItemAumentarECabecalhoTipoSaida() {
+		itemAntigo.setQuantidade(quantidadeAntiga(5));
+		itemNovo.setQuantidade(quantidadeNova(10));
+		produto.setCustoMedio(custoMedio("2.50"));
 		produto.setCustoTotal(custoTotalInicial("50.00"));
 		cabecalho.setTipo(TipoNota.SAIDA);
 		
 		custoTotalProdutoAtualizacaoRn.operarSobre(itemNovo, itemAntigo);
 		
-		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("40.00"))));
+		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("37.50"))));
 	}
 	
 	@Test
-	public void deveAumentarCustoTotalProdutoQuandoValorTotalItemDiminuirECabecalhoTipoSaida() {
-		itemAntigo.setValorTotal(valorTotalAntigo("20.00"));
-		itemNovo.setValorTotal(valorTotalNovo("10.00"));
+	public void deveAumentarCustoTotalProdutoComBaseNoCustoMedioQuandoQuantidadeItemDiminuirECabecalhoTipoSaida() {
+		itemAntigo.setQuantidade(quantidadeAntiga(10));
+		itemNovo.setQuantidade(quantidadeNova(5));
+		produto.setCustoMedio(custoMedio("2.50"));
 		produto.setCustoTotal(custoTotalInicial("50.00"));
 		cabecalho.setTipo(TipoNota.SAIDA);
 		
 		custoTotalProdutoAtualizacaoRn.operarSobre(itemNovo, itemAntigo);
 		
-		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("60.00"))));
+		assertThat(produto.getCustoTotal(), is(equalTo(custoTotalEsperado("62.50"))));
 	}
 	
 	@Test
@@ -103,6 +105,18 @@ class CustoTotalProdutoAtualizacaoRnTest {
 		custoTotalProdutoAtualizacaoRn.operarSobre(itemNovo, itemAntigo);
 		
 		verify(produtoRepository, times(1)).salvar(produto);
+	}
+	
+	private Integer quantidadeAntiga(Integer valor) {
+		return valor;
+	}
+	
+	private Integer quantidadeNova(Integer valor) {
+		return valor;
+	}
+	
+	private BigDecimal custoMedio(String valor) {
+		return new BigDecimal(valor);
 	}
 	
 	private BigDecimal valorTotalAntigo(String valor) {
