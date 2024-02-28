@@ -34,6 +34,16 @@ public class NotaFiscalTipoController {
         return ResponseEntity.ok().body(service.listarTodos());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(service.buscarPorId(id));
+    }
+
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<?> buscarPorNome(@PathVariable String nome) {
+        return ResponseEntity.ok().body(service.buscarPorNome(nome));
+    }
+
     @PutMapping
     public ResponseEntity<?> atualizar(@RequestBody NotaFiscalTipoDto notaFiscalTipoDto) {
         return ResponseEntity.ok().body(service.atualizar(notaFiscalTipoDto));

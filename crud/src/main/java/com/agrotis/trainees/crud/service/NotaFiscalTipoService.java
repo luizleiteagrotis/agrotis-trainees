@@ -4,10 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalTipoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.exception.CrudException;
+import com.agrotis.trainees.crud.exception.NotaFiscalTipoNaoEncontrada;
 import com.agrotis.trainees.crud.repository.NotaFiscalTipoRepository;
 import com.agrotis.trainees.crud.utils.NotaFiscalTipoDTOMapper;
 
@@ -45,41 +47,22 @@ public class NotaFiscalTipoService {
     }
 
     public NotaFiscalTipoDto buscarPorId(Integer id) {
-        return null;
-        // return repository.findById(id).orElseGet(() -> {
-        // throw new CrudException(String.format("Nota não encontrada para id
-        // {}.", id));
-        // });
+        return repository.findById(id).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new NotaFiscalTipoNaoEncontrada("Tipo de nota não encontrada para o id " + id));
     }
 
     public NotaFiscalTipoDto buscarPorNome(String nome) {
-        return null;
-        // return repository.findByNome(nome).orElseGet(() -> {
-        // throw new CrudException(String.format("Nota não encontrada para o
-        // nome {}.", nome));
-        // });
+        return repository.findByNome(nome).map(mapper::converterParaDto)
+                        .orElseThrow(() -> new NotaFiscalTipoNaoEncontrada("Tipo de nota não encontrada para o nome " + nome));
     }
 
     public void deletarPorId(Integer id) {
+        buscarPorId(id);
         repository.deleteById(id);
     }
 
-    public List<NotaFiscalTipo> listarTodos() {
-        return repository.findAll();
+    public List<NotaFiscalTipoDto> listarTodos() {
+        return repository.findAll().stream().map(mapper::converterParaDto).collect(Collectors.toList());
     }
-
-    // private NotaFiscalTipoDto converterParaDto(NotaFiscalTipo entidade) {
-    // NotaFiscalTipoDto dto = new NotaFiscalTipoDto();
-    // dto.setId(entidade.getId());
-    // dto.setNome(entidade.getNome());
-    // return dto;
-    // }
-    //
-    // private NotaFiscalTipo converterParaEntidade(NotaFiscalTipoDto dto) {
-    // NotaFiscalTipo entidade = new NotaFiscalTipo();
-    // entidade.setId(dto.getId());
-    // entidade.setNome(dto.getNome());
-    // return entidade;
-    // }
 
 }
