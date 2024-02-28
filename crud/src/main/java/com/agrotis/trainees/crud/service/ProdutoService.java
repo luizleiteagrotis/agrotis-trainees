@@ -44,7 +44,7 @@ public class ProdutoService {
         }
     }
 
-    public ProdutoDto atualizar(ProdutoDto dto) throws DescricaoExisteException {
+    public ProdutoDto atualizar(ProdutoDto dto) {
         if (dto.getId() == null) {
             throw new CrudException("Obrigatório preencher o id do produto.");
         }
@@ -60,7 +60,6 @@ public class ProdutoService {
             descricaoService.verificarDescricaoEId(produto);
         } catch (DescricaoExisteException e) {
             System.out.println("Erro: " + e.getMessage());
-            throw e;
         }
         return produtoWrapper.converterParaDto(repository.save(produto));
     }

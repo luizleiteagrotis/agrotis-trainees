@@ -49,9 +49,6 @@ public class NotaFiscalItemService {
 
     public NotaFiscalItemDto inserir(NotaFiscalItemDto dto) throws DescricaoExisteException {
         NotaFiscalItem entidade = notaFiscalItemWrapper.converterParaEntidade(dto);
-        Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
-        NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
-
         try {
             entidade = estoqueService.alterarEstoque(entidade);
 

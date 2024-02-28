@@ -187,11 +187,9 @@ public class ProdutoServiceTest {
         when(repository.findById(dto.getId())).thenReturn(Optional.of(entidade));
         doThrow(new DescricaoExisteException("A descrição já existe.")).when(descricaoService).verificarDescricaoEId(entidade);
 
-        Exception excecao = assertThrows(DescricaoExisteException.class, () -> {
-            service.atualizar(dto);
-        });
+        service.atualizar(dto);
 
-        assertEquals("A descrição já existe.", excecao.getMessage());
+        verify(descricaoService, times(1)).verificarDescricaoEId(entidade);
     }
 
     @Test

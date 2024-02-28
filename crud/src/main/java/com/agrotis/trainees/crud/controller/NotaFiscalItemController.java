@@ -16,6 +16,7 @@ import java.util.List;
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.exception.DescricaoExisteException;
+import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
 import com.agrotis.trainees.crud.service.EstoqueService;
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 
@@ -54,7 +55,7 @@ public class NotaFiscalItemController {
 
     @DeleteMapping
     @RequestMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Integer id) throws DescricaoExisteException {
+    public ResponseEntity<?> deletar(@PathVariable Integer id) throws DescricaoExisteException, EstoqueZeradoException {
         estoqueService.deletarEstoque(id);
         return ResponseEntity.ok().body(null);
     }
