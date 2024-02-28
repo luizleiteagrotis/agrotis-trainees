@@ -13,7 +13,7 @@ import com.agrotis.trainees.crud.exception.CrudException;
 public class CustoMedioServiceTest {
 
     @Test
-    public void deveCalcularCustoMedio() {
+    public void deveCalcularCustoMedioEntrada() {
         BigDecimal custoTotal = new BigDecimal(659000);
         BigDecimal quantidadeTotal = new BigDecimal(10000);
         BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
@@ -25,9 +25,9 @@ public class CustoMedioServiceTest {
         BigDecimal custoTotal = new BigDecimal(1038500);
         BigDecimal quantidadeTotal = new BigDecimal(0);
         Exception excecao = assertThrows(CrudException.class, () -> {
-            BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+            CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
         });
-        assertEquals("Quantidade Total deve ser maior que zero.", excecao.getMessage());
+        assertEquals("Quantidade Total do item deve ser maior que zero.", excecao.getMessage());
     }
 
 }
