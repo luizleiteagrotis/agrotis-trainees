@@ -1,13 +1,16 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -32,6 +35,25 @@ public class Produto {
 
     @Min(value = 0)
     private Integer estoque;
+
+    @Column(name = "custo_medio")
+    @Min(value = 0)
+    private BigDecimal custoMedio;
+
+    @PrePersist
+    private void prePersist() {
+        if (this.custoMedio == null) {
+            this.custoMedio = new BigDecimal(0);
+        }
+    }
+
+    public BigDecimal getCustoMedio() {
+        return custoMedio;
+    }
+
+    public void setCustoMedio(BigDecimal custoMedio) {
+        this.custoMedio = custoMedio;
+    }
 
     public Integer getEstoque() {
         return estoque;

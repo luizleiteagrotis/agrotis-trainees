@@ -16,6 +16,7 @@ public class ProdutoWrapper implements ConversorProduto {
         dto.setDataFabricacao(entidade.getDataFabricacao());
         dto.setDataValidade(entidade.getDataValidade());
         dto.setEstoque(entidade.getEstoque());
+        dto.setCustoMedio(entidade.getCustoMedio());
 
         return dto;
     }
@@ -28,7 +29,7 @@ public class ProdutoWrapper implements ConversorProduto {
         entidade.setDataFabricacao(dto.getDataFabricacao());
         entidade.setDataValidade(dto.getDataValidade());
         entidade.setEstoque(dto.getEstoque());
-
+        entidade.setCustoMedio(dto.getCustoMedio());
         return entidade;
     }
 }

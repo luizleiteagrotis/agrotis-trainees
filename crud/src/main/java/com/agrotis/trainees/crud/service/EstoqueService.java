@@ -2,6 +2,8 @@ package com.agrotis.trainees.crud.service;
 
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -51,6 +53,7 @@ public class EstoqueService {
                     produto2.setEstoque(produto2.getEstoque() - item.getQuantidade());
                     produtoService.atualizar(wrapper.converterParaDto(produto));
                     produtoService.atualizar(wrapper.converterParaDto(produto2));
+                    calcularCustoMedio(entidade);
                 } else {
                     throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
                 }
@@ -59,6 +62,7 @@ public class EstoqueService {
 
                 produto.setEstoque(produto.getEstoque() + entidade.getQuantidade() - item.getQuantidade());
                 produtoService.atualizar(wrapper.converterParaDto(produto));
+                calcularCustoMedio(entidade);
             } else {
                 throw new EstoqueZeradoException("Valor em estoque do produto indisponível");
             }
@@ -94,6 +98,7 @@ public class EstoqueService {
             item = itemService.validarNotaEItem(item);
 
             ProdutoDto produto2 = produtoService.atualizar(wrapper.converterParaDto(produto));
+            calcularCustoMedio(item);
         } else {
             if (produto.getEstoque() - item.getQuantidade() < 0) {
                 throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
@@ -134,6 +139,17 @@ public class EstoqueService {
             System.out.println("Erro: " + e.getMessage());
             throw e;
         }
+
+    }
+
+    public void calcularCustoMedio(NotaFiscalItem item) {
+        Produto produto = produtoService.buscarPorId(item.getProduto().getId());
+        BigDecimal quantidadeTotal = new BigDecimal(produto.getEstoque());
+        BigDecimal custoTotal = itemService.obterCustoTotal(item);
+
+        BigDecimal custoMedio = CustoMedioService.calcular(custoTotal, quantidadeTotal);
+        produto.setCustoMedio(custoMedio);
+        produtoService.atualizar(wrapper.converterParaDto(produto));
 
     }
 }

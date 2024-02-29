@@ -103,11 +103,8 @@ public class NotaFiscalItemService {
         });
     }
 
-    public NotaFiscalItem buscarPorProduto(Produto produto) {
-        return repository.findByProduto(produto).orElseThrow(() -> {
-            LOG.error("Informações não encontradas para o produto {}", produto);
-            throw new NoSuchElementException("Informações não encontradas para o produto " + produto.getDescricao());
-        });
+    public List<NotaFiscalItem> buscarPorProduto(Produto produto) {
+        return repository.findByProduto(produto);
     }
 
     public List<NotaFiscalItem> listarPorNota(Integer idNota) {

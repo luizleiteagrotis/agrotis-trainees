@@ -28,7 +28,6 @@ public class NotaFiscal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "id_tipo")
     @NotNull(message = "O tipo deve ser informado")
     @Enumerated(EnumType.STRING)
     private TipoNota tipo;

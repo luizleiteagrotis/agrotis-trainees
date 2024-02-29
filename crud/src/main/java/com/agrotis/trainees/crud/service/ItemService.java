@@ -4,12 +4,15 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
+
+import enums.TipoNota;
 
 @Component
 public class ItemService {
@@ -83,5 +86,18 @@ public class ItemService {
     public NotaFiscalItem obterValorTotal(NotaFiscalItem entidade) {
         entidade.setValorTotal(entidade.getPrecoUnitario().multiply(new BigDecimal(entidade.getQuantidade())));
         return entidade;
+    }
+
+    public BigDecimal obterCustoTotal(NotaFiscalItem entidade) {
+        Produto produto = produtoService.buscarPorId(entidade.getProduto().getId());
+        List<NotaFiscalItem> itens = repository.findByProduto(produto);
+        BigDecimal custoTotal = entidade.getPrecoUnitario().multiply(new BigDecimal(entidade.getQuantidade()));
+
+        for (NotaFiscalItem item : itens) {
+            if (item.getIdNota().getTipo() == TipoNota.ENTRADA) {
+                custoTotal = custoTotal.add(item.getValorTotal());
+            }
+        }
+        return custoTotal;
     }
 }

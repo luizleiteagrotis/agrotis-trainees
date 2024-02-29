@@ -21,4 +21,5 @@ public interface CustoMedioService {
         return custoTotal.divide(quantidadeTotal, 2, RoundingMode.HALF_UP);
 
     }
+
 }

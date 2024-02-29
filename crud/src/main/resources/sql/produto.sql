@@ -14,3 +14,4 @@ EXEC sp_rename 'produto.fabricante' , 'id_parceiro' , 'COLUMN';
 ALTER TABLE produto DROP CONSTRAINT fk_fabricante;
 ALTER TABLE produto ADD CONSTRAINT fk_id_parceiro_produto FOREIGN KEY (id_parceiro) REFERENCES parceiro_negocio(id);
 
+ALTER TABLE crud.dbo.produto ADD custo_medio numeric(10,2);

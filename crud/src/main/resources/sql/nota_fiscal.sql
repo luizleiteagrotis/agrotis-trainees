@@ -24,3 +24,7 @@ ALTER TABLE nota_fiscal ADD CONSTRAINT fk_id_tipo FOREIGN KEY (id_tipo) REFERENC
 
 ALTER TABLE nota_fiscal DROP CONSTRAINT fk_id_parceiro;
 ALTER TABLE nota_fiscal ADD CONSTRAINT fk_id_parceiro FOREIGN KEY (id_parceiro) REFERENCES parceiro_negocio(id);
+
+ALTER TABLE nota_fiscal DROP CONSTRAINT fk_id_tipo;
+
+LTER TABLE crud.dbo.nota_fiscal ALTER COLUMN tipo varchar NOT NULL;
