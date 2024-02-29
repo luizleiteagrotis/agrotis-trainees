@@ -35,9 +35,10 @@ public class ProdutoService {
         try {
             Produto produtoConvertido = produtoConversor.converter(entidadeDto);
             if (validador.existeParceiroPorId(produtoConvertido.getFabricante().getId())) {
+                validar(produtoConvertido);
                 produtoConvertido.setCustoMedio(new BigDecimal(0));
                 produtoConvertido.setEstoque(new BigDecimal(0));
-                validar(produtoConvertido);
+
                 produtoConvertido = repository.save(produtoConvertido);
                 return produtoConversor.converter(produtoConvertido);
             } else {
@@ -119,34 +120,41 @@ public class ProdutoService {
         return produtoConversor.converter(produtos);
     }
 
-    public ProdutoDto atualizar(ProdutoDto produtoDto, int id) {
+    public ProdutoDto atualizar(ProdutoDto produtoDto, int id) throws ProdutoExcecao {
         try {
             Produto produtoConvertido = produtoConversor.converter(produtoDto);
             Produto produtoAtualizar = verificarPorId(id);
-            if (produtoConvertido.getNome() != null) {
-                produtoAtualizar.setNome(produtoConvertido.getNome());
-            }
-            if (produtoConvertido.getDescricao() != null) {
-                produtoAtualizar.setDescricao(produtoConvertido.getDescricao());
-            }
-            if (produtoConvertido.getFabricante() != null) {
-                produtoAtualizar.setFabricante(produtoConvertido.getFabricante());
-            }
-            if (produtoConvertido.getDataFabricacao() != null) {
-                produtoAtualizar.setDataFabricacao(produtoConvertido.getDataFabricacao());
-            }
-            if (produtoConvertido.getDataValidade() != null) {
-                produtoAtualizar.setDataValidade(produtoConvertido.getDataValidade());
-            }
+            atribuirValor(produtoConvertido, produtoAtualizar);
             validar(produtoAtualizar);
             repository.save(produtoAtualizar);
             LOG.info("Produto atualizado");
             return produtoConversor.converter(produtoAtualizar);
         } catch (ProdutoExcecao pe) {
             LOG.error(pe.getMessage());
-            return null;
+            throw pe;
         }
 
+    }
+
+    private void atribuirValor(Produto produtoConvertido, Produto produtoAtualizar) throws ProdutoExcecao {
+        if (produtoAtualizar == null) {
+            throw new ProdutoExcecao("Falha ao salvar no banco: Por favor insira valores válidos.");
+        }
+        if (produtoConvertido.getNome() != null) {
+            produtoAtualizar.setNome(produtoConvertido.getNome());
+        }
+        if (produtoConvertido.getDescricao() != null) {
+            produtoAtualizar.setDescricao(produtoConvertido.getDescricao());
+        }
+        if (produtoConvertido.getFabricante() != null) {
+            produtoAtualizar.setFabricante(produtoConvertido.getFabricante());
+        }
+        if (produtoConvertido.getDataFabricacao() != null) {
+            produtoAtualizar.setDataFabricacao(produtoConvertido.getDataFabricacao());
+        }
+        if (produtoConvertido.getDataValidade() != null) {
+            produtoAtualizar.setDataValidade(produtoConvertido.getDataValidade());
+        }
     }
 
     public void deletarPorId(int id) {

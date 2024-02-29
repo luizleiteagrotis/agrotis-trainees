@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -129,7 +130,7 @@ class ProdutoServiceTest {
     }
 
     @Test
-    void testarProdutoSendoSalvoSemTerUmParceiroDeNegocioValidoESperandoUmaExcecao() {
+    void testarProdutoSendoSalvoSemTerUmParceiroDeNegocioValidoEsperandoUmaExcecao() {
         ProdutoDto dto = criarDto();
         Produto entidade = criarProduto();
         when(produtoConversor.converter(dto)).thenReturn(entidade);
@@ -350,7 +351,184 @@ class ProdutoServiceTest {
     }
 
     @Test
-    void testarExcluirUmProdutoExistente() {
+    void atualizarTodosOsCampos() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto("Feijão", "5-10-5", new ParceiroNegocio(), LocalDate.of(2022, 10, 10),
+                        LocalDate.of(2024, 10, 10));
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+        assertEquals(entidade.getNome(), novaEntidade.getNome());
+        assertEquals(entidade.getFabricante(), novaEntidade.getFabricante());
+        assertEquals(entidade.getDescricao(), novaEntidade.getDescricao());
+        assertEquals(entidade.getDataFabricacao(), novaEntidade.getDataFabricacao());
+        assertEquals(entidade.getDataValidade(), novaEntidade.getDataValidade());
+
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarProdutoInexistente() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto novaEntidade = new Produto("Feijão", "5-10-5", new ParceiroNegocio(), LocalDate.of(2022, 10, 10),
+                        LocalDate.of(2024, 10, 10));
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.empty());
+        assertThrows(ProdutoExcecao.class, () -> {
+            produtoService.atualizar(dto, ID);
+        });
+
+        verify(produtoRepository, times(0)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarNomeDoProduto() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setNome("Feijão");
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+        assertEquals(entidade.getNome(), novaEntidade.getNome());
+
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarNomeDoProdutoComNomeInvalidoEsperandoExcecao() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setNome("");
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ProdutoExcecao.class, () -> {
+            produtoService.atualizar(dto, ID);
+        });
+
+        verify(produtoRepository, times(0)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarDescricaoDoProduto() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setDescricao("10-10-10");
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+        assertEquals(entidade.getDescricao(), novaEntidade.getDescricao());
+
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarDescricaoDoProdutoVazia() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setDescricao("");
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+        assertEquals(entidade.getDescricao(), novaEntidade.getDescricao());
+
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarParceiroNegocio() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setFabricante(new ParceiroNegocio());
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+        assertEquals(entidade.getFabricante(), novaEntidade.getFabricante());
+
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarParceiroDeNegocioComUmProdutoIgualJaCadastradoNoBancoEsperandoExcecao() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = criarProduto();
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(produtoRepository.findByNomeAndDataFabricacaoAndFabricanteAndDescricao(NOME, DATAFABRICACAO, FABRICANTE, DESCRICAO))
+                        .thenReturn(Optional.of(entidade));
+        assertThrows(ProdutoExcecao.class, () -> {
+            produtoService.atualizar(dto, ID);
+        });
+
+        verify(produtoRepository, times(0)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarDataDeFabricacao() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setDataFabricacao(LocalDate.of(2015, 01, 01));
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+
+        assertEquals(entidade.getDataFabricacao(), novaEntidade.getDataFabricacao());
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarDataDeFabricacaoSendoMaiorQueDataDeValidadeEsperandoExcecao() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setDataFabricacao(LocalDate.of(2030, 01, 01));
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ProdutoExcecao.class, () -> {
+            produtoService.atualizar(dto, ID);
+        });
+
+        verify(produtoRepository, times(0)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarDataDeValidade() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setDataValidade(LocalDate.of(2022, 01, 01));
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        produtoService.atualizar(dto, ID);
+
+        assertEquals(entidade.getDataValidade(), novaEntidade.getDataValidade());
+        verify(produtoRepository, times(1)).save(any(Produto.class));
+    }
+
+    @Test
+    void atualizarDataDeValidadeSendoMenorQueDataDeValidadeEsperandoExcecao() throws ProdutoExcecao {
+        ProdutoDto dto = criarDto();
+        Produto entidade = criarProduto();
+        Produto novaEntidade = new Produto();
+        novaEntidade.setDataValidade(LocalDate.of(2010, 01, 01));
+        when(produtoConversor.converter(dto)).thenReturn(novaEntidade);
+        when(produtoRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ProdutoExcecao.class, () -> {
+            produtoService.atualizar(dto, ID);
+        });
+
+        verify(produtoRepository, times(0)).save(any(Produto.class));
+    }
+
+    @Test
+    void excluirUmProdutoExistente() {
 
         when(validador.existeProdutoPorId(ID)).thenReturn(true);
         produtoService.deletarPorId(ID);
