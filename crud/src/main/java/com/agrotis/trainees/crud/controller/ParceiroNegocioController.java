@@ -45,7 +45,8 @@ public class ParceiroNegocioController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocioDto parceiroNegocioDto, @PathVariable int id) {
+    public ResponseEntity<?> atualizar(@RequestBody ParceiroNegocioDto parceiroNegocioDto, @PathVariable int id)
+                    throws ParceiroNegocioExcecao {
         return ResponseEntity.ok().body(service.atualizar(parceiroNegocioDto, id));
     }
 

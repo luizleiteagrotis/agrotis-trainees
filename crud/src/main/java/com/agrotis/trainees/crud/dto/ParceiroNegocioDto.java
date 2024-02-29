@@ -7,6 +7,18 @@ public class ParceiroNegocioDto {
     private String endereco;
     private String telefone;
 
+    public ParceiroNegocioDto() {
+
+    }
+
+    public ParceiroNegocioDto(String nome, String inscricaoFiscal, String endereco, String telefone) {
+        super();
+        this.nome = nome;
+        this.inscricaoFiscal = inscricaoFiscal;
+        this.endereco = endereco;
+        this.telefone = telefone;
+    }
+
     public int getId() {
         return id;
     }

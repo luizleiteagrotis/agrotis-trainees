@@ -32,6 +32,9 @@ public class ParceiroNegocioService {
         try {
             ParceiroNegocio entidade = parceiroNegocioConversor.converter(dto);
             validarParceiro(entidade);
+            if (StringUtils.isEmpty(entidade.getInscricaoFiscal())) {
+                throw new ParceiroNegocioExcecao("Falha ao salvar no banco: É obrigatorio inserir uma inscrição fiscal.");
+            }
             validarInscricaoFiscal(entidade);
             LOG.info("Salvo com sucesso.");
             entidade = repository.save(entidade);
@@ -66,31 +69,39 @@ public class ParceiroNegocioService {
         return parceiroNegocioConversor.converter(entidades);
     }
 
-    public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto, int id) {
+    public ParceiroNegocioDto atualizar(ParceiroNegocioDto dto, int id) throws ParceiroNegocioExcecao {
         try {
             ParceiroNegocio entidade = parceiroNegocioConversor.converter(dto);
             ParceiroNegocio entidadeParaAtualizar = validarPorId(id);
-
-            if (entidade.getInscricaoFiscal() != null) {
-                entidadeParaAtualizar.setInscricaoFiscal(entidade.getInscricaoFiscal());
-            }
-            if (entidade.getNome() != null) {
-                entidadeParaAtualizar.setNome(entidade.getNome());
-            }
-            if (entidade.getEndereco() != null) {
-                entidadeParaAtualizar.setEndereco(entidade.getEndereco());
-            }
-            if (entidade.getTelefone() != null) {
-                entidadeParaAtualizar.setTelefone(entidade.getTelefone());
-            }
+            atribuirValores(entidade, entidadeParaAtualizar);
             validarParceiro(entidadeParaAtualizar);
+            validarInscricaoFiscal(entidadeParaAtualizar);
             repository.save(entidadeParaAtualizar);
             return parceiroNegocioConversor.converter(entidadeParaAtualizar);
         } catch (ParceiroNegocioExcecao e) {
             LOG.error(e.getMessage());
-            return null;
+            throw e;
         }
 
+    }
+
+    private void atribuirValores(ParceiroNegocio entidade, ParceiroNegocio entidadeParaAtualizar) throws ParceiroNegocioExcecao {
+        if (entidadeParaAtualizar == null) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira valores válidos.");
+        }
+
+        if (entidade.getInscricaoFiscal() != null) {
+            entidadeParaAtualizar.setInscricaoFiscal(entidade.getInscricaoFiscal());
+        }
+        if (entidade.getNome() != null) {
+            entidadeParaAtualizar.setNome(entidade.getNome());
+        }
+        if (entidade.getEndereco() != null) {
+            entidadeParaAtualizar.setEndereco(entidade.getEndereco());
+        }
+        if (entidade.getTelefone() != null) {
+            entidadeParaAtualizar.setTelefone(entidade.getTelefone());
+        }
     }
 
     public void deletarPorId(int id) {
@@ -111,7 +122,9 @@ public class ParceiroNegocioService {
         if (StringUtils.isEmpty(entidade.getNome())) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira um nome válido.");
         }
-
+        if (StringUtils.isEmpty(entidade.getEndereco())) {
+            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Por favor ensira um endereço válido.");
+        }
         if (StringUtils.isEmpty(entidade.getTelefone()) || entidade.getTelefone().length() < 10
                         || entidade.getTelefone().length() > 11) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Digite um telefone válido.");
@@ -121,9 +134,6 @@ public class ParceiroNegocioService {
 
     public void validarInscricaoFiscal(ParceiroNegocio entidade) throws ParceiroNegocioExcecao {
 
-        if (StringUtils.isEmpty(entidade.getInscricaoFiscal())) {
-            throw new ParceiroNegocioExcecao("Falha ao salvar no banco: É obrigatorio inserir uma inscrição fiscal.");
-        }
         if (repository.findByInscricaoFiscal(entidade.getInscricaoFiscal()).isPresent()) {
             throw new ParceiroNegocioExcecao("Falha ao salvar no banco: Inscrição fiscal já está cadastrada.");
         }

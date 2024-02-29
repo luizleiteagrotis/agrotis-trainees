@@ -19,7 +19,9 @@ public class ParceiroNegocio {
     @Column(name = "inscricao_fiscal", unique = true)
     @NotBlank(message = "Este campo é obrigatório")
     private String inscricaoFiscal;
+    @NotBlank(message = "Este campo é obrigatório")
     private String endereco;
+    @NotBlank(message = "Este campo é obrigatório")
     private String telefone;
 
     public ParceiroNegocio() {

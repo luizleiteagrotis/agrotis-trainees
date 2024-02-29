@@ -1,8 +1,10 @@
 package com.agrotis.trainees.crud.service;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -145,7 +147,7 @@ class ParceiroNegocioServiceTest {
     }
 
     @Test
-    void verificarSeORetornoDeBuscarPorIdENull() {
+    void verificarSeRetornoDeBuscarPorIdNull() {
         when(repository.findById(ID)).thenReturn(Optional.empty());
         ParceiroNegocioDto parceiro = parceiroNegocioService.buscarPorId(ID);
         assertNull(parceiro);
@@ -188,13 +190,172 @@ class ParceiroNegocioServiceTest {
         assertNotNull(parceirosDto);
     }
 
-    /*
-     * TO-DO VALIDAR O ATUALIZAR
-     * 
-     * @Test void verificarSeMetodoAtualizarEstaFuncionando() {
-     * 
-     * }
-     */
+    @Test
+    void verificarMetodoAtualizarTodosOsCampos() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio("matheus", "11111111111111", "Acre", "99999999999");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(entidade);
+        when(parceiroNegocioConversor.converter(entidade)).thenReturn(any(ParceiroNegocioDto.class));
+        parceiroNegocioService.atualizar(dto, ID);
+        assertEquals(entidade.getNome(), novaEntidade.getNome());
+        assertEquals(entidade.getInscricaoFiscal(), novaEntidade.getInscricaoFiscal());
+        assertEquals(entidade.getEndereco(), novaEntidade.getEndereco());
+        assertEquals(entidade.getTelefone(), novaEntidade.getTelefone());
+    }
+
+    @Test
+    void verificarMetodoAtualizarSemOParceiroRegistrado() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio("matheus", "11111111111111", "Acre", "99999999999");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.empty());
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(entidade);
+        when(parceiroNegocioConversor.converter(entidade)).thenReturn(any(ParceiroNegocioDto.class));
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasNome() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setNome("matheus");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(entidade);
+        parceiroNegocioService.atualizar(dto, ID);
+        assertEquals(entidade.getNome(), novaEntidade.getNome());
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasNomeComUmValorInvalidoEsperandoExcecao() {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setNome("");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(repository.save(any(ParceiroNegocio.class))).thenReturn(entidade);
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasInscricaoFiscal() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setInscricaoFiscal("00000000000000");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        parceiroNegocioService.atualizar(dto, ID);
+        assertEquals(entidade.getInscricaoFiscal(), novaEntidade.getInscricaoFiscal());
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasInscricaoFiscalComUmValorInvalidoEsperandoExcecao()
+                    throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setInscricaoFiscal("00");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasInscricaoFiscalComUmValorJaExistenteEsperandoExcecao()
+                    throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setInscricaoFiscal(INSCRICAO_FISCAL);
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(repository.findByInscricaoFiscal(INSCRICAO_FISCAL)).thenReturn(Optional.of(entidade));
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasEndereco() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setEndereco("Bahamas");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+
+        parceiroNegocioService.atualizar(dto, ID);
+        assertEquals(entidade.getEndereco(), novaEntidade.getEndereco());
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasEnderecoComWhiteSpace() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setEndereco("");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasTelefone() throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setTelefone("55555555555");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+
+        parceiroNegocioService.atualizar(dto, ID);
+        assertEquals(entidade.getTelefone(), novaEntidade.getTelefone());
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasTelefoneComUmTelefoneInvalidoComMenosCaracteresPermitidos()
+                    throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setTelefone("555555");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+    }
+
+    @Test
+    void verificarMetodoAtualizarAtualizandoApenasTelefoneComUmTelefoneInvalidoComMaisCaracteresPermitidos()
+                    throws ParceiroNegocioExcecao {
+        ParceiroNegocioDto dto = criaParceiroDto();
+        ParceiroNegocio entidade = converteParceiro(dto);
+        ParceiroNegocio novaEntidade = new ParceiroNegocio();
+        novaEntidade.setTelefone("5555555555555555");
+        when(parceiroNegocioConversor.converter(dto)).thenReturn(novaEntidade);
+        when(repository.findById(ID)).thenReturn(Optional.of(entidade));
+        assertThrows(ParceiroNegocioExcecao.class, () -> {
+            parceiroNegocioService.atualizar(dto, ID);
+        });
+    }
 
     @Test
     void excluirUmParceiroNegocioExistente() {
@@ -208,6 +369,10 @@ class ParceiroNegocioServiceTest {
         when(repository.existsById(ID)).thenReturn(false);
         parceiroNegocioService.deletarPorId(ID);
         verify(repository, times(0)).deleteById(ID);
+    }
+
+    ParceiroNegocioDto teste(ParceiroNegocio entidade) {
+        return parceiroNegocioConversor.converter(entidade);
     }
 
     ParceiroNegocioDto criaParceiroDto() {
