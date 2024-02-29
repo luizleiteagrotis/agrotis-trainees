@@ -440,49 +440,77 @@ public class NotaFiscalServiceTest {
     }
 
     @Test
-    @DisplayName("Teste para atualizarNotaFiscal")
-    public void testAtualizarNotaFiscal() {
-        NotaFiscal entidade = new NotaFiscal();
-        entidade.setId(1);
-        entidade.setValorTotal(BigDecimal.ZERO);
-        entidade.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
+    @DisplayName("Teste para o método atualizarNotaFiscal")
+    public void testeAtualizarNota() {
+        NotaFiscal notaFiscal = new NotaFiscal();
+        notaFiscal.setId(1);
+        notaFiscal.setValorTotal(BigDecimal.ZERO);
+        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.ENTRADA);
 
-        List<NotaFiscalItem> itens = new ArrayList<>();
         NotaFiscalItem item1 = new NotaFiscalItem();
         item1.setId(1);
         item1.setPrecoUnitario(BigDecimal.TEN);
-        item1.setQuantidade(10); // VT = 100
-        item1.setNotaFiscal(entidade);
+        item1.setQuantidade(10);
+        item1.setNotaFiscal(notaFiscal);
 
         NotaFiscalItem item2 = new NotaFiscalItem();
         item2.setId(2);
         item2.setPrecoUnitario(BigDecimal.valueOf(20));
-        item2.setQuantidade(20); // VT = 400
-        item2.setNotaFiscal(entidade);
+        item2.setQuantidade(20);
+        item2.setNotaFiscal(notaFiscal);
 
-        itens.add(item1);
-        itens.add(item2);
+        List<NotaFiscalItem> itens = Arrays.asList(item1, item2);
 
-        // when(repository.save(entidade)).thenAnswer(invocation ->
-        // invocation.getArgument(0));
-        when(repository.save(entidade)).thenReturn(entidade);
+        when(repository.save(any(NotaFiscal.class))).thenReturn(notaFiscal);
 
         service.atualizarNotaFiscal(itens);
 
-        verify(repository, times(1)).save(entidade);
+        verify(repository, times(1)).save(notaFiscal);
 
-        BigDecimal valorTotalEsperado = item1.getValorTotal().add(item2.getValorTotal());
-        assertEquals(valorTotalEsperado, entidade.getValorTotal());
+        BigDecimal valorTotalEsperado = BigDecimal.valueOf(10 * 10 + 20 * 20);
+        assertEquals(valorTotalEsperado, notaFiscal.getValorTotal());
     }
 
     @Test
     @DisplayName("Teste para atualizarNotaFiscal quando lista de itens está vazia")
-    public void testAtualizarNotaFiscalListaVazia() {
+    public void testeAtualizarNotaFiscalListaVazia() {
         List<NotaFiscalItem> itens = new ArrayList<>();
 
         service.atualizarNotaFiscal(itens);
 
         verify(repository, never()).save(any(NotaFiscal.class));
+    }
+
+    @Test
+    @DisplayName("Teste para o método atualizarNotaFiscal com itens de saída")
+    public void testAtualizarNotaFiscal_Saida() {
+        NotaFiscal notaFiscal = new NotaFiscal();
+        notaFiscal.setId(1);
+        notaFiscal.setValorTotal(BigDecimal.ZERO);
+        notaFiscal.setNotaFiscalTipo(NotaFiscalTipo.SAIDA);
+
+        NotaFiscalItem item1 = new NotaFiscalItem();
+        item1.setId(1);
+        item1.setPrecoUnitario(BigDecimal.TEN);
+        item1.setQuantidade(10);
+        item1.setNotaFiscal(notaFiscal);
+
+        NotaFiscalItem item2 = new NotaFiscalItem();
+        item2.setId(2);
+        item2.setPrecoUnitario(BigDecimal.valueOf(20));
+        item2.setQuantidade(20);
+        item2.setNotaFiscal(notaFiscal);
+
+        List<NotaFiscalItem> itens = Arrays.asList(item1, item2);
+
+        when(repository.save(any(NotaFiscal.class))).thenReturn(notaFiscal);
+
+        service.atualizarNotaFiscal(itens);
+
+        verify(repository, times(1)).save(notaFiscal);
+
+        BigDecimal valorTotalEsperado = BigDecimal.valueOf(10 * 10 + 20 * 20).negate();
+        assertEquals(valorTotalEsperado, notaFiscal.getValorTotal());
     }
 
 }
