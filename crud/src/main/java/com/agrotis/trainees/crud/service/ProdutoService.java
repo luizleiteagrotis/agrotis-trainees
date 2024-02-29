@@ -2,11 +2,16 @@ package com.agrotis.trainees.crud.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.entity.enums.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.CampoEmptyOrNullException;
@@ -73,13 +78,6 @@ public class ProdutoService {
 
     }
 
-//    public void deletarPorId(Integer id) {
-//        repository.findById(id).map(produto -> {
-//            repository.deleteById(id);
-//            LOG.info("Produto Deletado com sucesso");
-//            return produto;
-//        }).orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com o ID " + id + " não foi encontrado pelo id"));
-//    }
     
     public void deletarPorId(Integer id) {
         repository.findById(id).ifPresentOrElse(
@@ -133,7 +131,42 @@ public class ProdutoService {
         });
     }
     
+    
+
+    
+    
+    public ProdutoDto atualizarEstoque(ItemNotaFiscal itemNotaFiscal) {
+        Produto produto = itemNotaFiscal.getProduto();
+        BigDecimal quantidade = itemNotaFiscal.getQuantidade();
+        BigDecimal custoTotal = itemNotaFiscal.getValorTotal();
+        NotaFiscalTipo notaFiscalTipo = itemNotaFiscal.getNotaFiscal().getTipo();
+        BigDecimal estoque = produto.getEstoque();
+        BigDecimal novoEstoque;
+        BigDecimal novoCustoMedio;
+        if (notaFiscalTipo == NotaFiscalTipo.ENTRADA) {
+            BigDecimal custoMedioAtual = produto.getCustoMedio();
+            novoEstoque = estoque.add(quantidade);
+            BigDecimal novoCustoTotal = custoMedioAtual.multiply(estoque).add(custoTotal);
+            novoCustoMedio = novoCustoTotal.divide(novoEstoque, 2, RoundingMode.HALF_UP);
+        } else {
+            if (estoque.subtract(quantidade).compareTo(BigDecimal.ZERO) >= 0) {
+                novoEstoque = estoque.subtract(quantidade);
+                novoCustoMedio = produto.getCustoMedio(); // Não altera o custo médio em uma saída
+            } else {
+                throw new IllegalArgumentException("Não é possível remover mais itens do que o disponível em estoque.");
+            }
+        }
+        produto.setEstoque(novoEstoque);
+        produto.setCustoMedio(novoCustoMedio);
+        return salvarProdutoAtualizado(produto);
+    }
+    private ProdutoDto salvarProdutoAtualizado(Produto produto) {
+        Produto produtoAtualizado = repository.save(produto);
+        return converteParaDto(produtoAtualizado);
+    }
+    
    
+
 
     public static ProdutoDto converteParaDto(Produto entidade) {
         ProdutoDto dto = new ProdutoDto();

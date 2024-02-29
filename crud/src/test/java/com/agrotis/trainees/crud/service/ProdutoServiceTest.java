@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
+import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
+import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
+import com.agrotis.trainees.crud.entity.enums.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.ParceiroNegocioRepository;
 import com.agrotis.trainees.crud.repository.ProdutoRepository;
 import com.agrotis.trainees.crud.service.exceptions.CampoEmptyOrNullException;
@@ -51,7 +56,7 @@ public class ProdutoServiceTest {
 //    }
     
     @Test
-    void saveProductWhenDtoValido() {
+    void salvarProdutoQuandoDtoValido() {
     	// Criar um ProdutoDto válido
         ProdutoDto produtoDto = new ProdutoDto();
         produtoDto.setNome("Nome do Produto");
@@ -59,7 +64,8 @@ public class ProdutoServiceTest {
         produtoDto.setId(3);
         produtoDto.setDataFabricacao(LocalDate.of(2024, 2, 21));
         produtoDto.setDataValidade(LocalDate.of(2025, 2, 21));
-        produtoDto.setEstoque(new BigDecimal(10));
+        produtoDto.setEstoque(new BigDecimal(50));
+       
         
         // Criar um fabricante válido
         ParceiroNegocio fabricante = new ParceiroNegocio();
@@ -271,6 +277,7 @@ public class ProdutoServiceTest {
     
     
     
+    
     @Test
     void salvar_DeveLancarExcecaoQuandoFabricanteNulo() {
         // Dados de entrada
@@ -390,7 +397,43 @@ public class ProdutoServiceTest {
         verify(produtoRepository).save(any(Produto.class));
     }
     
-     
+
+    
+    
+    @Test
+    void atualizarEstoque_EntradaDeveAtualizarEstoqueECustoMedioCorretamente() {
+        // Arrange
+        Produto produto = new Produto();
+        produto.setId(1);
+        produto.setEstoque(BigDecimal.TEN);
+        produto.setCustoMedio(BigDecimal.valueOf(10.00));
+
+        NotaFiscal notaFiscal = new NotaFiscal(); // Inicialize o objeto NotaFiscal
+        notaFiscal.setTipo(NotaFiscalTipo.ENTRADA);
+
+        ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+        itemNotaFiscal.setProduto(produto);
+        itemNotaFiscal.setQuantidade(BigDecimal.valueOf(5));
+        itemNotaFiscal.setValorTotal(BigDecimal.valueOf(50.00));
+        itemNotaFiscal.setNotaFiscal(notaFiscal); // Defina o objeto NotaFiscal dentro do ItemNotaFiscal
+
+        BigDecimal novoEstoqueEsperado = BigDecimal.valueOf(15);
+        BigDecimal novoCustoMedioEsperado = BigDecimal.valueOf(8.33).setScale(2, RoundingMode.HALF_UP);
+
+        when(produtoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        ProdutoDto result = service.atualizarEstoque(itemNotaFiscal);
+
+        // Assert
+        assertEquals(novoEstoqueEsperado, result.getEstoque());
+        assertEquals(novoCustoMedioEsperado, result.getCustoMedio());
+    }
+    
+    
+
+    
+    
 
     private ProdutoDto criarProdutoDto() {
         ProdutoDto dto = new ProdutoDto();

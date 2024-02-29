@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,26 +44,27 @@ public class ItemNotaFiscalService {
         this.produtoRepository = produtoRepository;
     }
 
+
+    
     public NotaFiscalItemDto salvar(NotaFiscalItemDto dto) {
         ItemNotaFiscal entidade = converteParaEntidade(dto);
 
         NotaFiscal notaFiscal = entidade.getNotaFiscal();
-
         entidade.setNotaFiscal(notaFiscalService.converteParaEntidade(notaFiscalService.buscarPorId(notaFiscal.getId())));
 
         Produto produto = entidade.getProduto();
-
         entidade.setProduto(produtoService.converteParaEntidade(produtoService.buscarPorId(produto.getId())));
 
         calcularValorTotal(entidade);
-        ProdutoDto novoProduto = atualizarEstoque(entidade);
+        produtoService.atualizarEstoque(entidade); // Chamada para o método atualizarEstoque de ProdutoService
 
-        entidade.setProduto(produtoService.converteParaEntidade(novoProduto));
         addValorTotal(entidade);
         repository.save(entidade);
 
         return converteParaDto(entidade);
     }
+    
+    
 
     public List<NotaFiscalItemDto> listarTodos() {
         return repository.findAll().stream().map(ItemNotaFiscalService::converteParaDto).collect(Collectors.toList());
@@ -110,28 +112,7 @@ public class ItemNotaFiscalService {
         }
     }
 
-    public ProdutoDto atualizarEstoque(ItemNotaFiscal itemNotaFiscal) {
-
-        Produto produto = itemNotaFiscal.getProduto();
-        BigDecimal quantidade = itemNotaFiscal.getQuantidade();
-
-        com.agrotis.trainees.crud.entity.enums.NotaFiscalTipo notaFiscalTipo = itemNotaFiscal.getNotaFiscal().getTipo();
-        BigDecimal estoque = itemNotaFiscal.getProduto().getEstoque();
-
-        if (notaFiscalTipo == NotaFiscalTipo.ENTRADA) {
-            produto.setEstoque(estoque.add(quantidade)); // Add directly
-            System.out.println("Nota Fiscal TIPO Entrada");
-        } else {
-            if (estoque.subtract(quantidade).compareTo(BigDecimal.ZERO) >= 0) {
-                produto.setEstoque(estoque.subtract(quantidade)); // Subtract directly
-                System.out.println("Nota Fiscal TIPO Saida");
-            } else {
-                throw new IllegalArgumentException("Não é possível remover mais itens do que o disponível em estoque.");
-            }
-        }
-        System.out.println(produto.getEstoque());
-        return produtoService.salvar(produtoService.converteParaDto(produto));
-    }
+    
 
 
 
@@ -187,7 +168,7 @@ public class ItemNotaFiscalService {
 
         dto.setId(entidade.getId());
         dto.setPrecoUnitario(entidade.getPrecoUnitario());
-        dto.setQuantidade(dto.getQuantidade());
+        dto.setQuantidade(entidade.getQuantidade());
         dto.setValorTotal(entidade.getValorTotal());
         dto.setNotaFiscal(entidade.getNotaFiscal());
         dto.setProduto(entidade.getProduto());

@@ -66,7 +66,12 @@ public class ItemNotaFiscal {
         return id;
     }
 
-    @NotNull(message = "Obrigatorio inserir o preco unitario!")
+
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@NotNull(message = "Obrigatorio inserir o preco unitario!")
     public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
