@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.agrotis.trainees.crud.service.NotaFiscalItemService;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
-import com.agrotis.trainees.crud.service.NotaFiscalTipoService;
 import com.agrotis.trainees.crud.service.ParceiroNegocioService;
 import com.agrotis.trainees.crud.service.ProdutoService;
 
@@ -16,17 +15,14 @@ public class CrudApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(CrudApplication.class);
 
-    private final NotaFiscalTipoService notaFiscalTipoService;
     private final ParceiroNegocioService parceiroNegociosService;
     private final ProdutoService produtoService;
     private final NotaFiscalService notaFiscalService;
     private final NotaFiscalItemService notaFiscalItemService;
 
-    public CrudApplication(NotaFiscalTipoService notaFiscalTipoService, ParceiroNegocioService parceiroNegociosService,
-                    ProdutoService produtoService, NotaFiscalService notaFiscalService,
-                    NotaFiscalItemService notaFiscalItemService) {
+    public CrudApplication(ParceiroNegocioService parceiroNegociosService, ProdutoService produtoService,
+                    NotaFiscalService notaFiscalService, NotaFiscalItemService notaFiscalItemService) {
 
-        this.notaFiscalTipoService = notaFiscalTipoService;
         this.parceiroNegociosService = parceiroNegociosService;
         this.produtoService = produtoService;
         this.notaFiscalService = notaFiscalService;

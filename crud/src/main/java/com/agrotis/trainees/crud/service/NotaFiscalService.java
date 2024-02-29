@@ -11,10 +11,11 @@ import java.util.NoSuchElementException;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 import com.agrotis.trainees.crud.wrapper.NotaFiscalWrapper;
+
+import enums.TipoNota;
 
 @Service
 public class NotaFiscalService {
@@ -22,15 +23,12 @@ public class NotaFiscalService {
     private static final Logger LOG = LoggerFactory.getLogger(NotaFiscal.class);
 
     private final NotaFiscalRepository repository;
-    private final NotaFiscalTipoService tipoService;
     private final NotaFiscalWrapper notaFiscalWrapper;
     private final NumeroService numeroService;
 
-    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalTipoService tipoService,
-                    NotaFiscalWrapper notaFiscalWrapper, NumeroService numeroService) {
+    public NotaFiscalService(NotaFiscalRepository repository, NotaFiscalWrapper notaFiscalWrapper, NumeroService numeroService) {
         super();
         this.repository = repository;
-        this.tipoService = tipoService;
         this.notaFiscalWrapper = notaFiscalWrapper;
         this.numeroService = numeroService;
     }
@@ -64,16 +62,14 @@ public class NotaFiscalService {
         });
     }
 
-    public NotaFiscal buscarPorTipoeNumero(NotaFiscalTipo tipo, Integer numero) {
+    public NotaFiscal buscarPorTipoeNumero(TipoNota tipo, Integer numero) {
         return repository.findByTipoAndNumero(tipo, numero).orElseThrow(() -> {
             LOG.error("Informações não encontradas para o id {} e numero de nota {}", tipo, numero);
             return new NoSuchElementException("Informações não encontradas para o id e numero informados ");
         });
     }
 
-    public List<NotaFiscal> listarPorTipo(Integer idTipo) {
-
-        NotaFiscalTipo tipo = tipoService.buscarPorId(idTipo);
+    public List<NotaFiscal> listarPorTipo(TipoNota tipo) {
         return repository.findByTipo(tipo);
     }
 

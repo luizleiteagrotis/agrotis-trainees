@@ -17,6 +17,8 @@ import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.service.NotaFiscalService;
 
+import enums.TipoNota;
+
 @RequestMapping("notas-fiscais/notas")
 @RestController
 public class NotaFiscalController {
@@ -40,7 +42,7 @@ public class NotaFiscalController {
 
     @GetMapping
     @RequestMapping("/por-tipo/{idTipo}")
-    public ResponseEntity<List<NotaFiscal>> listarPorIdTipo(@PathVariable Integer idTipo) {
+    public ResponseEntity<List<NotaFiscal>> listarPorIdTipo(@PathVariable TipoNota idTipo) {
         return ResponseEntity.ok().body(service.listarPorTipo(idTipo));
     }
 

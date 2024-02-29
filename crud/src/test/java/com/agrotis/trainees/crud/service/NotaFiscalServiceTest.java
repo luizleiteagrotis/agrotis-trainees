@@ -22,7 +22,6 @@ import java.util.Optional;
 
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
@@ -43,9 +42,6 @@ public class NotaFiscalServiceTest {
 
     @Mock
     ModelMapper mapper;
-
-    @Mock
-    NotaFiscalTipoService tipoService;
 
     @InjectMocks
     NotaFiscalService service;
@@ -149,8 +145,7 @@ public class NotaFiscalServiceTest {
     @Test
     @DisplayName("Teste para buscar por tipo e numero com sucesso")
     void deveBuscarPorTipoENumero() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         ParceiroNegocio parceiro = new ParceiroNegocio();
         parceiro.setId(1);
@@ -172,8 +167,7 @@ public class NotaFiscalServiceTest {
     @Test
     @DisplayName("Teste erro ao não encontrar tipo e numero")
     void deveRetornarErroBuscarTipoENumero() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         when(repository.findByTipoAndNumero(tipo, 1)).thenReturn(Optional.empty());
 
@@ -187,8 +181,7 @@ public class NotaFiscalServiceTest {
     @Test
     @DisplayName("Teste para listar por tipo")
     void deveListarPorTipo() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         ParceiroNegocio parceiro = new ParceiroNegocio();
         parceiro.setId(1);
@@ -202,11 +195,10 @@ public class NotaFiscalServiceTest {
         List<NotaFiscal> notas = new ArrayList();
         notas.add(entidade);
 
-        when(tipoService.buscarPorId(1)).thenReturn(tipo);
         when(repository.findByTipo(tipo)).thenReturn(notas);
 
         assertDoesNotThrow(() -> {
-            service.listarPorTipo(tipo.getId());
+            service.listarPorTipo(tipo);
         });
 
         verify(repository, times(1)).findByTipo(tipo);
