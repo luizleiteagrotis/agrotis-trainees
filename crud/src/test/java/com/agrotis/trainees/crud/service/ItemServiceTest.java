@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +17,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
+
+import enums.TipoNota;
 
 public class ItemServiceTest {
 
@@ -195,6 +202,40 @@ public class ItemServiceTest {
         assertEquals(item2.getPrecoUnitario(), item.getPrecoUnitario());
         assertEquals(item2.getQuantidade(), item.getQuantidade());
         assertEquals(item2.getValorTotal(), item.getValorTotal());
+
+    }
+
+    @Test
+    @DisplayName("Teste para obter custo total")
+    void deveObterCustoTotal() {
+        Produto produto = new Produto();
+        produto.setId(1);
+
+        NotaFiscal nota = new NotaFiscal();
+        nota.setTipo(TipoNota.ENTRADA);
+
+        NotaFiscalItem item = new NotaFiscalItem();
+        item.setIdNota(nota);
+        item.setProduto(produto);
+        item.setPrecoUnitario(new BigDecimal(100));
+        item.setQuantidade(50);
+        item.setValorTotal(new BigDecimal(5000));
+
+        BigDecimal custoTotal = new BigDecimal(3).multiply(item.getValorTotal());
+
+        List<NotaFiscalItem> itens = new ArrayList();
+        itens.add(item);
+        itens.add(item);
+        itens.add(item);
+
+        when(produtoService.buscarPorId(any())).thenReturn(produto);
+        when(repository.findByProduto(produto)).thenReturn(itens);
+
+        assertDoesNotThrow(() -> {
+            service.obterCustoTotal(item);
+        });
+
+        verify(repository, times(1)).findByProduto(produto);
 
     }
 
