@@ -57,7 +57,7 @@ public class NotaFiscal {
 
     private BigDecimal custoMedio;
     
-    
+   
 
     public BigDecimal getCustoTotal() {
 		return custoTotal;

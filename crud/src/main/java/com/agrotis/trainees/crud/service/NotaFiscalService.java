@@ -1,13 +1,10 @@
 package com.agrotis.trainees.crud.service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -24,25 +21,15 @@ public class NotaFiscalService {
     private final NotaFiscalRepository repository;
 
     private final ParceiroNegocioRepository parceiroNegocioRepository;
+    
 
-    private final NotaFiscalRepository notaFiscal;
-
-    public NotaFiscalService(NotaFiscalRepository repository, ParceiroNegocioRepository parceiroNegocioRepository,
-                    NotaFiscalRepository notaFiscal) {
+    public NotaFiscalService(NotaFiscalRepository repository, ParceiroNegocioRepository parceiroNegocioRepository) {
         super();
         this.repository = repository;
         this.parceiroNegocioRepository = parceiroNegocioRepository;
-        this.notaFiscal = notaFiscal;
+        
     }
 
-    private ParceiroNegocio salvarOuBuscarFabricante(ParceiroNegocio fabricante) {
-        if (fabricante.getId() != null) {
-            return parceiroNegocioRepository.findById(fabricante.getId()).orElseThrow(() -> new EntidadeNaoEncontradaException(
-                            "Fabricante com o ID " + fabricante.getId() + " não encontrado"));
-        } else {
-            return parceiroNegocioRepository.save(fabricante);
-        }
-    }
 
     public NotaFiscalDto salvar(NotaFiscalDto cabecalhoDto) {
         NotaFiscal cabecalho = converteParaEntidade(cabecalhoDto);
@@ -109,6 +96,9 @@ public class NotaFiscalService {
             return new EntidadeNaoEncontradaException("Cabechalho com o ID " + id + " não encontrado");
         });
     }
+    
+    
+    
 
     public List<NotaFiscalDto> listarTodos() {
         return repository.findAll().stream().map(NotaFiscalService::converteParaDto).collect(Collectors.toList());
@@ -122,7 +112,7 @@ public class NotaFiscalService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("NOTA FISCAL com o ID " + id + " não foi encontrada!"));
     }
 
-    private BigDecimal calcularValorTotal(NotaFiscal cabecalho) {
+    public BigDecimal calcularValorTotal(NotaFiscal cabecalho) {
         return cabecalho.getItens().stream()
                 .map(item -> item.getQuantidade().multiply(item.getPrecoUnitario()))
                 .reduce(BigDecimal.ZERO, (subtotal, element) -> subtotal.add(element));
@@ -145,10 +135,10 @@ public class NotaFiscalService {
 
         dto.setId(entidade.getId());
         dto.setData(entidade.getData());
-        dto.setNumero(dto.getNumero());
+        dto.setNumero(entidade.getNumero());
         dto.setTipo(entidade.getTipo());
-        dto.setParceiroNegocio(dto.getParceiroNegocio());
-        dto.setValorTotal(dto.getValorTotal());
+        dto.setParceiroNegocio(entidade.getParceiroNegocio());
+        dto.setValorTotal(entidade.getValorTotal());
 
         return dto;
     }

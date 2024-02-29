@@ -1,10 +1,12 @@
 create table item_nota_fiscal (
        id int not null,
-        preco_unitario double precision,
-        quantidade int,
-        valor_total double precision,
+        preco_unitario numeric,
+        quantidade numeric,
+        valor_total numeric,
         nota_fiscal_id int,
         produto_id int,
+        custo_medio numeric,
+        custo_total numeric
         primary key (id)
     )
    

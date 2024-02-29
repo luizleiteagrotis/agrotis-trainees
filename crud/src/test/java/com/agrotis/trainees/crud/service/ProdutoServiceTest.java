@@ -96,7 +96,7 @@ public class ProdutoServiceTest {
     
     
     @Test
-    void salvarCampoEmptyOrNullWhenDtoInvalid() {
+    void salvarCampoVazioOuNuloQuandoDtoInvalido() {
         // Crie um ProdutoDto inválido (sem dados)
         ProdutoDto produtoDto = new ProdutoDto();
 
@@ -145,7 +145,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void deletarPorIdDeletaProduto_WhenFound() {
+    void deletarPorIdDeletaProduto_QuandoEncontrar() {
         int id = 1;
         Produto produto = criarProduto();
         when(produtoRepository.findById(id)).thenReturn(Optional.of(produto));
@@ -156,7 +156,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void deletarPorIdLancaExcecao_IfProductNotFound() {
+    void deletarPorIdLancaExcecao_SeProdutoNaoEncontrado() {
         int id = 1;
         when(produtoRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -166,7 +166,7 @@ public class ProdutoServiceTest {
     }
     
     @Test
-    void atualizarProduct_WhenFindProduct() {
+    void atualizarProduto_QuandoEncontrarProduto() {
         int id = 3;
         Produto produtoExistente = criarProduto();
         ProdutoDto produtoDto = criarProdutoDto();
@@ -187,7 +187,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void atualizar_LancarExceptionWhenProductNotFound() {
+    void atualizar_LancarExcecaoSeProdutoNaoEncontrado() {
         int id = 1;
         ProdutoDto produtoDto = criarProdutoDto();
         when(produtoRepository.findById(id)).thenReturn(Optional.empty());
@@ -344,7 +344,7 @@ public class ProdutoServiceTest {
         assertThrows(EntidadeNaoEncontradaException.class, () -> service.update(id, produtoDto));
     }
 
-    // Adicione este teste para cobrir o trecho do código em questão
+    
     @Test
     void update_DeveAtualizarFabricante_QuandoFabricanteNaoNulo() {
         // Dados de entrada

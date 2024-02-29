@@ -3,7 +3,10 @@
         data_nota date,
         numero int,
         tipo varchar(255),
+        valor_total numeric,
         parceiro_negocio_id int,
+        custo_medio numeric,
+        custo_total numeric
         primary key (id)
     )
     
