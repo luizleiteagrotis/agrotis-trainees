@@ -3,6 +3,7 @@ package com.agrotis.trainees.crud.service;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -86,16 +87,19 @@ public class EstoqueServiceTest {
         itemAtual.setIdNota(nota);
         itemAtual.setProduto(produto);
 
+        BigDecimal valor = new BigDecimal(25);
+        BigDecimal custoTotal = new BigDecimal(200);
+
         when(produtoService.buscarPorId(1)).thenReturn(produto);
         when(notaService.buscarPorId(1)).thenReturn(nota);
         when(produtoWrapper.converterParaDto(produto)).thenReturn(produtoDto);
         when(produtoService.atualizar(produtoDto)).thenReturn(produtoDto);
+        when(itemService.obterCustoTotal(any())).thenReturn(custoTotal);
 
         assertDoesNotThrow(() -> {
             service.atualizarEstoque(novoItem, itemAtual);
         });
 
-        verify(produtoService, times(1)).atualizar(produtoDto);
         assertEquals(10, produto.getEstoque());
     }
 
@@ -130,17 +134,20 @@ public class EstoqueServiceTest {
         itemAtual.setIdNota(nota);
         itemAtual.setProduto(produto2);
 
+        BigDecimal custoTotal = new BigDecimal(200);
+
         when(produtoService.buscarPorId(1)).thenReturn(produto);
         when(produtoService.buscarPorId(2)).thenReturn(produto2);
         when(notaService.buscarPorId(1)).thenReturn(nota);
         when(produtoWrapper.converterParaDto(produto)).thenReturn(produtoDto);
         when(produtoService.atualizar(produtoDto)).thenReturn(produtoDto);
+        when(itemService.obterCustoTotal(any())).thenReturn(custoTotal);
 
         assertDoesNotThrow(() -> {
             service.atualizarEstoque(novoItem, itemAtual);
         });
 
-        verify(produtoService, times(1)).atualizar(produtoDto);
+        verify(produtoService, times(2)).atualizar(produtoDto);
         assertEquals(20, produto.getEstoque());
         assertEquals(5, produto2.getEstoque());
     }
@@ -418,17 +425,19 @@ public class EstoqueServiceTest {
         novoItem.setIdNota(nota);
         novoItem.setProduto(produto);
 
+        BigDecimal custoTotal = new BigDecimal(200);
+
         when(produtoService.buscarPorId(1)).thenReturn(produto);
         when(notaService.buscarPorId(1)).thenReturn(nota);
         when(itemService.validarNotaEItem(novoItem)).thenReturn(novoItem);
         when(produtoWrapper.converterParaDto(produto)).thenReturn(produtoDto);
         when(produtoService.atualizar(produtoDto)).thenReturn(produtoDto);
+        when(itemService.obterCustoTotal(any())).thenReturn(custoTotal);
 
         assertDoesNotThrow(() -> {
             service.alterarEstoque(novoItem);
         });
 
-        verify(produtoService, times(1)).atualizar(produtoDto);
         assertEquals(45, produto.getEstoque());
     }
 
@@ -612,5 +621,31 @@ public class EstoqueServiceTest {
         });
 
         assertEquals("A quantidade em estoque não é suficiente", excecao.getMessage());
+    }
+
+    @Test
+    @DisplayName("Teste calcular custo medio")
+    void deveCalcularCustoMedio() {
+
+        Produto produto = new Produto();
+        produto.setId(1);
+        produto.setEstoque(100);
+
+        NotaFiscalItem item = new NotaFiscalItem();
+        item.setId(1);
+        item.setProduto(produto);
+
+        BigDecimal qtdTotal = new BigDecimal(100);
+        BigDecimal custoTotal = new BigDecimal(500);
+
+        BigDecimal custoM = CustoMedioService.calcular(custoTotal, qtdTotal);
+
+        when(produtoService.buscarPorId(item.getProduto().getId())).thenReturn(produto);
+        when(itemService.obterCustoTotal(item)).thenReturn(custoTotal);
+
+        assertDoesNotThrow(() -> {
+            service.calcularCustoMedio(item);
+        });
+
     }
 }

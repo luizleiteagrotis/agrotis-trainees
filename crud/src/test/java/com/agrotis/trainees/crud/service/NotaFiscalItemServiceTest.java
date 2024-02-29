@@ -252,35 +252,27 @@ public class NotaFiscalItemServiceTest {
     }
 
     @Test
-    @DisplayName("Testa Buscar por produto, sucesso")
-    void deveBuscarPorProduto() {
+    @DisplayName("Testa listar por produto, sucesso")
+    void deveListarPorProduto() {
         Produto produto = new Produto();
         produto.setDescricao("Batata");
 
         NotaFiscalItem item = new NotaFiscalItem();
+        item.setId(1);
 
-        when(repository.findByProduto(produto)).thenReturn(Optional.of(item));
+        List<NotaFiscalItem> itens = new ArrayList();
+        itens.add(item);
+        itens.add(item);
+        itens.add(item);
+
+        when(repository.findByProduto(produto)).thenReturn(itens);
 
         assertDoesNotThrow(() -> {
             service.buscarPorProduto(produto);
         });
 
         verify(repository, times(1)).findByProduto(produto);
-    }
-
-    @Test
-    @DisplayName("Testa Buscar por produto, falha")
-    void deveRetornarErroAoBuscarPorProduto() {
-        Produto produto = new Produto();
-        produto.setDescricao("Batata");
-
-        when(repository.findByProduto(produto)).thenReturn(Optional.empty());
-
-        Exception excecao = assertThrows(NoSuchElementException.class, () -> {
-            service.buscarPorProduto(produto);
-        });
-
-        assertEquals("Informações não encontradas para o produto Batata", excecao.getMessage());
+        assertEquals(3, itens.size());
     }
 
     @Test
