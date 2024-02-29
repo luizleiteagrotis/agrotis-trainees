@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+
+import enums.TipoNota;
 
 @Entity
 @Table(name = "nota_fiscal")
@@ -27,7 +31,8 @@ public class NotaFiscal {
     @ManyToOne
     @JoinColumn(name = "id_tipo")
     @NotNull(message = "O tipo deve ser informado")
-    private NotaFiscalTipo tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoNota tipo;
 
     @ManyToOne
     @JoinColumn(name = "id_parceiro")
@@ -78,11 +83,11 @@ public class NotaFiscal {
         return dataEmissao;
     }
 
-    public NotaFiscalTipo getTipo() {
+    public TipoNota getTipo() {
         return tipo;
     }
 
-    public void setTipo(NotaFiscalTipo tipo) {
+    public void setTipo(TipoNota tipo) {
         this.tipo = tipo;
     }
 

@@ -3,14 +3,15 @@ package com.agrotis.trainees.crud.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
+
+import enums.TipoNota;
 
 public class NotaFiscalDto {
 
     private Integer id;
 
-    private NotaFiscalTipo tipo;
+    private TipoNota tipo;
 
     private ParceiroNegocio parceiro;
 
@@ -24,8 +25,12 @@ public class NotaFiscalDto {
         return id;
     }
 
-    public NotaFiscalTipo getTipo() {
+    public TipoNota getTipo() {
         return tipo;
+    }
+
+    public void setTipo(TipoNota tipo) {
+        this.tipo = tipo;
     }
 
     public ParceiroNegocio getParceiro() {
@@ -46,10 +51,6 @@ public class NotaFiscalDto {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setTipo(NotaFiscalTipo tipo) {
-        this.tipo = tipo;
     }
 
     public void setParceiro(ParceiroNegocio parceiro) {

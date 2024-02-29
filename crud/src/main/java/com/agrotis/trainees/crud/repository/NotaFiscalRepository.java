@@ -11,13 +11,15 @@ import java.util.Optional;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 
+import enums.TipoNota;
+
 @Repository
 public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer> {
 
     Optional<NotaFiscal> findByTipoAndNumero(NotaFiscalTipo tipo, Integer numero);
 
     @Query("SELECT MAX(nf.numero) FROM NotaFiscal nf WHERE nf.tipo = :id_tipo")
-    Optional<Integer> findMaxNumeroByTipo(@Param("id_tipo") NotaFiscalTipo tipo);
+    Optional<Integer> findMaxNumeroByTipo(@Param("id_tipo") TipoNota tipo);
 
     @Query("SELECT nf FROM NotaFiscal nf WHERE nf.tipo = :id_tipo")
     List<NotaFiscal> findByTipo(@Param("id_tipo") NotaFiscalTipo tipo);

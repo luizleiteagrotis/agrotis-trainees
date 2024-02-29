@@ -28,6 +28,8 @@ import com.agrotis.trainees.crud.exception.CrudException;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 import com.agrotis.trainees.crud.wrapper.NotaFiscalWrapper;
 
+import enums.TipoNota;
+
 public class NotaFiscalServiceTest {
 
     @Mock
@@ -82,11 +84,9 @@ public class NotaFiscalServiceTest {
     @Test
     @DisplayName("Teste para atualizar com sucesso")
     void deveAtualizarComSucesso() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
-        NotaFiscalTipo tipo2 = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo2 = TipoNota.SAIDA;
 
         ParceiroNegocio parceiro = new ParceiroNegocio();
         parceiro.setId(1);
@@ -115,7 +115,7 @@ public class NotaFiscalServiceTest {
             service.atualizar(dto);
         });
 
-        assertEquals(dto.getTipo().getId(), entidade2.getTipo().getId());
+        assertEquals(dto.getTipo(), entidade2.getTipo());
         verify(repository, times(1)).save(entidade);
     }
 

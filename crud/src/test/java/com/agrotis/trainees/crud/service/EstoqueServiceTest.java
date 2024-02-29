@@ -21,7 +21,6 @@ import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.dto.ProdutoDto;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.exception.DescricaoExisteException;
 import com.agrotis.trainees.crud.exception.EstoqueZeradoException;
@@ -29,6 +28,8 @@ import com.agrotis.trainees.crud.exception.ValorDiferenteException;
 import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 import com.agrotis.trainees.crud.wrapper.NotaFiscalWrapper;
 import com.agrotis.trainees.crud.wrapper.ProdutoWrapper;
+
+import enums.TipoNota;
 
 public class EstoqueServiceTest {
 
@@ -61,8 +62,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste de atualização do estoque nota entrada e produtos iguais")
     void deveAtualizarEstoqueEntradaEIgual() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -102,8 +102,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste de atualização do estoque nota entrada e produto diferente")
     void deveAtualizarEstoqueEntradaEDiferente() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -149,8 +148,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste de atualização do estoque nota saida e produtos iguais")
     void deveAtualizarEstoqueSaidaEIgual() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -190,8 +188,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste de atualização do estoque nota saida e produto diferente")
     void deveAtualizarEstoqueSaidaEDiferente() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -237,8 +234,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste nota entrada produtos iguais, estoque zerado")
     void deveRetornarErroEstoqueZeradoNotaEntradaProdutosIguais() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -277,8 +273,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste nota entrada produtos diferentes, estoque zerado")
     void deveRetornarErroEstoqueZeradoNotaEntradaProdutosDiferentes() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -322,8 +317,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste nota saida produtos iguais, estoque zerado")
     void deveRetornarErroEstoqueZeradoNotaSaidaProdutosIguais() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -362,8 +356,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste nota saida produtos diferentes, estoque zerado")
     void deveRetornarErroEstoqueZeradoNotaSaidaProdutosDiferentes() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -407,8 +400,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste para alteração estoque(inserir), nota de entrada")
     void deveAlterarEstoqueEntrada() throws ValorDiferenteException, DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -443,8 +435,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste para alteração estoque(inserir), nota de saida")
     void deveAlterarEstoqueSaida() throws ValorDiferenteException, DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -479,8 +470,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste para estoque zerado(inserir), nota de saida")
     void deveRetornarEstoqueZeradoNotaSaida() throws ValorDiferenteException, DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -511,8 +501,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste de redução do estoque para nota de entrada deletada")
     void deveReduzirEstoquePorDelecaoDeItem() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -554,8 +543,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste de aumento do estoque para nota de saida deletada")
     void deveAumentarEstoquePorDelecaoDeItem() throws DescricaoExisteException {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         Produto produto = new Produto();
         produto.setId(1);
@@ -597,8 +585,7 @@ public class EstoqueServiceTest {
     @Test
     @DisplayName("Teste com erro estoque zerado para deleção de nota de entrada")
     void deveRetornarErroEstoqueZeradoParaDeleteEntrada() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         Produto produto = new Produto();
         produto.setId(1);

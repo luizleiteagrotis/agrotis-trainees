@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
 
+import enums.TipoNota;
+
 @Component
 public class NumeroService {
 
@@ -18,7 +20,7 @@ public class NumeroService {
     }
 
     public void gerarNumero(NotaFiscal notaFiscal) {
-        int tipo = notaFiscal.getTipo().getId();
+        TipoNota tipo = notaFiscal.getTipo();
 
         Integer ultimoNumero = obterUltimoNumeroPorTipo(notaFiscal);
         notaFiscal.setNumero((ultimoNumero != null) ? ultimoNumero + 1 : 1);

@@ -16,8 +16,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
-import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.repository.NotaFiscalRepository;
+
+import enums.TipoNota;
 
 public class NumeroServiceTest {
 
@@ -35,8 +36,7 @@ public class NumeroServiceTest {
     @Test
     @DisplayName("Teste Gerar numero  de entrada com sucesso")
     void deveGerarNumeroNuloEntrada() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         NotaFiscal nota = new NotaFiscal();
         nota.setId(1);
@@ -57,8 +57,7 @@ public class NumeroServiceTest {
     @Test
     @DisplayName("Teste Gerar numero diferente de nulo com sucesso")
     void deveGerarNumeroEntrada() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(1);
+        TipoNota tipo = TipoNota.ENTRADA;
 
         NotaFiscal nota = new NotaFiscal();
         nota.setId(1);
@@ -79,8 +78,7 @@ public class NumeroServiceTest {
     @Test
     @DisplayName("Teste Gerar numero diferente de nulo e saida com sucesso")
     void deveGerarNumeroSaida() {
-        NotaFiscalTipo tipo = new NotaFiscalTipo();
-        tipo.setId(2);
+        TipoNota tipo = TipoNota.SAIDA;
 
         NotaFiscal nota = new NotaFiscal();
         nota.setId(1);
@@ -95,7 +93,7 @@ public class NumeroServiceTest {
         });
 
         verify(repository, times(1)).findMaxNumeroByTipo(tipo);
-        assertEquals(2, nota.getTipo().getId());
+        assertEquals(TipoNota.SAIDA, nota.getTipo());
 
     }
 }

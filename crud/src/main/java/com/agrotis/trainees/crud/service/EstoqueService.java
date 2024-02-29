@@ -14,6 +14,8 @@ import com.agrotis.trainees.crud.repository.NotaFiscalItemRepository;
 import com.agrotis.trainees.crud.wrapper.NotaFiscalWrapper;
 import com.agrotis.trainees.crud.wrapper.ProdutoWrapper;
 
+import enums.TipoNota;
+
 @Component
 public class EstoqueService {
 
@@ -42,7 +44,7 @@ public class EstoqueService {
         Produto produto2 = produtoService.buscarPorId(item.getProduto().getId());
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
 
-        if (nota.getTipo().getId() == 1) {
+        if (nota.getTipo() == TipoNota.ENTRADA) {
             if (produto.getId() != produto2.getId()) {
                 if (produto2.getEstoque() - item.getQuantidade() >= 0) {
                     produto.setEstoque(produto.getEstoque() + entidade.getQuantidade());
@@ -87,7 +89,7 @@ public class EstoqueService {
         NotaFiscal nota = notaFiscalService.buscarPorId(item.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
-        if (nota.getTipo().getId() == 1) {
+        if (nota.getTipo() == TipoNota.ENTRADA) {
             produto.setEstoque(produto.getEstoque() + item.getQuantidade());
             item = itemService.validarNotaEItem(item);
 
@@ -109,7 +111,7 @@ public class EstoqueService {
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
         try {
-            if (nota.getTipo().getId() == 1) {
+            if (nota.getTipo() == TipoNota.ENTRADA) {
 
                 if (produto.getEstoque() - item.getQuantidade() < 0) {
                     throw new EstoqueZeradoException("A quantidade em estoque não é suficiente");
