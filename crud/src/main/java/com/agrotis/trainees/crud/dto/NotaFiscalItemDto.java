@@ -10,7 +10,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 public class NotaFiscalItemDto {
 
     private Integer id;
-    private Integer quantidade;
+    private BigDecimal quantidade;
     private BigDecimal precoUnitario;
     private BigDecimal valorTotal;
     private Produto produto;
@@ -35,11 +35,11 @@ public class NotaFiscalItemDto {
         this.id = id;
     }
 
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -61,7 +61,6 @@ public class NotaFiscalItemDto {
 
     public BigDecimal calcularValorTotal() {
         return quantidade.multiply(precoUnitario);
-
     }
 
     public static List<NotaFiscalItemDto> converter(List<NotaFiscalItem> itens) {

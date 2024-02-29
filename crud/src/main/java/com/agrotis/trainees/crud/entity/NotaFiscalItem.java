@@ -1,7 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,20 +28,19 @@ public class NotaFiscalItem {
     private Produto produto;
 
     @NotNull(message = "Necessário inserir a quantidade do produto")
-    private @NotNull(message = "Necessário inserir a quantidade do produto") @NotNull(
-                    message = "Necessário inserir a quantidade do produto") Integer quantidade;
+    private BigDecimal quantidade;
 
     private BigDecimal precoUnitario;
 
-    public void setPrecoUnitario(BigDecimal precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
-
-    private Double valorTotal;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
     public NotaFiscalItem() {
-        super();
-        this.valorTotal = 0.0;
+    }
+
+    public NotaFiscalItem(BigDecimal quantidade, BigDecimal precoUnitario) {
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
+        this.valorTotal = calcularValorTotal();
     }
 
     public Integer getId() {
@@ -62,35 +60,34 @@ public class NotaFiscalItem {
     }
 
     public void setProduto(Produto produto) {
-        if (Objects.equals(this.produto, produto)) {
-            throw new IllegalArgumentException("O mesmo produto não pode ser adicionado mais de uma vez na nota fiscal.");
-        }
         this.produto = produto;
     }
 
-    @NotNull(message = "Necessário inserir a quantidade do produto")
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Integer quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
-    @NotNull(message = "Necessário inserir o preço unitário")
     public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public void setPrecoUnitario(Integer preco_unitario) {
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
         this.precoUnitario = precoUnitario;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public BigDecimal calcularValorTotal() {
+        return quantidade.multiply(precoUnitario);
     }
 }

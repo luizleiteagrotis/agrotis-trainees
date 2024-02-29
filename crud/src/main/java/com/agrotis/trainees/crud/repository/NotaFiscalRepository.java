@@ -21,6 +21,5 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Integer>
 
     Optional<NotaFiscal> findByDataEmissao(LocalDate dataEmissao);
 
-    NotaFiscal save(Integer integer);
-
+    Optional<NotaFiscal> existsByNumeroAndNotaFiscalTipo(Integer numero, NotaFiscalTipo tipo);
 }

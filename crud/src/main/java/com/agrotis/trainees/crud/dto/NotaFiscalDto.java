@@ -1,36 +1,37 @@
 package com.agrotis.trainees.crud.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.agrotis.trainees.crud.entity.NotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscalItem;
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 
 public class NotaFiscalDto {
 
     private Integer id;
     private NotaFiscalTipo notaFiscalTipo;
-    private ParceiroNegocio parceiroNegocio;
+    private ParceiroNegocioDto parceiroNegocio;
     private Integer numero;
     private LocalDate dataEmissao;
     private List<NotaFiscalItem> itensNota;
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public NotaFiscalDto() {
         super();
     }
 
     public NotaFiscalDto(NotaFiscal nota) {
-        super();
         this.id = nota.getId();
         this.notaFiscalTipo = nota.getNotaFiscalTipo();
-        this.parceiroNegocio = nota.getParceiroNegocio();
+        this.parceiroNegocio = (nota.getParceiroNegocio() != null) ? new ParceiroNegocioDto(nota.getParceiroNegocio()) : null;
         this.numero = nota.getNumero();
         this.dataEmissao = nota.getDataEmissao();
-        this.itensNota = nota.getItensNota();
+        this.itensNota = new ArrayList<>(Objects.requireNonNull(nota.getItensNota()));
         this.valorTotal = nota.getValorTotal();
     }
 
@@ -42,11 +43,11 @@ public class NotaFiscalDto {
         this.notaFiscalTipo = notaFiscalTipo;
     }
 
-    public ParceiroNegocio getParceiroNegocio() {
+    public ParceiroNegocioDto getParceiroNegocio() {
         return parceiroNegocio;
     }
 
-    public void setParceiroNegocio(ParceiroNegocio parceiroNegocio) {
+    public void setParceiroNegocio(ParceiroNegocioDto parceiroNegocio) {
         this.parceiroNegocio = parceiroNegocio;
     }
 
@@ -74,11 +75,11 @@ public class NotaFiscalDto {
         this.itensNota = itensNota;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 

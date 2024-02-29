@@ -1,5 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class NotaFiscal {
     private List<NotaFiscalItem> itensNota = new ArrayList<>();
 
     @Column(name = "valor_total")
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public Integer getId() {
         return id;
@@ -84,11 +85,11 @@ public class NotaFiscal {
         return itensNota;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 
