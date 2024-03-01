@@ -149,7 +149,6 @@ public class ItemServiceTest {
 
         NotaFiscalItem item = new NotaFiscalItem();
         item.setId(1);
-        item.setPrecoUnitario(new BigDecimal(8.99));
 
         NotaFiscalItem item2 = new NotaFiscalItem();
         item2.setId(1);
@@ -160,13 +159,12 @@ public class ItemServiceTest {
         item2.setValorTotal(new BigDecimal(0));
 
         assertDoesNotThrow(() -> {
-            service.tratarNulos(item, item2);
+            service.jutsuDeSubstituicao(item, item2);
         });
 
         assertEquals(produto, item.getProduto());
         assertEquals(nota, item.getIdNota());
         assertEquals(item2.getQuantidade(), item.getQuantidade());
-        assertEquals(item2.getValorTotal(), item.getValorTotal());
 
     }
 
@@ -183,7 +181,40 @@ public class ItemServiceTest {
         item.setId(1);
         item.setPrecoUnitario(new BigDecimal(0));
         item.setQuantidade(0);
-        item.setValorTotal(new BigDecimal(0));
+
+        NotaFiscalItem item2 = new NotaFiscalItem();
+        item2.setId(1);
+        item2.setPrecoUnitario(new BigDecimal(8.99));
+        item2.setIdNota(nota);
+        item2.setProduto(produto);
+        item2.setQuantidade(15);
+
+        assertDoesNotThrow(() -> {
+            service.jutsuDeSubstituicao(item, item2);
+        });
+
+        assertEquals(produto, item.getProduto());
+        assertEquals(nota, item.getIdNota());
+        assertEquals(item2.getPrecoUnitario(), item.getPrecoUnitario());
+        assertEquals(item2.getQuantidade(), item.getQuantidade());
+
+    }
+
+    @Test
+    @DisplayName("Teste para todos os argumentos diferente de null")
+    void deveEnviarArgumentosNaoNulos() {
+        Produto produto = new Produto();
+        produto.setId(1);
+
+        NotaFiscal nota = new NotaFiscal();
+        nota.setId(1);
+
+        NotaFiscalItem item = new NotaFiscalItem();
+        item.setId(1);
+        item.setIdNota(nota);
+        item.setProduto(produto);
+        item.setPrecoUnitario(new BigDecimal(6.99));
+        item.setQuantidade(50);
 
         NotaFiscalItem item2 = new NotaFiscalItem();
         item2.setId(1);
@@ -194,15 +225,13 @@ public class ItemServiceTest {
         item2.setValorTotal(new BigDecimal(25));
 
         assertDoesNotThrow(() -> {
-            service.tratarNulos(item, item2);
+            service.jutsuDeSubstituicao(item, item2);
         });
 
         assertEquals(produto, item.getProduto());
         assertEquals(nota, item.getIdNota());
-        assertEquals(item2.getPrecoUnitario(), item.getPrecoUnitario());
-        assertEquals(item2.getQuantidade(), item.getQuantidade());
-        assertEquals(item2.getValorTotal(), item.getValorTotal());
-
+        assertNotEquals(item2.getPrecoUnitario(), item.getPrecoUnitario());
+        assertNotEquals(item2.getQuantidade(), item.getQuantidade());
     }
 
     @Test
@@ -239,4 +268,43 @@ public class ItemServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Teste para obter custo total com as notas apenas de saida")
+    void deveObterCustoTotalUnico() {
+        Produto produto = new Produto();
+        produto.setId(1);
+
+        NotaFiscal nota = new NotaFiscal();
+        nota.setTipo(TipoNota.ENTRADA);
+
+        NotaFiscal nota2 = new NotaFiscal();
+        nota.setTipo(TipoNota.SAIDA);
+
+        NotaFiscalItem item2 = new NotaFiscalItem();
+        item2.setIdNota(nota2);
+
+        NotaFiscalItem item = new NotaFiscalItem();
+        item.setIdNota(nota);
+        item.setProduto(produto);
+        item.setPrecoUnitario(new BigDecimal(100));
+        item.setQuantidade(50);
+        item.setValorTotal(new BigDecimal(5000));
+
+        BigDecimal custoTotal = new BigDecimal(3).multiply(item.getValorTotal());
+
+        List<NotaFiscalItem> itens = new ArrayList();
+        itens.add(item2);
+        itens.add(item2);
+        itens.add(item2);
+
+        when(produtoService.buscarPorId(any())).thenReturn(produto);
+        when(repository.findByProduto(produto)).thenReturn(itens);
+
+        assertDoesNotThrow(() -> {
+            service.obterCustoTotal(item);
+        });
+
+        verify(repository, times(1)).findByProduto(produto);
+
+    }
 }

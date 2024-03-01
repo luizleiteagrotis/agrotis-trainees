@@ -164,7 +164,7 @@ public class NotaFiscalItemServiceTest {
 
         when(itemWrapper.converterParaEntidade(dto)).thenReturn(entidade);
         when(repository.findById(entidade.getId())).thenReturn(Optional.of(entidade2));
-        when(itemService.tratarNulos(entidade, entidade2)).thenReturn(entidade);
+        when(itemService.jutsuDeSubstituicao(entidade, entidade2)).thenReturn(entidade);
         when(notaService.buscarPorId(entidade.getIdNota().getId())).thenReturn(nota);
         when(produtoService.buscarPorId(entidade2.getProduto().getId())).thenReturn(produto);
         when(estoqueService.atualizarEstoque(entidade, entidade2)).thenReturn(entidade);
@@ -224,7 +224,7 @@ public class NotaFiscalItemServiceTest {
 
         when(itemWrapper.converterParaEntidade(dto)).thenReturn(entidade);
         when(repository.findById(entidade.getId())).thenReturn(Optional.of(entidade2));
-        when(itemService.tratarNulos(entidade, entidade2)).thenReturn(entidade);
+        when(itemService.jutsuDeSubstituicao(entidade, entidade2)).thenReturn(entidade);
         when(notaService.buscarPorId(entidade.getIdNota().getId())).thenReturn(nota);
         when(produtoService.buscarPorId(entidade2.getProduto().getId())).thenReturn(produto);
         when(estoqueService.atualizarEstoque(entidade, entidade2))

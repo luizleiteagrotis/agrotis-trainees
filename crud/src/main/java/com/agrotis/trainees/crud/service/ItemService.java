@@ -67,7 +67,7 @@ public class ItemService {
             entidade.setIdNota(item.getIdNota());
         }
 
-        if (entidade.getPrecoUnitario() == null || entidade.getPrecoUnitario() == new BigDecimal(0)) {
+        if (entidade.getPrecoUnitario() == null || entidade.getPrecoUnitario().equals(new BigDecimal(0))) {
             entidade.setPrecoUnitario(item.getPrecoUnitario());
         }
 
