@@ -1,7 +1,7 @@
 package dto;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.agrotis.trainees.crud.entity.NotaFiscalTipo;
 import com.agrotis.trainees.crud.entity.ParceiroNegocio;
@@ -76,6 +76,12 @@ public class CabecalhoDto {
     public void setNotaFiscalTipo(String notaFiscalTipo2) {
         
     }
+
+    public void setData(LocalDate now) {
+        
+    }
+
+   
    
    
     

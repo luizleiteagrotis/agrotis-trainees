@@ -17,7 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.agrotis.trainees.crud.entity.ItemNota;
 import com.agrotis.trainees.crud.service.ItemNotaService;
 
-import dto.ItemDto;
+import dto.ItemNotaDto;
 
 @RestController
 @RequestMapping
@@ -32,7 +32,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criar(@RequestBody ItemDto itemNota) {
+    public ResponseEntity<?> criar(@RequestBody ItemNotaDto itemNota) {
         ItemNota itemSalvo = service.salvar(itemNota);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(itemSalvo.getId()).toUri();
@@ -52,7 +52,7 @@ public class ItemController {
         
     }
     @PutMapping("{id}")
-    public ResponseEntity<?> atualizar1(@PathVariable Integer id, @RequestBody ItemDto dto) {
+    public ResponseEntity<?> atualizar1(@PathVariable Integer id, @RequestBody ItemNotaDto dto) {
         return ResponseEntity.ok(service.atualizar1(id, dto));
     }
     @DeleteMapping("{id}")

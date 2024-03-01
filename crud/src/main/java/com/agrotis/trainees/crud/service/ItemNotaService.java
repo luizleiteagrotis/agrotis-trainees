@@ -14,7 +14,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 import com.agrotis.trainees.crud.repository.ItemNotaRepository;
 
 import dto.CabecalhoDto;
-import dto.ItemDto;
+import dto.ItemNotaDto;
 import utilidades.DtoUtilidades;
 
 
@@ -41,7 +41,7 @@ public class ItemNotaService {
        
         }
     
-    public ItemNota salvar(ItemDto dto) {
+    public ItemNota salvar(ItemNotaDto dto) {
         ItemNota entidade = DtoUtilidades.converteParaEntidade(dto);
         
         NotaFiscalC notaFiscalC = entidade.getNotaFiscalC();
@@ -67,7 +67,7 @@ public class ItemNotaService {
         
     }
     @Transactional
-    public ItemDto atualizar1(Integer id, ItemDto notaFiscalItemDto) {
+    public ItemNotaDto atualizar1(Integer id, ItemNotaDto notaFiscalItemDto) {
         ItemNota itemNotaExistente = repository.findById(id)
                 .orElseThrow();
 
@@ -79,7 +79,7 @@ public class ItemNotaService {
         
     }
     
-    private void atualizarItemNota(ItemNota itemNota, ItemDto notaFiscalItemDto) {
+    private void atualizarItemNota(ItemNota itemNota, ItemNotaDto notaFiscalItemDto) {
         NotaFiscalC notaFiscalC = notaFiscalItemDto.getNotaFiscalC();
         itemNota.setNotaFiscalC(notaFiscalC);
         itemNota.setPrecoUnitario(notaFiscalItemDto.getPrecoUnitario());

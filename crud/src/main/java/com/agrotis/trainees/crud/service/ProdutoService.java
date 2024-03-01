@@ -52,7 +52,7 @@ public class ProdutoService {
 
     public Produto buscarPorId(Integer id) {
         return repository.findById(id).orElseGet(() -> {
-            LOG.error("Nota não encontrada para o id {}. ", id);
+            LOG.error("Nota não encontrada {}. ", id);
             return null;
         });
     }

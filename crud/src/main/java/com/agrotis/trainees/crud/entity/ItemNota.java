@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @Table(name = "item_nota_fiscal")
 public class ItemNota {
 
+    public static final NotaFiscalTipo ENTRADA = null;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;

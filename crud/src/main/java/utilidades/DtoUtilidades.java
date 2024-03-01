@@ -6,7 +6,7 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 import com.agrotis.trainees.crud.entity.Produto;
 
 import dto.CabecalhoDto;
-import dto.ItemDto;
+import dto.ItemNotaDto;
 import dto.ParceiroNegocioDto;
 import dto.ProdutoDto;
 
@@ -70,7 +70,7 @@ public class DtoUtilidades {
         dto.setParceiroNegocio(entidade.getParceiroNegocio());
         return dto;
     }
-    public static ItemNota converteParaEntidade(ItemDto dto) {
+    public static ItemNota converteParaEntidade(ItemNotaDto dto) {
         ItemNota entidade = new ItemNota();
         entidade.setNotaFiscalC(dto.getNotaFiscalC());
         entidade.setPrecoUnitario(dto.getPrecoUnitario());
@@ -79,8 +79,8 @@ public class DtoUtilidades {
         return entidade;
     }
     
-    public static ItemDto converteParaDto(ItemNota entidade) {
-        ItemDto dto = new ItemDto();
+    public static ItemNotaDto converteParaDto(ItemNota entidade) {
+        ItemNotaDto dto = new ItemNotaDto();
         dto.setId(entidade.getId());
         dto.setNotaFiscalC(entidade.getNotaFiscalC());
         dto.setPrecoUnitario(entidade.getPrecoUnitario());

@@ -1,6 +1,6 @@
 package com.agrotis.trainees.crud.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -98,18 +98,25 @@ public class NotaFiscalC {
 		
 	}
 
-    public void setNotaFiscalTipo(NotaFiscalTipo notaFiscalTipo2) {
-        this.notaFiscalTipo = notaFiscalTipo;
-        
-    }
 
-    public void setData(Date data2) {
-        this.data = data;
-
-    }
 
     public static CabecalhoDto salvar(CabecalhoDto converteParaDto) {
                 return null;
+    }
+
+    public void setData(LocalDate now) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setNumeroNota(int numeroNota2) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setNotaFiscalTipo(NotaFiscalTipo entrada) {
+        // TODO Auto-generated method stub
+        
     }
 	
 	

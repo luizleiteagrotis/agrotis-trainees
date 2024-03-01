@@ -3,7 +3,7 @@ package dto;
 import com.agrotis.trainees.crud.entity.NotaFiscalC;
 import com.agrotis.trainees.crud.entity.Produto;
 
-public class ItemDto {
+public class ItemNotaDto {
 
     private Integer id;
     
@@ -64,7 +64,7 @@ public class ItemDto {
         this.valorTotal = valorTotal;
     }
 
-   
+
 
     
     
