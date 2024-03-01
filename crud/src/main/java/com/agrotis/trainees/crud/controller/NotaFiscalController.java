@@ -61,7 +61,7 @@ public class NotaFiscalController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalDto notaFiscalDto, @PathVariable int id) {
+    public ResponseEntity<?> atualizar(@RequestBody NotaFiscalDto notaFiscalDto, @PathVariable int id) throws NotaFiscalExcecao {
         return ResponseEntity.ok().body(service.atualizar(notaFiscalDto, id));
     }
 

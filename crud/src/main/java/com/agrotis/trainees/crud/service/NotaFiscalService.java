@@ -112,25 +112,24 @@ public class NotaFiscalService {
         }
     }
 
-    public NotaFiscalDto atualizar(NotaFiscalDto entidade, int id) {
+    public NotaFiscalDto atualizar(NotaFiscalDto dto, int id) throws NotaFiscalExcecao {
         try {
-            NotaFiscal notaFiscal = notaFiscalConversor.converter(entidade);
+            NotaFiscal notaConvertida = notaFiscalConversor.converter(dto);
             NotaFiscal notaAtualizar = verificarPorId(id);
-            atribuirCamposNaoNulos(notaFiscal, notaAtualizar);
+            atribuirCamposNaoNulos(notaConvertida, notaAtualizar);
             validar(notaAtualizar);
-            if (!repository.findByIdAndNumeroAndTipo(notaAtualizar.getId(), notaAtualizar.getNumero(), notaAtualizar.getTipo())
-                            .isEmpty()) {
+            if (repository.findByNumeroAndTipo(notaAtualizar.getNumero(), notaAtualizar.getTipo()).isEmpty()) {
 
                 repository.save(notaAtualizar);
             } else {
-                throw new NotaFiscalExcecao("Falha ao salvar no banco: Já existe uma nota registrada com esses dados.");
 
+                throw new NotaFiscalExcecao("Falha ao salvar no banco: Já existe uma nota registrada com esses dados.");
             }
             return notaFiscalConversor.converter(notaAtualizar);
 
         } catch (NotaFiscalExcecao nfe) {
             LOG.error(nfe.getMessage());
-            return null;
+            throw nfe;
         }
     }
 
@@ -176,7 +175,10 @@ public class NotaFiscalService {
         }
     }
 
-    private void atribuirCamposNaoNulos(NotaFiscal notaFiscal, NotaFiscal notaAtualizar) {
+    private void atribuirCamposNaoNulos(NotaFiscal notaFiscal, NotaFiscal notaAtualizar) throws NotaFiscalExcecao {
+        if (notaAtualizar == null) {
+            throw new NotaFiscalExcecao("Falha ao salvar no banco: Esta Nota não existe.");
+        }
         if (notaFiscal.getTipo() != null) {
             notaAtualizar.setTipo(notaFiscal.getTipo());
         }
@@ -191,10 +193,6 @@ public class NotaFiscalService {
         }
     }
 
-    /*
-     * busca o id da nota fiscal e todos os item vinculados a ele, fazendo o
-     * calculo do valor total daquela nota e salvando caso tenha alteração
-     */
     public BigDecimal persistirValorTotal(int idNotaFiscal) {
         NotaFiscal entidade = verificarPorId(idNotaFiscal);
         List<ItemNotaFiscal> itens = entidade.getItemNotaFiscal();
@@ -204,7 +202,7 @@ public class NotaFiscalService {
             valorTotalNota = valorTotalNota.add(item.getValorTotal());
 
         }
-        entidade.setValorTotal(valorTotalNota);
+        entidade.setValorTotal(valorTotalNota.setScale(2, RoundingMode.HALF_UP));
         repository.save(entidade);
         return valorTotalNota.setScale(2, RoundingMode.HALF_UP);
     }
