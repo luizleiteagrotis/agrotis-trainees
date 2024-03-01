@@ -54,7 +54,6 @@ public class NotaFiscalService {
     }
 
     public void atualizarValorTotal(Integer id, Double valorTotalItem) {
-        // TODO Auto-generated method stub
 
     }
 

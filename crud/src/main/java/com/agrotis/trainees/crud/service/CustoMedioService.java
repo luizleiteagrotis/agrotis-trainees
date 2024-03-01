@@ -9,10 +9,10 @@ public interface CustoMedioService {
 
     public static BigDecimal calcularCustoMedio(BigDecimal custoTotal, BigDecimal quantidadeTotal) {
         if (quantidadeTotal == null || custoTotal == null) {
-            throw new CrudException("Há algum valor nulo");
+            throw new CrudException("Verifique se existe um valor nulo.");
         }
         if (quantidadeTotal.compareTo(BigDecimal.ZERO) < 0 || custoTotal.compareTo(BigDecimal.ZERO) < 0) {
-            throw new CrudException("Valor deve ser maior que zero");
+            throw new CrudException("O valor precisa ser maior que zero.");
         }
         return custoTotal.divide(quantidadeTotal, 2, RoundingMode.HALF_UP);
     }
