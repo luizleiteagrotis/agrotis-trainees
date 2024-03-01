@@ -32,9 +32,9 @@ public class ProdutoService {
     }
 
     public ProdutoDto salvar(ProdutoDto produto) {
-    	if (produto.getId() == null) {
-            throw new CampoEmptyOrNullException("ID do produto não pode ser nulo.");
-        }
+//    	if (produto.getId() == null) {
+//            throw new CampoEmptyOrNullException("ID do produto não pode ser nulo.");
+//        }
         if (produto.getNome() == null || produto.getNome().isEmpty()) {
             throw new CampoEmptyOrNullException("Nome do produto não pode ser nulo ou vazio.");
         }
@@ -91,6 +91,7 @@ public class ProdutoService {
             }
         );
     }
+    
 
     public List<ProdutoDto> listarTodos() {
         return repository.findAll().stream().map(ProdutoService::converteParaDto).collect(Collectors.toList());
@@ -132,39 +133,41 @@ public class ProdutoService {
     }
     
     
-
-    
+  
     
     public ProdutoDto atualizarEstoque(ItemNotaFiscal itemNotaFiscal) {
         Produto produto = itemNotaFiscal.getProduto();
         BigDecimal quantidade = itemNotaFiscal.getQuantidade();
         BigDecimal custoTotal = itemNotaFiscal.getValorTotal();
-        NotaFiscalTipo notaFiscalTipo = itemNotaFiscal.getNotaFiscal().getTipo();
-        BigDecimal estoque = produto.getEstoque();
-        BigDecimal novoEstoque;
-        BigDecimal novoCustoMedio;
-        if (notaFiscalTipo == NotaFiscalTipo.ENTRADA) {
+        
+        // Verifica se a nota fiscal é de entrada
+        if (itemNotaFiscal.getNotaFiscal().getTipo() == NotaFiscalTipo.ENTRADA) {
+            BigDecimal estoqueAtual = produto.getEstoque();
             BigDecimal custoMedioAtual = produto.getCustoMedio();
-            novoEstoque = estoque.add(quantidade);
-            BigDecimal novoCustoTotal = custoMedioAtual.multiply(estoque).add(custoTotal);
-            novoCustoMedio = novoCustoTotal.divide(novoEstoque, 2, RoundingMode.HALF_UP);
+            
+            // Calcula o novo custo total considerando o estoque atual e o custo médio atual
+            BigDecimal novoCustoTotal = custoMedioAtual.multiply(estoqueAtual).add(custoTotal);
+            
+            // Calcula a nova quantidade total considerando o estoque atual e a quantidade da entrada
+            BigDecimal novaQuantidadeTotal = estoqueAtual.add(quantidade);
+            
+            // Calcula o novo custo médio
+            BigDecimal novoCustoMedio = novoCustoTotal.divide(novaQuantidadeTotal, 2, RoundingMode.HALF_UP);
+            
+            // Atualiza o estoque e o custo médio do produto
+            produto.setEstoque(novaQuantidadeTotal);
+            produto.setCustoMedio(novoCustoMedio);
+            
+            // Salva o produto atualizado no banco de dados
+            Produto produtoAtualizado = repository.save(produto);
+            
+            return converteParaDto(produtoAtualizado);
         } else {
-            if (estoque.subtract(quantidade).compareTo(BigDecimal.ZERO) >= 0) {
-                novoEstoque = estoque.subtract(quantidade);
-                novoCustoMedio = produto.getCustoMedio(); // Não altera o custo médio em uma saída
-            } else {
-                throw new IllegalArgumentException("Não é possível remover mais itens do que o disponível em estoque.");
-            }
+            // Se a nota fiscal não for de entrada, retorna o produto sem atualizar o estoque e o custo médio
+            return converteParaDto(produto);
         }
-        produto.setEstoque(novoEstoque);
-        produto.setCustoMedio(novoCustoMedio);
-        return salvarProdutoAtualizado(produto);
     }
-    private ProdutoDto salvarProdutoAtualizado(Produto produto) {
-        Produto produtoAtualizado = repository.save(produto);
-        return converteParaDto(produtoAtualizado);
-    }
-    
+
    
 
 
@@ -177,6 +180,8 @@ public class ProdutoService {
         dto.setDataFabricacao(entidade.getDataFabricacao());
         dto.setDataValidade(entidade.getDataValidade());
         dto.setEstoque(entidade.getEstoque());
+        dto.setCustoMedio(entidade.getCustoMedio());
+        dto.setCustoTotal(entidade.getCustoTotal());
         return dto;
     }
 
@@ -191,6 +196,8 @@ public class ProdutoService {
         entidade.setDataFabricacao(dto.getDataFabricacao());
         entidade.setDataValidade(dto.getDataValidade());
         entidade.setEstoque(dto.getEstoque());
+        entidade.setCustoMedio(dto.getCustoMedio());
+        entidade.setCustoTotal(dto.getCustoTotal());
         return entidade;
     }
 }

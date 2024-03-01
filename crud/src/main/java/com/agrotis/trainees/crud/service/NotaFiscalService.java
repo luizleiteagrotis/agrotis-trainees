@@ -49,9 +49,16 @@ public class NotaFiscalService {
         cabecalho.setValorTotal(valorTotal);
 
         NotaFiscal entidadeSalva = repository.save(cabecalho);
+        
+     
 
         return converteParaDto(entidadeSalva);
     }
+    
+   
+    
+    
+    
     public NotaFiscalDto buscarPorId(Integer id) {
         NotaFiscal cabecalho = repository.findById(id)
                         .orElseThrow(() -> new EntidadeNaoEncontradaException("Entidade não encontrada pelo ID: " + id));
@@ -61,6 +68,7 @@ public class NotaFiscalService {
 
         return converteParaDto(cabecalho);
     }
+    
 
     public NotaFiscalDto update(Integer id, NotaFiscalDto dto) {
         return repository.findById(id).map(cabecalhoExistente -> {
@@ -112,11 +120,20 @@ public class NotaFiscalService {
         }).orElseThrow(() -> new EntidadeNaoEncontradaException("NOTA FISCAL com o ID " + id + " não foi encontrada!"));
     }
 
-    public BigDecimal calcularValorTotal(NotaFiscal cabecalho) {
-        return cabecalho.getItens().stream()
-                .map(item -> item.getQuantidade().multiply(item.getPrecoUnitario()))
-                .reduce(BigDecimal.ZERO, (subtotal, element) -> subtotal.add(element));
-    }
+//    public BigDecimal calcularValorTotal(NotaFiscal cabecalho) {
+//        return cabecalho.getItens().stream()
+//                .map(item -> item.getQuantidade().multiply(item.getPrecoUnitario()))
+//                .reduce(BigDecimal.ZERO, (subtotal, element) -> subtotal.add(element));
+//    }
+    
+
+        public BigDecimal calcularValorTotal(NotaFiscal cabecalho) {
+            return cabecalho.getItens().stream()
+                    .map(item -> item.getQuantidade().multiply(item.getPrecoUnitario()))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+       
+    
 
     public static NotaFiscal converteParaEntidade(NotaFiscalDto dto) {
         NotaFiscal entidade = new NotaFiscal();
@@ -126,6 +143,7 @@ public class NotaFiscalService {
         entidade.setTipo(dto.getTipo());
         entidade.setParceiroNegocio(dto.getParceiroNegocio());
         entidade.setValorTotal(dto.getValorTotal());
+       
 
         return entidade;
     }
@@ -139,6 +157,7 @@ public class NotaFiscalService {
         dto.setTipo(entidade.getTipo());
         dto.setParceiroNegocio(entidade.getParceiroNegocio());
         dto.setValorTotal(entidade.getValorTotal());
+        
 
         return dto;
     }

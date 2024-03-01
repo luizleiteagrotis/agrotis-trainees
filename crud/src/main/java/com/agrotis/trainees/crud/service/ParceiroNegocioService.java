@@ -31,12 +31,12 @@ public class ParceiroNegocioService {
         if (dto.getNome() == null || dto.getNome().isEmpty()) {
             throw new EntidadeNaoEncontradaException("O nome do parceiro de negocios e nulo.");
         }
-        if (dto.getId() != null && repository.existsById(dto.getId())) {
-            throw new IdExistenteException("O ID ja existe: " + dto.getId());
-        }
-        if (dto.getId() == null && repository.existsById(dto.getId())) {
-            throw new EntidadeNaoEncontradaException("O ID e nulo: " + dto.getId());
-        }
+//        if (dto.getId() != null && repository.existsById(dto.getId())) {
+//            throw new IdExistenteException("O ID ja existe: " + dto.getId());
+//        }
+//        if (dto.getId() == null && repository.existsById(dto.getId())) {
+//            throw new EntidadeNaoEncontradaException("O ID e nulo: " + dto.getId());
+//        }
 
         if (dto.getEndereco() == null || dto.getEndereco().isEmpty()) {
             throw new EntidadeNaoEncontradaException("O endereço do parceiro de negócios é nulo. ");

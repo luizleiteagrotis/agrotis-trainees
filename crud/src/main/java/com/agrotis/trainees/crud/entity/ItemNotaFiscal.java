@@ -40,27 +40,8 @@ public class ItemNotaFiscal {
     @JoinColumn(name = "produto_id")
     private Produto produto;
     
-    private BigDecimal custoTotal;
-
-    private BigDecimal custoMedio;
+ 
     
-    
-    
-    public BigDecimal getCustoTotal() {
-		return custoTotal;
-	}
-
-	public void setCustoTotal(BigDecimal custoTotal) {
-		this.custoTotal = custoTotal;
-	}
-
-	public BigDecimal getCustoMedio() {
-		return custoMedio;
-	}
-
-	public void setCustoMedio(BigDecimal custoMedio) {
-		this.custoMedio = custoMedio;
-	}
 
 	public Integer getId() {
         return id;

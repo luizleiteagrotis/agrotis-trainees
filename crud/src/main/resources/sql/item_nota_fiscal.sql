@@ -5,8 +5,6 @@ create table item_nota_fiscal (
         valor_total numeric,
         nota_fiscal_id int,
         produto_id int,
-        custo_medio numeric,
-        custo_total numeric
         primary key (id)
     )
    

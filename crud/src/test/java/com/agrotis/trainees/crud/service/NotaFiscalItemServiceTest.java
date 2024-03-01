@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import com.agrotis.trainees.crud.dto.NotaFiscalDto;
 import com.agrotis.trainees.crud.dto.NotaFiscalItemDto;
 import com.agrotis.trainees.crud.entity.ItemNotaFiscal;
 import com.agrotis.trainees.crud.entity.NotaFiscal;
@@ -46,8 +47,9 @@ public class NotaFiscalItemServiceTest {
         MockitoAnnotations.initMocks(this);
     }
       
-    
-    
+
+
+
     
     
   @Test
@@ -129,14 +131,7 @@ public class NotaFiscalItemServiceTest {
       verify(repository).save(any(ItemNotaFiscal.class));
   }
 
-//  @Test
-//  void atualizar_DeveLancarEntidadeNaoEncontradaException_QuandoNaoEncontrarItemNota() {
-//      int id = 1;
-//      NotaFiscalItemDto itemNotaDto = criarNotaFiscalItemDto();
-//      when(repository.findById(id)).thenReturn(Optional.empty());
-//
-//      assertThrows(EntidadeNaoEncontradaException.class, () -> service.atualizarItemNota(id, itemNotaDto));
-//  }
+
 
   @Test
   void deletarPorIdDeveDeletarItemNota_QuandoEncontrarItemNota() {
@@ -148,6 +143,7 @@ public class NotaFiscalItemServiceTest {
 
       verify(repository).deleteById(id);
   }
+  
 
   @Test
   void deletarPorIdDeveLancarEntidadeNaoEncontradaException_QuandoNaoEncontrarItemNota() {
@@ -159,9 +155,166 @@ public class NotaFiscalItemServiceTest {
   
   
   
- 
   
   
+  @Test
+  public void testAdicionarValorTotalCabecalho_ValoresNaoNulos() {
+      // Arrange
+      BigDecimal valorTotalCabecalho = new BigDecimal("100");
+      BigDecimal valorTotalItem = new BigDecimal("50");
+      NotaFiscal cabecalhoNota = new NotaFiscal();
+      cabecalhoNota.setValorTotal(valorTotalCabecalho);
+
+      ItemNotaFiscal itemNota = new ItemNotaFiscal();
+      itemNota.setNotaFiscal(cabecalhoNota);
+      itemNota.setValorTotal(valorTotalItem);
+
+      // Act
+      service.adicionarValorTotalCabecalho(itemNota);
+
+      // Assert
+      assertEquals(valorTotalCabecalho.add(valorTotalItem), cabecalhoNota.getValorTotal());
+  }
+
+  @Test
+  public void testAdicionarValorTotalCabecalho_CabecalhoNaoNulo() {
+      // Arrange
+      BigDecimal valorTotalItem = new BigDecimal("50");
+      NotaFiscal cabecalhoNota = new NotaFiscal();
+      cabecalhoNota.setValorTotal(null);
+
+      ItemNotaFiscal itemNota = new ItemNotaFiscal();
+      itemNota.setNotaFiscal(cabecalhoNota);
+      itemNota.setValorTotal(valorTotalItem);
+
+      // Act
+      service.adicionarValorTotalCabecalho(itemNota);
+
+      // Assert
+      assertEquals(valorTotalItem, cabecalhoNota.getValorTotal());
+  }
+
+  
+  @Test
+  public void testAdicionarValorTotalCabecalho_ItemTotalNulo() {
+      // Arrange
+      BigDecimal valorTotalCabecalho = new BigDecimal("100");
+      NotaFiscal cabecalhoNota = new NotaFiscal();
+      cabecalhoNota.setValorTotal(valorTotalCabecalho);
+
+      ItemNotaFiscal itemNota = new ItemNotaFiscal();
+      itemNota.setNotaFiscal(cabecalhoNota);
+      itemNota.setValorTotal(null);
+
+      // Act
+      service.adicionarValorTotalCabecalho(itemNota);
+
+      // Assert
+      assertEquals(valorTotalCabecalho, cabecalhoNota.getValorTotal());
+  }
+  
+  
+  @Test
+  void testAddValorTotal_NotaFiscalEItemValido() {
+      // Arrange
+      ItemNotaFiscal item = new ItemNotaFiscal();
+      NotaFiscal notaFiscal = new NotaFiscal();
+      BigDecimal valorTotalItem = new BigDecimal("50");
+      item.setNotaFiscal(notaFiscal);
+      item.setValorTotal(valorTotalItem);
+
+      // Act
+      service.addValorTotal(item);
+
+      // Assert
+      assertEquals(valorTotalItem, notaFiscal.getValorTotal());
+      verify(notaFiscalService, times(1)).salvar(any());
+  }
+
+  @Test
+  void testAddValorTotal_ItemNulo() {
+      // Arrange
+      ItemNotaFiscal item = null;
+
+      // Act & Assert
+      assertThrows(IllegalArgumentException.class, () -> {
+          service.addValorTotal(item);
+      });
+
+      verifyNoInteractions(notaFiscalService);
+  }
+
+  @Test
+  void testAddValorTotal_NuloNotaFiscal() {
+      // Arrange
+      ItemNotaFiscal item = new ItemNotaFiscal();
+      BigDecimal valorTotalItem = new BigDecimal("50");
+      item.setNotaFiscal(null);
+      item.setValorTotal(valorTotalItem);
+
+      // Act & Assert
+      assertThrows(IllegalArgumentException.class, () -> {
+          service.addValorTotal(item);
+      });
+
+      verifyNoInteractions(notaFiscalService);
+  }
+  
+  
+  @Test
+  void testCalcularValorTotal_QtdEPrecoNaoNulo() {
+      // Arrange
+      
+      ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+      BigDecimal quantidade = new BigDecimal("5");
+      BigDecimal precoUnitario = new BigDecimal("10");
+      itemNotaFiscal.setQuantidade(quantidade);
+      itemNotaFiscal.setPrecoUnitario(precoUnitario);
+
+      // Act
+      service.calcularValorTotal(itemNotaFiscal);
+
+      // Assert
+      BigDecimal expectedValorTotal = new BigDecimal("50");
+      assertEquals(expectedValorTotal, itemNotaFiscal.getValorTotal());
+  }
+
+  @Test
+  void testCalcularValorTotal_QuantidadeNulo() {
+      // Arrange
+      
+      ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+      BigDecimal precoUnitario = new BigDecimal("10");
+      itemNotaFiscal.setQuantidade(null);
+      itemNotaFiscal.setPrecoUnitario(precoUnitario);
+
+      // Act
+      service.calcularValorTotal(itemNotaFiscal);
+
+      // Assert
+      assertNull(itemNotaFiscal.getValorTotal());
+  }
+
+  @Test
+  void testCalcularValorTotal_PrecoUnitarioNulo() {
+      // Arrange
+      
+      ItemNotaFiscal itemNotaFiscal = new ItemNotaFiscal();
+      BigDecimal quantidade = new BigDecimal("5");
+      itemNotaFiscal.setQuantidade(quantidade);
+      itemNotaFiscal.setPrecoUnitario(null);
+
+      // Act
+      service.calcularValorTotal(itemNotaFiscal);
+
+      // Assert
+      assertNull(itemNotaFiscal.getValorTotal());
+  }
+  
+   
+
+  
+
 
   private NotaFiscalItemDto criarNotaFiscalItemDto() {
       NotaFiscalItemDto dto = new NotaFiscalItemDto();
@@ -176,6 +329,7 @@ public class NotaFiscalItemServiceTest {
       dto.setProduto(produto);
       return dto;
   }
+  
 
   private ItemNotaFiscal criarItemNotaFiscal() {
       ItemNotaFiscal itemNota = new ItemNotaFiscal();
