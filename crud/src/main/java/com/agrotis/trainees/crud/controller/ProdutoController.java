@@ -36,7 +36,7 @@ public class ProdutoController {
 	
 	@PostMapping
 	public ResponseEntity<?> cadastrar(@Valid @RequestBody ProdutoCadastroDto dto, UriComponentsBuilder uriBuilder) {
-		ProdutoRetornoDto listagemDto = produtoService.salvar(dto);
+		ProdutoRetornoDto listagemDto = produtoService.cadastrar(dto);
 		URI uri = uriBuilder.path("/produtos/{id}").buildAndExpand(listagemDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -61,7 +61,7 @@ public class ProdutoController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletar(@PathVariable(name = "id") Long id) {
-		produtoService.deletar(id);
+		produtoService.deletarPor(id);
 		return ResponseEntity.noContent().build();
 	}
 }

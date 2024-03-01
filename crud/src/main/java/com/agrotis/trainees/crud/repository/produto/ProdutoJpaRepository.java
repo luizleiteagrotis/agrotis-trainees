@@ -11,4 +11,7 @@ import com.agrotis.trainees.crud.entity.Produto;
 public interface ProdutoJpaRepository extends JpaRepository<Produto, Long> {
 	
 	boolean existsByNomeAndDescricaoAndFabricante(String nome, String descricao, ParceiroNegocio fabricante);
+	
+	boolean existsByNomeAndDescricaoAndFabricanteAndIdNot(String nome, String descricao, ParceiroNegocio fabricante, Long id);
+	
 }

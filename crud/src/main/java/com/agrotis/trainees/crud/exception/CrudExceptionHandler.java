@@ -19,7 +19,8 @@ import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
 import com.agrotis.trainees.crud.service.parceiro.ParceiroNegocioDelecaoService;
 import com.agrotis.trainees.crud.service.parceiro.atualizacao.ParceiroNegocioAtualizacaoRnException;
 import com.agrotis.trainees.crud.service.parceiro.cadastro.ParceiroNegocioCadastroRnException;
-import com.agrotis.trainees.crud.service.produto.ProdutoServiceException;
+import com.agrotis.trainees.crud.service.produto.atualizacao.ProdutoAtualizacaoRnException;
+import com.agrotis.trainees.crud.service.produto.cadastro.ProdutoCadastroRnException;
 
 @ControllerAdvice
 public class CrudExceptionHandler {
@@ -69,12 +70,6 @@ public class CrudExceptionHandler {
 		return ResponseEntity.badRequest().body(mensagemErro);
 	}
 	
-	@ExceptionHandler(ProdutoServiceException.class)
-	public ResponseEntity<String> handle(ProdutoServiceException exception) {
-		String mensagemErro = exception.getMessage();
-		return ResponseEntity.badRequest().body(mensagemErro);
-	}
-	
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<?> handle(EntityNotFoundException exception) {
 		return ResponseEntity.notFound().build();
@@ -102,6 +97,16 @@ public class CrudExceptionHandler {
 	
 	@ExceptionHandler(ParceiroNegocioAtualizacaoRnException.class)
 	public ResponseEntity<String> handle(ParceiroNegocioAtualizacaoRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(ProdutoCadastroRnException.class)
+	public ResponseEntity<String> handle(ProdutoCadastroRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(ProdutoAtualizacaoRnException.class)
+	public ResponseEntity<String> handle(ProdutoAtualizacaoRnException exception) {
 		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
 }

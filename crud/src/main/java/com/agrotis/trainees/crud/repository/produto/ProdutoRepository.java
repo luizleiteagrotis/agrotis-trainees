@@ -21,4 +21,9 @@ public class ProdutoRepository extends JpaRepositoryWrapper<
 		ProdutoJpaRepository repository = (ProdutoJpaRepository) REPOSITORY; 
 		return repository.existsByNomeAndDescricaoAndFabricante(nome, descricao, fabricante);
 	}
+	
+	public boolean existeInstanciaCom(String nome, String descricao, ParceiroNegocio fabricante, Long naoIdProduto) {
+		ProdutoJpaRepository repository = (ProdutoJpaRepository) REPOSITORY; 
+		return repository.existsByNomeAndDescricaoAndFabricanteAndIdNot(nome, descricao, fabricante, naoIdProduto);
+	}
 }

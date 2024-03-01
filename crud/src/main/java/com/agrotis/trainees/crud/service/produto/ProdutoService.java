@@ -8,83 +8,41 @@ import org.springframework.stereotype.Service;
 import com.agrotis.trainees.crud.dto.produto.ProdutoAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.produto.ProdutoCadastroDto;
 import com.agrotis.trainees.crud.dto.produto.ProdutoRetornoDto;
-import com.agrotis.trainees.crud.entity.ParceiroNegocio;
-import com.agrotis.trainees.crud.entity.Produto;
-import com.agrotis.trainees.crud.mapper.produto.ProdutoMapper;
-import com.agrotis.trainees.crud.repository.produto.ProdutoRepository;
 
 @Service
 public class ProdutoService {
 	
-	private ProdutoRepository repository;
-	private ProdutoMapper mapper;
+	private ProdutoCadastroService cadastroService;
+	private ProdutoBuscaService buscaService;
+	private ProdutoAtualizacaoService atualizacaoService;
+	private ProdutoDelecaoService delecaoService;
 	
 	@Autowired
-	public ProdutoService(ProdutoRepository repository, ProdutoMapper mapper) {
-		this.repository = repository;
-		this.mapper = mapper;
+	public ProdutoService(ProdutoCadastroService cadastroService, ProdutoBuscaService buscaService,
+			ProdutoAtualizacaoService atualizacaoService, ProdutoDelecaoService delecaoService) {
+		this.cadastroService = cadastroService;
+		this.buscaService = buscaService;
+		this.atualizacaoService = atualizacaoService;
+		this.delecaoService = delecaoService;
 	}
-	
-	public ProdutoRetornoDto salvar(ProdutoCadastroDto cadastroDto) {
-		Produto produto = mapper.converterParaEntidade(cadastroDto);
-		verificar(produto); 
-		produto = repository.salvar(produto);
-		return mapper.converterParaDto(produto);
+
+	public ProdutoRetornoDto cadastrar(ProdutoCadastroDto cadastroDto) {
+		return cadastroService.cadastrar(cadastroDto);
 	}
 	
 	public ProdutoRetornoDto buscarPor(Long idProduto) {
-		Produto produto = repository.buscarPor(idProduto);
-		return mapper.converterParaDto(produto);
+		return buscaService.buscarPor(idProduto);
 	}
 	
 	public Page<ProdutoRetornoDto> listarTodos(Pageable pageable) {
-		return repository.buscarTodos(pageable).map((produto) -> mapper.converterParaDto(produto));
+		return buscaService.listarTodos(pageable);
 	}
 	
 	public ProdutoRetornoDto atualizar(ProdutoAtualizacaoDto atualizacaoDto) {
-		Long idProduto = atualizacaoDto.getId();
-		Produto produto = repository.buscarPor(idProduto);
-		atualizarProduto(atualizacaoDto, produto);
-		if (atualizacaoDto.getNome() != null || atualizacaoDto.getDescricao() != null) {
-			verificar(produto);
-		}
-		repository.salvar(produto);
-		return mapper.converterParaDto(produto);
+		return atualizacaoService.atualizar(atualizacaoDto);	
 	}
 	
-	public void deletar(Long idProduto) {
-		repository.deletar(idProduto);
-	}
-	
-	private void verificar(Produto produto) {
-		String nome = produto.getNome();
-		String descricao = produto.getDescricao();
-		ParceiroNegocio fabricante = produto.getFabricante();
-		if (repository.existeInstanciaCom(nome, descricao, fabricante)) {
-			StringBuilder mensagemErro = new StringBuilder();
-			mensagemErro.append("Ja existe Produto com nome {")
-						.append(nome)
-						.append("} descricao {")
-						.append(descricao)
-						.append("} do fabricante com id {")
-						.append(fabricante.getId())
-						.append("}");
-			throw new ProdutoServiceException(mensagemErro.toString());
-		}
-	}
-	
-	private void atualizarProduto(ProdutoAtualizacaoDto atualizacaoDto, Produto produto) {
-		if (atualizacaoDto.getNome() != null) {
-			produto.setNome(atualizacaoDto.getNome());
-		}
-		if (atualizacaoDto.getDescricao() != null) {
-			produto.setDescricao(atualizacaoDto.getDescricao());
-		}
-		if (atualizacaoDto.getDataFabricacao() != null) {
-			produto.setDataFabricacao(atualizacaoDto.getDataFabricacao());
-		}
-		if (atualizacaoDto.getDataValidade() != null) {
-			produto.setDataValidade(atualizacaoDto.getDataValidade());
-		}
+	public void deletarPor(Long idProduto) {
+		delecaoService.deletarPor(idProduto);
 	}
 }
