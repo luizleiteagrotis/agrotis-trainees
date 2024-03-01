@@ -34,6 +34,12 @@ public class ParceiroNegocio {
 	@Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve seguir o padrao: (41) 1234-5678 ou (41) 12345-5678")
 	private String telefone;
 	
+	public ParceiroNegocio() {}
+	
+	public ParceiroNegocio(Long id) {
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return id;
 	}

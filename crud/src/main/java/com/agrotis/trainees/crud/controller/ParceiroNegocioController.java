@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.agrotis.trainees.crud.dto.parceiro.ParceiroAtualizacaoDto;
 import com.agrotis.trainees.crud.dto.parceiro.ParceiroCadastroDto;
 import com.agrotis.trainees.crud.dto.parceiro.ParceiroRetornoDto;
-import com.agrotis.trainees.crud.service.ParceiroNegocioService;
+import com.agrotis.trainees.crud.service.parceiro.ParceiroNegocioService;
 
 @RestController
 @RequestMapping("/parceiros")
@@ -36,14 +36,14 @@ public class ParceiroNegocioController {
 	
 	@PostMapping
 	public ResponseEntity<?> cadastrar(@Valid @RequestBody ParceiroCadastroDto dto, UriComponentsBuilder uriBuilder) {
-		ParceiroRetornoDto listagemDto = parceiroService.salvar(dto);
+		ParceiroRetornoDto listagemDto = parceiroService.cadastrar(dto);
 		URI uri = uriBuilder.path("/parceiros/{id}").buildAndExpand(listagemDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ParceiroRetornoDto> buscarPorId(@PathVariable(name = "id") Long id) {
-		ParceiroRetornoDto listagemDto = parceiroService.buscarPorId(id);
+		ParceiroRetornoDto listagemDto = parceiroService.buscarPor(id);
 		return ResponseEntity.ok(listagemDto);
 	}
 	
@@ -61,7 +61,7 @@ public class ParceiroNegocioController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletar(@PathVariable(name = "id") Long id) {
-		parceiroService.deletar(id);
+		parceiroService.deletarPor(id);
 		return ResponseEntity.noContent().build();
 	}
 }

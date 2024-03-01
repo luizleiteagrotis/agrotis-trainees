@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,6 +69,8 @@ public class JpaRepositoryWrapper<Entity, ID> {
 			LOG.info("Entidade {} com id {} deletada com sucesso", NOME_ENTITY, idEntity);
 		} catch (EmptyResultDataAccessException e) {
 			naoEncontrada(idEntity);
+		} catch (DataIntegrityViolationException e) {
+			violacaoDelecao(idEntity);
 		}
 	}
 
@@ -79,6 +82,17 @@ public class JpaRepositoryWrapper<Entity, ID> {
 							+ " nao encontrada";
 		LOG.error(mensagemErro);
 		throw new EntityNotFoundException(mensagemErro);
+	}
+	
+	private void violacaoDelecao(ID idEntity) {
+		String mensagemErro = "Entidade " 
+				+ NOME_ENTITY
+				+ " com id "
+				+ idEntity
+				+ " nao pode ser deletada."
+				+ " Verifique se ela esta associada com outra entidade";
+		LOG.error(mensagemErro);
+		throw new JpaRepositoryWrapperException(mensagemErro);
 	}
 	
 	private String getNomeEntity() {

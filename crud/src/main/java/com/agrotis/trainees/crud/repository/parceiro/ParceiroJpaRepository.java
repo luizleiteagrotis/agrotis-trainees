@@ -9,4 +9,9 @@ import com.agrotis.trainees.crud.entity.ParceiroNegocio;
 @Repository
 public interface ParceiroJpaRepository extends JpaRepository<ParceiroNegocio, Long>{
 
+	boolean existsByNomeOrInscricaoFiscal(String nome, String inscricaoFiscal);
+	
+	ParceiroNegocio findByNome(String nome);
+	
+	ParceiroNegocio findByInscricaoFiscal(String inscricaoFiscal);
 }

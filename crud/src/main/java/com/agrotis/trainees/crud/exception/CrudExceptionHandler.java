@@ -16,6 +16,9 @@ import com.agrotis.trainees.crud.service.cabecalho.CabecalhoNotaServiceException
 import com.agrotis.trainees.crud.service.item.atualizar.ItemAtualizacaoRnException;
 import com.agrotis.trainees.crud.service.item.cadastrar.ItemCadastroRnException;
 import com.agrotis.trainees.crud.service.item.deletar.ItemDelecaoRnException;
+import com.agrotis.trainees.crud.service.parceiro.ParceiroNegocioDelecaoService;
+import com.agrotis.trainees.crud.service.parceiro.atualizacao.ParceiroNegocioAtualizacaoRnException;
+import com.agrotis.trainees.crud.service.parceiro.cadastro.ParceiroNegocioCadastroRnException;
 import com.agrotis.trainees.crud.service.produto.ProdutoServiceException;
 
 @ControllerAdvice
@@ -89,6 +92,16 @@ public class CrudExceptionHandler {
 	
 	@ExceptionHandler(ItemDelecaoRnException.class)
 	public ResponseEntity<String> handle(ItemDelecaoRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(ParceiroNegocioCadastroRnException.class)
+	public ResponseEntity<String> handle(ParceiroNegocioCadastroRnException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(ParceiroNegocioAtualizacaoRnException.class)
+	public ResponseEntity<String> handle(ParceiroNegocioAtualizacaoRnException exception) {
 		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
 }
