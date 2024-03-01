@@ -2,7 +2,6 @@ package com.agrotis.trainees.crud.service;
 
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -62,22 +61,22 @@ public class ItemService {
 
     }
 
-    public NotaFiscalItem tratarNulos(NotaFiscalItem entidade, NotaFiscalItem item) {
+    public NotaFiscalItem jutsuDeSubstituicao(NotaFiscalItem entidade, NotaFiscalItem item) {
 
-        Field[] fields = entidade.getClass().getDeclaredFields();
-        Field[] fields2 = item.getClass().getDeclaredFields();
+        if (entidade.getIdNota() == null) {
+            entidade.setIdNota(item.getIdNota());
+        }
 
-        for (Field field : fields) {
-            field.setAccessible(true);
+        if (entidade.getPrecoUnitario() == null || entidade.getPrecoUnitario() == new BigDecimal(0)) {
+            entidade.setPrecoUnitario(item.getPrecoUnitario());
+        }
 
-            try {
-                if (field.get(entidade) == null || field.get(entidade).equals(0) || field.get(entidade).equals(new BigDecimal(0))) {
+        if (entidade.getProduto() == null) {
+            entidade.setProduto(item.getProduto());
+        }
 
-                    field.set(entidade, field.get(item));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+        if (entidade.getQuantidade() == null || entidade.getQuantidade() == 0) {
+            entidade.setQuantidade(item.getQuantidade());
         }
 
         return entidade;

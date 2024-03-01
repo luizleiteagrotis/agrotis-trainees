@@ -72,7 +72,7 @@ public class NotaFiscalItemService {
             throw new CrudException("Obrigatório preencher o id do item.");
         }
         NotaFiscalItem item = buscarPorId(entidade.getId());
-        entidade = itemService.tratarNulos(entidade, item);
+        entidade = itemService.jutsuDeSubstituicao(entidade, item);
         NotaFiscal nota = notaFiscalService.buscarPorId(entidade.getIdNota().getId());
         Produto produto = produtoService.buscarPorId(item.getProduto().getId());
 
