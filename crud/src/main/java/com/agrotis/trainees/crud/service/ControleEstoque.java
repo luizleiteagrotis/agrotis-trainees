@@ -48,9 +48,6 @@ public class ControleEstoque {
         } catch (ControleEstoqueException exp) {
             LOG.error(exp.getMessage());
             throw exp;
-        } catch (NullPointerException npe) {
-            LOG.error(npe.getMessage());
-            throw npe;
         }
     }
 
