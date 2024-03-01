@@ -59,7 +59,8 @@ public class ItemNotaFiscalController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> atualizarPorId(@PathVariable int id, @RequestBody ItemNotaFiscalDto itemNotaFiscalDto) {
+    public ResponseEntity<?> atualizarPorId(@PathVariable int id, @RequestBody ItemNotaFiscalDto itemNotaFiscalDto)
+                    throws ItemNotaFiscalExcecao, ControleEstoqueException {
         return ResponseEntity.ok().body(service.atualizar(itemNotaFiscalDto, id));
     }
 

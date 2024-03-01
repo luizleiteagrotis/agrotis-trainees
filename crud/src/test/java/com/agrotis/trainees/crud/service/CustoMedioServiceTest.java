@@ -14,9 +14,9 @@ class CustoMedioServiceTest {
 
     @Test
     void deveCalcularCustoMedio() {
-        BigDecimal custoTotal = new BigDecimal(1038500);
+        BigDecimal custoTotal = new BigDecimal(1_038_500);
         BigDecimal quantidadeTotal = new BigDecimal(15000);
-        BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+        BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
         assertEquals(new BigDecimal(69.23).setScale(2, RoundingMode.HALF_UP), custoMedioCalculado);
     }
 
@@ -25,7 +25,7 @@ class CustoMedioServiceTest {
         BigDecimal custoTotal = new BigDecimal(1_038_500);
         BigDecimal quantidadeTotal = new BigDecimal(0);
         Exception excecao = assertThrows(CrudException.class, () -> {
-            CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+            CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
         });
         assertEquals("Quantidade total deve ser maior que zero.", (excecao.getMessage()));
     }
@@ -35,7 +35,7 @@ class CustoMedioServiceTest {
         BigDecimal custoTotal = new BigDecimal(-1_038_500);
         BigDecimal quantidadeTotal = new BigDecimal(15000);
         Exception excecao = assertThrows(CrudException.class, () -> {
-            CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+            CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
         });
         assertEquals("Custo total deve ser maior que zero.", (excecao.getMessage()));
 
@@ -44,9 +44,31 @@ class CustoMedioServiceTest {
     @Test
     void verificarValoresNulos() {
         BigDecimal custoTotal = null;
+        BigDecimal quantidadeTotal = new BigDecimal(15000);
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
+        });
+        assertEquals("O quantidade total e o custo total não podem ser nulos.", (excecao.getMessage()));
+
+    }
+
+    @Test
+    void verificarQuantidadeTotalNull() {
+        BigDecimal custoTotal = new BigDecimal(15000);
         BigDecimal quantidadeTotal = null;
         Exception excecao = assertThrows(CrudException.class, () -> {
-            CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+            CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
+        });
+        assertEquals("O quantidade total e o custo total não podem ser nulos.", (excecao.getMessage()));
+
+    }
+
+    @Test
+    void verificarCustoTotalNull() {
+        BigDecimal custoTotal = null;
+        BigDecimal quantidadeTotal = null;
+        Exception excecao = assertThrows(CrudException.class, () -> {
+            CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
         });
         assertEquals("O quantidade total e o custo total não podem ser nulos.", (excecao.getMessage()));
 
@@ -56,7 +78,7 @@ class CustoMedioServiceTest {
     void calculaCustoMedioValorEsperadoSessentaCincoNoventaCentavos() {
         BigDecimal custoTotal = new BigDecimal(659_000.00);
         BigDecimal quantidadeTotal = new BigDecimal(10000);
-        BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+        BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
         assertEquals(new BigDecimal(65.90).setScale(2, RoundingMode.HALF_UP), custoMedioCalculado);
     }
 
@@ -64,8 +86,41 @@ class CustoMedioServiceTest {
     void calculaCustoMedioValorEsperadoSessentaCincoVinteTresCentavos() {
         BigDecimal custoTotal = new BigDecimal(1038500);
         BigDecimal quantidadeTotal = new BigDecimal(15000);
-        BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(custoTotal, quantidadeTotal);
+        BigDecimal custoMedioCalculado = CustoMedioService.calcularCustoMedio(quantidadeTotal, custoTotal);
         assertEquals(new BigDecimal(69.23).setScale(2, RoundingMode.HALF_UP), custoMedioCalculado);
     }
 
+    @Test
+    void calcularCustoTotalEsperandoCem() {
+        BigDecimal custoTotal = new BigDecimal(10);
+        BigDecimal quantidadeTotal = new BigDecimal(10);
+        BigDecimal calcularCustoTotal = CustoMedioService.calcularCustoTotal(quantidadeTotal, custoTotal);
+        assertEquals(new BigDecimal(100), calcularCustoTotal);
+    }
+
+    @Test
+    void calcularCustoTotalComCustoTotalNull() {
+        BigDecimal custoTotal = null;
+        BigDecimal quantidadeTotal = new BigDecimal(10);
+        assertThrows(CrudException.class, () -> {
+            CustoMedioService.calcularCustoTotal(quantidadeTotal, custoTotal);
+        });
+    }
+
+    @Test
+    void calcularCustoTotalComQuantidadeTotalNull() {
+        BigDecimal custoTotal = new BigDecimal(10);
+        BigDecimal quantidadeTotal = null;
+        assertThrows(CrudException.class, () -> {
+            CustoMedioService.calcularCustoTotal(quantidadeTotal, custoTotal);
+        });
+    }
+
+    @Test
+    void adicionarValoresEsperandoVinte() {
+        BigDecimal custoTotal = new BigDecimal(10);
+        BigDecimal quantidadeTotal = new BigDecimal(10);
+        BigDecimal adicionadoCusto = CustoMedioService.adicionarCustoTotal(custoTotal, quantidadeTotal);
+        assertEquals(new BigDecimal(20), adicionadoCusto);
+    }
 }

@@ -84,7 +84,7 @@ public class ItemNotaFiscalService {
         return itemNotaFiscalConversor.converter(itens);
     }
 
-    public ItemNotaFiscalDto atualizar(ItemNotaFiscalDto item, int id) {
+    public ItemNotaFiscalDto atualizar(ItemNotaFiscalDto item, int id) throws ItemNotaFiscalExcecao, ControleEstoqueException {
         try {
             ItemNotaFiscal itemNotaFiscal = itemNotaFiscalConversor.converter(item);
             ItemNotaFiscal itemNotaAtualizar = verificarPorId(id);
@@ -95,7 +95,7 @@ public class ItemNotaFiscalService {
             return itemNotaFiscalConversor.converter(itemNotaAtualizar);
         } catch (ItemNotaFiscalExcecao infe) {
             LOG.error(infe.getMessage());
-            return null;
+            throw infe;
         }
     }
 
@@ -123,7 +123,8 @@ public class ItemNotaFiscalService {
 
     }
 
-    private ItemNotaFiscal atribuirValores(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
+    private ItemNotaFiscal atribuirValores(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar)
+                    throws ControleEstoqueException {
         if (itemNotaFiscal.getNotaFiscal() != null) {
             itemNotaAtualizar.setNotaFiscal(notaFiscalService.verificarPorId(itemNotaFiscal.getNotaFiscal().getId()));
         }
@@ -134,7 +135,7 @@ public class ItemNotaFiscalService {
             itemNotaAtualizar.setPrecoUnitario(itemNotaFiscal.getPrecoUnitario());
         }
         if (itemNotaFiscal.getQuantidade() != null && itemNotaFiscal.getQuantidade().doubleValue() >= 0) {
-            itemNotaAtualizar = controleEstoque.atualizarEstoque(itemNotaFiscal, itemNotaAtualizar);
+            controleEstoque.atualizarEstoque(itemNotaFiscal, itemNotaAtualizar);
             itemNotaAtualizar.setQuantidade(itemNotaFiscal.getQuantidade());
         }
         itemNotaAtualizar

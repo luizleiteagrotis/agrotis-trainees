@@ -54,7 +54,8 @@ public class ControleEstoque {
         }
     }
 
-    public ItemNotaFiscal atualizarEstoque(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar) {
+    public ItemNotaFiscal atualizarEstoque(ItemNotaFiscal itemNotaFiscal, ItemNotaFiscal itemNotaAtualizar)
+                    throws ControleEstoqueException {
 
         try {
             BigDecimal estoque = itemNotaAtualizar.getProduto().getEstoque();
@@ -79,7 +80,7 @@ public class ControleEstoque {
             return itemNotaAtualizar;
         } catch (ControleEstoqueException cee) {
             LOG.error(cee.getMessage());
-            return null;
+            throw cee;
         }
     }
 

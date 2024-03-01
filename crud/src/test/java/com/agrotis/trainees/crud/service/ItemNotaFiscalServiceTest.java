@@ -3,7 +3,9 @@ package com.agrotis.trainees.crud.service;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -565,6 +567,146 @@ class ItemNotaFiscalServiceTest {
         assertEquals(new BigDecimal(1), entidade.getProduto().getEstoque());
         verify(itemNotaFiscalRepository, times(1)).deleteById(ID);
 
+    }
+
+    @Test
+    void testarAtualizarTodosOsCampos() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal(NOTA_FISCAL_ENTRADA, new Produto(), new BigDecimal(10),
+                        new BigDecimal(10));
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_ENTRADA);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        when(controleEstoque.atualizarEstoque(entidade, novaEntidade)).thenReturn(entidade);
+        itemNotaFiscalService.atualizar(dto, ID);
+        assertEquals(novaEntidade.getNotaFiscal(), entidade.getNotaFiscal());
+        assertEquals(novaEntidade.getProduto(), entidade.getProduto());
+        assertEquals(novaEntidade.getPrecoUnitario(), entidade.getPrecoUnitario());
+        assertEquals(novaEntidade.getQuantidade(), entidade.getQuantidade());
+
+        verify(itemNotaFiscalRepository, times(1)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarApenasNotaFiscalDoItem() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setNotaFiscal(NOTA_FISCAL_ENTRADA);
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_ENTRADA);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        when(controleEstoque.atualizarEstoque(entidade, novaEntidade)).thenReturn(entidade);
+        itemNotaFiscalService.atualizar(dto, ID);
+        assertEquals(novaEntidade.getNotaFiscal(), entidade.getNotaFiscal());
+
+        verify(itemNotaFiscalRepository, times(1)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarItemNotaComUmaNotaFiscalInexistente() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setNotaFiscal(NOTA_FISCAL_ENTRADA);
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(null);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        when(controleEstoque.atualizarEstoque(entidade, novaEntidade)).thenReturn(entidade);
+        assertThrows(ItemNotaFiscalExcecao.class, () -> {
+            itemNotaFiscalService.atualizar(dto, ID);
+
+        });
+
+        verify(itemNotaFiscalRepository, times(0)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarApenasProdutoDoItem() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setProduto(new Produto());
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_SAIDA);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        itemNotaFiscalService.atualizar(dto, ID);
+        assertEquals(novaEntidade.getProduto(), entidade.getProduto());
+
+        verify(itemNotaFiscalRepository, times(1)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarProdutoDoItemComUmInvalido() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setProduto(new Produto());
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_SAIDA);
+        when(produtoService.verificarPorId(ID)).thenReturn(null);
+        assertThrows(ItemNotaFiscalExcecao.class, () -> {
+            itemNotaFiscalService.atualizar(dto, ID);
+
+        });
+
+        verify(itemNotaFiscalRepository, times(0)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarApenasQuantidade() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setQuantidade(new BigDecimal(13198));
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_SAIDA);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        itemNotaFiscalService.atualizar(dto, ID);
+        assertEquals(novaEntidade.getQuantidade(), entidade.getQuantidade());
+
+        verify(itemNotaFiscalRepository, times(1)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarApenasQuantidadeComUmaQuantidadeNegativaNaoPermitindo() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setQuantidade(new BigDecimal(-13198));
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_SAIDA);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        itemNotaFiscalService.atualizar(dto, ID);
+        assertNotEquals(novaEntidade.getQuantidade(), entidade.getQuantidade());
+
+        verify(itemNotaFiscalRepository, times(1)).save(any(ItemNotaFiscal.class));
+    }
+
+    @Test
+    void atualizarApenasPrecoUnitairoComUmValorNegativoNaoPermitindo() throws ItemNotaFiscalExcecao, ControleEstoqueException {
+        ItemNotaFiscalDto dto = criarItemNotaFiscalDtoSaida();
+        ItemNotaFiscal entidade = criarItemNotaFiscalSaida();
+        ItemNotaFiscal novaEntidade = new ItemNotaFiscal();
+        novaEntidade.setPrecoUnitario(new BigDecimal(-13198));
+        when(itemNotaFiscalConversor.converter(dto)).thenReturn(novaEntidade);
+        when(itemNotaFiscalRepository.findById(ID)).thenReturn(Optional.of(entidade));
+        when(notaFiscalService.verificarPorId(ID)).thenReturn(NOTA_FISCAL_SAIDA);
+        when(produtoService.verificarPorId(ID)).thenReturn(novaEntidade.getProduto());
+        assertThrows(ItemNotaFiscalExcecao.class, () -> {
+            itemNotaFiscalService.atualizar(dto, ID);
+
+        });
+
+        verify(itemNotaFiscalRepository, times(0)).save(any(ItemNotaFiscal.class));
     }
 
     @Test
